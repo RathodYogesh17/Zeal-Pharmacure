@@ -1,0 +1,1640 @@
+/* ========================================================
+   ZEAL PHARMACEUTICALS - GLOBAL COMMON STYLESHEET (common.css)
+   Centralized design system for cards, buttons, badges,
+   forms, modals, containers, and responsive grids.
+======================================================== */
+
+:root {
+  /* Brand Purple Palette */
+  --zp-primary: #6828DC;
+  --zp-primary-hover: #581C87;
+  --zp-primary-light: #F5F3FF;
+  --zp-primary-border: #DDD6FE;
+  --zp-primary-glow: rgba(104, 40, 220, 0.25);
+
+  /* Medical Accents */
+  --zp-emerald: #059669;
+  --zp-emerald-hover: #047857;
+  --zp-emerald-light: #ECFDF5;
+  --zp-emerald-border: #A7F3D0;
+
+  --zp-amber: #D97706;
+  --zp-amber-light: #FFFBEB;
+  --zp-amber-border: #FDE68A;
+
+  --zp-red: #EF4444;
+  --zp-red-light: #FEF2F2;
+  --zp-red-border: #FECACA;
+
+  --zp-blue: #0284C7;
+  --zp-blue-light: #F0F9FF;
+  --zp-blue-border: #BAE6FD;
+
+  /* Neutrals */
+  --zp-text-dark: #0F172A;
+  --zp-text-muted: #64748B;
+  --zp-text-subtle: #94A3B8;
+  --zp-bg-body: #FAFAFC;
+  --zp-bg-white: #FFFFFF;
+  --zp-border-light: #E2E8F0;
+  --zp-border-input: #CBD5E1;
+}
+
+/* ========================================================
+   1. LAYOUT & CONTAINERS
+======================================================== */
+.zp-container {
+  width: 100%;
+  max-width: 1340px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.zp-section {
+  padding-top: 48px;
+  padding-bottom: 48px;
+}
+
+.zp-section-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.zp-section-title {
+  font-family: var(--font-heading, 'Outfit', sans-serif) !important;
+  font-size: clamp(22px, 2.5vw, 28px);
+  font-weight: 900;
+  color: var(--zp-text-dark);
+  letter-spacing: -0.6px;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+
+.zp-section-subtitle {
+  font-size: 14px;
+  color: var(--zp-text-muted);
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
+}
+
+/* Responsive Product Grid - 4 columns on desktop, 3 on tablet, 2 on mobile */
+.zp-grid-products {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 1100px) {
+  .zp-grid-products {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .zp-grid-products {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .zp-grid-products {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ========================================================
+   2. PRODUCT CARDS & ELEMENTS
+======================================================== */
+.zp-product-card {
+  background: var(--zp-bg-white);
+  border-radius: 16px;
+  border: 1.2px solid var(--zp-border-light);
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  transition: all 0.22s ease;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+}
+
+.zp-product-card:hover {
+  border-color: #C4B5FD;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(104, 40, 220, 0.09);
+}
+
+.zp-product-card.is-selected {
+  border: 2px solid var(--zp-primary);
+  box-shadow: 0 8px 24px rgba(104, 40, 220, 0.12);
+}
+
+.zp-product-img-box {
+  height: 145px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  cursor: pointer;
+  padding: 6px;
+  background: radial-gradient(circle at center, #FFFFFF 60%, #F8FAFC 100%);
+  border-radius: 12px;
+  border: 1px solid #F1F5F9;
+  position: relative;
+}
+
+.zp-product-img-box img {
+  max-height: 130px;
+  max-width: 90%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.06));
+  transition: transform 0.25s ease;
+}
+
+.zp-product-img-box:hover img {
+  transform: scale(1.06);
+}
+
+.zp-product-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--zp-text-dark);
+  line-height: 1.3;
+  margin-bottom: 3px;
+  height: 36px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.zp-product-title:hover {
+  color: var(--zp-primary);
+}
+
+.zp-product-generic {
+  font-size: 12px;
+  color: var(--zp-primary);
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 5px;
+}
+
+.zp-product-comp {
+  font-size: 11px;
+  color: var(--zp-text-muted);
+  line-height: 1.4;
+  margin-bottom: 10px;
+  height: 32px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.zp-product-pack-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11.5px;
+  background: #F8FAFC;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--zp-border-light);
+  margin-bottom: 12px;
+}
+
+/* ========================================================
+   3. BADGES
+======================================================== */
+.zp-badge-purple {
+  background: var(--zp-primary-light);
+  color: var(--zp-primary);
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 5px;
+  border: 1px solid var(--zp-primary-border);
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.zp-badge-green {
+  background: var(--zp-emerald-light);
+  color: var(--zp-emerald);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 5px;
+  border: 1px solid var(--zp-emerald-border);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.zp-badge-amber {
+  background: var(--zp-amber-light);
+  color: var(--zp-amber);
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 5px;
+  border: 1px solid var(--zp-amber-border);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.zp-badge-blue {
+  background: var(--zp-blue-light);
+  color: var(--zp-blue);
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 5px;
+  border: 1px solid var(--zp-blue-border);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* ========================================================
+   4. BUTTONS
+======================================================== */
+.zp-btn-primary {
+  background: var(--zp-primary);
+  color: #FFFFFF;
+  border: none;
+  padding: 9px 18px;
+  border-radius: 10px;
+  font-size: 12.5px;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.18s ease;
+  box-shadow: 0 3px 8px var(--zp-primary-glow);
+}
+
+.zp-btn-primary:hover {
+  background: var(--zp-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px var(--zp-primary-glow);
+}
+
+.zp-btn-secondary {
+  background: #F8FAFC;
+  border: 1.2px solid var(--zp-border-input);
+  color: #334155;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: all 0.15s ease;
+}
+
+.zp-btn-secondary:hover {
+  border-color: var(--zp-primary);
+  color: var(--zp-primary);
+  background: var(--zp-primary-light);
+}
+
+.zp-btn-emerald {
+  background: var(--zp-emerald);
+  color: #FFFFFF;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: all 0.18s ease;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+}
+
+.zp-btn-emerald:hover {
+  background: var(--zp-emerald-hover);
+  transform: translateY(-1px);
+}
+
+.zp-btn-pill-outline {
+  background: #FFFFFF;
+  color: var(--zp-text-dark);
+  border: 1.5px solid var(--zp-border-input);
+  padding: 9px 20px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.zp-btn-pill-outline:hover {
+  border-color: var(--zp-primary);
+  color: var(--zp-primary);
+}
+
+/* ========================================================
+   5. FORM CONTROLS & INPUTS
+======================================================== */
+.zp-label {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #475569;
+  margin-bottom: 4px;
+  letter-spacing: 0.3px;
+}
+
+.zp-input {
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1.5px solid var(--zp-border-input);
+  font-size: 13px;
+  color: var(--zp-text-dark);
+  background: #FFFFFF;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+
+.zp-input:focus {
+  border-color: var(--zp-primary);
+  box-shadow: 0 0 0 3px var(--zp-primary-glow);
+}
+
+.zp-textarea {
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1.5px solid var(--zp-border-input);
+  font-size: 13px;
+  color: var(--zp-text-dark);
+  background: #FFFFFF;
+  outline: none;
+  box-sizing: border-box;
+  resize: vertical;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+
+.zp-textarea:focus {
+  border-color: var(--zp-primary);
+  box-shadow: 0 0 0 3px var(--zp-primary-glow);
+}
+
+/* ========================================================
+   6. MODALS
+======================================================== */
+.zp-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 1000;
+  animation: zpFadeIn 0.2s ease-out;
+}
+
+.zp-modal-box {
+  background: var(--zp-bg-white);
+  border-radius: 20px;
+  padding: 28px;
+  width: 100%;
+  max-width: 640px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 48px rgba(15, 23, 42, 0.25);
+  animation: zpScaleIn 0.22s ease-out;
+}
+
+.zp-modal-close-btn {
+  padding: 6px;
+  border-radius: 50%;
+  background: #F1F5F9;
+  border: none;
+  cursor: pointer;
+  color: #64748B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.zp-modal-close-btn:hover {
+  background: #E2E8F0;
+  color: var(--zp-text-dark);
+}
+
+/* ========================================================
+   7. STICKY FLOATING DOCK (BULK ENQUIRY)
+======================================================== */
+.zp-floating-dock {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(19, 9, 41, 0.94);
+  backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(168, 85, 247, 0.4);
+  border-radius: 999px;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  z-index: 990;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+  color: #FFFFFF;
+  animation: zpFadeIn 0.2s ease-out;
+}
+
+/* ========================================================
+   8. ANIMATION KEYFRAMES
+======================================================== */
+@keyframes zpFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes zpScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ========================================================
+   9. COMMON CARDS, PANELS & SURFACES
+======================================================== */
+.zp-card {
+  background: var(--zp-bg-white);
+  border-radius: 16px;
+  border: 1.2px solid var(--zp-border-light);
+  padding: 24px;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.zp-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1.2px solid #F1F5F9;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.zp-card-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--zp-text-dark);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.zp-card-subtitle {
+  font-size: 13px;
+  color: var(--zp-text-muted);
+  margin-top: 3px;
+}
+
+/* ========================================================
+   10. COMMON FORM GRIDS & ROWS
+======================================================== */
+.zp-form-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.zp-form-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.zp-form-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.zp-form-row {
+  margin-bottom: 14px;
+}
+
+.zp-form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #F1F5F9;
+  flex-wrap: wrap;
+}
+
+/* ========================================================
+   11. COMMON ALERTS & NOTIFICATIONS
+======================================================== */
+.zp-alert-error {
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  color: #991B1B;
+  padding: 11px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+.zp-alert-success {
+  background: #ECFDF5;
+  border: 1.5px solid #A7F3D0;
+  color: #065F46;
+  padding: 11px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+.zp-alert-info {
+  background: #F5F3FF;
+  border: 1px solid #DDD6FE;
+  color: #5B21B6;
+  padding: 11px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+/* ========================================================
+   12. COMMON SUCCESS SUBMISSION VIEWS
+======================================================== */
+.zp-success-box {
+  background: #F0FDF4;
+  border: 1.5px solid #86EFAC;
+  border-radius: 18px;
+  padding: 36px 24px;
+  text-align: center;
+  color: #166534;
+}
+
+.zp-success-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #DCFCE7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  color: #16A34A;
+}
+
+.zp-success-title {
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0 0 8px;
+  color: #14532D;
+}
+
+.zp-success-desc {
+  font-size: 13.5px;
+  line-height: 1.6;
+  margin: 0 auto;
+  max-width: 520px;
+  color: #166534;
+}
+
+/* ========================================================
+   13. COMMON STAT & METRIC CARDS
+======================================================== */
+.zp-stat-card {
+  background: var(--zp-bg-white);
+  border-radius: 16px;
+  padding: 16px 20px;
+  border: 1px solid var(--zp-border-light);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: transform 0.18s, border-color 0.18s;
+}
+
+.zp-stat-card:hover {
+  transform: translateY(-2px);
+  border-color: #CBD5E1;
+}
+
+.zp-stat-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.zp-stat-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #94A3B8;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.zp-stat-value {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--zp-text-dark);
+  margin-top: 2px;
+}
+
+/* ========================================================
+   14. COMMON BREADCRUMBS
+======================================================== */
+.zp-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #64748B;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.zp-breadcrumb a {
+  color: #64748B;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s;
+}
+
+.zp-breadcrumb a:hover {
+  color: var(--zp-primary);
+}
+
+.zp-breadcrumb-active {
+  color: var(--zp-primary);
+  font-weight: 700;
+}
+
+/* ========================================================
+   15. SIDEBAR TABS & NAVIGATION
+======================================================== */
+.zp-tab-list {
+  background: var(--zp-bg-white);
+  border-radius: 20px;
+  padding: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--zp-border-light);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.zp-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: left;
+  background: transparent;
+  color: #475569;
+  transition: all 0.18s ease;
+  width: 100%;
+}
+
+.zp-tab-btn:hover {
+  background: #F8FAFC;
+  color: var(--zp-primary);
+}
+
+.zp-tab-btn.is-active {
+  background: #FAF5FF;
+  color: var(--zp-primary);
+  box-shadow: inset 3px 0 0 var(--zp-primary);
+}
+
+/* ========================================================
+   16. ADVANCED CONTACT PAGE STYLES & INTERACTIVE CARDS
+======================================================== */
+.contact-hero-banner {
+  position: relative;
+  background-color: #3B0764;
+  background-image: 
+    radial-gradient(rgba(255, 255, 255, 0.14) 1.5px, transparent 1.5px),
+    linear-gradient(135deg, rgba(30, 10, 60, 0.94) 0%, rgba(104, 40, 220, 0.88) 55%, rgba(67, 18, 126, 0.95) 100%),
+    url('/banners/banner_research_lab.jpg');
+  background-size: 24px 24px, 100% 100%, cover;
+  background-position: 0 0, 0 0, center 25%;
+  color: #FFFFFF;
+  padding: 68px 0 88px;
+  overflow: hidden;
+}
+
+.contact-hero-glow-1 {
+  position: absolute;
+  top: -90px;
+  right: -60px;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.28) 0%, rgba(104, 40, 220, 0.05) 70%, transparent 100%);
+  filter: blur(50px);
+  pointer-events: none;
+  animation: float-slow 8s ease-in-out infinite alternate;
+}
+
+.contact-hero-glow-2 {
+  position: absolute;
+  bottom: -60px;
+  left: 5%;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(52, 211, 153, 0.22) 0%, rgba(16, 185, 129, 0.03) 70%, transparent 100%);
+  filter: blur(45px);
+  pointer-events: none;
+  animation: float-slow 10s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes float-slow {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-20px) scale(1.05); }
+}
+
+/* Modern Clean Contact Cards */
+.contact-card-modern {
+  background: #FFFFFF;
+  border-radius: 20px;
+  border: 1.5px solid #E2E8F0;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 26px;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+  z-index: 10;
+}
+
+.contact-card-modern:hover {
+  transform: translateY(-5px);
+  border-color: #DDD6FE !important;
+  box-shadow: 0 18px 36px -8px rgba(104, 40, 220, 0.12), 0 6px 16px rgba(15, 23, 42, 0.04) !important;
+}
+
+/* Card Icon with gentle hover effect */
+.card-icon-modern {
+  transition: transform 0.25s ease, background-color 0.25s ease;
+}
+.contact-card-modern:hover .card-icon-modern {
+  transform: scale(1.06);
+}
+
+/* Action Button: starts soft, transforms on hover */
+.card-action-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  background: #F8FAFC;
+  color: #334155;
+  border: 1px solid #E2E8F0;
+  transition: all 0.22s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.contact-card-modern:hover .card-action-pill {
+  background: var(--zp-primary, #6828DC);
+  color: #FFFFFF;
+  border-color: var(--zp-primary, #6828DC);
+  box-shadow: 0 4px 14px rgba(104, 40, 220, 0.25);
+}
+
+.card-action-pill .action-arrow-icon {
+  transition: transform 0.22s ease;
+}
+
+.contact-card-modern:hover .card-action-pill .action-arrow-icon {
+  transform: translate(3px, -2px);
+}
+
+/* Pulse Dot Animation for Real-Time Status */
+.dot-pulse-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.dot-pulse-indicator {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot-pulse-indicator::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 50%;
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  50% { transform: scale(2.2); opacity: 0; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+.pulse-green { background: #10B981; }
+.pulse-green::after { background: rgba(16, 185, 129, 0.4); }
+
+.pulse-purple { background: #8B5CF6; }
+.pulse-purple::after { background: rgba(139, 92, 246, 0.4); }
+
+.pulse-blue { background: #3B82F6; }
+.pulse-blue::after { background: rgba(59, 130, 246, 0.4); }
+
+/* ========================================================
+   17. REUSABLE CARD HOVER & INTERACTION UTILITIES
+======================================================== */
+.zp-card-interactive {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.zp-card-interactive:hover {
+  transform: translateY(-4px);
+  border-color: var(--zp-primary, #6828DC) !important;
+  box-shadow: 0 14px 28px -6px rgba(104, 40, 220, 0.16), 0 4px 10px rgba(15, 23, 42, 0.04) !important;
+}
+
+.zp-card-subtle {
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.zp-card-subtle:hover {
+  transform: translateY(-3px);
+  border-color: #DDD6FE !important;
+  box-shadow: 0 10px 24px -4px rgba(104, 40, 220, 0.1) !important;
+}
+
+/* ========================================================
+   18. SHARED CORE UTILITIES (FLEX, CARDS, BADGES)
+======================================================== */
+.zp-flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zp-flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.zp-flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.zp-card-box {
+  background: #FFFFFF;
+  border-radius: 16px;
+  border: 1px solid var(--zp-border-light, #E2E8F0);
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+}
+
+.zp-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.zp-form-input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1.5px solid var(--zp-border-light, #E2E8F0);
+  font-size: 13px;
+  color: var(--zp-text-dark, #0F172A);
+  background: #FFFFFF;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.zp-form-input:focus {
+  border-color: var(--zp-primary, #6828DC);
+  box-shadow: 0 0 0 3px rgba(104, 40, 220, 0.1);
+}
+
+.zp-form-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #334155;
+  margin-bottom: 6px;
+}
+
+.zp-footer-link {
+  color: #94A3B8;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.zp-footer-link:hover {
+  color: #C4B5FD;
+}
+
+/* ==========================================================================
+   UNIFIED HERO BANNER HEIGHT STANDARD (Home, About, Career, Contact)
+   Ensures identical banner height & vertical alignment across all core pages
+   ========================================================================== */
+.zp-home-hero-wrapper,
+.zp-about-hero-wrapper,
+.zp-career-hero-wrapper,
+.zp-contact-hero {
+  position: relative;
+  background: linear-gradient(135deg, #0F172A 0%, #1E1B4B 45%, #2E1065 100%);
+  color: #FFFFFF;
+  border-bottom: 3px solid var(--zp-primary, #6828DC);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+@media (min-width: 981px) {
+  .zp-home-hero-wrapper,
+  .zp-about-hero-wrapper,
+  .zp-career-hero-wrapper,
+  .zp-contact-hero {
+    min-height: 570px !important;
+    height: 570px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 0 !important;
+  }
+
+  .zp-home-hero-wrapper > .container,
+  .zp-about-hero-wrapper > .container,
+  .zp-career-hero-wrapper > .container,
+  .zp-contact-hero > .container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (max-width: 980px) {
+  .zp-home-hero-wrapper,
+  .zp-about-hero-wrapper,
+  .zp-career-hero-wrapper,
+  .zp-contact-hero {
+    height: auto !important;
+    min-height: auto !important;
+    padding: clamp(48px, 6vw, 68px) 0 !important;
+    display: block !important;
+  }
+}
+
+/* ========================================================
+   PRODUCT CATALOG FILTER BAR (zp-pfb-)
+   ======================================================== */
+.zp-pfb-wrapper {
+  background: #FFFFFF;
+  border-radius: 18px;
+  border: 1.5px solid var(--zp-border-light, #E2E8F0);
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+  padding: 20px 22px;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Search input */
+.zp-pfb-search-wrap {
+  width: 100%;
+}
+
+.zp-pfb-search-inner {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.zp-pfb-search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--zp-primary, #6828DC);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.zp-pfb-search-inner .zp-input {
+  width: 100%;
+  height: 48px;
+  padding-left: 48px;
+  padding-right: 44px;
+  border-radius: 12px;
+  border: 1.5px solid #CBD5E1;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #0F172A;
+  background: #F8FAFC;
+  transition: all 0.2s ease;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.zp-pfb-search-inner .zp-input:focus {
+  background: #FFFFFF;
+  border-color: var(--zp-primary, #6828DC);
+  box-shadow: 0 0 0 3.5px rgba(104, 40, 220, 0.12);
+}
+
+.zp-pfb-clear-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: #E2E8F0;
+  color: #64748B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  z-index: 2;
+}
+
+.zp-pfb-clear-btn:hover {
+  background: #CBD5E1;
+  color: #0F172A;
+}
+
+/* 5 Selectors Row */
+.zp-pfb-filters-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .zp-pfb-filters-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .zp-pfb-filters-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .zp-pfb-filters-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* A–Z Letter Index */
+.zp-pfb-alpha-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: #F8FAFC;
+  border-radius: 14px;
+  border: 1.5px solid #E2E8F0;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto;
+}
+
+.zp-pfb-alpha-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: #64748B;
+  letter-spacing: 0.6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.zp-pfb-alpha-list {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  width: 100%;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+
+.zp-pfb-alpha-btn {
+  flex: 1 1 0;
+  min-width: 26px;
+  height: 32px;
+  padding: 0 2px;
+  border-radius: 8px;
+  border: 1px solid #E2E8F0;
+  background: #FFFFFF;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.16s ease;
+  user-select: none;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.zp-pfb-alpha-btn:first-child {
+  flex: 1.8 1 0;
+  min-width: 42px;
+}
+
+.zp-pfb-alpha-btn:hover {
+  border-color: var(--zp-primary, #6828DC);
+  color: var(--zp-primary, #6828DC);
+  background: var(--zp-primary-light, #F5F3FF);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(104, 40, 220, 0.15);
+}
+
+.zp-pfb-alpha-btn.active {
+  background: var(--zp-primary, #6828DC) !important;
+  color: #FFFFFF !important;
+  border-color: var(--zp-primary, #6828DC) !important;
+  box-shadow: 0 3px 10px rgba(104, 40, 220, 0.35);
+  font-weight: 800;
+}
+
+/* Summary, Tags & View Mode Toggles */
+.zp-pfb-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #F1F5F9;
+}
+
+.zp-pfb-summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.zp-pfb-summary-text {
+  font-size: 13.5px;
+  color: #64748B;
+  font-weight: 500;
+}
+
+.zp-pfb-tags-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.zp-pfb-filter-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--zp-primary-light, #F5F3FF);
+  color: var(--zp-primary, #6828DC);
+  border: 1px solid var(--zp-primary-border, #DDD6FE);
+  transition: all 0.15s ease;
+}
+
+.zp-pfb-filter-tag.highlight {
+  background: #FEF3C7;
+  color: #B45309;
+  border-color: #FDE68A;
+}
+
+.zp-pfb-filter-tag-remove {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.65;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.15s ease;
+}
+
+.zp-pfb-filter-tag-remove:hover {
+  opacity: 1;
+}
+
+.zp-pfb-reset-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #EF4444;
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.zp-pfb-reset-btn:hover {
+  background: #FEE2E2;
+  border-color: #F87171;
+}
+
+/* View Mode Toggles */
+.zp-pfb-view-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.zp-pfb-toggle-wrap {
+  display: inline-flex;
+  align-items: center;
+  background: #F1F5F9;
+  border-radius: 10px;
+  padding: 3px;
+  gap: 3px;
+  border: 1px solid #E2E8F0;
+}
+
+.zp-pfb-view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: #64748B;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.zp-pfb-view-btn:hover {
+  color: var(--zp-primary, #6828DC);
+}
+
+.zp-pfb-view-btn.active {
+  background: #FFFFFF;
+  color: var(--zp-primary, #6828DC);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  font-weight: 700;
+}
+
+/* ========================================================
+   PRODUCT LIST VIEW ITEM (zp-pli-)
+   ======================================================== */
+.zp-pli-wrapper {
+  background: #FFFFFF;
+  border-radius: 16px;
+  border: 1.5px solid var(--zp-border-light, #E2E8F0);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+}
+
+.zp-pli-wrapper:hover {
+  border-color: #C4B5FD;
+  box-shadow: 0 8px 24px rgba(104, 40, 220, 0.08);
+  transform: translateY(-2px);
+}
+
+.zp-pli-wrapper.selected {
+  border: 2px solid var(--zp-primary, #6828DC);
+  background: #FAF9FF;
+}
+
+.zp-pli-left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex: 1;
+  min-width: 0;
+}
+
+.zp-pli-img-box {
+  width: 90px;
+  height: 90px;
+  border-radius: 12px;
+  background: #F8FAFC;
+  border: 1px solid #F1F5F9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 6px;
+}
+
+.zp-pli-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.zp-pli-pill-icon {
+  color: #94A3B8;
+}
+
+.zp-pli-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.zp-pli-ready {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--zp-emerald, #059669);
+  background: var(--zp-emerald-light, #ECFDF5);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.zp-pli-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--zp-text-dark, #0F172A);
+  margin: 0 0 4px 0;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.zp-pli-title:hover {
+  color: var(--zp-primary, #6828DC);
+}
+
+.zp-pli-generic {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--zp-primary, #6828DC);
+  margin: 0 0 4px 0;
+}
+
+.zp-pli-comp {
+  font-size: 12px;
+  color: var(--zp-text-muted, #64748B);
+  margin: 0;
+}
+
+.zp-pli-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.zp-pli-pack-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748B;
+  background: #F1F5F9;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+.zp-pli-bulk-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.zp-pli-bulk-btn.selected {
+  border-color: var(--zp-primary, #6828DC);
+  background: var(--zp-primary-light, #F5F3FF);
+  color: var(--zp-primary, #6828DC);
+}
+
+@media (max-width: 860px) {
+  .zp-pli-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .zp-pli-right {
+    width: 100%;
+    justify-content: flex-start;
+    padding-top: 12px;
+    border-top: 1px solid #F1F5F9;
+  }
+}
+
+/* ========================================================
+   BULK ENQUIRY FLOATING DOCK (zp-feb-)
+   ======================================================== */
+.zp-feb-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.zp-feb-count-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--zp-primary, #6828DC);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 13px;
+  box-shadow: 0 2px 8px rgba(104, 40, 220, 0.4);
+}
+
+.zp-feb-count-label {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.zp-feb-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.zp-feb-enquire-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #7C3AED 0%, #6828DC 100%);
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
+  transition: all 0.2s ease;
+}
+
+.zp-feb-enquire-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(124, 58, 237, 0.5);
+}
+
+.zp-feb-clear-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #CBD5E1;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.zp-feb-clear-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+}
+
+

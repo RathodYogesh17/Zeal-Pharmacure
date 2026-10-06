@@ -1,0 +1,9 @@
+export { ProductDetailGallery } from './ProductDetailGallery';
+export { ProductDetailInfo } from './ProductDetailInfo';
+export { ProductDetailTabs } from './ProductDetailTabs';
+export { ProductDetailLeadForm } from './ProductDetailLeadForm';
+export { ProductDetailPromoBanner } from './ProductDetailPromoBanner';
+export { ProductDetailRelated } from './ProductDetailRelated';
+export { ProductDetailSidebar } from './ProductDetailSidebar';
+export { ProductDetailComboInquiry } from './ProductDetailComboInquiry';
+export { ProductDetailComparisonTable } from './ProductDetailComparisonTable';

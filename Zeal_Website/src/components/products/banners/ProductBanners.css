@@ -1,0 +1,300 @@
+/* Product Middle & Bottom Promo Banners Styling & Responsive Design */
+
+/* ========================================================
+   Middle Banners (3 Cards)
+   ======================================================== */
+.zp-middle-banners-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 1024px) {
+  .zp-middle-banners-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .zp-middle-banners-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+/* Middle Promo Card */
+.zp-middle-promo-card {
+  position: relative;
+  border-radius: 22px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justifyContent: space-between;
+  gap: 16px;
+  min-height: 190px;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.zp-middle-promo-card:hover {
+  transform: translateY(-3px);
+}
+
+.zp-middle-promo-card:hover .zp-middle-promo-img {
+  transform: scale(1.06);
+}
+
+.zp-middle-promo-content {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  min-width: 0;
+}
+
+.zp-middle-promo-tag {
+  display: inline-block;
+  font-family: var(--font-heading, 'Outfit', sans-serif);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 3px 9px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.zp-middle-promo-title {
+  font-family: var(--font-heading, 'Outfit', sans-serif);
+  font-size: clamp(17px, 1.6vw, 19px);
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1.25;
+  margin-bottom: 14px;
+  letter-spacing: -0.3px;
+}
+
+.zp-middle-promo-btn {
+  font-family: var(--font-heading, 'Outfit', sans-serif);
+  border: none;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #FFFFFF;
+  transition: transform 0.2s ease, filter 0.2s ease;
+  white-space: nowrap;
+}
+
+.zp-middle-promo-btn:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+/* Middle Promo Image Stage */
+.zp-middle-promo-img-wrap {
+  width: clamp(105px, 28%, 140px);
+  aspect-ratio: 1 / 1;
+  flex-shrink: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justifyContent: center;
+}
+
+.zp-middle-promo-glow {
+  position: absolute;
+  inset: -10%;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.zp-middle-promo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 18px;
+  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 56%, rgba(0, 0, 0, 0) 96%);
+  mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 56%, rgba(0, 0, 0, 0) 96%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  display: block;
+}
+
+@media (max-width: 480px) {
+  .zp-middle-promo-card {
+    padding: 18px 16px;
+    gap: 12px;
+  }
+  .zp-middle-promo-title {
+    font-size: 16.5px;
+    margin-bottom: 12px;
+  }
+  .zp-middle-promo-img-wrap {
+    width: 100px;
+  }
+}
+
+/* ========================================================
+   Bottom Banners (2 Cards)
+   ======================================================== */
+.zp-bottom-banners-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 900px) {
+  .zp-bottom-banners-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+.zp-bottom-promo-card {
+  position: relative;
+  border-radius: 24px;
+  padding: 30px 32px;
+  display: flex;
+  align-items: center;
+  justifyContent: space-between;
+  gap: 24px;
+  min-height: 220px;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.zp-bottom-promo-card:hover {
+  transform: translateY(-3px);
+}
+
+.zp-bottom-promo-card:hover .zp-bottom-promo-img {
+  transform: scale(1.05);
+}
+
+.zp-bottom-promo-content {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  min-width: 0;
+  max-width: 360px;
+}
+
+.zp-bottom-promo-tag {
+  display: inline-block;
+  font-family: var(--font-heading, 'Outfit', sans-serif);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 3px 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.zp-bottom-promo-title {
+  font-family: var(--font-heading, 'Outfit', sans-serif);
+  font-size: clamp(19px, 2vw, 23px);
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1.22;
+  margin-bottom: 10px;
+  letter-spacing: -0.4px;
+}
+
+.zp-bottom-promo-desc {
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #475569;
+  line-height: 1.55;
+  margin-bottom: 18px;
+}
+
+.zp-bottom-promo-btn {
+  font-family: var(--font-heading, 'Outfit', sans-serif);
+  border: none;
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #FFFFFF;
+  transition: transform 0.2s ease, filter 0.2s ease;
+  white-space: nowrap;
+}
+
+.zp-bottom-promo-btn:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+/* Bottom Promo Image Stage */
+.zp-bottom-promo-img-wrap {
+  width: clamp(140px, 34%, 210px);
+  aspect-ratio: 1 / 1;
+  flex-shrink: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justifyContent: center;
+}
+
+.zp-bottom-promo-glow {
+  position: absolute;
+  inset: -12%;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.zp-bottom-promo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 22px;
+  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 56%, rgba(0, 0, 0, 0) 96%);
+  mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 56%, rgba(0, 0, 0, 0) 96%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  display: block;
+}
+
+@media (max-width: 600px) {
+  .zp-bottom-promo-card {
+    padding: 22px 18px;
+    gap: 16px;
+  }
+  .zp-bottom-promo-title {
+    font-size: 18px;
+  }
+  .zp-bottom-promo-desc {
+    font-size: 12.5px;
+    margin-bottom: 14px;
+  }
+  .zp-bottom-promo-img-wrap {
+    width: clamp(110px, 32%, 140px);
+  }
+}
+
+@media (max-width: 440px) {
+  .zp-bottom-promo-card {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+  }
+  .zp-bottom-promo-content {
+    max-width: 100%;
+    width: 100%;
+  }
+  .zp-bottom-promo-img-wrap {
+    width: 130px;
+    align-self: center;
+    margin-bottom: 4px;
+  }
+}

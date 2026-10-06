@@ -1,0 +1,289 @@
+/* ==========================================================================
+   PRODUCT DETAIL PAGE RESPONSIVE SYSTEM (Down to 320px Mobile)
+   ========================================================================== */
+
+/* Main Container Wrapper */
+.zp-product-detail-container {
+  max-width: 1360px;
+  margin: 20px auto 0;
+  padding: 0 clamp(10px, 3vw, 24px);
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: clip;
+}
+
+/* 1. Hero Stage: 2-Column Showcase (Gallery + Info) */
+.product-hero-2col {
+  background: #FFFFFF;
+  border-radius: clamp(16px, 3vw, 24px);
+  border: 1.5px solid #E2E8F0;
+  padding: clamp(14px, 3.5vw, 32px);
+  display: grid;
+  grid-template-columns: minmax(320px, 440px) minmax(0, 1fr);
+  gap: clamp(20px, 3vw, 36px);
+  align-items: start;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+  margin-bottom: clamp(24px, 4vw, 36px);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1040px) {
+  .product-hero-2col {
+    grid-template-columns: 100% !important;
+    gap: 24px !important;
+  }
+}
+
+/* 2. Lower 2-Column Layout (Tabs/Form + Sidebar) */
+.product-lower-2col {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 340px);
+  gap: clamp(20px, 3vw, 32px);
+  align-items: start;
+  margin-bottom: clamp(28px, 4vw, 40px);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1040px) {
+  .product-lower-2col {
+    grid-template-columns: 100% !important;
+    gap: 28px !important;
+  }
+}
+
+/* 3. Product Gallery Responsiveness */
+.zp-gallery-stage-box {
+  height: clamp(250px, 75vw, 380px) !important;
+  padding: clamp(12px, 3vw, 24px) !important;
+  border-radius: clamp(12px, 2.5vw, 16px) !important;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.zp-gallery-thumbs-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+}
+
+.zp-gallery-thumbs-row::-webkit-scrollbar {
+  height: 4px;
+}
+
+.zp-gallery-thumbs-row::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+
+/* 4. Product Info Responsiveness */
+.zp-product-info-title {
+  font-family: var(--font-heading, "Outfit", sans-serif);
+  font-size: clamp(20px, 4.5vw, 32px) !important;
+  font-weight: 900;
+  color: #0F172A;
+  margin-bottom: 6px;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  word-break: break-word;
+}
+
+.zp-product-action-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.zp-product-action-btn-main {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.zp-product-action-btn-wa {
+  flex: 1 1 160px;
+  min-width: 0;
+}
+
+@media (max-width: 480px) {
+  .zp-product-action-btn-main,
+  .zp-product-action-btn-wa {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+  }
+}
+
+/* Trust Badges Strip */
+.zp-trust-badges-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 10px;
+  background: #F8FAFC;
+  border-radius: 10px;
+  border: 1px solid #E2E8F0;
+  text-align: center;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+@media (max-width: 420px) {
+  .zp-trust-badges-strip {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .zp-trust-badges-strip > div {
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: 1px solid #E2E8F0;
+    padding-bottom: 6px;
+  }
+  .zp-trust-badges-strip > div:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+}
+
+/* 5. Product Tabs Component */
+.zp-tabs-wrapper {
+  background: #FFFFFF;
+  border-radius: clamp(16px, 3vw, 24px);
+  border: 1.5px solid #E2E8F0;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.zp-tabs-header {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-bottom: 1.5px solid #E2E8F0;
+  background: #F8FAFC;
+  width: 100%;
+}
+
+.zp-tab-button {
+  padding: 14px 10px;
+  border: none;
+  background: transparent;
+  color: #64748B;
+  font-weight: 800;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+  font-family: var(--font-heading, "Outfit", sans-serif);
+  text-align: center;
+  line-height: 1.3;
+}
+
+.zp-tab-button.is-active {
+  background: #FFFFFF;
+  color: var(--zp-primary, #6828DC);
+  border-bottom: 3px solid var(--zp-primary, #6828DC);
+}
+
+@media (max-width: 768px) {
+  .zp-tabs-header {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .zp-tabs-header::-webkit-scrollbar {
+    display: none;
+  }
+  .zp-tab-button {
+    flex: 0 0 auto;
+    padding: 12px 16px;
+    font-size: 12px;
+  }
+}
+
+.zp-tabs-content-body {
+  padding: clamp(14px, 3.5vw, 32px) !important;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* Tabs Sub-sections */
+.zp-tabs-subcard {
+  padding: clamp(14px, 3vw, 24px) !important;
+  border-radius: clamp(12px, 2.5vw, 18px) !important;
+  box-sizing: border-box;
+  width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* 6. Lead Form Responsiveness */
+.zp-product-leadform-card {
+  background: #FFFFFF;
+  border-radius: clamp(16px, 3vw, 24px);
+  border: 1.5px solid #E2E8F0;
+  padding: clamp(16px, 3.5vw, 32px);
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.zp-product-leadform-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: clamp(10px, 2.5vw, 16px);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 540px) {
+  .zp-product-leadform-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* 7. Monopoly Promo Banner */
+.zp-product-promo-banner {
+  border-radius: clamp(16px, 3vw, 24px) !important;
+  padding: clamp(20px, 3.5vw, 36px) clamp(16px, 3vw, 32px) !important;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .zp-product-promo-banner-bg-img {
+    opacity: 0.15 !important;
+    width: 70% !important;
+  }
+}
+
+/* 8. Prev / Next Navigation */
+.zp-product-nav-row {
+  width: 100%;
+  padding-top: 20px;
+  border-top: 1.5px solid #E2E8F0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 520px) {
+  .zp-product-nav-link {
+    width: 100% !important;
+    justify-content: center !important;
+    text-align: center;
+    box-sizing: border-box;
+  }
+}
