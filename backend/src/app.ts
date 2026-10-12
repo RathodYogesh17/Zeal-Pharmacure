@@ -35,12 +35,12 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow all valid origins dynamically (Vercel, Localhost, Custom Domain)
+      // Direct browser navigation or server-side calls without Origin header
+      if (!origin) return callback(null, false);
+      // Allow any web origin dynamically (Vercel, Localhost, Custom Domains)
       callback(null, true);
     },
     credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"],
   })
 );
 
