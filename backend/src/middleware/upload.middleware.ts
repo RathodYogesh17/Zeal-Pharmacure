@@ -5,17 +5,7 @@ import { registerUploadedMedia } from "../services/media.service";
 type UploadedFile = Express.Multer.File;
 
 
-const storage = multer.diskStorage({
-  destination: ( _req: import("express").Request, _file: UploadedFile,
-    cb: (error: Error | null, destination: string) => void ) => {
-    cb(null, galleryDir); },
-  filename: (  _req: import("express").Request,  file: UploadedFile,  cb: (error: Error | null, filename: string) => void
-  ) => {
-    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-    const ext = file.originalname ? file.originalname.slice(file.originalname.lastIndexOf(".")) : "";
-    cb(null, `image-${uniqueSuffix}${ext.toLowerCase()}`);
-  },
-});
+const storage = multer.memoryStorage();
 
 
 

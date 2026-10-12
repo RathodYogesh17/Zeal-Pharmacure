@@ -1,44 +1,55 @@
-import fs from "fs";
 import path from "path";
 import os from "os";
 import multer, { type FileFilterCallback } from "multer";
+import type { Request, Response, NextFunction } from "express";
 
-const isServerless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
-const galleryDir = isServerless
-  ? path.join(os.tmpdir(), "uploads", "gallery")
-  : path.resolve(process.cwd(), "uploads", "gallery");
+const galleryDir = path.join(os.tmpdir(), "uploads", "gallery");
 
-try {
-  if (!fs.existsSync(galleryDir)) {
-    fs.mkdirSync(galleryDir, { recursive: true });
+// Use memoryStorage for serverless environments & direct cloud streaming
+const storage = multer.memoryStorage();
+
+const fileFilter = (
+  _req: unknown,
+  file: Express.Multer.File,
+  cb: FileFilterCallback
+) => {
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/jpg",
+    "image/webp",
+    "image/svg+xml",
+  ];
+  if (allowedTypes.includes(file.mimetype)) {
+    cb(null, true);
+    return;
   }
-} catch {
-  // Silently ignore in read-only environments
-}
-
-
-const storage = multer.diskStorage({
-  destination: (_req: unknown, _file: unknown, cb: (error: Error | null, destination: string) => void) => {
-    cb(null, galleryDir);
-  },
-  filename: (_req: unknown, file: { originalname?: string }, cb: (error: Error | null, filename: string) => void) => {
-    const extension = path.extname(file.originalname || "").toLowerCase();
-    cb(null, `image-${Date.now()}-${Math.round(Math.random() * 1e9)}${extension}`);
-  },
-});
-
-
-const fileFilter = (  _req: unknown, file: Express.Multer.File, cb: FileFilterCallback) => {
-  const allowedTypes = ["image/jpeg", "image/png", "image/jpg", "image/webp", "image/svg+xml"];
-  if (allowedTypes.includes(file.mimetype)) { cb(null, true); return;}
   cb(new Error("Only JPG, JPEG, PNG, WEBP, and SVG images are allowed."));
 };
 
-
-const uploadGalleryImages = multer({
+const multerArrayUpload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 30 * 1024 * 1024, files: 100 },
-}).array("images", 100);
+  limits: { fileSize: 10 * 1024 * 1024, files: 50 },
+}).array("images", 50);
+
+// Safe middleware wrapper catching Multer errors before Express fails
+const uploadGalleryImages = (req: Request, res: Response, next: NextFunction) => {
+  multerArrayUpload(req, res, (err: any) => {
+    if (err) {
+      console.error("[GALLERY UPLOAD] Multer processing error:", err);
+      const origin = req.headers?.origin;
+      if (origin) {
+        res.setHeader("Access-Control-Allow-Origin", origin);
+        res.setHeader("Access-Control-Allow-Credentials", "true");
+      }
+      return res.status(400).json({
+        success: false,
+        message: err.message || "File upload processing failed",
+      });
+    }
+    next();
+  });
+};
 
 export { uploadGalleryImages, galleryDir };

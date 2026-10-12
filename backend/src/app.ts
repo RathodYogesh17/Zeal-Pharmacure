@@ -35,15 +35,17 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(null, true);
-      }
+      // Allow all valid origins dynamically (Vercel, Localhost, Custom Domain)
+      callback(null, true);
     },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"],
   })
 );
+
+// Explicit OPTIONS preflight handling
+app.options("*", cors() as any);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

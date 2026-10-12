@@ -74,7 +74,7 @@ const registerUploadedMedia = async (
     ? [tag]
     : [];
 
-  const buffer = await fs.readFile(file.path);
+  const buffer = file.buffer ? file.buffer : (file.path ? await fs.readFile(file.path) : Buffer.from(""));
   const hash = crypto.createHash("sha256").update(buffer).digest("hex");
   const existing = (await Media.findOne({ hash }).lean()) as IMedia | null;
   const ownerId =
@@ -82,10 +82,13 @@ const registerUploadedMedia = async (
       ? new mongoose.Types.ObjectId(String(uploadedBy))
       : null;
 
+  const ext = path.extname(file.originalname || "").toLowerCase();
+  const safeFilename = file.filename || `image-${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
+
   const mediaType: MediaType = detectMediaType(file.mimetype);
-  let storageKey = options.storageKey || file.filename;
+  let storageKey = options.storageKey || safeFilename;
   let storageProvider: StorageProvider = options.storageProvider || "LOCAL";
-  let url = `/uploads/gallery/${file.filename}`;
+  let url = `/uploads/gallery/${safeFilename}`;
   const title =
     options.title !== undefined
       ? String(options.title).trim()
@@ -99,7 +102,7 @@ const registerUploadedMedia = async (
   // Cloudinary Upload Integration
   if (isCloudinaryConfigured()) {
     try {
-      const cld = await uploadImageToCloudinary(file.path, {
+      const cld = await uploadImageToCloudinary(file.buffer || file.path, {
         folder,
         tags,
       });
@@ -115,17 +118,19 @@ const registerUploadedMedia = async (
   }
 
   if (existing?.isDeleted === false) {
-    await fs.unlink(file.path).catch(() => undefined);
+    if (file.path) {
+      await fs.unlink(file.path).catch(() => undefined);
+    }
     return { media: existing, reused: true, restored: false };
   }
 
   if (existing) {
-    const previousFilePath = path.join(path.dirname(file.path), existing.filename);
+    const previousFilePath = file.path ? path.join(path.dirname(file.path), existing.filename) : "";
     const restored = (await Media.findByIdAndUpdate(
       existing._id,
       {
         originalName: file.originalname,
-        filename: file.filename,
+        filename: safeFilename,
         url,
         storageKey,
         storageProvider,
@@ -148,7 +153,7 @@ const registerUploadedMedia = async (
       { new: true }
     ).lean()) as IMedia;
 
-    if (existing.filename !== file.filename) {
+    if (previousFilePath && existing.filename !== safeFilename) {
       await fs.unlink(previousFilePath).catch(() => undefined);
     }
 
@@ -158,7 +163,7 @@ const registerUploadedMedia = async (
   const created = (
     await Media.create({
       originalName: file.originalname,
-      filename: file.filename,
+      filename: safeFilename,
       url,
       storageKey,
       storageProvider,

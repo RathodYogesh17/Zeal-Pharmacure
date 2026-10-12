@@ -21,6 +21,13 @@ const errorMiddleware: ErrorRequestHandler = (error, _req, res, _next) => {
 	if (!isAppError && statusCode === HTTP_STATUS.INTERNAL_SERVER_ERROR) {
 		console.error("Unhandled error:", error);
 	}
+
+	const origin = _req.headers?.origin;
+	if (origin) {
+		res.setHeader("Access-Control-Allow-Origin", origin);
+		res.setHeader("Access-Control-Allow-Credentials", "true");
+	}
+
 	res.status(statusCode).json({ success: false, message });
 };
 
