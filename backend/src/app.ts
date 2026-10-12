@@ -44,9 +44,6 @@ app.use(
   })
 );
 
-// Explicit OPTIONS preflight handling
-app.options("*", cors() as any);
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
