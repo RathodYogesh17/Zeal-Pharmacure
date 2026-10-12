@@ -1884,7 +1884,7 @@ export const AdminCmsPage: React.FC = () => {
                   <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Shown on Home showcase & Contact</p>
                   <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
                     <img
-                      src={galleryService.formatUrl(formSettings.promoBanners?.cardMonopoly) || '/banners/pcd_pharma_monopoly.jpg'}
+                      src={galleryService.formatUrl(formSettings.promoBanners?.cardMonopoly) || '/banners/card_monopoly_formulations.jpg'}
                       alt="PCD Monopoly"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
@@ -1946,7 +1946,7 @@ export const AdminCmsPage: React.FC = () => {
                   <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Featured on Contact Page</p>
                   <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
                     <img
-                      src={galleryService.formatUrl(formSettings.promoBanners?.cardInstitutional) || '/promos/promo_institutional_supply.jpg'}
+                      src={galleryService.formatUrl(formSettings.promoBanners?.cardInstitutional) || '/banners/card_institutional_formulations.jpg'}
                       alt="Institutional Supply"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
@@ -1986,7 +1986,7 @@ export const AdminCmsPage: React.FC = () => {
                   <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Products catalog hero banner</p>
                   <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
                     <img
-                      src={galleryService.formatUrl(formSettings.promoBanners?.cardDiabetic) || '/promos/promo_diabetic_glimepiride.jpg'}
+                      src={galleryService.formatUrl(formSettings.promoBanners?.cardDiabetic) || '/promos/promo_diabetic.jpg'}
                       alt="Diabetic Range"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
@@ -2017,7 +2017,7 @@ export const AdminCmsPage: React.FC = () => {
                   <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Products catalog hero banner</p>
                   <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
                     <img
-                      src={galleryService.formatUrl(formSettings.promoBanners?.cardBiotin) || '/promos/promo_biotin_hair_vitamins.jpg'}
+                      src={galleryService.formatUrl(formSettings.promoBanners?.cardBiotin) || '/promos/promo_hair_biotin.jpg'}
                       alt="Biotin Nutrition"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
@@ -2048,7 +2048,7 @@ export const AdminCmsPage: React.FC = () => {
                   <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Products catalog middle banner</p>
                   <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
                     <img
-                      src={galleryService.formatUrl(formSettings.promoBanners?.cardRespiratory) || '/promos/promo_acebrophylline_respiratory.jpg'}
+                      src={galleryService.formatUrl(formSettings.promoBanners?.cardRespiratory) || '/promos/promo_respiratory.jpg'}
                       alt="Respiratory Care"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
@@ -2079,7 +2079,7 @@ export const AdminCmsPage: React.FC = () => {
                   <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Products catalog middle banner</p>
                   <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
                     <img
-                      src={galleryService.formatUrl(formSettings.promoBanners?.cardPediatric) || '/promos/promo_pediatric_syrup_drops.jpg'}
+                      src={galleryService.formatUrl(formSettings.promoBanners?.cardPediatric) || '/promos/promo_pediatric.jpg'}
                       alt="Pediatric Range"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
@@ -2110,7 +2110,7 @@ export const AdminCmsPage: React.FC = () => {
                   <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Products catalog bottom banner</p>
                   <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
                     <img
-                      src={galleryService.formatUrl(formSettings.promoBanners?.cardDerma) || '/promos/promo_derma_skincare_cosmeceuticals.jpg'}
+                      src={galleryService.formatUrl(formSettings.promoBanners?.cardDerma) || '/promos/promo_derma_barrier.jpg'}
                       alt="Derma Range"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
@@ -2150,7 +2150,7 @@ export const AdminCmsPage: React.FC = () => {
                   <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Product detail sidebar promo</p>
                   <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
                     <img
-                      src={galleryService.formatUrl(formSettings.promoBanners?.productMultivitamin) || '/promos/promo_multivitamin_immunity.jpg'}
+                      src={galleryService.formatUrl(formSettings.promoBanners?.productMultivitamin) || '/promos/promo_multivitamin.jpg'}
                       alt="Multivitamin"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
@@ -2181,7 +2181,7 @@ export const AdminCmsPage: React.FC = () => {
                   <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Product detail sidebar promo</p>
                   <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
                     <img
-                      src={galleryService.formatUrl(formSettings.promoBanners?.productWellness) || '/promos/promo_wellness_nutraceuticals.jpg'}
+                      src={galleryService.formatUrl(formSettings.promoBanners?.productWellness) || '/promos/promo_wellness.jpg'}
                       alt="Daily Vitality"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
