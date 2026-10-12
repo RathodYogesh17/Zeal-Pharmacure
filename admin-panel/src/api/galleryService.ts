@@ -64,15 +64,43 @@ export const galleryService = {
   },
 
   async uploadImages(files: File[], tag: string = 'PRODUCT'): Promise<IMediaItem[]> {
-    const formData = new FormData();
-    files.forEach((file) => { formData.append('images', file); });
-    formData.append('tag', tag);
-    formData.append('folder', tag);
-    const res = await request<{ created: IMediaItem[]; existing: IMediaItem[]; total: number }>(
-      '/gallery/upload',
-      { method: 'POST', body: formData }
-    );
-    return [...(res.data.created || []), ...(res.data.existing || [])];
+    if (!files || files.length === 0) return [];
+
+    const allResults: IMediaItem[] = [];
+
+    // Helper to upload a single file (ensures payload stays well under Vercel's 4.5MB limit)
+    const uploadSingle = async (file: File): Promise<IMediaItem[]> => {
+      const formData = new FormData();
+      formData.append('images', file);
+      formData.append('tag', tag);
+      formData.append('folder', tag);
+
+      const res = await request<{ created: IMediaItem[]; existing: IMediaItem[]; total: number }>(
+        '/gallery/upload',
+        { method: 'POST', body: formData }
+      );
+      return [...(res?.data?.created || []), ...(res?.data?.existing || [])];
+    };
+
+    // Upload with concurrency of 3 workers for speed and reliability
+    const CONCURRENCY = 3;
+    const queue = [...files];
+    const workers = Array.from({ length: Math.min(CONCURRENCY, files.length) }, async () => {
+      while (queue.length > 0) {
+        const file = queue.shift();
+        if (file) {
+          try {
+            const items = await uploadSingle(file);
+            allResults.push(...items);
+          } catch (err: any) {
+            console.error(`Failed to upload ${file.name}:`, err.message);
+          }
+        }
+      }
+    });
+
+    await Promise.all(workers);
+    return allResults;
   },
 
   async updateImage(
