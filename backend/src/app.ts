@@ -59,7 +59,15 @@ app.use(
   express.static(path.resolve(process.cwd(), "uploads"))
 );
 
-// Health Check
+// Root & Health Check
+app.get("/", (_req, res) => {
+  res.status(HTTP_STATUS.OK).json({
+    success: true,
+    message: "Zeal Pharmaceuticals API Server is Live & Running",
+    status: "healthy",
+  });
+});
+
 app.get( "/health", ( _req: import("express").Request, res: import("express").Response ) => {
     res.status(HTTP_STATUS.OK).json({  success: true, message: "Zeal Pharma API is running", });
   }
