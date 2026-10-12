@@ -1633,6 +1633,10 @@ export const AdminCmsPage: React.FC = () => {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
                 {/* 1. Depot Image */}
                 <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#EDE9FE', color: '#6828DC', padding: '2px 8px', borderRadius: '5px', fontSize: '10.5px', fontWeight: 800, marginBottom: '6px' }}>
+                    <span>📍</span>
+                    <span>About Page (Corporate Profile Section)</span>
+                  </div>
                   <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>Surat Central Depot Photo</div>
                   <div style={{ height: '120px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
                     <img
@@ -1663,6 +1667,10 @@ export const AdminCmsPage: React.FC = () => {
 
                 {/* 2. Marketing Kit Image */}
                 <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#EDE9FE', color: '#6828DC', padding: '2px 8px', borderRadius: '5px', fontSize: '10.5px', fontWeight: 800, marginBottom: '6px' }}>
+                    <span>📍</span>
+                    <span>About Page (Promotional Support Kit Section)</span>
+                  </div>
                   <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>Promotional Support &amp; Visual Aids</div>
                   <div style={{ height: '120px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
                     <img
@@ -1693,6 +1701,10 @@ export const AdminCmsPage: React.FC = () => {
 
                 {/* 3. Leadership Meeting Image */}
                 <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#EDE9FE', color: '#6828DC', padding: '2px 8px', borderRadius: '5px', fontSize: '10.5px', fontWeight: 800, marginBottom: '6px' }}>
+                    <span>📍</span>
+                    <span>About Page (Executive Directorate Section)</span>
+                  </div>
                   <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>Executive Directorate Meeting</div>
                   <div style={{ height: '120px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
                     <img
@@ -1723,6 +1735,10 @@ export const AdminCmsPage: React.FC = () => {
 
                 {/* 4. About Hero Image */}
                 <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#EDE9FE', color: '#6828DC', padding: '2px 8px', borderRadius: '5px', fontSize: '10.5px', fontWeight: 800, marginBottom: '6px' }}>
+                    <span>📍</span>
+                    <span>About Page (Top Hero Formulations Visual)</span>
+                  </div>
                   <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>About Page Hero Formulations</div>
                   <div style={{ height: '120px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
                     <img
@@ -1880,8 +1896,12 @@ export const AdminCmsPage: React.FC = () => {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
                 {/* Monopoly Card */}
                 <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#EDE9FE', color: '#6828DC', padding: '2px 8px', borderRadius: '5px', fontSize: '10.5px', fontWeight: 800, marginBottom: '6px' }}>
+                    <span>📍</span>
+                    <span>Homepage (Middle Feature Card) &amp; Contact Page</span>
+                  </div>
                   <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>PCD Monopoly Rights Card</div>
-                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Shown on Home showcase & Contact</p>
+                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Shows in Home showcase &amp; Contact page feature card</p>
                   <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
                     <img
                       src={galleryService.formatUrl(formSettings.promoBanners?.cardMonopoly) || '/banners/card_monopoly_formulations.jpg'}
@@ -1911,8 +1931,12 @@ export const AdminCmsPage: React.FC = () => {
 
                 {/* Warehouse Depot */}
                 <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#EDE9FE', color: '#6828DC', padding: '2px 8px', borderRadius: '5px', fontSize: '10.5px', fontWeight: 800, marginBottom: '6px' }}>
+                    <span>📍</span>
+                    <span>Homepage (Middle Depot Card) &amp; Contact Page</span>
+                  </div>
                   <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>Central Depot & Logistics Card</div>
-                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Shown on Home showcase & Contact</p>
+                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Shows in Home showcase &amp; Contact page feature card</p>
                   <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
                     <img
                       src={galleryService.formatUrl(formSettings.promoBanners?.warehouseDepot) || '/banners/pharma_warehouse_depot.jpg'}
@@ -1942,8 +1966,12 @@ export const AdminCmsPage: React.FC = () => {
 
                 {/* Institutional Supply */}
                 <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#EDE9FE', color: '#6828DC', padding: '2px 8px', borderRadius: '5px', fontSize: '10.5px', fontWeight: 800, marginBottom: '6px' }}>
+                    <span>📍</span>
+                    <span>Contact Page (Institutional Formulations Card)</span>
+                  </div>
                   <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>Hospital & Institutional Supply</div>
-                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Featured on Contact Page</p>
+                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Featured on Contact Page feature banners</p>
                   <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
                     <img
                       src={galleryService.formatUrl(formSettings.promoBanners?.cardInstitutional) || '/banners/card_institutional_formulations.jpg'}
@@ -1982,8 +2010,12 @@ export const AdminCmsPage: React.FC = () => {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
                 {/* Diabetic Banner */}
                 <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#EDE9FE', color: '#6828DC', padding: '2px 8px', borderRadius: '5px', fontSize: '10.5px', fontWeight: 800, marginBottom: '6px' }}>
+                    <span>📍</span>
+                    <span>Products Page (Top Banner Card 1)</span>
+                  </div>
                   <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>Diabetic & Metabolic Range</div>
-                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Products catalog hero banner</p>
+                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Products catalog top hero promo</p>
                   <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
                     <img
                       src={galleryService.formatUrl(formSettings.promoBanners?.cardDiabetic) || '/promos/promo_diabetic.jpg'}
@@ -2013,8 +2045,12 @@ export const AdminCmsPage: React.FC = () => {
 
                 {/* Biotin Banner */}
                 <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#EDE9FE', color: '#6828DC', padding: '2px 8px', borderRadius: '5px', fontSize: '10.5px', fontWeight: 800, marginBottom: '6px' }}>
+                    <span>📍</span>
+                    <span>Products Page (Top Banner Card 2)</span>
+                  </div>
                   <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>Biotin & Hair Nutrition</div>
-                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Products catalog hero banner</p>
+                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Products catalog top hero promo</p>
                   <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
                     <img
                       src={galleryService.formatUrl(formSettings.promoBanners?.cardBiotin) || '/promos/promo_hair_biotin.jpg'}
@@ -2044,8 +2080,12 @@ export const AdminCmsPage: React.FC = () => {
 
                 {/* Respiratory Care */}
                 <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#EDE9FE', color: '#6828DC', padding: '2px 8px', borderRadius: '5px', fontSize: '10.5px', fontWeight: 800, marginBottom: '6px' }}>
+                    <span>📍</span>
+                    <span>Products Page (Middle Section Banner 1)</span>
+                  </div>
                   <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>Respiratory & Chest Care</div>
-                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Products catalog middle banner</p>
+                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Products catalog middle section promo</p>
                   <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
                     <img
                       src={galleryService.formatUrl(formSettings.promoBanners?.cardRespiratory) || '/promos/promo_respiratory.jpg'}
@@ -2075,8 +2115,12 @@ export const AdminCmsPage: React.FC = () => {
 
                 {/* Pediatric Range */}
                 <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#EDE9FE', color: '#6828DC', padding: '2px 8px', borderRadius: '5px', fontSize: '10.5px', fontWeight: 800, marginBottom: '6px' }}>
+                    <span>📍</span>
+                    <span>Products Page (Middle Section Banner 2)</span>
+                  </div>
                   <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>Pediatric Syrups & Drops</div>
-                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Products catalog middle banner</p>
+                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Products catalog middle section promo</p>
                   <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
                     <img
                       src={galleryService.formatUrl(formSettings.promoBanners?.cardPediatric) || '/promos/promo_pediatric.jpg'}
@@ -2106,8 +2150,12 @@ export const AdminCmsPage: React.FC = () => {
 
                 {/* Dermatology Range */}
                 <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#EDE9FE', color: '#6828DC', padding: '2px 8px', borderRadius: '5px', fontSize: '10.5px', fontWeight: 800, marginBottom: '6px' }}>
+                    <span>📍</span>
+                    <span>Products Page (Bottom Promo Banner)</span>
+                  </div>
                   <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>Dermatology & Skin Care</div>
-                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Products catalog bottom banner</p>
+                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Products catalog bottom promo</p>
                   <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
                     <img
                       src={galleryService.formatUrl(formSettings.promoBanners?.cardDerma) || '/promos/promo_derma_barrier.jpg'}
@@ -2146,6 +2194,10 @@ export const AdminCmsPage: React.FC = () => {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
                 {/* Multivitamin Banner */}
                 <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#EDE9FE', color: '#6828DC', padding: '2px 8px', borderRadius: '5px', fontSize: '10.5px', fontWeight: 800, marginBottom: '6px' }}>
+                    <span>📍</span>
+                    <span>Single Product Detail Page (Sidebar Top Card)</span>
+                  </div>
                   <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>Multivitamin & Immunity Boost</div>
                   <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Product detail sidebar promo</p>
                   <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
@@ -2177,6 +2229,10 @@ export const AdminCmsPage: React.FC = () => {
 
                 {/* Wellness Banner */}
                 <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#EDE9FE', color: '#6828DC', padding: '2px 8px', borderRadius: '5px', fontSize: '10.5px', fontWeight: 800, marginBottom: '6px' }}>
+                    <span>📍</span>
+                    <span>Single Product Detail Page (Sidebar Bottom Card)</span>
+                  </div>
                   <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>Daily Vitality & Nutraceuticals</div>
                   <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Product detail sidebar promo</p>
                   <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
