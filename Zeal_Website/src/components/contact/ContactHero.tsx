@@ -10,6 +10,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { useSiteSettings } from '../../context/SiteSettingsContext';
+import { getMediaUrl } from '../../utils/mediaUtils';
 import './ContactStyles.css';
 
 export interface ContactHeroProps {
@@ -18,7 +19,8 @@ export interface ContactHeroProps {
 }
 
 export const ContactHero: React.FC<ContactHeroProps> = ({ onOpenFranchise, onScrollToForm }) => {
-  const { settings, productCount } = useSiteSettings();
+  const { settings, about, productCount } = useSiteSettings();
+  const depotImg = getMediaUrl((settings as any)?.promoBanners?.warehouseDepot || (about as any)?.depotImage, '/banners/pharma_warehouse_depot.jpg');
   const corporatePhone = settings.phone || '+91 9316227576';
   const cleanPhone = corporatePhone.replace(/[^0-9]/g, '');
 
@@ -113,7 +115,7 @@ export const ContactHero: React.FC<ContactHeroProps> = ({ onOpenFranchise, onScr
           <div className="zp-contact-hero-visual">
             <div className="zp-contact-hero-img-card">
               <img
-                src="/banners/pharma_warehouse_depot.jpg"
+                src={depotImg}
                 alt="Zeal Pharmacure Central Distribution Warehouse and Medicine Rack Logistics Depot"
                 className="zp-contact-hero-img"
               />

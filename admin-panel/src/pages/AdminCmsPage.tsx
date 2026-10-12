@@ -41,9 +41,10 @@ import type { ISiteSettings, IBannerItem, IAboutContent, IFaqItem, ICertificatio
 export const AdminCmsPage: React.FC = () => {
   const { settings, banners, about, faqs, certifications, refreshSettings } = useSiteSettings();
 
-  const [activeTab, setActiveTab] = useState<'branding' | 'contact' | 'hero' | 'about' | 'faqs' | 'certifications'>('branding');
+  const [activeTab, setActiveTab] = useState<'branding' | 'contact' | 'hero' | 'about' | 'faqs' | 'certifications' | 'promos'>('branding');
   const [logoModalOpen, setLogoModalOpen] = useState(false);
   const [bannerModalOpen, setBannerModalOpen] = useState(false);
+  const [aboutMediaPickerField, setAboutMediaPickerField] = useState<string | null>(null);
 
   // Form States
   const [formSettings, setFormSettings] = useState<ISiteSettings>(settings);
@@ -332,7 +333,8 @@ export const AdminCmsPage: React.FC = () => {
           { id: 'branding', label: 'Logo & Buttons', icon: <Palette size={15} /> },
           { id: 'contact', label: 'Topbar & Contact Helpline', icon: <Phone size={15} /> },
           { id: 'hero', label: 'Hero Banners & Headlines', icon: <Image size={15} /> },
-          { id: 'about', label: 'About Story & Leadership', icon: <Building size={15} /> },
+          { id: 'about', label: 'About Story & Media', icon: <Building size={15} /> },
+          { id: 'promos', label: 'Promo & Showcase Banners', icon: <Layers size={15} /> },
           { id: 'faqs', label: 'Pharma FAQs', icon: <HelpCircle size={15} /> },
           { id: 'certifications', label: 'Manufacturing Certifications', icon: <ShieldCheck size={15} /> },
         ].map((tab) => {
@@ -1606,6 +1608,150 @@ export const AdminCmsPage: React.FC = () => {
                 />
               </div>
             </div>
+
+            {/* Visual Media & Facility Photos */}
+            <div
+              style={{
+                background: '#FFFFFF',
+                border: '1.5px solid #E2E8F0',
+                padding: 'clamp(18px, 3.5vw, 24px)',
+                borderRadius: '14px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '18px',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
+              }}
+            >
+              <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#0F172A', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Image size={16} style={{ color: '#6828DC' }} />
+                <span>About Us Page Media &amp; Facility Photos</span>
+              </div>
+              <p style={{ fontSize: '12.5px', color: '#64748B', margin: '-8px 0 6px 0' }}>
+                Upload or select real photos of your Surat Central Depot, promotional kits, executive team, and formulation racks.
+              </p>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
+                {/* 1. Depot Image */}
+                <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>Surat Central Depot Photo</div>
+                  <div style={{ height: '120px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
+                    <img
+                      src={galleryService.formatUrl((aboutForm as any).depotImage) || '/banners/pharma_warehouse_depot.jpg'}
+                      alt="Depot"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setAboutMediaPickerField('depotImage')}
+                      style={{ padding: '6px 12px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#6828DC', color: '#FFFFFF', border: 'none', cursor: 'pointer' }}
+                    >
+                      Pick from Gallery
+                    </button>
+                    {(aboutForm as any).depotImage && (
+                      <button
+                        type="button"
+                        onClick={() => setAboutForm((prev: any) => ({ ...prev, depotImage: '' }))}
+                        style={{ padding: '6px 10px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#FFFFFF', color: '#EF4444', border: '1px solid #FECACA', cursor: 'pointer' }}
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* 2. Marketing Kit Image */}
+                <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>Promotional Support &amp; Visual Aids</div>
+                  <div style={{ height: '120px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
+                    <img
+                      src={galleryService.formatUrl((aboutForm as any).marketingKitImage) || '/banners/banner_promotional_kit.jpg'}
+                      alt="Kit"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setAboutMediaPickerField('marketingKitImage')}
+                      style={{ padding: '6px 12px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#6828DC', color: '#FFFFFF', border: 'none', cursor: 'pointer' }}
+                    >
+                      Pick from Gallery
+                    </button>
+                    {(aboutForm as any).marketingKitImage && (
+                      <button
+                        type="button"
+                        onClick={() => setAboutForm((prev: any) => ({ ...prev, marketingKitImage: '' }))}
+                        style={{ padding: '6px 10px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#FFFFFF', color: '#EF4444', border: '1px solid #FECACA', cursor: 'pointer' }}
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* 3. Leadership Meeting Image */}
+                <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>Executive Directorate Meeting</div>
+                  <div style={{ height: '120px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
+                    <img
+                      src={galleryService.formatUrl((aboutForm as any).leadershipImage) || '/banners/banner_franchise_meeting.jpg'}
+                      alt="Meeting"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setAboutMediaPickerField('leadershipImage')}
+                      style={{ padding: '6px 12px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#6828DC', color: '#FFFFFF', border: 'none', cursor: 'pointer' }}
+                    >
+                      Pick from Gallery
+                    </button>
+                    {(aboutForm as any).leadershipImage && (
+                      <button
+                        type="button"
+                        onClick={() => setAboutForm((prev: any) => ({ ...prev, leadershipImage: '' }))}
+                        style={{ padding: '6px 10px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#FFFFFF', color: '#EF4444', border: '1px solid #FECACA', cursor: 'pointer' }}
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* 4. About Hero Image */}
+                <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>About Page Hero Formulations</div>
+                  <div style={{ height: '120px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
+                    <img
+                      src={galleryService.formatUrl((aboutForm as any).heroImage) || '/banners/about_animated_formulations.jpg'}
+                      alt="Hero"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setAboutMediaPickerField('heroImage')}
+                      style={{ padding: '6px 12px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#6828DC', color: '#FFFFFF', border: 'none', cursor: 'pointer' }}
+                    >
+                      Pick from Gallery
+                    </button>
+                    {(aboutForm as any).heroImage && (
+                      <button
+                        type="button"
+                        onClick={() => setAboutForm((prev: any) => ({ ...prev, heroImage: '' }))}
+                        style={{ padding: '6px 10px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#FFFFFF', color: '#EF4444', border: '1px solid #FECACA', cursor: 'pointer' }}
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Live Leadership Quote Simulation Preview */}
@@ -1673,6 +1819,390 @@ export const AdminCmsPage: React.FC = () => {
                   </div>
                   <div style={{ fontSize: '11px', color: '#6828DC', fontWeight: 600 }}>
                     {aboutForm.directorTitle || 'Executive Leadership, Zeal Pharmaceuticals'}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* TAB: PROMO & SHOWCASE BANNERS */}
+      {/* ========================================================================= */}
+      {activeTab === 'promos' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
+          <div
+            style={{
+              background: '#FFFFFF',
+              borderRadius: '16px',
+              border: '1.5px solid #EDE9FE',
+              padding: 'clamp(16px, 3.5vw, 28px)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '24px',
+              boxShadow: '0 4px 16px rgba(104, 40, 220, 0.04)',
+            }}
+          >
+            {/* Header */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div
+                style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '10px',
+                  background: '#EDE9FE',
+                  color: '#6828DC',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}
+              >
+                <Layers size={19} />
+              </div>
+              <div>
+                <h3 style={{ fontSize: '17px', fontWeight: 800, color: '#0F172A', margin: 0 }}>
+                  Showcase, Catalog & Promotional Banners
+                </h3>
+                <p style={{ fontSize: '12.5px', color: '#64748B', margin: '2px 0 0' }}>
+                  Manage promotional graphic cards featured on Homepage, Products catalog, and Contact pages. High-resolution fallback images remain active if unassigned.
+                </p>
+              </div>
+            </div>
+
+            {/* Section 1: Home & Contact Showcase Cards */}
+            <div>
+              <div style={{ fontSize: '14px', fontWeight: 800, color: '#0F172A', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Sparkles size={15} style={{ color: '#6828DC' }} />
+                <span>Homepage & Contact Feature Cards</span>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
+                {/* Monopoly Card */}
+                <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>PCD Monopoly Rights Card</div>
+                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Shown on Home showcase & Contact</p>
+                  <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
+                    <img
+                      src={galleryService.formatUrl(formSettings.promoBanners?.cardMonopoly) || '/banners/pcd_pharma_monopoly.jpg'}
+                      alt="PCD Monopoly"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setAboutMediaPickerField('promo_cardMonopoly')}
+                      style={{ padding: '6px 12px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#6828DC', color: '#FFFFFF', border: 'none', cursor: 'pointer' }}
+                    >
+                      Pick from Gallery
+                    </button>
+                    {formSettings.promoBanners?.cardMonopoly && (
+                      <button
+                        type="button"
+                        onClick={() => setFormSettings((prev) => ({ ...prev, promoBanners: { ...prev.promoBanners, cardMonopoly: '' } }))}
+                        style={{ padding: '6px 10px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#FFFFFF', color: '#EF4444', border: '1px solid #FECACA', cursor: 'pointer' }}
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Warehouse Depot */}
+                <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>Central Depot & Logistics Card</div>
+                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Shown on Home showcase & Contact</p>
+                  <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
+                    <img
+                      src={galleryService.formatUrl(formSettings.promoBanners?.warehouseDepot) || '/banners/pharma_warehouse_depot.jpg'}
+                      alt="Central Depot"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setAboutMediaPickerField('promo_warehouseDepot')}
+                      style={{ padding: '6px 12px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#6828DC', color: '#FFFFFF', border: 'none', cursor: 'pointer' }}
+                    >
+                      Pick from Gallery
+                    </button>
+                    {formSettings.promoBanners?.warehouseDepot && (
+                      <button
+                        type="button"
+                        onClick={() => setFormSettings((prev) => ({ ...prev, promoBanners: { ...prev.promoBanners, warehouseDepot: '' } }))}
+                        style={{ padding: '6px 10px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#FFFFFF', color: '#EF4444', border: '1px solid #FECACA', cursor: 'pointer' }}
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Institutional Supply */}
+                <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>Hospital & Institutional Supply</div>
+                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Featured on Contact Page</p>
+                  <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
+                    <img
+                      src={galleryService.formatUrl(formSettings.promoBanners?.cardInstitutional) || '/promos/promo_institutional_supply.jpg'}
+                      alt="Institutional Supply"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setAboutMediaPickerField('promo_cardInstitutional')}
+                      style={{ padding: '6px 12px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#6828DC', color: '#FFFFFF', border: 'none', cursor: 'pointer' }}
+                    >
+                      Pick from Gallery
+                    </button>
+                    {formSettings.promoBanners?.cardInstitutional && (
+                      <button
+                        type="button"
+                        onClick={() => setFormSettings((prev) => ({ ...prev, promoBanners: { ...prev.promoBanners, cardInstitutional: '' } }))}
+                        style={{ padding: '6px 10px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#FFFFFF', color: '#EF4444', border: '1px solid #FECACA', cursor: 'pointer' }}
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Section 2: Products Catalog Promo Banners */}
+            <div>
+              <div style={{ fontSize: '14px', fontWeight: 800, color: '#0F172A', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Layers size={15} style={{ color: '#6828DC' }} />
+                <span>Product Catalog Therapeutic Division Banners</span>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
+                {/* Diabetic Banner */}
+                <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>Diabetic & Metabolic Range</div>
+                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Products catalog hero banner</p>
+                  <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
+                    <img
+                      src={galleryService.formatUrl(formSettings.promoBanners?.cardDiabetic) || '/promos/promo_diabetic_glimepiride.jpg'}
+                      alt="Diabetic Range"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setAboutMediaPickerField('promo_cardDiabetic')}
+                      style={{ padding: '6px 12px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#6828DC', color: '#FFFFFF', border: 'none', cursor: 'pointer' }}
+                    >
+                      Pick from Gallery
+                    </button>
+                    {formSettings.promoBanners?.cardDiabetic && (
+                      <button
+                        type="button"
+                        onClick={() => setFormSettings((prev) => ({ ...prev, promoBanners: { ...prev.promoBanners, cardDiabetic: '' } }))}
+                        style={{ padding: '6px 10px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#FFFFFF', color: '#EF4444', border: '1px solid #FECACA', cursor: 'pointer' }}
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Biotin Banner */}
+                <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>Biotin & Hair Nutrition</div>
+                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Products catalog hero banner</p>
+                  <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
+                    <img
+                      src={galleryService.formatUrl(formSettings.promoBanners?.cardBiotin) || '/promos/promo_biotin_hair_vitamins.jpg'}
+                      alt="Biotin Nutrition"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setAboutMediaPickerField('promo_cardBiotin')}
+                      style={{ padding: '6px 12px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#6828DC', color: '#FFFFFF', border: 'none', cursor: 'pointer' }}
+                    >
+                      Pick from Gallery
+                    </button>
+                    {formSettings.promoBanners?.cardBiotin && (
+                      <button
+                        type="button"
+                        onClick={() => setFormSettings((prev) => ({ ...prev, promoBanners: { ...prev.promoBanners, cardBiotin: '' } }))}
+                        style={{ padding: '6px 10px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#FFFFFF', color: '#EF4444', border: '1px solid #FECACA', cursor: 'pointer' }}
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Respiratory Care */}
+                <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>Respiratory & Chest Care</div>
+                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Products catalog middle banner</p>
+                  <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
+                    <img
+                      src={galleryService.formatUrl(formSettings.promoBanners?.cardRespiratory) || '/promos/promo_acebrophylline_respiratory.jpg'}
+                      alt="Respiratory Care"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setAboutMediaPickerField('promo_cardRespiratory')}
+                      style={{ padding: '6px 12px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#6828DC', color: '#FFFFFF', border: 'none', cursor: 'pointer' }}
+                    >
+                      Pick from Gallery
+                    </button>
+                    {formSettings.promoBanners?.cardRespiratory && (
+                      <button
+                        type="button"
+                        onClick={() => setFormSettings((prev) => ({ ...prev, promoBanners: { ...prev.promoBanners, cardRespiratory: '' } }))}
+                        style={{ padding: '6px 10px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#FFFFFF', color: '#EF4444', border: '1px solid #FECACA', cursor: 'pointer' }}
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Pediatric Range */}
+                <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>Pediatric Syrups & Drops</div>
+                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Products catalog middle banner</p>
+                  <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
+                    <img
+                      src={galleryService.formatUrl(formSettings.promoBanners?.cardPediatric) || '/promos/promo_pediatric_syrup_drops.jpg'}
+                      alt="Pediatric Range"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setAboutMediaPickerField('promo_cardPediatric')}
+                      style={{ padding: '6px 12px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#6828DC', color: '#FFFFFF', border: 'none', cursor: 'pointer' }}
+                    >
+                      Pick from Gallery
+                    </button>
+                    {formSettings.promoBanners?.cardPediatric && (
+                      <button
+                        type="button"
+                        onClick={() => setFormSettings((prev) => ({ ...prev, promoBanners: { ...prev.promoBanners, cardPediatric: '' } }))}
+                        style={{ padding: '6px 10px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#FFFFFF', color: '#EF4444', border: '1px solid #FECACA', cursor: 'pointer' }}
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Dermatology Range */}
+                <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>Dermatology & Skin Care</div>
+                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Products catalog bottom banner</p>
+                  <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
+                    <img
+                      src={galleryService.formatUrl(formSettings.promoBanners?.cardDerma) || '/promos/promo_derma_skincare_cosmeceuticals.jpg'}
+                      alt="Derma Range"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setAboutMediaPickerField('promo_cardDerma')}
+                      style={{ padding: '6px 12px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#6828DC', color: '#FFFFFF', border: 'none', cursor: 'pointer' }}
+                    >
+                      Pick from Gallery
+                    </button>
+                    {formSettings.promoBanners?.cardDerma && (
+                      <button
+                        type="button"
+                        onClick={() => setFormSettings((prev) => ({ ...prev, promoBanners: { ...prev.promoBanners, cardDerma: '' } }))}
+                        style={{ padding: '6px 10px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#FFFFFF', color: '#EF4444', border: '1px solid #FECACA', cursor: 'pointer' }}
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Section 3: Product Detail Promo Banners */}
+            <div>
+              <div style={{ fontSize: '14px', fontWeight: 800, color: '#0F172A', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Eye size={15} style={{ color: '#6828DC' }} />
+                <span>Product Detail Sidebar Banners</span>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
+                {/* Multivitamin Banner */}
+                <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>Multivitamin & Immunity Boost</div>
+                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Product detail sidebar promo</p>
+                  <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
+                    <img
+                      src={galleryService.formatUrl(formSettings.promoBanners?.productMultivitamin) || '/promos/promo_multivitamin_immunity.jpg'}
+                      alt="Multivitamin"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setAboutMediaPickerField('promo_productMultivitamin')}
+                      style={{ padding: '6px 12px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#6828DC', color: '#FFFFFF', border: 'none', cursor: 'pointer' }}
+                    >
+                      Pick from Gallery
+                    </button>
+                    {formSettings.promoBanners?.productMultivitamin && (
+                      <button
+                        type="button"
+                        onClick={() => setFormSettings((prev) => ({ ...prev, promoBanners: { ...prev.promoBanners, productMultivitamin: '' } }))}
+                        style={{ padding: '6px 10px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#FFFFFF', color: '#EF4444', border: '1px solid #FECACA', cursor: 'pointer' }}
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Wellness Banner */}
+                <div style={{ background: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>Daily Vitality & Nutraceuticals</div>
+                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Product detail sidebar promo</p>
+                  <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
+                    <img
+                      src={galleryService.formatUrl(formSettings.promoBanners?.productWellness) || '/promos/promo_wellness_nutraceuticals.jpg'}
+                      alt="Daily Vitality"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setAboutMediaPickerField('promo_productWellness')}
+                      style={{ padding: '6px 12px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#6828DC', color: '#FFFFFF', border: 'none', cursor: 'pointer' }}
+                    >
+                      Pick from Gallery
+                    </button>
+                    {formSettings.promoBanners?.productWellness && (
+                      <button
+                        type="button"
+                        onClick={() => setFormSettings((prev) => ({ ...prev, promoBanners: { ...prev.promoBanners, productWellness: '' } }))}
+                        style={{ padding: '6px 10px', fontSize: '12px', fontWeight: 700, borderRadius: '6px', background: '#FFFFFF', color: '#EF4444', border: '1px solid #FECACA', cursor: 'pointer' }}
+                      >
+                        Reset
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -2348,6 +2878,32 @@ export const AdminCmsPage: React.FC = () => {
         defaultTag="BANNER"
         onSelect={(imgUrl) => {
           setBannerItem((prev: any) => ({ ...prev, imageUrl: imgUrl }));
+        }}
+      />
+
+      {/* Media Gallery Picker for About & Promo Images */}
+      <MediaGalleryModal
+        isOpen={Boolean(aboutMediaPickerField)}
+        onClose={() => setAboutMediaPickerField(null)}
+        defaultTag="BANNER"
+        onSelect={(imgUrl) => {
+          if (!aboutMediaPickerField) return;
+          if (aboutMediaPickerField.startsWith('promo_')) {
+            const promoKey = aboutMediaPickerField.replace('promo_', '');
+            setFormSettings((prev: any) => ({
+              ...prev,
+              promoBanners: {
+                ...(prev.promoBanners || {}),
+                [promoKey]: imgUrl,
+              },
+            }));
+          } else {
+            setAboutForm((prev: any) => ({
+              ...prev,
+              [aboutMediaPickerField]: imgUrl,
+            }));
+          }
+          setAboutMediaPickerField(null);
         }}
       />
     </div>

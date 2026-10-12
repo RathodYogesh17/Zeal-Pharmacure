@@ -1,5 +1,7 @@
 import React from 'react';
 import { Award, ShieldCheck, CheckCircle2, ArrowRight } from 'lucide-react';
+import { useSiteSettings } from '../../context/SiteSettingsContext';
+import { getMediaUrl } from '../../utils/mediaUtils';
 
 interface ProductDetailPromoBannerProps {
   onClaimMonopoly: () => void;
@@ -10,6 +12,8 @@ export const ProductDetailPromoBanner: React.FC<ProductDetailPromoBannerProps> =
   onClaimMonopoly,
   categoryName = 'Therapeutic',
 }) => {
+  const { settings } = useSiteSettings();
+  const bannerImg = getMediaUrl((settings as any)?.promoBanners?.cardMonopoly, '/banners/card_monopoly_formulations.jpg');
   return (
     <div
       className="zp-product-promo-banner"
@@ -145,7 +149,7 @@ export const ProductDetailPromoBanner: React.FC<ProductDetailPromoBannerProps> =
         }}
       >
         <img
-          src="/banners/card_monopoly_formulations.jpg"
+          src={bannerImg}
           alt="Zeal Pharma Monopoly Formulations"
           style={{
             width: '100%',

@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import { useSiteSettings } from '../../context/SiteSettingsContext';
+import { getMediaUrl } from '../../utils/mediaUtils';
 import type { IProduct } from '../../types';
 
 interface ProductDetailSidebarProps {
@@ -16,6 +18,10 @@ export const ProductDetailSidebar: React.FC<ProductDetailSidebarProps> = ({
   categoryName,
   onOpenFranchise,
 }) => {
+  const { settings } = useSiteSettings();
+  const multivitaminImg = getMediaUrl((settings as any)?.promoBanners?.productMultivitamin, '/promos/promo_multivitamin.jpg');
+  const wellnessImg = getMediaUrl((settings as any)?.promoBanners?.productWellness, '/promos/promo_wellness.jpg');
+
   // Get up to 4 products for the 2-column mini grid
   const miniGridProducts = relatedProducts.length > 0 ? relatedProducts.slice(0, 4) : [currentProduct];
 
@@ -40,8 +46,8 @@ export const ProductDetailSidebar: React.FC<ProductDetailSidebarProps> = ({
 
         <div style={{ width: '80px', height: '80px', margin: '0 auto 10px', background: 'rgba(255,255,255,0.15)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <img
-            src="/promos/promo_multivitamin.jpg"
-            alt="Vitamins &amp; Supplements"
+            src={multivitaminImg}
+            alt="Vitamins & Supplements"
             style={{ maxHeight: '70px', maxWidth: '70px', objectFit: 'contain' }}
             onError={(e) => {
               (e.currentTarget as HTMLElement).style.display = 'none';
@@ -236,7 +242,7 @@ export const ProductDetailSidebar: React.FC<ProductDetailSidebarProps> = ({
       >
         <div style={{ width: '80px', height: '80px', margin: '0 auto 10px', background: '#FFFFFF', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #FCD34D' }}>
           <img
-            src="/promos/promo_wellness.jpg"
+            src={wellnessImg}
             alt="Stockists Distribution"
             style={{ maxHeight: '70px', maxWidth: '70px', objectFit: 'contain' }}
             onError={(e) => {

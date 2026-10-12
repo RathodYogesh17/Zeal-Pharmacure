@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkles, ArrowRight, FlaskConical, Building2, ShieldCheck, Clock, Award } from 'lucide-react';
 import { useSiteSettings } from '../../context/SiteSettingsContext';
+import { getMediaUrl } from '../../utils/mediaUtils';
 import './AboutStyles.css';
 
 export interface AboutHeroProps {
@@ -9,7 +10,8 @@ export interface AboutHeroProps {
 }
 
 export const AboutHero: React.FC<AboutHeroProps> = ({ onOpenFranchiseModal }) => {
-  const { productCount } = useSiteSettings();
+  const { productCount, about } = useSiteSettings();
+  const heroImg = getMediaUrl((about as any)?.heroImage, '/banners/about_animated_formulations.jpg');
   return (
     <section className="zp-about-hero-wrapper" style={{ borderBottomColor: '#A78BFA' }}>
       {/* Background Purple Shade Layer */}
@@ -142,7 +144,7 @@ export const AboutHero: React.FC<AboutHeroProps> = ({ onOpenFranchiseModal }) =>
               {/* Central Media Container with 3D Cartoon Medicine Rack Visual */}
               <div className="zp-about-visual-media">
                 <img
-                  src="/banners/about_animated_formulations.jpg"
+                  src={heroImg}
                   alt="Zeal Pharmacure DCGI Approved Medicine Formulations & Therapeutics"
                   className="zp-about-card-img is-active"
                 />

@@ -12,6 +12,7 @@ import {
   Award
 } from 'lucide-react';
 import { useSiteSettings } from '../../context/SiteSettingsContext';
+import { getMediaUrl } from '../../utils/mediaUtils';
 import './HomeStyles.css';
 
 export interface HeroSlideItem {
@@ -182,11 +183,54 @@ const getHomeHeroSlides = (productCount: number): HomeSlideConfig[] => [
 ];
 
 export const HomeHeroSlider: React.FC<HomeHeroSliderProps> = ({
+  slides,
   onOpenFranchiseModal,
   onOpenStoryModal,
 }) => {
   const { productCount } = useSiteSettings();
-  const HOME_HERO_SLIDES = useMemo(() => getHomeHeroSlides(productCount), [productCount]);
+  const BASE_SLIDES = useMemo(() => getHomeHeroSlides(productCount), [productCount]);
+
+  const HOME_HERO_SLIDES = useMemo(() => {
+    if (!slides || slides.length === 0) return BASE_SLIDES;
+
+    return slides.map((customSlide, idx) => {
+      const template = BASE_SLIDES[idx % BASE_SLIDES.length];
+      const customImage = customSlide.image
+        ? getMediaUrl(customSlide.image, template.image)
+        : template.image;
+
+      let titlePrefix = template.titlePrefix;
+      let highlightWord = template.highlightWord;
+      let titleSuffix = template.titleSuffix;
+
+      if (customSlide.title && customSlide.title.trim()) {
+        const fullTitle = customSlide.title.trim();
+        const words = fullTitle.split(' ');
+        if (words.length > 2) {
+          titlePrefix = words.slice(0, words.length - 2).join(' ') + ' ';
+          highlightWord = words.slice(words.length - 2, words.length - 1).join(' ');
+          titleSuffix = ' ' + words[words.length - 1];
+        } else {
+          titlePrefix = '';
+          highlightWord = fullTitle;
+          titleSuffix = '';
+        }
+      }
+
+      return {
+        ...template,
+        id: idx,
+        badgeText: customSlide.badge || template.badgeText,
+        titlePrefix,
+        highlightWord,
+        titleSuffix,
+        subtitle: customSlide.subtitle || template.subtitle,
+        ctaText: customSlide.ctaText || template.ctaText,
+        ctaLink: customSlide.ctaLink || template.ctaLink,
+        image: customImage,
+      };
+    });
+  }, [slides, BASE_SLIDES]);
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Sparkles, Send, ArrowRight } from 'lucide-react';
+import { useSiteSettings } from '../../../context/SiteSettingsContext';
+import { getMediaUrl } from '../../../utils/mediaUtils';
 import type { IProduct } from '../../../types';
 
 export interface ProductHeroBannersProps {
@@ -55,8 +57,25 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
   onOpenFranchise,
   onScrollToCatalog,
 }) => {
+  const { settings } = useSiteSettings();
   const [activeBannerDot, setActiveBannerDot] = useState(0);
-  const currentSlide = HERO_SLIDES[activeBannerDot] || HERO_SLIDES[0];
+
+  const dynamicPromoCards = PROMO_CARDS.map((card, idx) => ({
+    ...card,
+    image: idx === 0
+      ? getMediaUrl((settings as any)?.promoBanners?.productGummies, card.image)
+      : getMediaUrl((settings as any)?.promoBanners?.productWellness, card.image),
+  }));
+
+  const dynamicHeroSlides = HERO_SLIDES.map((slide, idx) => ({
+    ...slide,
+    image: idx === 0
+      ? getMediaUrl((settings as any)?.promoBanners?.productHeroSlide1 || (settings as any)?.promoBanners?.productMultivitamin, slide.image)
+      : getMediaUrl((settings as any)?.promoBanners?.productHeroSlide2 || (settings as any)?.promoBanners?.productWellness, slide.image),
+  }));
+
+  const rackBgImg = getMediaUrl((settings as any)?.promoBanners?.warehouseRack, '/banners/stockist_warehouse_rack.jpg');
+  const currentSlide = dynamicHeroSlides[activeBannerDot] || dynamicHeroSlides[0];
 
   const handleEnquire = (idx: number) => {
     if (products.length > idx) {
@@ -214,7 +233,7 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
           
           {/* Top Card: PCD Supply Chain */}
           <div style={{
-            backgroundImage: `linear-gradient(90deg, rgba(245, 243, 255, 0.97) 0%, rgba(245, 243, 255, 0.92) 52%, rgba(245, 243, 255, 0.55) 78%, rgba(245, 243, 255, 0.15) 100%), url('/banners/stockist_warehouse_rack.jpg')`,
+            backgroundImage: `linear-gradient(90deg, rgba(245, 243, 255, 0.97) 0%, rgba(245, 243, 255, 0.92) 52%, rgba(245, 243, 255, 0.55) 78%, rgba(245, 243, 255, 0.15) 100%), url('${rackBgImg}')`,
             backgroundSize: 'cover',
             backgroundPosition: 'right center',
             borderRadius: '20px',
@@ -275,7 +294,7 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
 
           {/* Bottom Split 2 Cards */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-            {PROMO_CARDS.map((card, idx) => (
+            {dynamicPromoCards.map((card, idx) => (
               <div
                 key={idx}
                 style={{

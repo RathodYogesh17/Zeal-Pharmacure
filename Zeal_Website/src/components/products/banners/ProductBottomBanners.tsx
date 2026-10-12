@@ -1,5 +1,7 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
+import { useSiteSettings } from '../../../context/SiteSettingsContext';
+import { getMediaUrl } from '../../../utils/mediaUtils';
 import './ProductBanners.css';
 
 export interface ProductBottomBannersProps {
@@ -52,10 +54,19 @@ const BOTTOM_BANNERS: BottomBannerItem[] = [
   },
 ];
 
-export const ProductBottomBanners: React.FC<ProductBottomBannersProps> = ({ onOpenFranchise }) => (
-  <section className="zp-container" style={{ marginTop: '52px' }}>
-    <div className="zp-bottom-banners-grid">
-      {BOTTOM_BANNERS.map((banner, idx) => (
+export const ProductBottomBanners: React.FC<ProductBottomBannersProps> = ({ onOpenFranchise }) => {
+  const { settings } = useSiteSettings();
+  const dynamicBanners = BOTTOM_BANNERS.map((banner, idx) => {
+    let customImg = banner.image;
+    if (idx === 0) customImg = getMediaUrl((settings as any)?.promoBanners?.productPediatric, banner.image);
+    else if (idx === 1) customImg = getMediaUrl((settings as any)?.promoBanners?.productDerma, banner.image);
+    return { ...banner, image: customImg };
+  });
+
+  return (
+    <section className="zp-container" style={{ marginTop: '52px' }}>
+      <div className="zp-bottom-banners-grid">
+        {dynamicBanners.map((banner, idx) => (
         <div
           key={idx}
           className="zp-bottom-promo-card"
@@ -100,4 +111,5 @@ export const ProductBottomBanners: React.FC<ProductBottomBannersProps> = ({ onOp
       ))}
     </div>
   </section>
-);
+  );
+};

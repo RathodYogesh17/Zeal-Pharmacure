@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowRight, Sparkles, ShieldCheck } from 'lucide-react';
 import { useSiteSettings } from '../../context/SiteSettingsContext';
+import { getMediaUrl } from '../../utils/mediaUtils';
 import './ContactStyles.css';
 
 export interface ContactFeatureBannersProps {
@@ -64,8 +65,13 @@ export const ContactFeatureBanners: React.FC<ContactFeatureBannersProps> = ({
   onOpenFranchise,
   onScrollToForm,
 }) => {
-  const { productCount } = useSiteSettings();
-  const SEAMLESS_FEATURES = getSeamlessFeatures(productCount);
+  const { productCount, settings } = useSiteSettings();
+  const SEAMLESS_FEATURES = getSeamlessFeatures(productCount).map((feat, idx) => ({
+    ...feat,
+    image: idx === 0
+      ? getMediaUrl((settings as any)?.promoBanners?.cardMonopoly, feat.image)
+      : getMediaUrl((settings as any)?.promoBanners?.cardInstitutional, feat.image),
+  }));
   return (
     <section className="container" style={{ marginTop: '48px', marginBottom: '16px' }}>
       <div className="zp-contact-features-grid">

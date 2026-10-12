@@ -2,9 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Building, Check, ArrowRight, Package } from 'lucide-react';
 import { useSiteSettings } from '../../context/SiteSettingsContext';
+import { getMediaUrl } from '../../utils/mediaUtils';
 
 export const AboutCorporateProfile: React.FC = () => {
-  const { productCount } = useSiteSettings();
+  const { productCount, about, settings } = useSiteSettings();
+  const depotImage = getMediaUrl((about as any)?.depotImage || (settings as any)?.promoBanners?.warehouseDepot, '/banners/pharma_warehouse_depot.jpg');
+  const promoKitImage = getMediaUrl((about as any)?.marketingKitImage || (settings as any)?.promoBanners?.promotionalKit, '/banners/banner_promotional_kit.jpg');
   const highlights = [
     'Third-Party WHO-GMP Sourcing',
     'Rigorous Batch Testing & Stability',
@@ -70,7 +73,7 @@ export const AboutCorporateProfile: React.FC = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div style={{ borderRadius: '20px', overflow: 'hidden', boxShadow: '0 12px 30px rgba(15, 23, 42, 0.08)', border: '3px solid #FFFFFF', background: '#FFFFFF' }}>
               <img
-                src="/banners/pharma_warehouse_depot.jpg"
+                src={depotImage}
                 alt="Zeal Pharma Surat Central Warehousing"
                 style={{ width: '100%', height: '230px', objectFit: 'cover', display: 'block' }}
               />
@@ -89,7 +92,7 @@ export const AboutCorporateProfile: React.FC = () => {
 
             <div style={{ borderRadius: '20px', overflow: 'hidden', boxShadow: '0 12px 30px rgba(15, 23, 42, 0.08)', border: '3px solid #FFFFFF', background: '#FFFFFF' }}>
               <img
-                src="/banners/banner_promotional_kit.jpg"
+                src={promoKitImage}
                 alt="Zeal Pharma Promotional Support Kits"
                 style={{ width: '100%', height: '190px', objectFit: 'cover', display: 'block' }}
               />

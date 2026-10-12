@@ -1,5 +1,7 @@
 import React from 'react';
 import { Quote, Award } from 'lucide-react';
+import { useSiteSettings } from '../../context/SiteSettingsContext';
+import { getMediaUrl } from '../../utils/mediaUtils';
 
 export interface AboutLeadershipProps {
   directorMessage?: string;
@@ -7,7 +9,9 @@ export interface AboutLeadershipProps {
   directorTitle?: string;
 }
 
-export const AboutLeadership: React.FC<AboutLeadershipProps> = ({ directorMessage, directorName, directorTitle,}) => {
+export const AboutLeadership: React.FC<AboutLeadershipProps> = ({ directorMessage, directorName, directorTitle }) => {
+  const { about } = useSiteSettings();
+  const leadershipImg = getMediaUrl((about as any)?.leadershipImage, '/banners/banner_franchise_meeting.jpg');
   return (
     <section style={{ background: '#FAF5FF', padding: '80px 0' }}>
       <div className="container">
@@ -57,7 +61,7 @@ export const AboutLeadership: React.FC<AboutLeadershipProps> = ({ directorMessag
           <div style={{ position: 'relative' }}>
             <div style={{ borderRadius: '20px', overflow: 'hidden', boxShadow: '0 12px 30px rgba(0,0,0,0.08)', border: '3px solid #FFFFFF', background: '#FFFFFF' }}>
               <img
-                src="/banners/banner_franchise_meeting.jpg"
+                src={leadershipImg}
                 alt="Zeal Pharmacure Executive Directorate & Stockist Franchise Strategy Meeting"
                 style={{ width: '100%', height: '320px', objectFit: 'cover', display: 'block' }}
               />

@@ -245,6 +245,29 @@ export interface ISiteSettings {
   drugLicenseNumber?: string;
   primaryCtaText?: string;
   primaryCtaLink?: string;
+  promoBanners?: {
+    cardMonopoly?: string;
+    warehouseDepot?: string;
+    cardInstitutional?: string;
+    promotionalKit?: string;
+    productHeroSlide1?: string;
+    productHeroSlide2?: string;
+    productGummies?: string;
+    productWellness?: string;
+    productDiabetic?: string;
+    productBiotin?: string;
+    productRespiratory?: string;
+    productPediatric?: string;
+    productDerma?: string;
+    warehouseRack?: string;
+    productMultivitamin?: string;
+    cardDiabetic?: string;
+    cardBiotin?: string;
+    cardRespiratory?: string;
+    cardPediatric?: string;
+    cardDerma?: string;
+    [key: string]: string | undefined;
+  };
 }
 
 export interface IBannerItem {
@@ -299,6 +322,10 @@ export interface IAboutContent {
   directorName?: string;
   directorTitle?: string;
   directorMessage?: string;
+  depotImage?: string;
+  marketingKitImage?: string;
+  leadershipImage?: string;
+  heroImage?: string;
   stats?: Array<{ label: string; value: string; icon?: string }>;
 }
 

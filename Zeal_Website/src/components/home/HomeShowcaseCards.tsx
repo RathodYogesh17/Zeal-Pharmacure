@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles, ShieldCheck } from 'lucide-react';
 import { useSiteSettings } from '../../context/SiteSettingsContext';
+import { getMediaUrl } from '../../utils/mediaUtils';
 import './HomeStyles.css';
 
 export interface HomeShowcaseCardsProps {
@@ -9,7 +10,9 @@ export interface HomeShowcaseCardsProps {
 }
 
 export const HomeShowcaseCards: React.FC<HomeShowcaseCardsProps> = ({ onOpenFranchiseModal }) => {
-  const { productCount } = useSiteSettings();
+  const { productCount, settings } = useSiteSettings();
+  const monopolyImg = getMediaUrl((settings as any)?.promoBanners?.cardMonopoly, '/banners/card_monopoly_formulations.jpg');
+  const depotImg = getMediaUrl((settings as any)?.promoBanners?.warehouseDepot, '/banners/pharma_warehouse_depot.jpg');
   return (
     <section className="zp-home-showcase-section">
       <div className="container">
@@ -112,7 +115,7 @@ export const HomeShowcaseCards: React.FC<HomeShowcaseCardsProps> = ({ onOpenFran
 
             <div className="zp-home-wide-img-wrap">
               <img
-                src="/banners/card_monopoly_formulations.jpg"
+                src={monopolyImg}
                 alt="Zeal Pharmacure Monopoly Formulations and Doctor Sample Kit"
                 className="zp-home-wide-img"
               />
@@ -165,7 +168,7 @@ export const HomeShowcaseCards: React.FC<HomeShowcaseCardsProps> = ({ onOpenFran
 
             <div className="zp-home-wide-img-wrap">
               <img
-                src="/banners/pharma_warehouse_depot.jpg"
+                src={depotImg}
                 alt="Zeal Pharmacure Surat Central Logistics Depot"
                 className="zp-home-wide-img"
               />

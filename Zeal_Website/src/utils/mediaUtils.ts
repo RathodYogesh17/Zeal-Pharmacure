@@ -3,13 +3,22 @@
  * or prepends backend API origin for legacy local /uploads paths.
  */
 export const getMediaUrl = (url?: string | null, fallback = ''): string => {
-  if (!url) return fallback;
+  if (!url || !url.trim()) return fallback;
   const trimmed = url.trim();
   if (
     trimmed.startsWith('http://') ||
     trimmed.startsWith('https://') ||
     trimmed.startsWith('data:') ||
     trimmed.startsWith('blob:')
+  ) {
+    return trimmed;
+  }
+  // Frontend public static assets
+  if (
+    trimmed.startsWith('/banners/') ||
+    trimmed.startsWith('/promos/') ||
+    trimmed.startsWith('/images/') ||
+    trimmed.startsWith('/assets/')
   ) {
     return trimmed;
   }

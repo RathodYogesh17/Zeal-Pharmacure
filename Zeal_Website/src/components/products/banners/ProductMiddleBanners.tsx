@@ -1,5 +1,7 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
+import { useSiteSettings } from '../../../context/SiteSettingsContext';
+import { getMediaUrl } from '../../../utils/mediaUtils';
 import './ProductBanners.css';
 
 export interface ProductMiddleBannersProps {
@@ -58,10 +60,20 @@ const BANNERS: MiddleBannerItem[] = [
   },
 ];
 
-export const ProductMiddleBanners: React.FC<ProductMiddleBannersProps> = ({ onOpenFranchise }) => (
-  <section className="zp-container" style={{ marginTop: '52px' }}>
-    <div className="zp-middle-banners-grid">
-      {BANNERS.map((banner, idx) => (
+export const ProductMiddleBanners: React.FC<ProductMiddleBannersProps> = ({ onOpenFranchise }) => {
+  const { settings } = useSiteSettings();
+  const dynamicBanners = BANNERS.map((banner, idx) => {
+    let customImg = banner.image;
+    if (idx === 0) customImg = getMediaUrl((settings as any)?.promoBanners?.productDiabetic, banner.image);
+    else if (idx === 1) customImg = getMediaUrl((settings as any)?.promoBanners?.productBiotin, banner.image);
+    else if (idx === 2) customImg = getMediaUrl((settings as any)?.promoBanners?.productRespiratory, banner.image);
+    return { ...banner, image: customImg };
+  });
+
+  return (
+    <section className="zp-container" style={{ marginTop: '52px' }}>
+      <div className="zp-middle-banners-grid">
+        {dynamicBanners.map((banner, idx) => (
         <div
           key={idx}
           className="zp-middle-promo-card"
@@ -103,4 +115,5 @@ export const ProductMiddleBanners: React.FC<ProductMiddleBannersProps> = ({ onOp
       ))}
     </div>
   </section>
-);
+  );
+};
