@@ -38,6 +38,7 @@ import {
 } from 'lucide-react';
 import { productService } from '../api/productService';
 import { categoryService } from '../api/categoryService';
+import { ZealLoader } from '../components/common';
 import type { IProduct, ICategory } from '../types';
 
 export const AdminProductDetailPage: React.FC = () => {
@@ -113,13 +114,12 @@ export const AdminProductDetailPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="dossier-card min-h-[400px] items-center justify-center text-center">
-        <div className="w-12 h-12 border-4 border-purple-200 border-t-[#6828DC] rounded-full animate-spin" />
-        <h3 className="text-base font-bold text-slate-900 mt-4">Loading Pharmaceutical Dossier</h3>
-        <p className="text-brand-purple font-semibold text-xs mt-1">
-          Fetching clinical specs, pharmacology & commercial records...
-        </p>
-      </div>
+      <ZealLoader
+        title="Loading Pharmaceutical Dossier"
+        subtitle="Fetching clinical specifications, pharmacology & commercial records..."
+        size="lg"
+        minHeight="420px"
+      />
     );
   }
 

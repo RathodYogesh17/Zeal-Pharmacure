@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Search, ChevronLeft, ChevronRight, Inbox } from 'lucide-react';
+import { ZealLoader } from './ZealLoader';
 
 export interface ColumnDef<T> {
   key: string;
@@ -86,14 +87,13 @@ export function DataTable<T>({
           </thead>
           <tbody>
             {loading ? (
-              <tr>
-                <td colSpan={columns.length} style={{ padding: '48px', textAlign: 'center', color: '#6828DC', fontWeight: 600 }}>
-                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px' }}>
-                    <span style={{ animation: 'spin 1s linear infinite' }}>⏳</span>
-                    <span>Loading data...</span>
-                  </div>
-                </td>
-              </tr>
+              <ZealLoader
+                variant="table-row"
+                colSpan={columns.length}
+                title="Loading table records..."
+                subtitle="Fetching synchronized data from database"
+                size="md"
+              />
             ) : data.length === 0 ? (
               <tr>
                 <td colSpan={columns.length} style={{ padding: '48px 24px', textAlign: 'center' }}>

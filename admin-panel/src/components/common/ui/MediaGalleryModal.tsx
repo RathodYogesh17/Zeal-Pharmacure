@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { UploadCloud, Search, Check, Folder, Image as ImageIcon, CheckCircle2, AlertCircle} from 'lucide-react';
 import { Modal } from './Modal';
 import { Button } from './Button';
+import { ZealLoader } from './ZealLoader';
 import { ThemeSelect } from '../tableTheme';
 import { useGalleryImagesQuery, useUploadGalleryImagesMutation} from '../../../hooks/queries/useGalleryQuery';
 import { galleryService, type IMediaItem } from '../../../api/galleryService';
@@ -193,9 +194,12 @@ export const MediaGalleryModal: React.FC<MediaGalleryModalProps> = ({ isOpen, on
 
             {/* Grid of Images */}
             {isLoading ? (
-              <div style={{ padding: '40px', textAlign: 'center', color: '#64748B' }}>
-                Loading gallery images...
-              </div>
+              <ZealLoader
+                title="Loading Gallery Media"
+                subtitle="Fetching verified media assets..."
+                size="md"
+                minHeight="220px"
+              />
             ) : !galleryData?.items || galleryData.items.length === 0 ? (
               <div style={{ padding: '40px 20px', textAlign: 'center', background: '#F8FAFC', borderRadius: '12px', border: '1.5px dashed #E2E8F0',}}>
                 <Folder size={36} style={{ color: '#CBD5E1', margin: '0 auto 10px' }} />

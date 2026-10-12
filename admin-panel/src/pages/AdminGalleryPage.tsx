@@ -24,7 +24,7 @@ import {
   useDeleteGalleryImageMutation
 } from '../hooks/queries/useGalleryQuery';
 import { galleryService, type IMediaItem } from '../api/galleryService';
-import { Button, Modal, Badge, ThemeSelect } from '../components/common';
+import { Button, Modal, Badge, ThemeSelect, ZealLoader } from '../components/common';
 
 export const AdminGalleryPage: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState<string>('ALL');
@@ -688,9 +688,12 @@ export const AdminGalleryPage: React.FC = () => {
 
         {/* Gallery Grid */}
         {isLoading ? (
-          <div style={{ padding: '60px', textAlign: 'center', color: '#64748B' }}>
-            Loading media assets...
-          </div>
+          <ZealLoader
+            title="Loading Media & Certificate Assets"
+            subtitle="Accessing secure Cloudinary asset storage..."
+            size="lg"
+            minHeight="340px"
+          />
         ) : allItems.length === 0 ? (
           <div style={{
             padding: '60px 20px',

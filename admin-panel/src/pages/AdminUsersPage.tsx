@@ -43,6 +43,7 @@ import {
   filterByDateRange,
   DateFilterType,
   MediaGalleryModal,
+  ZealLoader,
 } from '../components/common';
 import type { IStaffUser } from '../api/userService';
 
@@ -672,11 +673,13 @@ export const AdminUsersPage: React.FC = () => {
                 </thead>
                 <tbody>
                   {usersLoading ? (
-                    <tr>
-                      <td colSpan={7} style={{ padding: '40px', textAlign: 'center', color: '#6828DC' }}>
-                        Loading staff users...
-                      </td>
-                    </tr>
+                    <ZealLoader
+                      variant="table-row"
+                      colSpan={7}
+                      title="Loading Staff & Role Permissions"
+                      subtitle="Verifying administrative access control directory..."
+                      size="md"
+                    />
                   ) : dateFilteredUsers.length === 0 ? (
                     <tr>
                       <td colSpan={7} style={{ padding: '48px 20px', textAlign: 'center', color: '#64748B' }}>

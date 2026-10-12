@@ -18,6 +18,7 @@ export * from './ui/TabBar';
 export * from './ui/SearchFilterBar';
 export * from './ui/ConfirmModal';
 export * from './ui/GalleryImagePicker';
+export * from './ui/ZealLoader';
 
 export * from './ThemeQuillEditor';
 export * from './tableTheme';

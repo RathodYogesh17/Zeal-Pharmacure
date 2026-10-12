@@ -3,7 +3,7 @@ import { Inbox, RefreshCw, Download, CheckCircle2, Building2, Briefcase, Layers,
 import { enquiryService } from '../api/enquiryService';
 import { careerService } from '../api/careerService';
 import { AdminEnquiryDetailModal, EnquiryStatsCards, EnquiryCategoryTabs, EnquiryFilterToolbar, EnquiryTableRow, StatusChangeConfirmModal, isCareerLead, isStockistLead, isBulkLead, isSingleProductLead, computeEnquiryStats, exportEnquiriesCSV, } from '../components/enquiries';
-import { TablePagination, filterByDateRange, type DateFilterType } from '../components/common';
+import { TablePagination, filterByDateRange, type DateFilterType, ZealLoader } from '../components/common';
 import type { IEnquiry, EnquiryStatus } from '../types';
 
 export { isCareerLead, isStockistLead, isBulkLead, isSingleProductLead } from '../components/enquiries';
@@ -526,12 +526,13 @@ export const AdminEnquiriesPage: React.FC<AdminEnquiriesPageProps> = ({ pageMode
             </thead>
             <tbody>
               {loading ? (
-                <tr>
-                  <td colSpan={10} style={{ padding: '56px', textAlign: 'center', color: '#6828DC', fontWeight: 600 }}>
-                    <RefreshCw size={24} className="animate-spin" style={{ margin: '0 auto 12px' }} />
-                    <p>Loading live leads from database...</p>
-                  </td>
-                </tr>
+                <ZealLoader
+                  variant="table-row"
+                  colSpan={10}
+                  title="Loading Inquiries & Distribution Leads"
+                  subtitle="Streaming verified customer enquiries and stockist applications..."
+                  size="md"
+                />
               ) : dateFiltered.length === 0 ? (
                 <tr>
                   <td colSpan={10} style={{ padding: '56px', textAlign: 'center' }}>

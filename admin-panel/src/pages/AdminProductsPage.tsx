@@ -28,6 +28,7 @@ import {
   TablePagination,
   filterByDateRange,
   type DateFilterType,
+  ZealLoader,
 } from '../components/common';
 import type { IProduct, ICategory } from '../types';
 
@@ -350,9 +351,12 @@ export const AdminProductsPage: React.FC = () => {
 
       {/* Loading State */}
       {loading && (
-        <div style={{ padding: '60px', textAlign: 'center', color: '#6828DC', fontWeight: 600 }}>
-          Loading products from database...
-        </div>
+        <ZealLoader
+          title="Loading Product Formulations"
+          subtitle="Synchronizing pharmaceutical catalogue with live database..."
+          size="lg"
+          minHeight="360px"
+        />
       )}
 
       {/* 1. TABLE VIEW */}

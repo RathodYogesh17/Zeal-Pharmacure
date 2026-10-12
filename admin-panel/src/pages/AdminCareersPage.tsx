@@ -42,6 +42,7 @@ import {
   filterByDateRange,
   DateFilterType,
   AdvancedWhatsAppModal,
+  ZealLoader,
 } from '../components/common';
 
 export const AdminCareersPage: React.FC = () => {
@@ -514,7 +515,12 @@ export const AdminCareersPage: React.FC = () => {
           </div>
 
           {loading ? (
-            <div style={{ padding: '40px', textAlign: 'center', color: '#6828DC' }}>Loading candidates...</div>
+            <ZealLoader
+              title="Loading Candidate Applications"
+              subtitle="Retrieving candidate profiles and resume records..."
+              size="lg"
+              minHeight="320px"
+            />
           ) : dateFilteredApps.length === 0 ? (
             <div style={{ background: '#FFFFFF', padding: '48px', borderRadius: '16px', textAlign: 'center', border: '1.5px solid #E2E8F0' }}>
               <FileText size={36} style={{ color: '#94A3B8', margin: '0 auto 12px' }} />

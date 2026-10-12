@@ -25,7 +25,7 @@ import {
 import { productService } from '../api/productService';
 import { categoryService } from '../api/categoryService';
 import { galleryService } from '../api/galleryService';
-import { MediaGalleryModal, ThemeSelect, ThemeQuillEditor } from '../components/common';
+import { MediaGalleryModal, ThemeSelect, ThemeQuillEditor, ZealLoader } from '../components/common';
 import { useAppSelector } from '../store';
 import { selectEffectivePermissions, selectCurrentRole } from '../store/slices/authSlice';
 import type { ICategory, ISubCategory, IProduct } from '../types';
@@ -821,7 +821,7 @@ export const AdminAddProductPage: React.FC = () => {
                   Therapeutic Category <span className="required-dot">*</span>
                 </label>
                 {loadingCategories ? (
-                  <div style={{ padding: '10px', fontSize: '13px', color: '#64748B' }}>Loading categories...</div>
+                  <ZealLoader variant="inline" size="sm" title="Loading categories..." />
                 ) : (
                   <ThemeSelect
                     value={formData.category}
@@ -836,7 +836,7 @@ export const AdminAddProductPage: React.FC = () => {
               <div className="field-group">
                 <label className="field-label">Sub-Category / Division</label>
                 {loadingSubCategories ? (
-                  <div style={{ padding: '10px', fontSize: '13px', color: '#64748B' }}>Loading divisions...</div>
+                  <ZealLoader variant="inline" size="sm" title="Loading divisions..." />
                 ) : (
                   <ThemeSelect
                     value={formData.subCategory}

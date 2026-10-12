@@ -29,6 +29,7 @@ import {
   ThemeQuillEditor,
   filterByDateRange,
   type DateFilterType,
+  ZealLoader,
 } from '../components/common';
 import type { ICategory, ISubCategory } from '../types';
 
@@ -740,11 +741,13 @@ export const AdminCategoriesPage: React.FC = () => {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr>
-                    <td colSpan={7} style={{ padding: '36px', textAlign: 'center', color: '#6828DC' }}>
-                      Loading categories...
-                    </td>
-                  </tr>
+                  <ZealLoader
+                    variant="table-row"
+                    colSpan={7}
+                    title="Loading Categories & Classifications"
+                    subtitle="Synchronizing therapeutic divisions from database..."
+                    size="md"
+                  />
                 ) : dateFilteredCategories.length === 0 ? (
                   <tr>
                     <td colSpan={7} style={{ padding: '40px', textAlign: 'center', color: '#64748B' }}>
@@ -1019,11 +1022,13 @@ export const AdminCategoriesPage: React.FC = () => {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr>
-                    <td colSpan={8} style={{ padding: '36px', textAlign: 'center', color: '#6828DC' }}>
-                      Loading subcategories...
-                    </td>
-                  </tr>
+                  <ZealLoader
+                    variant="table-row"
+                    colSpan={8}
+                    title="Loading Sub-Categories & Divisions"
+                    subtitle="Retrieving granular pharmaceutical segments..."
+                    size="md"
+                  />
                 ) : dateFilteredSubCategories.length === 0 ? (
                   <tr>
                     <td colSpan={8} style={{ padding: '40px', textAlign: 'center', color: '#64748B' }}>

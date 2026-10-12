@@ -30,7 +30,7 @@ import { useAuth } from '../context/AuthContext';
 import { useAppDispatch, useAppSelector } from '../store';
 import { setCredentials, selectCurrentRole } from '../store/slices/authSlice';
 import { request } from '../api/apiClient';
-import { Button, FormInput, Badge, MediaGalleryModal, ThemeSelect } from '../components/common';
+import { Button, FormInput, Badge, MediaGalleryModal, ThemeSelect, ZealLoader } from '../components/common';
 import { galleryService } from '../api/galleryService';
 import { settingsService, IAuditLogItem } from '../api/settingsService';
 
@@ -1433,10 +1433,18 @@ export const AdminSettingsPage: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {auditLogs.length === 0 ? (
+                  {auditLoading ? (
+                    <ZealLoader
+                      variant="table-row"
+                      colSpan={6}
+                      title="Loading Audit Trail Events"
+                      subtitle="Querying enterprise security logs..."
+                      size="md"
+                    />
+                  ) : auditLogs.length === 0 ? (
                     <tr>
                       <td colSpan={6} style={{ padding: '36px', textAlign: 'center', color: '#64748B' }}>
-                        {auditLoading ? 'Loading audit events...' : 'No audit log entries matching your criteria.'}
+                        No audit log entries matching your criteria.
                       </td>
                     </tr>
                   ) : (

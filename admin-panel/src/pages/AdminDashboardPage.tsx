@@ -33,6 +33,7 @@ import {
   DashboardQuickActions,
   type DashboardKpiItem,
 } from '../components/dashboard';
+import { ZealLoader } from '../components/common';
 
 export const AdminDashboardPage: React.FC = () => {
   const { user } = useAuth();
@@ -240,6 +241,17 @@ export const AdminDashboardPage: React.FC = () => {
         link: '/admin/categories',
       },
     ];
+  }
+
+  if (loading && stats.totalProducts === 0 && stats.totalEnquiries === 0 && stats.totalApplications === 0) {
+    return (
+      <ZealLoader
+        title="Loading Operations Console"
+        subtitle="Aggregating live formulations, enquiries pipeline & system metrics..."
+        size="lg"
+        minHeight="420px"
+      />
+    );
   }
 
   return (
