@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Pill, ShieldCheck, Sparkles, ZoomIn, X } from 'lucide-react';
 import type { IProduct } from '../../types';
+import { getMediaUrl } from '../../utils/mediaUtils';
 
 interface ProductDetailGalleryProps {
   product: IProduct;
@@ -18,18 +19,19 @@ export const ProductDetailGallery: React.FC<ProductDetailGalleryProps> = ({
   // Collect all gallery images: featuredImage + mediaGallery items
   const galleryImages: string[] = [];
   if (product.featuredImage) {
-    galleryImages.push(product.featuredImage);
+    galleryImages.push(getMediaUrl(product.featuredImage));
   }
   if (product.mediaGallery && product.mediaGallery.length > 0) {
     product.mediaGallery.forEach((item) => {
-      const url = typeof item === 'object' && (item as any)?.url ? (item as any).url : String(item);
+      const rawUrl = typeof item === 'object' && (item as any)?.url ? (item as any).url : String(item);
+      const url = getMediaUrl(rawUrl);
       if (url && !galleryImages.includes(url)) {
         galleryImages.push(url);
       }
     });
   }
 
-  const currentDisplayImage = activeImage || product.featuredImage || '';
+  const currentDisplayImage = getMediaUrl(activeImage || product.featuredImage || '');
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', minWidth: 0, width: '100%' }}>

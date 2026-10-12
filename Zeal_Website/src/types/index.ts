@@ -50,6 +50,7 @@ export interface IProduct {
   prescriptionType?: string;
   licenseNumber?: string;
   countryOfOrigin?: string;
+  mrp?: number | null;
   featuredImage?: string | null;
   mediaGallery?: Array<any>;
   brochureUrl?: string | null;

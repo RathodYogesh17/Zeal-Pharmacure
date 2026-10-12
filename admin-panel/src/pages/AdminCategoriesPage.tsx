@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Plus,
   Layers,
@@ -886,34 +886,34 @@ export const AdminCategoriesPage: React.FC = () => {
                       {/* Actions */}
                       <td style={{ padding: '14px 16px', textAlign: 'right' }}>
                         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                            <button
-                              type="button"
-                              onClick={() => setViewingCategory(c)}
-                              title="View Category Details"
-                              style={{
-                                width: '32px',
-                                height: '32px',
-                                background: '#F5F3FF',
-                                border: '1px solid #EDE9FE',
-                                borderRadius: '7px',
-                                color: '#6828DC',
-                                cursor: 'pointer',
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                transition: 'all 0.15s ease',
-                              }}
-                              onMouseEnter={(e) => {
-                                e.currentTarget.style.background = '#EDE9FE';
-                                e.currentTarget.style.borderColor = '#DDD6FE';
-                              }}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.style.background = '#F5F3FF';
-                                e.currentTarget.style.borderColor = '#EDE9FE';
-                              }}
-                            >
-                              <Eye size={15} style={{ color: '#6828DC' }} />
-                            </button>
+                          <button
+                            type="button"
+                            onClick={() => setViewingCategory(c)}
+                            title="View Category Details"
+                            style={{
+                              width: '32px',
+                              height: '32px',
+                              background: '#F5F3FF',
+                              border: '1px solid #EDE9FE',
+                              borderRadius: '7px',
+                              color: '#6828DC',
+                              cursor: 'pointer',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              transition: 'all 0.15s ease',
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = '#EDE9FE';
+                              e.currentTarget.style.borderColor = '#DDD6FE';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = '#F5F3FF';
+                              e.currentTarget.style.borderColor = '#EDE9FE';
+                            }}
+                          >
+                            <Eye size={15} style={{ color: '#6828DC' }} />
+                          </button>
                           <button
                             type="button"
                             onClick={() => handleOpenEditCategory(c)}

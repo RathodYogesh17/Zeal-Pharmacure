@@ -31,8 +31,8 @@ const loginUser = async (req: Request, res: Response): Promise<void> => {
     accessToken: result.accessToken,
     refreshToken: result.refreshToken,
     user: result.user,
-    otp: result.otp,
-    otpSent: result.otpSent,
+    requiresOtp: (result as any).requiresOtp,
+    otpSent: (result as any).otpSent,
   });
 };
 

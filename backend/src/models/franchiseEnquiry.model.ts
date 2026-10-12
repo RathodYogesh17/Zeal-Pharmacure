@@ -80,8 +80,23 @@ const franchiseEnquirySchema = new Schema(
     // CRM STATUS
     // ==========================================
 
-    status: { type: String,
-      enum: ["NEW","CONTACTED", "QUALIFIED", "DOCUMENTS_PENDING", "APPROVED", "REJECTED", "ON_HOLD", "CLOSED",],
+    status: {
+      type: String,
+      enum: [
+        "NEW",
+        "CONTACTED",
+        "IN_TOUCH",
+        "IN_PROGRESS",
+        "QUALIFIED",
+        "DOCUMENTS_PENDING",
+        "QUOTED",
+        "FOLLOW_UP",
+        "APPROVED",
+        "REJECTED",
+        "ON_HOLD",
+        "CLOSED",
+        "PENDING",
+      ],
       default: "NEW",
       index: true,
     },
@@ -128,6 +143,7 @@ const franchiseEnquirySchema = new Schema(
     isDeleted: { type: Boolean, default: false,  index: true,},
     deletedAt: { type: Date,  default: null,},
     deletedBy: { type: Schema.Types.ObjectId, ref: "User",  default: null, },
+    updatedBy: { type: Schema.Types.ObjectId, ref: "User",  default: null, },
   },
   {
     timestamps: true,

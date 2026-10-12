@@ -118,6 +118,31 @@ const getAuditLogs = async (req: ISettingsRequest, res: Response): Promise<void>
   sendSuccess(res, HTTP_STATUS.OK, MESSAGES.SUCCESS, result);
 };
 
+const getRolePermissionsMatrix = async (req: ISettingsRequest, res: Response): Promise<void> => {
+  const result = await settingsService.getRolePermissionsMatrix();
+  sendSuccess(res, HTTP_STATUS.OK, MESSAGES.SUCCESS, result);
+};
+
+const saveRolePermissionsMatrix = async (req: ISettingsRequest, res: Response): Promise<void> => {
+  const roleCode = String(req.params.roleCode || req.params.id);
+  const permissions = Array.isArray(req.body.permissions) ? req.body.permissions : [];
+  const result = await settingsService.saveRolePermissionsMatrix(
+    roleCode,
+    permissions,
+    req.user?._id
+  );
+  void recordAuditLog({
+    userId: req.user?._id,
+    action: "ROLE_PERMISSIONS_ASSIGN",
+    module: "SETTINGS",
+    targetType: "Role",
+    targetId: roleCode,
+    req,
+    metadata: { permissionCount: permissions.length },
+  });
+  sendSuccess(res, HTTP_STATUS.OK, "Role permissions matrix saved successfully", result);
+};
+
 export {
   getAllPermissions,
   getAllRoles,
@@ -129,4 +154,6 @@ export {
   getUserPermissions,
   assignUserPermissions,
   getAuditLogs,
+  getRolePermissionsMatrix,
+  saveRolePermissionsMatrix,
 };

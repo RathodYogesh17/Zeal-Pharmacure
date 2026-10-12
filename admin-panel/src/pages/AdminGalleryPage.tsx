@@ -12,7 +12,11 @@ import {
   Sparkles,
   ExternalLink,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Users,
+  RefreshCw,
+  Tag,
+  ArrowRight
 } from 'lucide-react';
 import {
   useGalleryImagesQuery,
@@ -30,6 +34,11 @@ export const AdminGalleryPage: React.FC = () => {
   const [uploadSuccess, setUploadSuccess] = useState('');
   const [uploadError, setUploadError] = useState('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  // Auto-organize and moving state
+  const [organizing, setOrganizing] = useState(false);
+  const [movingId, setMovingId] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Batch upload state
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -125,23 +134,107 @@ export const AdminGalleryPage: React.FC = () => {
     }
   };
 
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 4500);
+  };
+
+  const handleAutoOrganize = async () => {
+    setOrganizing(true);
+    try {
+      const res = await galleryService.autoOrganize();
+      showToast(
+        `✅ Organized ${res.totalUpdated} assets (${res.profileCount} staff profiles, ${res.productCount} formulations, ${res.logoCount} logos, ${res.bannerCount} banners sorted into proper categories)!`
+      );
+      refetch();
+    } catch (err: any) {
+      showToast(`❌ Failed to auto-organize: ${err.message || 'Server error'}`);
+    } finally {
+      setOrganizing(false);
+    }
+  };
+
+  const handleMoveCategory = async (itemId: string, newFolder: string) => {
+    setMovingId(itemId);
+    try {
+      await galleryService.updateImage(itemId, { folder: newFolder, tag: newFolder });
+      showToast(`✅ Successfully moved image to ${newFolder}!`);
+      refetch();
+    } catch (err: any) {
+      showToast(`❌ Failed to move image: ${err.message || 'Server error'}`);
+    } finally {
+      setMovingId(null);
+    }
+  };
+
+  const getCategoryMeta = (tagOrFolder?: string) => {
+    const key = (tagOrFolder || 'PRODUCT').toUpperCase();
+    switch (key) {
+      case 'PRODUCT':
+        return { label: 'Product Formulation', color: '#6828DC', bg: '#F5F3FF', border: '#DDD6FE' };
+      case 'PROFILE':
+      case 'STAFF':
+        return { label: 'Staff Profile Photo', color: '#2563EB', bg: '#EFF6FF', border: '#BFDBFE' };
+      case 'LOGO':
+      case 'BRANDING':
+        return { label: 'Company Logo', color: '#059669', bg: '#ECFDF5', border: '#A7F3D0' };
+      case 'BANNER':
+      case 'CMS':
+      case 'HERO':
+        return { label: 'Website Banner', color: '#D97706', bg: '#FFFBEB', border: '#FDE68A' };
+      default:
+        return { label: 'Other Asset', color: '#475569', bg: '#F1F5F9', border: '#E2E8F0' };
+    }
+  };
+
   const filterTabs = [
     { id: 'ALL', label: 'All Media Assets' },
     { id: 'PRODUCT', label: 'Product Formulations' },
-    { id: 'LOGO', label: 'Logos & Branding' },
     { id: 'PROFILE', label: 'Staff Profile Photos' },
+    { id: 'LOGO', label: 'Logos & Branding' },
     { id: 'BANNER', label: 'Banners & CMS' },
     { id: 'OTHER', label: 'Other Visual Aids' },
   ];
 
   // Quick stats
   const allItems = galleryData?.items || [];
-  const productCount = allItems.filter(i => i.tag === 'PRODUCT').length;
-  const logoCount = allItems.filter(i => i.tag === 'LOGO').length;
-  const profileCount = allItems.filter(i => i.tag === 'PROFILE').length;
+  const productCount = allItems.filter(i => (i.tag || i.folder) === 'PRODUCT').length;
+  const profileCount = allItems.filter(i => (i.tag || i.folder) === 'PROFILE' || (i.tag || i.folder) === 'STAFF').length;
+  const logoCount = allItems.filter(i => (i.tag || i.folder) === 'LOGO' || (i.tag || i.folder) === 'BRANDING').length;
+  const bannerCount = allItems.filter(i => (i.tag || i.folder) === 'BANNER' || (i.tag || i.folder) === 'CMS' || (i.tag || i.folder) === 'HERO').length;
 
   return (
     <div>
+      {/* Toast Feedback Notification Banner */}
+      {toastMessage && (
+        <div style={{
+          position: 'fixed',
+          top: '20px',
+          right: '24px',
+          zIndex: 9999,
+          background: '#0F172A',
+          color: '#FFFFFF',
+          padding: '14px 22px',
+          borderRadius: '12px',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.25)',
+          fontSize: '13.5px',
+          fontWeight: 700,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          border: '1.5px solid #334155',
+          animation: 'fadeIn 0.2s ease-out',
+        }}>
+          <span>{toastMessage}</span>
+          <button
+            onClick={() => setToastMessage(null)}
+            style={{ background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: '0 4px', fontSize: '16px' }}
+          >
+            ×
+          </button>
+        </div>
+      )}
+
       {/* Top Header */}
       <div className="page-header">
         <div>
@@ -150,91 +243,122 @@ export const AdminGalleryPage: React.FC = () => {
           </div>
           <h1 className="admin-page-title">Media Gallery &amp; Asset Central</h1>
           <p className="admin-page-subtitle">
-            Upload, categorize, and manage product packaging, logos, staff avatars, and certificates
+            Upload, categorize, and organize product packaging, staff avatars, company logos, and website banners
           </p>
         </div>
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <Button variant="outline" size="sm" onClick={() => refetch()}>Refresh Assets</Button>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleAutoOrganize}
+            disabled={organizing}
+            style={{
+              background: '#F5F3FF',
+              color: '#6828DC',
+              borderColor: '#DDD6FE',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              fontWeight: 700,
+            }}
+            title="Automatically scan and move staff profile photos, product images, logos, and banners into their right positions"
+          >
+            <Sparkles size={15} />
+            <span>{organizing ? 'Organizing Assets...' : 'Auto-Organize All Media'}</span>
+          </Button>
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => refetch()}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+          >
+            <RefreshCw size={14} />
+            <span>Refresh Assets</span>
+          </Button>
         </div>
       </div>
 
-      {/* KPI Stats Cards */}
+      {/* KPI Stats Cards - 5 Categories Breakdown */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-        gap: '16px',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+        gap: '14px',
         marginBottom: '24px',
       }}>
+        {/* Card 1: Total */}
         <div style={{
           background: '#FFFFFF',
           borderRadius: '14px',
-          padding: '18px 20px',
+          padding: '16px 18px',
           border: '1px solid #E2E8F0',
           display: 'flex',
           alignItems: 'center',
-          gap: '16px',
+          gap: '14px',
         }}>
           <div style={{
-            width: '46px',
-            height: '46px',
+            width: '42px',
+            height: '42px',
             borderRadius: '10px',
-            background: '#EDE9FE',
+            background: '#F1F5F9',
+            color: '#475569',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <ImageIcon size={22} />
+          </div>
+          <div>
+            <div style={{ fontSize: '20px', fontWeight: 800, color: '#0F172A' }}>
+              {galleryData?.pagination?.total || allItems.length}
+            </div>
+            <div style={{ fontSize: '12px', color: '#64748B' }}>Total Assets</div>
+          </div>
+        </div>
+
+        {/* Card 2: Products */}
+        <div style={{
+          background: '#FFFFFF',
+          borderRadius: '14px',
+          padding: '16px 18px',
+          border: '1px solid #E2E8F0',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '14px',
+        }}>
+          <div style={{
+            width: '42px',
+            height: '42px',
+            borderRadius: '10px',
+            background: '#F5F3FF',
             color: '#6828DC',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-            <ImageIcon size={24} />
+            <Layers size={22} />
           </div>
           <div>
-            <div style={{ fontSize: '22px', fontWeight: 800, color: '#0F172A' }}>
-              {galleryData?.pagination?.total || allItems.length}
-            </div>
-            <div style={{ fontSize: '12.5px', color: '#64748B' }}>Total Gallery Files</div>
-          </div>
-        </div>
-
-        <div style={{
-          background: '#FFFFFF',
-          borderRadius: '14px',
-          padding: '18px 20px',
-          border: '1px solid #E2E8F0',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '16px',
-        }}>
-          <div style={{
-            width: '46px',
-            height: '46px',
-            borderRadius: '10px',
-            background: '#F0FDF4',
-            color: '#10B981',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-            <Layers size={24} />
-          </div>
-          <div>
-            <div style={{ fontSize: '22px', fontWeight: 800, color: '#0F172A' }}>
+            <div style={{ fontSize: '20px', fontWeight: 800, color: '#6828DC' }}>
               {productCount}
             </div>
-            <div style={{ fontSize: '12.5px', color: '#64748B' }}>Product Images</div>
+            <div style={{ fontSize: '12px', color: '#64748B' }}>Product Images</div>
           </div>
         </div>
 
+        {/* Card 3: Staff & Profiles */}
         <div style={{
           background: '#FFFFFF',
           borderRadius: '14px',
-          padding: '18px 20px',
+          padding: '16px 18px',
           border: '1px solid #E2E8F0',
           display: 'flex',
           alignItems: 'center',
-          gap: '16px',
+          gap: '14px',
         }}>
           <div style={{
-            width: '46px',
-            height: '46px',
+            width: '42px',
+            height: '42px',
             borderRadius: '10px',
             background: '#EFF6FF',
             color: '#2563EB',
@@ -242,42 +366,73 @@ export const AdminGalleryPage: React.FC = () => {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-            <Sparkles size={24} />
+            <Users size={22} />
           </div>
           <div>
-            <div style={{ fontSize: '22px', fontWeight: 800, color: '#0F172A' }}>
-              {logoCount}
+            <div style={{ fontSize: '20px', fontWeight: 800, color: '#2563EB' }}>
+              {profileCount}
             </div>
-            <div style={{ fontSize: '12.5px', color: '#64748B' }}>Logos & Brands</div>
+            <div style={{ fontSize: '12px', color: '#64748B' }}>Staff Profiles</div>
           </div>
         </div>
 
+        {/* Card 4: Logos & Branding */}
         <div style={{
           background: '#FFFFFF',
           borderRadius: '14px',
-          padding: '18px 20px',
+          padding: '16px 18px',
           border: '1px solid #E2E8F0',
           display: 'flex',
           alignItems: 'center',
-          gap: '16px',
+          gap: '14px',
         }}>
           <div style={{
-            width: '46px',
-            height: '46px',
+            width: '42px',
+            height: '42px',
             borderRadius: '10px',
-            background: '#FFF7ED',
-            color: '#F97316',
+            background: '#ECFDF5',
+            color: '#059669',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-            <Folder size={24} />
+            <Sparkles size={22} />
           </div>
           <div>
-            <div style={{ fontSize: '22px', fontWeight: 800, color: '#0F172A' }}>
-              {profileCount}
+            <div style={{ fontSize: '20px', fontWeight: 800, color: '#059669' }}>
+              {logoCount}
             </div>
-            <div style={{ fontSize: '12.5px', color: '#64748B' }}>Profile Photos</div>
+            <div style={{ fontSize: '12px', color: '#64748B' }}>Company Logos</div>
+          </div>
+        </div>
+
+        {/* Card 5: Banners & CMS */}
+        <div style={{
+          background: '#FFFFFF',
+          borderRadius: '14px',
+          padding: '16px 18px',
+          border: '1px solid #E2E8F0',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '14px',
+        }}>
+          <div style={{
+            width: '42px',
+            height: '42px',
+            borderRadius: '10px',
+            background: '#FFFBEB',
+            color: '#D97706',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <Folder size={22} />
+          </div>
+          <div>
+            <div style={{ fontSize: '20px', fontWeight: 800, color: '#D97706' }}>
+              {bannerCount}
+            </div>
+            <div style={{ fontSize: '12px', color: '#64748B' }}>Website Banners</div>
           </div>
         </div>
       </div>
@@ -432,7 +587,7 @@ export const AdminGalleryPage: React.FC = () => {
           }}>
             <div>
               <div style={{ fontSize: '14px', fontWeight: 800, color: '#0F172A' }}>
-                {filesToUpload.length} image(s) selected ({ (filesToUpload.reduce((acc, f) => acc + f.size, 0) / (1024 * 1024)).toFixed(2) } MB)
+                {filesToUpload.length} image(s) selected ({(filesToUpload.reduce((acc, f) => acc + f.size, 0) / (1024 * 1024)).toFixed(2)} MB)
               </div>
               <div style={{ fontSize: '12px', color: '#64748B', marginTop: '2px' }}>
                 Ready to upload to category: <strong>{selectedTagForUpload}</strong>
@@ -599,16 +754,31 @@ export const AdminGalleryPage: React.FC = () => {
                       }}
                     />
 
-                    {/* Tag Badge */}
-                    <div style={{
-                      position: 'absolute',
-                      top: '8px',
-                      left: '8px',
-                    }}>
-                      <Badge variant="purple" size="sm">
-                        {item.tag || 'PRODUCT'}
-                      </Badge>
-                    </div>
+                    {/* Tag Badge with Category Color */}
+                    {(() => {
+                      const meta = getCategoryMeta(item.tag || item.folder);
+                      return (
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: '8px',
+                            left: '8px',
+                            background: meta.bg,
+                            color: meta.color,
+                            border: `1.5px solid ${meta.border}`,
+                            borderRadius: '6px',
+                            padding: '3px 8px',
+                            fontSize: '11px',
+                            fontWeight: 800,
+                            display: 'flex',
+                            alignItems: 'center',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.06)',
+                          }}
+                        >
+                          <span>{item.tag || item.folder || 'PRODUCT'}</span>
+                        </div>
+                      );
+                    })()}
 
                     {/* Quick View Button */}
                     <button

@@ -1,13 +1,22 @@
 import multer, { type FileFilterCallback } from "multer";
 import path from "path";
 import fs from "fs";
+import os from "os";
 import type { Request, Response, NextFunction } from "express";
+import { isCloudinaryConfigured, uploadRawToCloudinary } from "../services/cloudinary.service";
 
-const resumeDir = path.resolve(process.cwd(), "uploads", "resumes");
+const isServerless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+const resumeDir = isServerless
+  ? path.join(os.tmpdir(), "uploads", "resumes")
+  : path.resolve(process.cwd(), "uploads", "resumes");
 
-// Ensure uploads/resumes directory exists
-if (!fs.existsSync(resumeDir)) {
-  fs.mkdirSync(resumeDir, { recursive: true });
+// Ensure uploads/resumes directory exists safely
+try {
+  if (!fs.existsSync(resumeDir)) {
+    fs.mkdirSync(resumeDir, { recursive: true });
+  }
+} catch {
+  // Silently ignore in read-only environments
 }
 
 type UploadedFile = Express.Multer.File;
@@ -68,14 +77,30 @@ const uploadResume = upload.single("resume");
 
 /**
  * Helper middleware that formats uploaded resume metadata into req.body
+ * Automatically uploads to Cloudinary if configured.
  */
-const attachResumeMetadata = (
+const attachResumeMetadata = async (
   req: Request,
   _res: Response,
   next: NextFunction
-): void => {
+): Promise<void> => {
   if (req.file) {
-    req.body.resumeUrl = `/uploads/resumes/${req.file.filename}`;
+    let finalUrl = `/uploads/resumes/${req.file.filename}`;
+
+    if (isCloudinaryConfigured()) {
+      try {
+        const cld = await uploadRawToCloudinary(req.file.path, {
+          folder: "resumes",
+          originalName: req.file.originalname,
+        });
+        finalUrl = cld.url;
+        console.log(`[CLOUDINARY] Resume uploaded to cloud: ${finalUrl}`);
+      } catch (err) {
+        console.warn("[CLOUDINARY] Resume upload to cloud failed, using local fallback:", err);
+      }
+    }
+
+    req.body.resumeUrl = finalUrl;
     req.body.resumeOriginalName = req.file.originalname;
     req.body.resumeMimeType = req.file.mimetype;
     req.body.resumeSize = req.file.size;

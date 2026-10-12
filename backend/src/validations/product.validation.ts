@@ -86,12 +86,13 @@ const createProductSchema = Joi.object({
   pregnancyInfo: Joi.string().trim().max(2500).allow(null, "").optional(),
   lactationInfo: Joi.string().trim().max(2500).allow(null, "").optional(),
   prescriptionType: Joi.string()
-    .valid("Rx", "OTC", "Schedule H", "Schedule H1", "General")
+    .valid("Rx", "OTC", "Schedule H", "Schedule H1", "General", "OTC / General")
     .default("Rx")
     .optional(),
   regulatoryInfo: Joi.string().trim().max(2500).allow(null, "").optional(),
   licenseNumber: Joi.string().trim().max(100).allow(null, "").optional(),
   countryOfOrigin: Joi.string().trim().max(100).default("India").optional(),
+  mrp: Joi.number().min(0).allow(null, "").optional(),
   availabilityStatus: Joi.string()
     .valid("AVAILABLE", "OUT_OF_STOCK", "COMING_SOON", "DISCONTINUED")
     .default("AVAILABLE")
@@ -159,11 +160,12 @@ const updateProductSchema = Joi.object({
   pregnancyInfo: Joi.string().trim().max(2500).allow(null, "").optional(),
   lactationInfo: Joi.string().trim().max(2500).allow(null, "").optional(),
   prescriptionType: Joi.string()
-    .valid("Rx", "OTC", "Schedule H", "Schedule H1", "General")
+    .valid("Rx", "OTC", "Schedule H", "Schedule H1", "General", "OTC / General")
     .optional(),
   regulatoryInfo: Joi.string().trim().max(2500).allow(null, "").optional(),
   licenseNumber: Joi.string().trim().max(100).allow(null, "").optional(),
   countryOfOrigin: Joi.string().trim().max(100).optional(),
+  mrp: Joi.number().min(0).allow(null, "").optional(),
   availabilityStatus: Joi.string()
     .valid("AVAILABLE", "OUT_OF_STOCK", "COMING_SOON", "DISCONTINUED")
     .optional(),

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import "../models/role.model";
 import { generateUniqueSlug } from "../utils/slug";
 import JobOpening from "../models/jobOpening.model";
 import CareerApplication from "../models/careerApplication.model";
@@ -34,7 +35,16 @@ const defaultApplicationPopulate = [
   { path: "assignedTo", select: "name email role phone" },
   { path: "assignedBy", select: "name email role" },
   { path: "lastContactedBy", select: "name email role" },
-  { path: "hrNotes.addedBy", select: "name email role" },
+  {
+    path: "updatedBy",
+    select: "name email role phone designation",
+    populate: { path: "role", select: "name code description" },
+  },
+  {
+    path: "hrNotes.addedBy",
+    select: "name email role designation",
+    populate: { path: "role", select: "name code description" },
+  },
 ];
 
 const generateApplicationCode = async (): Promise<string> => {
@@ -552,6 +562,9 @@ const updateApplicationStatus = async (
   }
 
   application.status = body.status;
+  if (user?._id) {
+    application.updatedBy = new mongoose.Types.ObjectId(user._id) as any;
+  }
 
   if (body.interviewDate) {
     application.interviewRounds.push({
@@ -577,25 +590,39 @@ const updateApplicationStatus = async (
 
   let whatsAppDispatch = null;
   if (body.notifyCandidate !== false && application.phone) {
-    const jobTitle = application.positionAppliedFor || "Position";
-    whatsAppDispatch = await sendStatusUpdateWhatsAppNotification({
-      recipientType: "CAREER_CANDIDATE",
-      recipientName: application.fullName,
-      recipientPhone: application.phone,
-      newStatus: body.status,
-      referenceTitle: jobTitle,
-      additionalDetails: body.interviewDate
-        ? { interviewDate: new Date(body.interviewDate).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }) }
-        : undefined,
-      customMessage: body.customWhatsAppMessage || undefined,
-    });
+    try {
+      const jobTitle = application.positionAppliedFor || "Position Opening";
+      whatsAppDispatch = await sendStatusUpdateWhatsAppNotification({
+        recipientType: "CAREER_CANDIDATE",
+        referenceId: String(application._id),
+        recipientName: application.fullName,
+        recipientPhone: application.phone,
+        recipientEmail: application.email,
+        newStatus: body.status,
+        referenceTitle: jobTitle,
+        additionalDetails: {
+          department: application.department || undefined,
+          qualification: application.qualification || undefined,
+          experienceYears: application.totalExperienceYears !== undefined ? `${application.totalExperienceYears}` : undefined,
+          city: application.currentCity || undefined,
+          state: application.currentState || undefined,
+          interviewDate: body.interviewDate
+            ? new Date(body.interviewDate).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
+            : undefined,
+          note: body.note ? body.note.trim() : undefined,
+        },
+        customMessage: body.customWhatsAppMessage || undefined,
+      });
 
-    if (user?._id) {
-      application.hrNotes.push({
-        note: `WhatsApp status update (${body.status}) dispatched to candidate: ${application.phone} (Bot Delivered: ${whatsAppDispatch.deliveredViaBot})`,
-        addedBy: new mongoose.Types.ObjectId(user._id),
-        addedAt: new Date(),
-      } as any);
+      if (user?._id) {
+        application.hrNotes.push({
+          note: `WhatsApp status update (${body.status}) dispatched to candidate: ${application.phone} (Bot Delivered: ${whatsAppDispatch?.deliveredViaBot ?? false})`,
+          addedBy: new mongoose.Types.ObjectId(user._id),
+          addedAt: new Date(),
+        } as any);
+      }
+    } catch (notifErr) {
+      console.warn("Could not dispatch WhatsApp status notification for career application:", notifErr);
     }
   }
 
@@ -710,26 +737,37 @@ const scheduleInterviewRound = async (
         })
       : "To be announced";
 
-    whatsAppDispatch = await sendStatusUpdateWhatsAppNotification({
-      recipientType: "CAREER_CANDIDATE",
-      recipientName: application.fullName,
-      recipientPhone: application.phone,
-      newStatus: "INTERVIEW_SCHEDULED",
-      referenceTitle: jobTitle,
-      additionalDetails: {
-        interviewDate: `${round.roundName} on ${dateFormatted}`,
-        interviewMode: round.mode,
-        meetingLink: round.meetingLink,
-      },
-      customMessage: body.customWhatsAppMessage || undefined,
-    });
+    try {
+      whatsAppDispatch = await sendStatusUpdateWhatsAppNotification({
+        recipientType: "CAREER_CANDIDATE",
+        referenceId: String(application._id),
+        recipientName: application.fullName,
+        recipientPhone: application.phone,
+        recipientEmail: application.email,
+        newStatus: "INTERVIEW_SCHEDULED",
+        referenceTitle: jobTitle,
+        additionalDetails: {
+          department: application.department || undefined,
+          qualification: application.qualification || undefined,
+          experienceYears: application.totalExperienceYears !== undefined ? `${application.totalExperienceYears}` : undefined,
+          city: application.currentCity || undefined,
+          state: application.currentState || undefined,
+          interviewDate: `${round.roundName} on ${dateFormatted}`,
+          interviewMode: round.mode,
+          meetingLink: round.meetingLink,
+        },
+        customMessage: body.customWhatsAppMessage || undefined,
+      });
 
-    if (user?._id) {
-      application.hrNotes.push({
-        note: `Interview scheduled WhatsApp alert dispatched to ${application.phone} (Bot Delivered: ${whatsAppDispatch.deliveredViaBot})`,
-        addedBy: new mongoose.Types.ObjectId(user._id),
-        addedAt: new Date(),
-      } as any);
+      if (user?._id) {
+        application.hrNotes.push({
+          note: `Interview scheduled WhatsApp alert dispatched to ${application.phone} (Bot Delivered: ${whatsAppDispatch?.deliveredViaBot ?? false})`,
+          addedBy: new mongoose.Types.ObjectId(user._id),
+          addedAt: new Date(),
+        } as any);
+      }
+    } catch (notifErr) {
+      console.warn("Could not dispatch WhatsApp status notification for interview schedule:", notifErr);
     }
   }
 

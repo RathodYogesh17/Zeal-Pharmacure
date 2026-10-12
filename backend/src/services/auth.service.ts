@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import User from "../models/user.model";
 import { USER_ROLES } from "../constants/enums";
 import MESSAGES from "../constants/messages";
@@ -9,6 +10,8 @@ import HTTP_STATUS from "../constants/httpStatus";
 import type { HttpStatusCode } from "../constants/httpStatus";
 import { resolveMediaReference } from "../services/media.service";
 import { resolveRoleId } from "../utils/resolveRole";
+import { getEffectivePermissions } from "./permission.service";
+import { generateOtpEmailHtml } from "../utils/emailTemplate";
 import type {
   IChangePasswordRequest,
   IForgotPasswordRequest,
@@ -25,19 +28,49 @@ const throwServiceError = (message: string, statusCode: HttpStatusCode): never =
 const createOtp = (): string => { return Math.floor(100000 + Math.random() * 900000).toString(); };
 
 
-const sendOtpNotification = async ({ to, subject, otp, purpose }: { to: string; subject: string; otp: string; purpose: string; }) => {
+const sendOtpNotification = async ({
+  to,
+  subject,
+  otp,
+  purpose,
+  expiryMinutes = 10,
+  userName,
+}: {
+  to: string;
+  subject: string;
+  otp: string;
+  purpose: string;
+  expiryMinutes?: number | undefined;
+  userName?: string | undefined;
+}) => {
   const hasMailConfig = Boolean(process.env.MAIL_HOST && process.env.MAIL_USER && process.env.MAIL_PASSWORD);
 
   if (!hasMailConfig) {
-    console.warn(`[DEV OTP] ${purpose} OTP for ${to}: ${otp}`);
-    return { sent: false, otp };
+    console.log(`\n==================================================`);
+    console.log(`[ZEAL SECURITY CONSOLE] ${purpose.toUpperCase()} OTP for ${to}: ${otp}`);
+    console.log(`(Configure MAIL_HOST/MAIL_USER/MAIL_PASSWORD in .env for inbox delivery)`);
+    console.log(`==================================================\n`);
+    return { sent: false };
   }
 
-  await sendEmail({
-    to, subject,
-    html: `<p>Your OTP is <strong>${otp}</strong>. It is valid for 10 minutes.</p>`,
-  });
-  return { sent: true, otp };
+  try {
+    const html = generateOtpEmailHtml({
+      otp,
+      purpose,
+      expiryMinutes,
+      userName: userName || (to.split("@")[0] ? to.split("@")[0] : "Valued User"),
+    });
+
+    await sendEmail({
+      to,
+      subject,
+      html,
+    });
+    return { sent: true };
+  } catch (err: any) {
+    console.error(`[MAIL ERROR] Failed to send OTP email to ${to}:`, err.message);
+    return { sent: false };
+  }
 };
 
 
@@ -77,15 +110,26 @@ const registerUser = async (body: IRegisterRequest) => {
 const loginUser = async (body: ILoginRequest) => {
   const email = body.email.trim().toLowerCase();
 
-  const user = await User.findOne({ email, isDeleted: false }).select("+password").populate("role", "name code");
+  const user = await User.findOne({ email, isDeleted: false }).select("+password");
   if (!user) { throw new AppError(MESSAGES.INVALID_CREDENTIALS, HTTP_STATUS.UNAUTHORIZED); }
+
+  if (user.role && mongoose.isValidObjectId(user.role)) {
+    await user.populate("role", "name code");
+  }
 
   const isPasswordValid = await comparePassword(body.password, user.password);
   if (!isPasswordValid) { throwServiceError(MESSAGES.INVALID_CREDENTIALS, HTTP_STATUS.UNAUTHORIZED); }
   if (!user.isActive) { throwServiceError(MESSAGES.ACCOUNT_INACTIVE, HTTP_STATUS.FORBIDDEN); }
 
-  const roleName = ((user.role as any)?.name || user.role || USER_ROLES.USER) as string;
-  const adminRoles: string[] = [USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN];
+  const roleName = ((user.role as any)?.name || (user.role as any)?.code || user.role || USER_ROLES.USER) as string;
+  const adminRoles: string[] = [
+    USER_ROLES.SUPER_ADMIN,
+    USER_ROLES.ADMIN,
+    "SUPER_ADMIN",
+    "ADMIN",
+    "Super Admin",
+    "Admin",
+  ];
   if (adminRoles.includes(roleName)) {
     const otpCode = createOtp();
     await User.findByIdAndUpdate(user._id, {
@@ -94,13 +138,17 @@ const loginUser = async (body: ILoginRequest) => {
       otpPurpose: "adminLogin",
     });
 
-    const otpResult = await sendOtpNotification({ to: email, subject: "Admin login verification", otp: otpCode, purpose: "adminLogin", });
+    const otpResult = await sendOtpNotification({
+      to: email,
+      subject: "Zeal Pharma - Login Verification OTP",
+      otp: otpCode,
+      purpose: "adminLogin",
+    });
+
     return {
       success: true,
-      message: otpResult.sent
-        ? MESSAGES.LOGIN_OTP_SENT
-        : MESSAGES.LOGIN_OTP_DEV.replace("{otp}", otpResult.otp),
-      otp: otpResult.otp,
+      requiresOtp: true,
+      message: MESSAGES.LOGIN_OTP_SENT,
       otpSent: otpResult.sent,
     };
   }
@@ -110,7 +158,9 @@ const loginUser = async (body: ILoginRequest) => {
   const refreshToken = generateRefreshToken(payload);
   await User.findByIdAndUpdate(user._id, { lastLogin: new Date(), lastActivityAt: new Date() });
   const safeUser = sanitizeUser(user.toObject());
-  return { accessToken, refreshToken, user: { ...safeUser, role: roleName }, message: MESSAGES.LOGIN_SUCCESS };
+  const effectivePerms = await getEffectivePermissions({ _id: user._id.toString(), role: roleName as any, permissions: user.permissions });
+  const permissionsList = Array.from(effectivePerms);
+  return { accessToken, refreshToken, user: { ...safeUser, role: roleName, permissions: permissionsList }, message: MESSAGES.LOGIN_SUCCESS };
 };
 
 
@@ -126,10 +176,13 @@ const changePassword = async (userId: string, body: IChangePasswordRequest) => {
   if (!isCurrentPasswordValid) { throwServiceError(MESSAGES.CURRENT_PASSWORD_INCORRECT, HTTP_STATUS.BAD_REQUEST); }
   if (body.currentPassword === body.newPassword) { throwServiceError(MESSAGES.PASSWORD_SAME_AS_CURRENT, HTTP_STATUS.BAD_REQUEST); }
   if (body.newPassword !== body.confirmPassword) { throwServiceError(MESSAGES.PASSWORD_CONFIRM_MISMATCH, HTTP_STATUS.BAD_REQUEST); }
-  user.password = await hashPassword(body.newPassword);
-  user.otpCode = null;
-  user.otpExpiresAt = null;
-  await user.save();
+  const hashedPassword = await hashPassword(body.newPassword);
+  await User.findByIdAndUpdate(user._id, {
+    password: hashedPassword,
+    otpCode: null,
+    otpExpiresAt: null,
+    otpPurpose: null,
+  });
   return { success: true, message: MESSAGES.PASSWORD_CHANGED, };
 };
 
@@ -139,22 +192,31 @@ const forgotPassword = async (body: IForgotPasswordRequest) => {
   const email = body.email.trim().toLowerCase();
   const user = await User.findOne({ email, isDeleted: false });
 
-  let otpCode = null;
-
-  if (user) {
-    otpCode = createOtp();
-    await User.findByIdAndUpdate(user._id, {
-      otpCode,
-      otpExpiresAt: new Date(Date.now() + 10 * 60 * 1000),
-      otpPurpose: "passwordReset",
-    });
-    const otpResult = await sendOtpNotification({ to: email, subject: "Password reset OTP", otp: otpCode, purpose: "passwordReset", });
-    otpCode = otpResult.otp;
+  if (!user) {
+    throw new AppError("No account found with this email address.", HTTP_STATUS.NOT_FOUND);
   }
 
+  const otpCode = createOtp();
+  // OTP expires in 1 minute for password reset (as per requirement)
+  await User.findByIdAndUpdate(user._id, {
+    otpCode,
+    otpExpiresAt: new Date(Date.now() + 1 * 60 * 1000),
+    otpPurpose: "passwordReset",
+  });
+
+  const otpResult = await sendOtpNotification({
+    to: email,
+    subject: "Zeal Pharmacure - Password Reset OTP Code",
+    otp: otpCode,
+    purpose: "passwordReset",
+    expiryMinutes: 1,
+    userName: user.name || email.split("@")[0],
+  });
+
   return {
-    success: true, message: MESSAGES.FORGOT_PASSWORD_SENT,
-    otp: otpCode, otpSent: Boolean(otpCode),
+    success: true,
+    message: "Verification OTP has been sent to your registered email address. It expires in 1 minute.",
+    otpSent: otpResult.sent,
   };
 };
 
@@ -163,10 +225,12 @@ const forgotPassword = async (body: IForgotPasswordRequest) => {
 const verifyOtp = async (body: IVerifyOtpRequest) => {
   const email = body.email.trim().toLowerCase();
   const user = await User.findOne({ email, isDeleted: false })
-    .select("+otpCode +otpExpiresAt +otpPurpose")
-    .populate("role", "name code");
+    .select("+otpCode +otpExpiresAt +otpPurpose");
 
   if (!user) { throw new AppError(MESSAGES.USER_NOT_FOUND, HTTP_STATUS.NOT_FOUND); }
+  if (user.role && mongoose.isValidObjectId(user.role)) {
+    await user.populate("role", "name code");
+  }
   if (!user.otpCode || !user.otpExpiresAt) { throwServiceError(MESSAGES.OTP_NOT_FOUND, HTTP_STATUS.BAD_REQUEST); }
 
   if (new Date() > new Date(user.otpExpiresAt as Date)) {
@@ -177,7 +241,8 @@ const verifyOtp = async (body: IVerifyOtpRequest) => {
     });
     throwServiceError(MESSAGES.OTP_EXPIRED, HTTP_STATUS.BAD_REQUEST);
   }
-  if (user.otpCode !== body.otp) { throwServiceError(MESSAGES.INVALID_OTP, HTTP_STATUS.BAD_REQUEST); }
+  const otp = String(body.otp ?? "").trim();
+  if (user.otpCode !== otp) { throwServiceError(MESSAGES.INVALID_OTP, HTTP_STATUS.BAD_REQUEST); }
 
   const otpPurpose = user.otpPurpose;
 
@@ -187,33 +252,49 @@ const verifyOtp = async (body: IVerifyOtpRequest) => {
       otpExpiresAt: null,
       otpPurpose: null,
       isEmailVerified: true,
+      lastLogin: new Date(),
+      lastActivityAt: new Date(),
     });
 
     const roleName = ((user.role as any)?.name || user.role || USER_ROLES.ADMIN) as string;
     const payload = { _id: user._id, email: user.email, role: roleName };
     const accessToken = generateAccessToken(payload);
     const refreshToken = generateRefreshToken(payload);
+    const effectivePerms = await getEffectivePermissions({ _id: user._id.toString(), role: roleName as any, permissions: user.permissions });
+    const permissionsList = Array.from(effectivePerms);
 
     return {
       success: true,
       message: MESSAGES.ADMIN_LOGIN_SUCCESS,
-      accessToken, refreshToken,
-      user: { _id: user._id, name: user.name, email: user.email, role: roleName, },
+      accessToken,
+      refreshToken,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone || '',
+        role: roleName,
+        profileImage: user.profileImage || null,
+        designation: user.designation || '',
+        department: user.department || '',
+        permissions: permissionsList,
+      },
     };
   }
 
   if (otpPurpose === "passwordReset") {
-    await user.save();
     return {
       success: true,
       message: MESSAGES.PASSWORD_RESET_OTP_VERIFIED,
+      otpVerified: true,
     };
   }
 
-  user.otpCode = null;
-  user.otpExpiresAt = null;
-  user.otpPurpose = null;
-  await user.save();
+  await User.findByIdAndUpdate(user._id, {
+    otpCode: null,
+    otpExpiresAt: null,
+    otpPurpose: null,
+  });
   return { success: true, message: MESSAGES.OTP_VERIFIED };
 };
 
@@ -221,27 +302,32 @@ const verifyOtp = async (body: IVerifyOtpRequest) => {
 
 const resetPassword = async (body: IResetPasswordRequest) => {
   const email = body.email.trim().toLowerCase();
-  const user = await User.findOne({ email, isDeleted: false });
+  const user = await User.findOne({ email, isDeleted: false })
+    .select("+password +otpCode +otpExpiresAt +otpPurpose");
 
   if (!user) { throw new AppError(MESSAGES.USER_NOT_FOUND, HTTP_STATUS.NOT_FOUND); }
   if (!user.otpCode || !user.otpExpiresAt) { throwServiceError(MESSAGES.OTP_NOT_FOUND, HTTP_STATUS.BAD_REQUEST); }
 
   if (new Date() > new Date(user.otpExpiresAt as Date)) {
-    user.otpCode = null;
-    user.otpExpiresAt = null;
-    user.otpPurpose = null;
-    await user.save();
+    await User.findByIdAndUpdate(user._id, {
+      otpCode: null,
+      otpExpiresAt: null,
+      otpPurpose: null,
+    });
     throwServiceError(MESSAGES.OTP_EXPIRED, HTTP_STATUS.BAD_REQUEST);
   }
 
-  if (user.otpCode !== body.otp) { throwServiceError(MESSAGES.INVALID_OTP, HTTP_STATUS.BAD_REQUEST); }
+  const otp = String(body.otp ?? "").trim();
+  if (user.otpCode !== otp) { throwServiceError(MESSAGES.INVALID_OTP, HTTP_STATUS.BAD_REQUEST); }
   if (body.newPassword !== body.confirmPassword) { throwServiceError(MESSAGES.PASSWORD_CONFIRM_MISMATCH, HTTP_STATUS.BAD_REQUEST); }
 
-  user.password = await hashPassword(body.newPassword);
-  user.otpCode = null;
-  user.otpExpiresAt = null;
-  user.otpPurpose = null;
-  await user.save();
+  const hashedPassword = await hashPassword(body.newPassword);
+  await User.findByIdAndUpdate(user._id, {
+    password: hashedPassword,
+    otpCode: null,
+    otpExpiresAt: null,
+    otpPurpose: null,
+  });
 
   return {
     success: true,

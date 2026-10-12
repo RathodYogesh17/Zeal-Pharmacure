@@ -229,6 +229,8 @@ const updateEnquiryStatusSchema = Joi.object({
     }),
   note: Joi.string().trim().max(1000).allow(null, "").optional(),
   nextFollowUpAt: Joi.date().iso().allow(null).optional(),
+  notifyClient: Joi.boolean().optional(),
+  customWhatsAppMessage: Joi.string().trim().max(2000).allow(null, "").optional(),
 }).options({
   abortEarly: false,
   stripUnknown: true,

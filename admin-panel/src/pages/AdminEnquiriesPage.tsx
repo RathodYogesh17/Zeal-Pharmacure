@@ -1,9 +1,9 @@
-﻿import React, { useState, useEffect, useMemo } from 'react';
-import { Inbox, RefreshCw, Download, CheckCircle2, Building2, Briefcase, Layers, Pill} from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Inbox, RefreshCw, Download, CheckCircle2, Building2, Briefcase, Layers, Pill } from 'lucide-react';
 import { enquiryService } from '../api/enquiryService';
 import { careerService } from '../api/careerService';
-import { AdminEnquiryDetailModal, EnquiryStatsCards, EnquiryCategoryTabs, EnquiryFilterToolbar, EnquiryTableRow, isCareerLead, isStockistLead, isBulkLead, isSingleProductLead, computeEnquiryStats, exportEnquiriesCSV,} from '../components/enquiries';
-import { TablePagination, filterByDateRange, type DateFilterType,AdvancedWhatsAppModal,} from '../components/common';
+import { AdminEnquiryDetailModal, EnquiryStatsCards, EnquiryCategoryTabs, EnquiryFilterToolbar, EnquiryTableRow, StatusChangeConfirmModal, isCareerLead, isStockistLead, isBulkLead, isSingleProductLead, computeEnquiryStats, exportEnquiriesCSV, } from '../components/enquiries';
+import { TablePagination, filterByDateRange, type DateFilterType } from '../components/common';
 import type { IEnquiry, EnquiryStatus } from '../types';
 
 export { isCareerLead, isStockistLead, isBulkLead, isSingleProductLead } from '../components/enquiries';
@@ -24,8 +24,11 @@ export const AdminEnquiriesPage: React.FC<AdminEnquiriesPageProps> = ({ pageMode
   const [pageSize, setPageSize] = useState(10);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [selectedEnquiry, setSelectedEnquiry] = useState<IEnquiry | null>(null);
-  const [activeWhatsAppEnquiry, setActiveWhatsAppEnquiry] = useState<IEnquiry | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [pendingStatusChange, setPendingStatusChange] = useState<{
+    enquiry: IEnquiry;
+    newStatus: EnquiryStatus;
+  } | null>(null);
 
   // Reset tab and page when pageMode route changes
   useEffect(() => {
@@ -43,14 +46,28 @@ export const AdminEnquiriesPage: React.FC<AdminEnquiriesPageProps> = ({ pageMode
 
   useEffect(() => {
     loadEnquiries();
-  }, []);
+  }, [pageMode]);
 
   const loadEnquiries = async () => {
     setLoading(true);
     try {
+      const categoryParam =
+        pageMode === 'franchise'
+          ? 'franchise'
+          : pageMode === 'product'
+            ? 'product'
+            : undefined;
+
+      const shouldLoadCareers = pageMode === 'all' || pageMode === 'career';
+
       const [res, careerApps] = await Promise.all([
-        enquiryService.adminGetEnquiries({ limit: 500 }),
-        careerService.adminGetApplications().catch(() => []),
+        enquiryService.adminGetEnquiries({
+          limit: 500,
+          category: categoryParam,
+        }),
+        shouldLoadCareers
+          ? careerService.adminGetApplications().catch(() => [])
+          : Promise.resolve([]),
       ]);
 
       const standardEnquiries = res?.enquiries || [];
@@ -99,21 +116,50 @@ export const AdminEnquiriesPage: React.FC<AdminEnquiriesPageProps> = ({ pageMode
     }
   };
 
-  const handleStatusChange = async (id: string, newStatus: EnquiryStatus, note?: string) => {
+  const handleInitiateStatusChange = async (id: string, newStatus: EnquiryStatus) => {
+    const target =
+      enquiries.find((e) => e._id === id) || (selectedEnquiry?._id === id ? selectedEnquiry : null);
+    if (!target) return;
+    if (target.status === newStatus) return;
+    setPendingStatusChange({ enquiry: target, newStatus });
+  };
+
+  const handleConfirmStatusChange = async (
+    id: string,
+    newStatus: EnquiryStatus,
+    note?: string,
+    customMessage?: string
+  ) => {
     setUpdatingId(id);
     try {
-      const target = enquiries.find((e) => e._id === id);
+      const target = enquiries.find((e) => e._id === id) || selectedEnquiry;
       const isCandidate =
         target?.enquiryType === 'CAREER' ||
         target?.enquiryCategory === 'CAREER' ||
         Boolean(target?.positionAppliedFor);
 
       let updatedNotes = target?.internalNotes;
+      let whatsAppDispatch: any = null;
+
       if (isCandidate) {
-        await careerService.adminUpdateApplicationStatus(id, newStatus, true);
+        const res: any = await careerService.adminUpdateApplicationStatus(
+          id,
+          newStatus,
+          true,
+          customMessage
+        );
+        whatsAppDispatch = res?.whatsAppDispatch;
       } else {
-        const updated = await enquiryService.adminUpdateEnquiryStatus(id, newStatus, note, undefined, true);
+        const updated: any = await enquiryService.adminUpdateEnquiryStatus(
+          id,
+          newStatus,
+          note,
+          undefined,
+          true,
+          customMessage
+        );
         updatedNotes = updated?.internalNotes || updatedNotes;
+        whatsAppDispatch = updated?.whatsAppDispatch;
       }
 
       setEnquiries((prev) =>
@@ -122,7 +168,17 @@ export const AdminEnquiriesPage: React.FC<AdminEnquiriesPageProps> = ({ pageMode
       if (selectedEnquiry && selectedEnquiry._id === id) {
         setSelectedEnquiry((prev) => (prev ? { ...prev, status: newStatus, internalNotes: updatedNotes } : null));
       }
-      showToast(`Status updated to ${newStatus} & candidate/partner notified via WhatsApp!`);
+
+      const clientName = target?.name || target?.fullName || 'Client';
+
+      if (whatsAppDispatch?.directWhatsAppUrl) {
+        window.open(whatsAppDispatch.directWhatsAppUrl, '_blank', 'noopener,noreferrer');
+        showToast(`✅ Status updated to ${newStatus}! WhatsApp chat opened with pre-filled details.`);
+      } else {
+        showToast(`✅ Status updated to ${newStatus}`);
+      }
+
+      setPendingStatusChange(null);
     } catch (err: any) {
       console.error('Failed to update status:', err);
       showToast(err?.message || 'Failed to update status');
@@ -463,7 +519,7 @@ export const AdminEnquiriesPage: React.FC<AdminEnquiriesPageProps> = ({ pageMode
                 <th style={{ padding: '14px 16px', fontSize: '12px', fontWeight: 700, color: '#64748B', textTransform: 'uppercase' }}>Target Product / Territory</th>
                 <th style={{ padding: '14px 16px', fontSize: '12px', fontWeight: 700, color: '#64748B', textTransform: 'uppercase' }}>Drug License / GST</th>
                 <th style={{ padding: '14px 16px', fontSize: '12px', fontWeight: 700, color: '#64748B', textTransform: 'uppercase' }}>Created / Updated Date</th>
-                <th style={{ padding: '14px 16px', fontSize: '12px', fontWeight: 700, color: '#64748B', textTransform: 'uppercase' }}>Created / Handled By</th>
+                <th style={{ padding: '14px 16px', fontSize: '12px', fontWeight: 700, color: '#64748B', textTransform: 'uppercase' }}>Updated By</th>
                 <th style={{ padding: '14px 16px', fontSize: '12px', fontWeight: 700, color: '#64748B', textTransform: 'uppercase' }}>Pipeline Status</th>
                 <th style={{ padding: '14px 16px', fontSize: '12px', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', textAlign: 'right' }}>Actions</th>
               </tr>
@@ -495,9 +551,8 @@ export const AdminEnquiriesPage: React.FC<AdminEnquiriesPageProps> = ({ pageMode
                     enquiry={enq}
                     rowNumber={(currentPage - 1) * pageSize + index + 1}
                     updatingId={updatingId}
-                    onStatusChange={handleStatusChange}
+                    onStatusChange={handleInitiateStatusChange}
                     onView={setSelectedEnquiry}
-                    onWhatsApp={setActiveWhatsAppEnquiry}
                     onDelete={handleDeleteEnquiry}
                   />
                 ))
@@ -521,17 +576,20 @@ export const AdminEnquiriesPage: React.FC<AdminEnquiriesPageProps> = ({ pageMode
       <AdminEnquiryDetailModal
         enquiry={selectedEnquiry}
         onClose={() => setSelectedEnquiry(null)}
-        onStatusChange={handleStatusChange}
+        onStatusChange={handleInitiateStatusChange}
         onAddNote={handleAddNote}
         onDelete={handleDeleteEnquiry}
       />
 
-      {/* Advanced WhatsApp Communication Hub Modal */}
-      {activeWhatsAppEnquiry && (
-        <AdvancedWhatsAppModal
-          isOpen={Boolean(activeWhatsAppEnquiry)}
-          onClose={() => setActiveWhatsAppEnquiry(null)}
-          enquiry={activeWhatsAppEnquiry}
+      {/* 1-Click Status Confirmation & WhatsApp Message Modal */}
+      {pendingStatusChange && (
+        <StatusChangeConfirmModal
+          isOpen={Boolean(pendingStatusChange)}
+          onClose={() => setPendingStatusChange(null)}
+          enquiry={pendingStatusChange.enquiry}
+          newStatus={pendingStatusChange.newStatus}
+          onConfirm={handleConfirmStatusChange}
+          isSubmitting={updatingId === pendingStatusChange.enquiry._id}
         />
       )}
     </div>

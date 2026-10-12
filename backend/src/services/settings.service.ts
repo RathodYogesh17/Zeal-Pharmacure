@@ -343,10 +343,103 @@ const assignUserPermissions = async (
 };
 
 // ==========================================
+// ROLE PERMISSIONS MATRIX (KEY-BASED)
+// ==========================================
+const getRolePermissionsMatrix = async () => {
+  const roles = await Role.find({ isActive: true }).lean();
+  const matrix: Record<string, string[]> = {};
+
+  for (const role of roles) {
+    const rolePermissions = await RolePermission.find({ roleId: role._id, isActive: true })
+      .populate("permissionId", "key")
+      .lean();
+
+    const keys = rolePermissions
+      .map((rp: any) => rp.permissionId?.key)
+      .filter((k: any): k is string => Boolean(k));
+
+    matrix[role.name] = keys;
+    if (role.code && role.code !== role.name) {
+      matrix[role.code] = keys;
+    }
+  }
+
+  return matrix;
+};
+
+const saveRolePermissionsMatrix = async (
+  roleCode: string,
+  permissionKeys: string[],
+  userId?: string | mongoose.Types.ObjectId
+) => {
+  const normalizedCode = roleCode.trim().toUpperCase();
+  let role = await Role.findOne({
+    $or: [{ name: normalizedCode }, { code: normalizedCode }],
+  });
+
+  if (!role) {
+    role = await Role.create({
+      name: normalizedCode,
+      code: normalizedCode,
+      description: `${normalizedCode} system role`,
+      isSystemRole: true,
+      isActive: true,
+    });
+  }
+
+  // Find or create permission documents for all requested keys
+  const permissionIds: mongoose.Types.ObjectId[] = [];
+  for (const key of permissionKeys) {
+    const cleanKey = key.trim().toLowerCase();
+    if (!cleanKey) continue;
+
+    let perm = await Permission.findOne({ key: cleanKey });
+    if (!perm) {
+      const parts = cleanKey.split(":");
+      const mod = parts[0] || "general";
+      const act = parts[1] || "view";
+      perm = await Permission.create({
+        key: cleanKey,
+        name: `${mod} ${act}`.toUpperCase(),
+        module: mod.toUpperCase(),
+        action: act.toUpperCase(),
+        description: `Permission for ${cleanKey}`,
+        isActive: true,
+      });
+    }
+    permissionIds.push(perm._id as mongoose.Types.ObjectId);
+  }
+
+  // Delete existing RolePermissions
+  await RolePermission.deleteMany({ roleId: role._id });
+
+  // Insert new mappings
+  const assigner = userId && mongoose.isValidObjectId(userId) ? new mongoose.Types.ObjectId(String(userId)) : null;
+  const mappings = permissionIds.map((pId) => ({
+    roleId: role._id,
+    permissionId: pId,
+    isActive: true,
+    assignedBy: assigner,
+    updatedBy: assigner,
+  }));
+
+  if (mappings.length > 0) {
+    await RolePermission.insertMany(mappings, { ordered: false });
+  }
+
+  // Sync to all users with this role
+  await User.updateMany(
+    { $or: [{ role: role._id }, { role: normalizedCode }] },
+    { $set: { permissions: permissionKeys } }
+  );
+
+  return { role: normalizedCode, permissions: permissionKeys };
+};
+
+// ==========================================
 // AUDIT LOGS QUERY
 // ==========================================
 import { getAuditLogs } from "./auditLog.service";
-
 
 export {
   getAllPermissions,
@@ -359,4 +452,6 @@ export {
   getUserPermissions,
   assignUserPermissions,
   getAuditLogs,
+  getRolePermissionsMatrix,
+  saveRolePermissionsMatrix,
 };

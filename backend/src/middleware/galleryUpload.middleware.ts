@@ -1,11 +1,20 @@
 import fs from "fs";
 import path from "path";
+import os from "os";
 import multer, { type FileFilterCallback } from "multer";
 
+const isServerless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+const galleryDir = isServerless
+  ? path.join(os.tmpdir(), "uploads", "gallery")
+  : path.resolve(process.cwd(), "uploads", "gallery");
 
-
-const galleryDir = path.resolve(process.cwd(), "uploads", "gallery");
-if (!fs.existsSync(galleryDir)) { fs.mkdirSync(galleryDir, { recursive: true });}
+try {
+  if (!fs.existsSync(galleryDir)) {
+    fs.mkdirSync(galleryDir, { recursive: true });
+  }
+} catch {
+  // Silently ignore in read-only environments
+}
 
 
 const storage = multer.diskStorage({

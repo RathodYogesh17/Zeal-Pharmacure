@@ -1,7 +1,7 @@
 /**
  * WhatsApp Message Builder
- * Generates well-structured, executive B2B WhatsApp lead cards
- * with corporate formatting, emojis, and clear sections.
+ * Generates clean, humble, executive B2B WhatsApp messages.
+ * Contains NO emojis, only dynamic details, and a single bottom divider line.
  */
 
 export interface AuthenticatedUserMeta {
@@ -43,6 +43,8 @@ export interface ProductInquiryData {
   state?: string;
   quantity?: string;
   drugLicenseNumber?: string;
+  gstNumber?: string;
+  mrp?: number | string | null;
   message?: string;
   authUser?: AuthenticatedUserMeta;
 }
@@ -52,6 +54,7 @@ export interface BulkBatchItem {
   quantity: number | string;
   unit?: string;
   composition?: string;
+  mrp?: number | string | null;
 }
 
 export interface BulkBatchInquiryData {
@@ -66,121 +69,6 @@ export interface BulkBatchInquiryData {
   message?: string;
   authUser?: AuthenticatedUserMeta;
 }
-
-const formatAuthBlock = (
-  authUser?: AuthenticatedUserMeta,
-  fallbackName?: string,
-  fallbackPhone?: string,
-  fallbackEmail?: string
-) => {
-  const name = authUser?.name || fallbackName || 'Registered User';
-  const phone = authUser?.phone || fallbackPhone || 'Phone Not Set';
-  const email = authUser?.email || fallbackEmail;
-  return [
-    `👤 *VERIFIED REGISTERED USER (LOGIN ACCOUNT)*`,
-    `• *User Name:* ${name}`,
-    `• *Registered Phone:* ${phone}`,
-    email ? `• *Account Email:* ${email}` : null,
-  ].filter(Boolean);
-};
-
-export const buildStockistsWhatsAppMessage = (data: StockistLeadData): string => {
-  const firm = data.companyName || 'Authorized Stockist Partner';
-  const divisions = data.interestedDivisions?.length ? data.interestedDivisions.join(', ') : 'All Formulations';
-  const now = new Date().toLocaleDateString('en-IN', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  });
-
-  const lines = [
-    `🏛️ *ZEAL PHARMACURE PVT. LTD.*`,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `📋 *NEW STOCKISTS DISTRIBUTION APPLICATION*`,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    ...formatAuthBlock(data.authUser, data.fullName, data.phone, data.email),
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    ``,
-    `📍 *TARGET TERRITORY ALLOCATION*`,
-    `• *Territory / District:* ${data.district || data.city || 'District Headquarter'}`,
-    `• *State:* ${data.state || 'India'}`,
-    `• *City HQ:* ${data.city || 'Headquarter'}${data.pincode ? ` (PIN: ${data.pincode})` : ''}`,
-    ``,
-    `🏢 *FIRM & COMMERCIAL DETAILS*`,
-    `• *Firm Name:* ${firm}`,
-    data.businessType ? `• *Business Structure:* ${data.businessType.replace(/_/g, ' ')}` : null,
-    `• *Investment Budget:* ${data.investmentBudget || 'Standard Allocation'}`,
-    `• *Pharma Experience:* ${data.pharmaExperience || 'Active Distribution Background'}`,
-    data.drugLicenseNumber ? `• *Drug License (20B/21B):* ${data.drugLicenseNumber}` : null,
-    data.gstNumber ? `• *GST Number:* ${data.gstNumber}` : null,
-    ``,
-    `📦 *DIVISIONS OF INTEREST*`,
-    `• ${divisions}`,
-    ``,
-    data.message ? `💬 *Requirement Note:*\n_"${data.message}"_\n` : null,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `📅 *Date:* ${now}`,
-    `🌐 *Source:* Zeal Pharmacure Stockists Distribution Portal`,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `👉 *Requested Next Step:*`,
-    `Please share the *Stockists Distribution Rate Chart*, *Product Visual Aids*, and *Authorized Territory Terms*.`,
-  ].filter(Boolean);
-
-  return lines.join('\n');
-};
-
-export const buildFranchiseWhatsAppMessage = buildStockistsWhatsAppMessage;
-
-export const buildProductWhatsAppMessage = (data: ProductInquiryData): string => {
-  const lines = [
-    `💊 *ZEAL PHARMACURE — STOCKISTS PRODUCT INQUIRY*`,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    ...formatAuthBlock(data.authUser, data.fullName, data.phone, data.email),
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `📦 *FORMULATION DETAILS*`,
-    `• *Product Name:* ${data.productName}`,
-    data.genericName ? `• *Composition:* ${data.genericName}` : null,
-    data.dosageForm ? `• *Dosage Form:* ${data.dosageForm}` : null,
-    data.packaging ? `• *Packing:* ${data.packaging}` : null,
-    data.quantity ? `• *Estimated Requirement:* ${data.quantity}` : null,
-    ``,
-    data.companyName ? `🏢 *Firm / Pharmacy:* ${data.companyName}` : null,
-    data.city || data.state ? `📍 *Location:* ${[data.city, data.state].filter(Boolean).join(', ')}` : null,
-    data.drugLicenseNumber ? `📋 *Drug License:* ${data.drugLicenseNumber}` : null,
-    data.message ? `💬 *Note:*\n_"${data.message}"_\n` : null,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `🚀 *Please share the Stockists Net Wholesale Rate and dispatch timeline.*`,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-  ].filter(Boolean);
-
-  return lines.join('\n');
-};
-
-export const buildBulkBatchWhatsAppMessage = (data: BulkBatchInquiryData): string => {
-  const itemLines = data.items.map((it, idx) => {
-    return `${idx + 1}️⃣ *${it.name}* — ${it.quantity} ${it.unit || 'Boxes'}${it.composition ? ` (${it.composition})` : ''}`;
-  });
-
-  const lines = [
-    `📦 *ZEAL PHARMACURE — STOCKISTS BULK BATCH QUOTATION*`,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    ...formatAuthBlock(data.authUser, data.fullName, data.phone, data.email),
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `📋 *ITEMIZED FORMULATIONS BATCH (${data.items.length} Items):*`,
-    ...itemLines,
-    ``,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    data.companyName ? `🏢 *Firm Name:* ${data.companyName}` : null,
-    data.city || data.state ? `📍 *Delivery Headquarter:* ${[data.city, data.state].filter(Boolean).join(', ')}` : null,
-    data.gstNumber ? `📋 *GST Number:* ${data.gstNumber}` : null,
-    data.message ? `💬 *Special Instructions:*\n_"${data.message}"_\n` : null,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `🚀 *Action Required:* Please calculate total institutional batch quotation with freight & wholesale discount.`,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-  ].filter(Boolean);
-
-  return lines.join('\n');
-};
 
 export interface CareerApplicationData {
   jobTitle: string;
@@ -200,44 +88,6 @@ export interface CareerApplicationData {
   authUser?: AuthenticatedUserMeta;
 }
 
-export const buildCareerWhatsAppMessage = (data: CareerApplicationData): string => {
-  const now = new Date().toLocaleDateString('en-IN', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  });
-
-  const location = [data.currentCity, data.currentState].filter(Boolean).join(', ') || 'India';
-
-  const lines = [
-    `💼 *ZEAL PHARMACURE — CAREER APPLICATION*`,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    ...formatAuthBlock(data.authUser, data.fullName, data.phone, data.email),
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `📋 *JOB VACANCY DETAILS*`,
-    `• *Position Applied:* ${data.jobTitle}`,
-    data.department ? `• *Department:* ${data.department}` : null,
-    ``,
-    `👤 *CANDIDATE BACKGROUND*`,
-    `• *Current Location:* ${location}`,
-    data.qualification ? `• *Highest Qualification:* ${data.qualification}` : null,
-    data.totalExperience ? `• *Total Experience:* ${data.totalExperience}` : null,
-    data.currentCompany ? `• *Current Firm:* ${data.currentCompany}` : null,
-    data.currentDesignation ? `• *Designation:* ${data.currentDesignation}` : null,
-    data.expectedCtc ? `• *Expected CTC:* ${data.expectedCtc}` : null,
-    data.noticePeriod ? `• *Notice Period:* ${data.noticePeriod}` : null,
-    data.coverNote ? `💬 *Candidate Note:*\n_"${data.coverNote}"_\n` : null,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `📅 *Date:* ${now}`,
-    `🌐 *Source:* Zeal Pharmacure Careers Portal`,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `🚀 *Action Required:* Please review my candidate application and share interview schedule with HR.`,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-  ].filter(Boolean);
-
-  return lines.join('\n');
-};
-
 export interface QuickWhatsAppInquiryData {
   user?: AuthenticatedUserMeta;
   topicTitle?: string;
@@ -246,29 +96,194 @@ export interface QuickWhatsAppInquiryData {
   source?: string;
 }
 
-export const buildQuickWhatsAppMessage = (data: QuickWhatsAppInquiryData): string => {
-  const now = new Date().toLocaleDateString('en-IN', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
+// -------------------------------------------------------------
+// 1. Single Product Enquiry (User -> Sales Desk)
+// -------------------------------------------------------------
+export const buildProductWhatsAppMessage = (data: ProductInquiryData): string => {
+  const clientName = data.authUser?.name || data.fullName || 'Valued Associate';
+  const clientPhone = data.authUser?.phone || data.phone;
+  const clientEmail = data.authUser?.email || data.email;
+  const location = [data.city, data.state].filter(Boolean).join(', ');
+  const qty = data.quantity || data.targetVolume;
+
+  let mrpText: string | null = null;
+  if (data.mrp !== undefined && data.mrp !== null && data.mrp !== '') {
+    const numericMrp = Number(data.mrp);
+    const displayMrp = isNaN(numericMrp) ? data.mrp : numericMrp.toLocaleString('en-IN');
+    mrpText = `Rs. ${displayMrp} / Pack`;
+  }
+
+  const lines = [
+    `Namaste / Hello Zeal Pharmacure Team,`,
+    ``,
+    `Thank you for your valuable support. I am interested in your pharmaceutical formulation and would like to receive your official distributor rates.`,
+    ``,
+    `*Product Details:*`,
+    `• Formulation: ${data.productName}`,
+    data.genericName ? `• Composition: ${data.genericName}` : null,
+    data.packaging ? `• Packaging: ${data.packaging}` : null,
+    data.dosageForm ? `• Dosage Form: ${data.dosageForm}` : null,
+    mrpText ? `• Single Unit MRP: ${mrpText}` : null,
+    qty ? `• Required Quantity: ${qty}` : null,
+    ``,
+    `*My Contact Details:*`,
+    `• Name: ${clientName}`,
+    clientPhone ? `• Mobile: ${clientPhone}` : null,
+    clientEmail ? `• Email: ${clientEmail}` : null,
+    data.companyName ? `• Firm / Pharmacy: ${data.companyName}` : null,
+    location ? `• Location: ${location}` : null,
+    data.drugLicenseNumber ? `• Drug License: ${data.drugLicenseNumber}` : null,
+    data.gstNumber ? `• GSTIN: ${data.gstNumber}` : null,
+    data.message ? `• Requirement Note: "${data.message}"` : null,
+    ``,
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+    `Kindly share the net distributor rates and dispatch availability at your earliest convenience. Thank you very much!`,
+  ].filter(line => line !== null);
+
+  return lines.join('\n');
+};
+
+// -------------------------------------------------------------
+// 2. Bulk Batch Formulation Enquiry (User -> Sales Desk)
+// -------------------------------------------------------------
+export const buildBulkBatchWhatsAppMessage = (data: BulkBatchInquiryData): string => {
+  const clientName = data.authUser?.name || data.fullName || 'Valued Associate';
+  const clientPhone = data.authUser?.phone || data.phone;
+  const clientEmail = data.authUser?.email || data.email;
+  const location = [data.city, data.state].filter(Boolean).join(', ');
+
+  const itemLines = data.items.map((it, idx) => {
+    let mrpSuffix = '';
+    if (it.mrp !== undefined && it.mrp !== null && it.mrp !== '') {
+      const n = Number(it.mrp);
+      mrpSuffix = ` (MRP: Rs. ${isNaN(n) ? it.mrp : n.toLocaleString('en-IN')} / Pack)`;
+    }
+    const comp = it.composition ? ` [${it.composition}]` : '';
+    return `${idx + 1}. ${it.name} — ${it.quantity} ${it.unit || 'Boxes'}${comp}${mrpSuffix}`;
   });
 
+  const lines = [
+    `Namaste / Hello Zeal Pharmacure Team,`,
+    ``,
+    `Thank you for your assistance. We are looking to place an institutional bulk requirement for the following formulations:`,
+    ``,
+    `*Requested Formulations (${data.items.length} Items):*`,
+    ...itemLines,
+    ``,
+    `*Firm & Contact Details:*`,
+    `• Contact Person: ${clientName}`,
+    clientPhone ? `• Mobile: ${clientPhone}` : null,
+    clientEmail ? `• Email: ${clientEmail}` : null,
+    data.companyName ? `• Firm Name: ${data.companyName}` : null,
+    location ? `• Delivery Location: ${location}` : null,
+    data.gstNumber ? `• GSTIN: ${data.gstNumber}` : null,
+    data.message ? `• Special Instructions: "${data.message}"` : null,
+    ``,
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+    `Kindly share the consolidated quotation with wholesale discounts and freight terms. Thank you very much!`,
+  ].filter(line => line !== null);
+
+  return lines.join('\n');
+};
+
+// -------------------------------------------------------------
+// 3. Stockist / PCD Distribution Application (User -> Sales Desk)
+// -------------------------------------------------------------
+export const buildStockistsWhatsAppMessage = (data: StockistLeadData): string => {
+  const clientName = data.authUser?.name || data.fullName || 'Valued Associate';
+  const clientPhone = data.authUser?.phone || data.phone;
+  const clientEmail = data.authUser?.email || data.email;
+  const location = [data.city, data.district, data.state].filter(Boolean).join(', ');
+  const divisions = data.interestedDivisions?.length ? data.interestedDivisions.join(', ') : null;
+
+  const lines = [
+    `Namaste / Hello Zeal Pharmacure Team,`,
+    ``,
+    `Thank you for offering quality healthcare products. We are keen to associate with Zeal Pharmacure Pvt. Ltd. as an Authorized Stockist Partner in our territory.`,
+    ``,
+    `*Application Details:*`,
+    location ? `• Target Territory: ${location}${data.pincode ? ` (PIN: ${data.pincode})` : ''}` : null,
+    data.companyName ? `• Firm Name: ${data.companyName}` : null,
+    `• Contact Person: ${clientName}`,
+    clientPhone ? `• Mobile: ${clientPhone}` : null,
+    clientEmail ? `• Email: ${clientEmail}` : null,
+    data.businessType ? `• Business Structure: ${data.businessType.replace(/_/g, ' ')}` : null,
+    data.investmentBudget ? `• Investment Capacity: ${data.investmentBudget}` : null,
+    data.pharmaExperience ? `• Pharma Experience: ${data.pharmaExperience}` : null,
+    data.drugLicenseNumber ? `• Drug License (DL): ${data.drugLicenseNumber}` : null,
+    data.gstNumber ? `• GSTIN: ${data.gstNumber}` : null,
+    divisions ? `• Interested Divisions: ${divisions}` : null,
+    data.message ? `• Note: "${data.message}"` : null,
+    ``,
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+    `We request you to kindly share the territory availability, visual aids, and monopoly distribution terms. Thank you!`,
+  ].filter(line => line !== null);
+
+  return lines.join('\n');
+};
+
+export const buildFranchiseWhatsAppMessage = buildStockistsWhatsAppMessage;
+
+// -------------------------------------------------------------
+// 4. Career Candidate Application (Applicant -> HR Desk)
+// -------------------------------------------------------------
+export const buildCareerWhatsAppMessage = (data: CareerApplicationData): string => {
+  const candidateName = data.authUser?.name || data.fullName || 'Candidate';
+  const candidatePhone = data.authUser?.phone || data.phone;
+  const candidateEmail = data.authUser?.email || data.email;
+  const location = [data.currentCity, data.currentState].filter(Boolean).join(', ');
+
+  const lines = [
+    `Namaste / Hello Zeal Pharmacure HR Team,`,
+    ``,
+    `Thank you for reviewing my profile. I am writing to express my keen interest in the career opening at Zeal Pharmacure Pvt. Ltd.`,
+    ``,
+    `*Candidate Profile:*`,
+    `• Position Applied: ${data.jobTitle}`,
+    data.department ? `• Department: ${data.department}` : null,
+    `• Candidate Name: ${candidateName}`,
+    candidatePhone ? `• Mobile: ${candidatePhone}` : null,
+    candidateEmail ? `• Email: ${candidateEmail}` : null,
+    location ? `• Current Location: ${location}` : null,
+    data.qualification ? `• Highest Qualification: ${data.qualification}` : null,
+    data.totalExperience ? `• Total Experience: ${data.totalExperience}` : null,
+    data.currentCompany ? `• Current Company: ${data.currentCompany}` : null,
+    data.currentDesignation ? `• Current Designation: ${data.currentDesignation}` : null,
+    data.expectedCtc ? `• Expected CTC: ${data.expectedCtc}` : null,
+    data.noticePeriod ? `• Notice Period: ${data.noticePeriod}` : null,
+    data.coverNote ? `• Candidate Note: "${data.coverNote}"` : null,
+    ``,
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+    `Kindly consider my application for the interview process. Thank you very much!`,
+  ].filter(line => line !== null);
+
+  return lines.join('\n');
+};
+
+// -------------------------------------------------------------
+// 5. Quick Direct Desk Enquiry
+// -------------------------------------------------------------
+export const buildQuickWhatsAppMessage = (data: QuickWhatsAppInquiryData): string => {
+  const clientName = data.user?.name || 'Valued Associate';
+  const clientPhone = data.user?.phone;
+  const clientEmail = data.user?.email;
   const subject = data.topicTitle || data.topicLabel;
 
   const lines = [
-    `💬 *ZEAL PHARMACURE — DIRECT ENQUIRY DESK*`,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    ...formatAuthBlock(data.user),
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    subject ? `📌 *Subject / Topic:* ${subject}` : null,
-    data.message ? `\n💬 *Message:*\n"${data.message}"\n` : null,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `📅 *Date:* ${now}`,
-    `🌐 *Source:* ${data.source || 'Zeal Pharmacure Website Desk'}`,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `👉 *Action Required:* Sales Executive please connect with the verified user above.`,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-  ].filter(Boolean);
+    `Namaste / Hello Zeal Pharmacure Team,`,
+    ``,
+    `Thank you for your assistance. I would like to make an enquiry regarding the following:`,
+    ``,
+    subject ? `*Subject:* ${subject}` : null,
+    `*Contact Details:*`,
+    `• Name: ${clientName}`,
+    clientPhone ? `• Mobile: ${clientPhone}` : null,
+    clientEmail ? `• Email: ${clientEmail}` : null,
+    data.message ? `• Message: "${data.message}"` : null,
+    ``,
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+    `Kindly connect with me at your convenience. Thank you!`,
+  ].filter(line => line !== null);
 
   return lines.join('\n');
 };

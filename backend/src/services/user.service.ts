@@ -18,6 +18,18 @@ const auditUserPopulate = [
   { path: "deletedBy", select: "name email" },
 ];
 
+const normalizeUserResponse = (userDoc: any) => {
+  if (!userDoc) return userDoc;
+  const roleName = typeof userDoc.role === "object" && userDoc.role !== null
+    ? (userDoc.role.name || userDoc.role.code || "USER")
+    : String(userDoc.role || "USER");
+  return {
+    ...userDoc,
+    role: roleName,
+    roleDetails: typeof userDoc.role === "object" ? userDoc.role : undefined,
+  };
+};
+
 const throwServiceError = (message: string, statusCode: HttpStatusCode): never => {
   throw new AppError(message, statusCode);
 };
@@ -87,10 +99,11 @@ const createUser = async (body: ICreateUserRequest, user?: IAuthenticatedUser) =
     lastLogin: null,
   });
 
-  return User.findById(newUser._id)
+  const created = await User.findById(newUser._id)
     .select("-password")
     .populate(auditUserPopulate)
     .lean();
+  return normalizeUserResponse(created);
 };
 
 const createStaffUser = async (body: ICreateUserRequest, user?: IAuthenticatedUser) => {
@@ -126,10 +139,11 @@ const createStaffUser = async (body: ICreateUserRequest, user?: IAuthenticatedUs
     lastLogin: null,
   });
 
-  return User.findById(newUser._id)
+  const createdStaff = await User.findById(newUser._id)
     .select("-password")
     .populate(auditUserPopulate)
     .lean();
+  return normalizeUserResponse(createdStaff);
 };
 
 // =====================================================
@@ -145,7 +159,7 @@ const getUser = async (id: string) => {
   if (!user) {
     throwServiceError(MESSAGES.USER_NOT_FOUND, HTTP_STATUS.NOT_FOUND);
   }
-  return user;
+  return normalizeUserResponse(user);
 };
 
 // =====================================================
@@ -190,7 +204,7 @@ const getAllUsers = async (query: IUserQuery = {}) => {
   ]);
 
   const totalPages = Math.ceil(total / limit);
-  return { users, total, page, limit, totalPages };
+  return { users: users.map(normalizeUserResponse), total, page, limit, totalPages };
 };
 
 // =====================================================
@@ -235,7 +249,7 @@ const updateUser = async (id: string, body: IUpdateUserRequest, user?: IAuthenti
     .populate(auditUserPopulate)
     .lean();
 
-  return updatedUser;
+  return normalizeUserResponse(updatedUser);
 };
 
 // =====================================================

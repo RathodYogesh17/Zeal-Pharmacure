@@ -1,25 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import {
-  X,
-  MessageSquare,
-  ExternalLink,
-  Copy,
-  Check,
-  Bot,
-  User,
-  Phone,
-  AlertCircle,
-} from 'lucide-react';
-import { whatsappService, type IWhatsAppBotStatus } from '../../api/whatsappService';
-import {
-  getWhatsAppCategoryColor,
-  getCategoryWhatsAppTemplates,
-  buildWhatsAppWebUrl,
-  normalizeWhatsAppRecipient,
-  type WhatsAppEnquiryCategory,
-  type MessageTemplate,
-  type WhatsAppTemplateDetails,
-} from './whatsapp';
+import { X, MessageSquare, ExternalLink, Copy, Check, User, Phone, AlertCircle } from 'lucide-react';
+import { getWhatsAppCategoryColor, getCategoryWhatsAppTemplates, buildWhatsAppWebUrl, normalizeWhatsAppRecipient, type WhatsAppEnquiryCategory, type MessageTemplate, type WhatsAppTemplateDetails } from './whatsapp';
 
 export interface AdvancedWhatsAppModalProps {
   isOpen: boolean;
@@ -39,47 +20,35 @@ export const AdvancedWhatsAppModal: React.FC<AdvancedWhatsAppModalProps> = (prop
   const { isOpen, onClose, onMessageSent } = props;
 
   const normalized = useMemo(() => normalizeWhatsAppRecipient(props), [props]);
-  const { category, recipientName, recipientPhone, cleanPhone, currentStatus, referenceTitle, details } = normalized;
+  const { category, recipientName, recipientPhone, recipientEmail, cleanPhone, currentStatus, referenceTitle, details, referenceId } = normalized;
 
-  // Category message templates from shared common definitions
+  // Category message templates with auto-injected client & status details
   const templates: MessageTemplate[] = useMemo(
-    () => getCategoryWhatsAppTemplates(category, recipientName, referenceTitle, details),
-    [category, recipientName, referenceTitle, details]
+    () =>
+      getCategoryWhatsAppTemplates(
+        category,
+        recipientName,
+        referenceTitle,
+        details,
+        recipientPhone,
+        recipientEmail,
+        referenceId,
+        currentStatus
+      ),
+    [category, recipientName, referenceTitle, details, recipientPhone, recipientEmail, referenceId, currentStatus]
   );
 
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
   const [messageText, setMessageText] = useState<string>('');
-  const [botStatus, setBotStatus] = useState<IWhatsAppBotStatus>({ status: 'DISCONNECTED' });
-  const [sendingBot, setSendingBot] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
-  const [botSuccessMsg, setBotSuccessMsg] = useState<string>('');
-  const [botErrorMsg, setBotErrorMsg] = useState<string>('');
 
-  // Sync templates on open or category/recipient change
+  // Automatically load the pre-built status template
   useEffect(() => {
     if (templates.length > 0) {
       setSelectedTemplateId(templates[0].id);
       setMessageText(templates[0].getMessage());
     }
   }, [templates]);
-
-  // Check live bot status when modal is opened
-  useEffect(() => {
-    if (!isOpen) return;
-    let isMounted = true;
-    whatsappService
-      .getBotStatus()
-      .then((status) => {
-        if (isMounted) setBotStatus(status);
-      })
-      .catch(() => {
-        if (isMounted) setBotStatus({ status: 'DISCONNECTED' });
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -103,28 +72,6 @@ export const AdvancedWhatsAppModal: React.FC<AdvancedWhatsAppModalProps> = (prop
     window.open(url, '_blank', 'noopener,noreferrer');
     onMessageSent?.(messageText);
     onClose();
-  };
-
-  const handleSendViaBot = async () => {
-    setSendingBot(true);
-    setBotSuccessMsg('');
-    setBotErrorMsg('');
-    try {
-      const res = await whatsappService.sendDirectMessage(cleanPhone || recipientPhone, messageText);
-      if (res.success) {
-        setBotSuccessMsg(`Message successfully delivered to +${cleanPhone || recipientPhone} via WhatsApp Bot!`);
-        onMessageSent?.(messageText);
-        setTimeout(() => {
-          onClose();
-        }, 2200);
-      } else {
-        setBotErrorMsg(res.error || res.message || 'Bot could not deliver message. Please open via WhatsApp Web.');
-      }
-    } catch (err: any) {
-      setBotErrorMsg(err?.message || 'Failed to dispatch message via WhatsApp Bot. Use WhatsApp Web.');
-    } finally {
-      setSendingBot(false);
-    }
   };
 
   const catStyle = getWhatsAppCategoryColor(category);
@@ -282,92 +229,59 @@ export const AdvancedWhatsAppModal: React.FC<AdvancedWhatsAppModalProps> = (prop
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span
               style={{
-                width: '9px',
-                height: '9px',
+                width: '8px',
+                height: '8px',
                 borderRadius: '50%',
-                background: botStatus.status === 'CONNECTED' ? '#10B981' : '#94A3B8',
-                boxShadow: botStatus.status === 'CONNECTED' ? '0 0 8px #10B981' : 'none',
+                background: '#10B981',
+                boxShadow: '0 0 6px #10B981',
               }}
             />
-            <span style={{ fontSize: '12px', fontWeight: 700, color: botStatus.status === 'CONNECTED' ? '#065F46' : '#64748B' }}>
-              {botStatus.status === 'CONNECTED' ? 'WhatsApp Bot Active (Server Push)' : 'WhatsApp Web Ready'}
+            <span style={{ fontSize: '12px', fontWeight: 700, color: '#065F46' }}>
+              WhatsApp Click-to-Chat (100% Free &amp; Fast)
             </span>
           </div>
         </div>
 
         {/* Modal Scrollable Body */}
         <div style={{ padding: '20px 24px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px', flex: 1 }}>
-          {/* Alerts */}
-          {botSuccessMsg && (
-            <div
-              style={{
-                padding: '10px 14px',
-                background: '#ECFDF5',
-                border: '1px solid #A7F3D0',
-                color: '#065F46',
-                borderRadius: '10px',
-                fontSize: '12.5px',
-                fontWeight: 600,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-              }}
-            >
-              <Check size={16} />
-              <span>{botSuccessMsg}</span>
-            </div>
-          )}
 
-          {botErrorMsg && (
-            <div
-              style={{
-                padding: '10px 14px',
-                background: '#FEF2F2',
-                border: '1px solid #FECACA',
-                color: '#991B1B',
-                borderRadius: '10px',
-                fontSize: '12.5px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-              }}
-            >
-              <AlertCircle size={16} />
-              <span>{botErrorMsg}</span>
-            </div>
-          )}
-
-          {/* Template Selector Pills */}
+          {/* Auto-Loaded Status Template Info */}
           <div>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: 800, color: '#475569', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-              Select Smart Message Template
-            </label>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-              {templates.map((tpl) => {
-                const isSelected = selectedTemplateId === tpl.id;
-                return (
-                  <button
-                    key={tpl.id}
-                    type="button"
-                    onClick={() => handleSelectTemplate(tpl)}
-                    style={{
-                      padding: '7px 14px',
-                      fontSize: '12.5px',
-                      fontWeight: 700,
-                      borderRadius: '10px',
-                      border: isSelected ? '1.5px solid #10B981' : '1.5px solid #E2E8F0',
-                      background: isSelected ? '#ECFDF5' : '#FFFFFF',
-                      color: isSelected ? '#065F46' : '#334155',
-                      cursor: 'pointer',
-                      transition: 'all 0.15s ease',
-                      boxShadow: isSelected ? '0 2px 8px rgba(16, 185, 129, 0.15)' : 'none',
-                    }}
-                  >
-                    {tpl.label}
-                  </button>
-                );
-              })}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+              <label style={{ fontSize: '12px', fontWeight: 800, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                Pre-Generated Status Message (Auto-Filled)
+              </label>
+              <span style={{ fontSize: '11px', color: '#059669', fontWeight: 700, background: '#ECFDF5', padding: '2px 8px', borderRadius: '6px', border: '1px solid #A7F3D0' }}>
+                ✓ Dynamic Details Injected
+              </span>
             </div>
+            {templates.length > 1 && (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                {templates.map((tpl) => {
+                  const isSelected = selectedTemplateId === tpl.id;
+                  return (
+                    <button
+                      key={tpl.id}
+                      type="button"
+                      onClick={() => handleSelectTemplate(tpl)}
+                      style={{
+                        padding: '6px 12px',
+                        fontSize: '12px',
+                        fontWeight: 700,
+                        borderRadius: '8px',
+                        border: isSelected ? '1.5px solid #10B981' : '1.5px solid #E2E8F0',
+                        background: isSelected ? '#ECFDF5' : '#FFFFFF',
+                        color: isSelected ? '#065F46' : '#475569',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease',
+                      }}
+                    >
+                      {tpl.label}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           {/* Editable Textarea */}
@@ -493,33 +407,7 @@ export const AdvancedWhatsAppModal: React.FC<AdvancedWhatsAppModalProps> = (prop
               Cancel
             </button>
 
-            {/* Direct Bot Send */}
-            <button
-              type="button"
-              onClick={handleSendViaBot}
-              disabled={sendingBot}
-              style={{
-                padding: '9px 16px',
-                fontSize: '13px',
-                fontWeight: 700,
-                borderRadius: '10px',
-                border: 'none',
-                background: botStatus.status === 'CONNECTED' ? '#6828DC' : '#475569',
-                color: '#FFFFFF',
-                cursor: sendingBot ? 'not-allowed' : 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                opacity: sendingBot ? 0.7 : 1,
-                boxShadow: '0 2px 10px rgba(104, 40, 220, 0.25)',
-              }}
-              title={botStatus.status === 'CONNECTED' ? 'Send direct message from server via bot' : 'Send test via bot'}
-            >
-              <Bot size={15} />
-              <span>{sendingBot ? 'Pushing Message...' : '🚀 Send via Bot'}</span>
-            </button>
-
-            {/* WhatsApp Web Direct Chat */}
+            {/* WhatsApp Direct Click-to-Chat */}
             <button
               type="button"
               onClick={handleOpenWhatsAppWeb}

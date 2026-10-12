@@ -7,7 +7,6 @@ import {
   Building2,
   Calendar,
   Clock,
-  Send,
   Download,
   ShieldCheck,
   FileText,
@@ -22,17 +21,19 @@ import {
   CheckCircle2,
   AlertCircle,
   Plus,
-  ExternalLink,
   MessageSquare,
   UserCheck,
+  Send,
 } from 'lucide-react';
-import { ThemeSelect, AdvancedWhatsAppModal } from '../common';
+import { ThemeSelect } from '../common';
+import { enquiryService } from '../../api/enquiryService';
+import { getMediaUrl } from '../../utils/mediaUtils';
 import type { IEnquiry, EnquiryStatus } from '../../types';
 
 interface AdminEnquiryDetailModalProps {
   enquiry: IEnquiry | null;
   onClose: () => void;
-  onStatusChange: (id: string, newStatus: EnquiryStatus, note?: string) => Promise<void>;
+  onStatusChange: (id: string, newStatus: EnquiryStatus, note?: string) => Promise<void> | void;
   onAddNote: (id: string, note: string) => Promise<void>;
   onDelete?: (id: string, name: string) => Promise<void>;
 }
@@ -46,7 +47,13 @@ export const AdminEnquiryDetailModal: React.FC<AdminEnquiryDetailModalProps> = (
   const [newNote, setNewNote] = useState('');
   const [submittingNote, setSubmittingNote] = useState(false);
   const [updatingStatus, setUpdatingStatus] = useState(false);
-  const [showAdvancedWhatsApp, setShowAdvancedWhatsApp] = useState(false);
+
+  // Email Composer Modal State
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [emailSubject, setEmailSubject] = useState('');
+  const [emailBody, setEmailBody] = useState('');
+  const [sendingEmail, setSendingEmail] = useState(false);
+  const [emailStatusMsg, setEmailStatusMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   if (!enquiry) return null;
 
@@ -128,35 +135,39 @@ export const AdminEnquiryDetailModal: React.FC<AdminEnquiryDetailModalProps> = (
   const statusMeta = getStatusMeta(enquiry.status || 'NEW');
   const typeMeta = getTypeMeta();
 
-  // Smart Contextual WhatsApp greeting builder
+  // Smart Contextual WhatsApp greeting builder (Humble, respectful, dynamic)
   const getWhatsAppUrl = () => {
     const rawPhone = (enquiry.phone || enquiry.whatsappNumber || '').replace(/[^0-9]/g, '');
-    let text = `Hello ${leadName}, greetings from Zeal Pharmaceuticals Head Office.`;
 
     if (isSingle) {
-      const qtyText = enquiry.quantity ? ` with requirement of ${enquiry.quantity} ${enquiry.quantityUnit || 'units'}` : '';
-      text = `Hello ${leadName}, greetings from Zeal Pharmaceuticals Head Office.\n\nWe have received your product inquiry for *${singleProdName}*${qtyText}.\n\nOur institutional sales department has reviewed your request and we are pleased to offer our net distributor rates. Would you be available for a quick discussion?`;
+      const qtyText = enquiry.quantity ? `\n• Quantity: ${enquiry.quantity} ${enquiry.quantityUnit || 'Boxes'}` : '';
+      let mrpLine = '';
+      if (typeof enquiry.product === 'object' && enquiry.product && (enquiry.product as any).mrp) {
+        const num = Number((enquiry.product as any).mrp);
+        mrpLine = `\n• Single Unit MRP: Rs. ${isNaN(num) ? (enquiry.product as any).mrp : num.toLocaleString('en-IN')} / Pack`;
+      }
+      const text = `Dear ${leadName} Ji,\n\nGreetings from Zeal Pharmacure Pvt. Ltd.!\n\nThank you very much for your enquiry regarding *${singleProdName}*. We truly appreciate your interest in our formulations.\n\n*Enquiry Details:*${mrpLine}${qtyText}\n\nOur institutional sales team has reviewed your requirement and prepared our net distributor rates. May we take a brief moment of your time to share the commercial details?\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nWarm regards,\nSales Desk | Zeal Pharmacure\nHelpline: +91 93162 27576`;
+      return `https://wa.me/${rawPhone}?text=${encodeURIComponent(text)}`;
     } else if (isBulk) {
       const prodPreview = bulkItems
         .slice(0, 3)
         .map(i => (typeof i.product === 'object' && i.product?.name ? i.product.name : 'Formulation'))
         .join(', ');
-      text = `Hello ${leadName}, greetings from Zeal Pharmaceuticals Head Office.\n\nWe have received your Bulk Requirement Batch for *${bulkItems.length} formulations* (${prodPreview}${bulkItems.length > 3 ? '...' : ''}).\n\nOur team has prepared the wholesale commercial quotation. Could you please confirm your expected delivery schedule?`;
+      const text = `Dear ${leadName} Ji,\n\nGreetings from Zeal Pharmacure Pvt. Ltd.!\n\nThank you very much for submitting your Bulk Requirement Batch for *${bulkItems.length} formulations* (${prodPreview}${bulkItems.length > 3 ? '...' : ''}). We truly appreciate your trust in our brand.\n\nOur commercial sales desk has prepared the institutional wholesale quotation with net rates and freight estimates. Could you please confirm your expected delivery schedule?\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nWarm regards,\nInstitutional Sales Desk | Zeal Pharmacure\nHelpline: +91 93162 27576`;
+      return `https://wa.me/${rawPhone}?text=${encodeURIComponent(text)}`;
     } else if (isCareer) {
       const role = enquiry.positionAppliedFor || 'the advertised position';
-      text = `Hello ${leadName}, greetings from the HR Department at Zeal Pharmaceuticals.\n\nThank you for submitting your application for *${role}*.\n\nWe have reviewed your profile and would like to invite you for an initial interview round. Could you please confirm your availability this week?`;
+      const text = `Dear ${leadName},\n\nGreetings from the HR Department at Zeal Pharmacure Pvt. Ltd.!\n\nThank you very much for your interest in building your career with us for the position of *${role}*.\n\nWe have reviewed your candidate profile and would like to invite you for an interview round. Could you please confirm your availability this week?\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nWarm regards,\nTalent Acquisition Team | Zeal Pharmacure\ncareers@zealpharma.com`;
+      return `https://wa.me/${rawPhone}?text=${encodeURIComponent(text)}`;
     } else {
       const territory = enquiry.territoryDistrict || enquiry.preferredTerritory || enquiry.city || 'your territory';
-      text = `Hello ${leadName}, greetings from Zeal Pharmaceuticals Head Office.\n\nThank you for your application for our *Stockists Distribution Network* in *${territory}*.\n\nWe would like to share our product catalog, monopoly division details, and commercial terms. Are you available for a phone discussion today?`;
+      const text = `Dear ${leadName} Ji,\n\nGreetings from Zeal Pharmacure Pvt. Ltd.!\n\nThank you very much for your application for our *Stockists Distribution Network* in *${territory}*. We sincerely appreciate your interest in partnering with our company.\n\nOur market expansion desk has reviewed your file and is pleased to share our product catalog, monopoly division details, and distribution rate charts. Are you available for a brief phone consultation today?\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nWarm regards,\nStockists Network Desk | Zeal Pharmacure\nHelpline: +91 93162 27576`;
+      return `https://wa.me/${rawPhone}?text=${encodeURIComponent(text)}`;
     }
-
-    return `https://wa.me/${rawPhone}?text=${encodeURIComponent(text)}`;
   };
 
   const getResumeUrl = (url?: string) => {
-    if (!url) return '';
-    if (url.startsWith('http')) return url;
-    return `http://localhost:5000${url.startsWith('/') ? '' : '/'}${url}`;
+    return getMediaUrl(url);
   };
 
   const handleStatusSubmit = async (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -178,6 +189,41 @@ export const AdminEnquiryDetailModal: React.FC<AdminEnquiryDetailModalProps> = (
       setNewNote('');
     } finally {
       setSubmittingNote(false);
+    }
+  };
+
+  const openEmailComposer = (presetKey: string = 'quotation') => {
+    setShowEmailModal(true);
+    setEmailStatusMsg(null);
+    if (presetKey === 'quotation') {
+      setEmailSubject(`Commercial Price Quotation - Zeal Pharmaceuticals`);
+      setEmailBody(`Dear ${leadName},\n\nThank you for reaching out to Zeal Pharmaceuticals regarding ${isSingle ? singleProdName : (isBulk ? `${bulkItems.length} formulations` : 'Stockists Distribution')}.\n\nWe have prepared our wholesale net distributor rate proposal. Attached/below are the commercial terms and minimum supply schedule.\n\nPlease let us know if you require product samples or our Visual Aid booklet.\n\nWarm regards,\nZeal Pharma Sales Management\nHelpline: +91 9316227576 | info@zealpharma.com`);
+    } else if (presetKey === 'docs') {
+      setEmailSubject(`Document Verification Required - Zeal Pharmaceuticals`);
+      setEmailBody(`Dear ${leadName},\n\nWe have received your B2B inquiry. To process your distributor registration and dispatch commercial Visual Aids, please share a scanned copy of your:\n\n1. Valid Wholesale Drug License (Form 20B/21B)\n2. GST Registration Certificate\n3. Transport/Consignment delivery preferences\n\nYou can reply directly to this email.\n\nBest regards,\nZeal Pharma Compliance Desk`);
+    } else {
+      setEmailSubject(`Stockists Distribution Network Discussion - Zeal Pharmaceuticals`);
+      setEmailBody(`Dear ${leadName},\n\nThank you for your interest in partnering with Zeal Pharmaceuticals for our Stockists Distribution Network.\n\nWe would like to schedule a 10-minute briefing to discuss exclusive territory allocation, profit margins, and promotional support in your district.\n\nPlease let us know your preferred time for a phone discussion this week.\n\nWarm regards,\nDirector - Distribution Alliances\nZeal Pharmaceuticals Pvt. Ltd.`);
+    }
+  };
+
+  const handleSendEmailReply = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!emailBody.trim()) return;
+    setSendingEmail(true);
+    setEmailStatusMsg(null);
+    try {
+      const res = await enquiryService.adminReplyEnquiryEmail(enquiry._id, emailBody.trim(), emailSubject.trim() || undefined);
+      setEmailStatusMsg({ type: 'success', text: res.message || 'Email successfully delivered to client!' });
+      await onAddNote(enquiry._id, `✉️ Sent email reply: "${emailBody.trim().slice(0, 100)}..."`);
+      setTimeout(() => {
+        setShowEmailModal(false);
+        setEmailStatusMsg(null);
+      }, 1800);
+    } catch (err: any) {
+      setEmailStatusMsg({ type: 'error', text: err?.message || 'Failed to send email. Check SMTP settings.' });
+    } finally {
+      setSendingEmail(false);
     }
   };
 
@@ -985,12 +1031,62 @@ export const AdminEnquiryDetailModal: React.FC<AdminEnquiryDetailModalProps> = (
           }}
         >
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            {/* WhatsApp Deep-Link 1-Click Button */}
+            <a
+              href={getWhatsAppUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-primary"
+              style={{
+                borderRadius: '10px',
+                padding: '9px 16px',
+                fontSize: '13px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                textDecoration: 'none',
+                background: '#059669',
+                borderColor: '#059669',
+                color: '#FFFFFF',
+                fontWeight: 700,
+                boxShadow: '0 2px 8px rgba(5, 150, 105, 0.2)',
+              }}
+              title="Open WhatsApp Web or app with pre-filled greeting"
+            >
+              <MessageSquare size={14} />
+              <span>WhatsApp Reply</span>
+            </a>
+
+            {/* Direct In-Portal Email Reply */}
+            <button
+              type="button"
+              onClick={() => openEmailComposer('quotation')}
+              className="btn btn-primary"
+              style={{
+                borderRadius: '10px',
+                padding: '9px 16px',
+                fontSize: '13px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                background: '#2563EB',
+                borderColor: '#2563EB',
+                color: '#FFFFFF',
+                fontWeight: 700,
+                boxShadow: '0 2px 8px rgba(37, 99, 235, 0.2)',
+              }}
+              title="Compose and send official email response via Gmail SMTP"
+            >
+              <Send size={14} />
+              <span>Reply by Email</span>
+            </button>
+
             <a
               href={`tel:${enquiry.phone || enquiry.whatsappNumber}`}
               className="btn btn-secondary"
               style={{
                 borderRadius: '10px',
-                padding: '9px 16px',
+                padding: '9px 14px',
                 fontSize: '13px',
                 display: 'flex',
                 alignItems: 'center',
@@ -1008,7 +1104,7 @@ export const AdminEnquiryDetailModal: React.FC<AdminEnquiryDetailModalProps> = (
               className="btn btn-secondary"
               style={{
                 borderRadius: '10px',
-                padding: '9px 16px',
+                padding: '9px 14px',
                 fontSize: '13px',
                 display: 'flex',
                 alignItems: 'center',
@@ -1016,9 +1112,10 @@ export const AdminEnquiryDetailModal: React.FC<AdminEnquiryDetailModalProps> = (
                 textDecoration: 'none',
                 color: '#334155',
               }}
+              title="Open default email application"
             >
-              <Mail size={14} style={{ color: '#2563EB' }} />
-              <span>Send Email</span>
+              <Mail size={14} style={{ color: '#64748B' }} />
+              <span>Client App</span>
             </a>
           </div>
 
@@ -1031,40 +1128,175 @@ export const AdminEnquiryDetailModal: React.FC<AdminEnquiryDetailModalProps> = (
             >
               Close
             </button>
-
-            <button
-              type="button"
-              onClick={() => setShowAdvancedWhatsApp(true)}
-              className="btn btn-primary"
-              style={{
-                borderRadius: '10px',
-                background: '#059669',
-                borderColor: '#059669',
-                padding: '9px 22px',
-                fontSize: '13.5px',
-                fontWeight: 700,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                cursor: 'pointer',
-                boxShadow: '0 4px 14px rgba(5, 150, 105, 0.25)',
-              }}
-            >
-              <Send size={15} />
-              <span>Chat on WhatsApp</span>
-            </button>
           </div>
         </div>
-      </div>
 
-      {/* Advanced WhatsApp Communication Hub Modal */}
-      {showAdvancedWhatsApp && enquiry && (
-        <AdvancedWhatsAppModal
-          isOpen={showAdvancedWhatsApp}
-          onClose={() => setShowAdvancedWhatsApp(false)}
-          enquiry={enquiry}
-        />
-      )}
+        {/* IN-PORTAL EMAIL COMPOSER MODAL */}
+        {showEmailModal && (
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'rgba(15, 23, 42, 0.65)',
+              backdropFilter: 'blur(4px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 10001,
+              padding: '16px',
+            }}
+            onClick={() => setShowEmailModal(false)}
+          >
+            <div
+              style={{
+                background: '#FFFFFF',
+                borderRadius: '16px',
+                maxWidth: '620px',
+                width: '100%',
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+                overflow: 'hidden',
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div
+                style={{
+                  padding: '16px 20px',
+                  borderBottom: '1.5px solid #F1F5F9',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  background: '#F8FAFC',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Mail size={18} style={{ color: '#2563EB' }} />
+                  <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: '#0F172A' }}>
+                    Send Email Reply to {leadName}
+                  </h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowEmailModal(false)}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748B' }}
+                >
+                  <X size={18} />
+                </button>
+              </div>
+
+              {/* Quick Template Selector */}
+              <div style={{ padding: '12px 20px', background: '#FAF5FF', borderBottom: '1px solid #EDE9FE', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                <span style={{ fontSize: '12px', fontWeight: 700, color: '#6828DC' }}>⚡ Quick Templates:</span>
+                <button
+                  type="button"
+                  onClick={() => openEmailComposer('quotation')}
+                  style={{ fontSize: '11.5px', padding: '4px 10px', borderRadius: '6px', border: '1px solid #DDD6FE', background: '#FFFFFF', color: '#6828DC', cursor: 'pointer', fontWeight: 600 }}
+                >
+                  Price Quotation
+                </button>
+                <button
+                  type="button"
+                  onClick={() => openEmailComposer('docs')}
+                  style={{ fontSize: '11.5px', padding: '4px 10px', borderRadius: '6px', border: '1px solid #DDD6FE', background: '#FFFFFF', color: '#6828DC', cursor: 'pointer', fontWeight: 600 }}
+                >
+                  Request DL / GST
+                </button>
+                <button
+                  type="button"
+                  onClick={() => openEmailComposer('franchise')}
+                  style={{ fontSize: '11.5px', padding: '4px 10px', borderRadius: '6px', border: '1px solid #DDD6FE', background: '#FFFFFF', color: '#6828DC', cursor: 'pointer', fontWeight: 600 }}
+                >
+                  Stockist Discussion
+                </button>
+              </div>
+
+              {/* Form */}
+              <form onSubmit={handleSendEmailReply} style={{ padding: '20px' }}>
+                {emailStatusMsg && (
+                  <div
+                    style={{
+                      padding: '10px 14px',
+                      borderRadius: '8px',
+                      marginBottom: '14px',
+                      fontSize: '13px',
+                      fontWeight: 600,
+                      background: emailStatusMsg.type === 'success' ? '#ECFDF5' : '#FEF2F2',
+                      color: emailStatusMsg.type === 'success' ? '#047857' : '#B91C1C',
+                      border: `1px solid ${emailStatusMsg.type === 'success' ? '#A7F3D0' : '#FECACA'}`,
+                    }}
+                  >
+                    {emailStatusMsg.text}
+                  </div>
+                )}
+
+                <div style={{ marginBottom: '14px' }}>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#475569', marginBottom: '4px' }}>
+                    To (Recipient Email)
+                  </label>
+                  <input
+                    type="text"
+                    value={enquiry.email || ''}
+                    disabled
+                    style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #E2E8F0', background: '#F8FAFC', fontSize: '13px', color: '#64748B' }}
+                  />
+                </div>
+
+                <div style={{ marginBottom: '14px' }}>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#475569', marginBottom: '4px' }}>
+                    Subject Line
+                  </label>
+                  <input
+                    type="text"
+                    value={emailSubject}
+                    onChange={(e) => setEmailSubject(e.target.value)}
+                    placeholder="e.g. Commercial Price Quotation - Zeal Pharmaceuticals"
+                    required
+                    style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #CBD5E1', fontSize: '13px', color: '#0F172A' }}
+                  />
+                </div>
+
+                <div style={{ marginBottom: '20px' }}>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#475569', marginBottom: '4px' }}>
+                    Message Content
+                  </label>
+                  <textarea
+                    rows={8}
+                    value={emailBody}
+                    onChange={(e) => setEmailBody(e.target.value)}
+                    placeholder="Type your official response..."
+                    required
+                    style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #CBD5E1', fontSize: '13px', lineHeight: 1.5, color: '#0F172A', resize: 'vertical' }}
+                  />
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setShowEmailModal(false)}
+                    disabled={sendingEmail}
+                    className="btn btn-secondary"
+                    style={{ borderRadius: '8px', padding: '9px 18px', fontSize: '13px' }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={sendingEmail || !emailBody.trim()}
+                    className="btn btn-primary"
+                    style={{ borderRadius: '8px', padding: '9px 22px', fontSize: '13px', fontWeight: 700, background: '#2563EB', borderColor: '#2563EB', display: 'flex', alignItems: 'center', gap: '6px' }}
+                  >
+                    <Send size={14} />
+                    <span>{sendingEmail ? 'Delivering...' : 'Send Email Now'}</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

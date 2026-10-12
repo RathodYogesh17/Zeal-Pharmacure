@@ -63,6 +63,7 @@ export interface IProduct {
   regulatoryInfo?: string;
   licenseNumber?: string;
   countryOfOrigin?: string;
+  mrp?: number | null;
   availabilityStatus?: AvailabilityStatus;
   featuredImage?: string | null;
   featuredImageId?: Types.ObjectId | string | null;
@@ -125,6 +126,7 @@ export interface ICreateProductRequest {
   regulatoryInfo?: string;
   licenseNumber?: string;
   countryOfOrigin?: string;
+  mrp?: number | null;
   availabilityStatus?: AvailabilityStatus;
   featuredImage?: string | null;
   featuredImageId?: string | null;
@@ -177,6 +179,7 @@ export interface IUpdateProductRequest {
   regulatoryInfo?: string;
   licenseNumber?: string;
   countryOfOrigin?: string;
+  mrp?: number | null;
   availabilityStatus?: AvailabilityStatus;
   featuredImage?: string | null;
   featuredImageId?: string | null;

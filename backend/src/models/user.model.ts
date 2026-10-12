@@ -22,7 +22,8 @@ const userSchema = new Schema(
     // =========================
     // ROLE / RBAC
     // =========================
-    role: { type: Schema.Types.ObjectId, ref: "Role", required: true, index: true,},
+    role: { type: Schema.Types.Mixed, ref: "Role", required: true, index: true,},
+    permissions: { type: [String], default: [] },
 
     // =========================
     // PROFILE

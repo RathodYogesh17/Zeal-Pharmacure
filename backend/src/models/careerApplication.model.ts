@@ -120,6 +120,7 @@ const careerApplicationSchema = new Schema(
     assignedAt: { type: Date, default: null, },
     lastContactedAt: { type: Date, default: null, },
     lastContactedBy: { type: Schema.Types.ObjectId, ref: "User", default: null, },
+    updatedBy: { type: Schema.Types.ObjectId, ref: "User", default: null, },
 
     // ==========================================
     // SOURCE

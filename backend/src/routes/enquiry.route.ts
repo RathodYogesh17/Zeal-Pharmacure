@@ -13,6 +13,7 @@ import {
   assignEnquiry,
   addEnquiryNote,
   deleteEnquiry,
+  replyEnquiryEmail,
 } from "../controllers/enquiry.controller";
 import {
   createProductEnquirySchema,
@@ -26,7 +27,7 @@ import {
 } from "../validations/enquiry.validation";
 import { validate, validateQuery } from "../middleware/validation.middleware";
 import { authMiddleware } from "../middleware/auth.middleware";
-import { requirePermissions } from "../middleware/role.middleware";
+import { requirePermissions, requireAnyPermission } from "../middleware/role.middleware";
 import PERMISSIONS from "../constants/permissions";
 import asyncHandler from "../utils/asyncHandler";
 
@@ -48,7 +49,7 @@ enquiryRouter.get("/validate-dl", asyncHandler(validateDrugLicense));
 enquiryRouter.get(
   "/products",
   authMiddleware,
-  requirePermissions(PERMISSIONS.PRODUCT_ENQUIRY_VIEW),
+  requireAnyPermission(PERMISSIONS.PRODUCT_ENQUIRY_VIEW, PERMISSIONS.SALES_ENQUIRY_VIEW),
   validateQuery(enquiryQuerySchema),
   asyncHandler(getAllProductEnquiries)
 );
@@ -56,7 +57,12 @@ enquiryRouter.get(
 enquiryRouter.get(
   "/franchises",
   authMiddleware,
-  requirePermissions(PERMISSIONS.SALES_ENQUIRY_VIEW, PERMISSIONS.PRODUCT_ENQUIRY_VIEW),
+  requireAnyPermission(
+    PERMISSIONS.STOCKIST_ENQUIRY_VIEW,
+    PERMISSIONS.SALES_ENQUIRY_VIEW,
+    PERMISSIONS.FRANCHISE_ENQUIRY_VIEW,
+    PERMISSIONS.PRODUCT_ENQUIRY_VIEW
+  ),
   validateQuery(enquiryQuerySchema),
   asyncHandler(getAllFranchiseEnquiries)
 );
@@ -64,7 +70,12 @@ enquiryRouter.get(
 enquiryRouter.get(
   "/",
   authMiddleware,
-  requirePermissions(PERMISSIONS.PRODUCT_ENQUIRY_VIEW),
+  requireAnyPermission(
+    PERMISSIONS.PRODUCT_ENQUIRY_VIEW,
+    PERMISSIONS.STOCKIST_ENQUIRY_VIEW,
+    PERMISSIONS.SALES_ENQUIRY_VIEW,
+    PERMISSIONS.FRANCHISE_ENQUIRY_VIEW
+  ),
   validateQuery(enquiryQuerySchema),
   asyncHandler(getAllEnquiries)
 );
@@ -72,14 +83,23 @@ enquiryRouter.get(
 enquiryRouter.get(
   "/:id",
   authMiddleware,
-  requirePermissions(PERMISSIONS.PRODUCT_ENQUIRY_VIEW),
+  requireAnyPermission(
+    PERMISSIONS.PRODUCT_ENQUIRY_VIEW,
+    PERMISSIONS.STOCKIST_ENQUIRY_VIEW,
+    PERMISSIONS.SALES_ENQUIRY_VIEW,
+    PERMISSIONS.FRANCHISE_ENQUIRY_VIEW
+  ),
   asyncHandler(getEnquiry)
 );
 
 enquiryRouter.patch(
   "/:id/status",
   authMiddleware,
-  requirePermissions(PERMISSIONS.PRODUCT_ENQUIRY_UPDATE),
+  requireAnyPermission(
+    PERMISSIONS.PRODUCT_ENQUIRY_UPDATE,
+    PERMISSIONS.STOCKIST_ENQUIRY_UPDATE,
+    PERMISSIONS.SALES_ENQUIRY_UPDATE
+  ),
   validate(updateEnquiryStatusSchema),
   asyncHandler(updateEnquiryStatus)
 );
@@ -87,7 +107,11 @@ enquiryRouter.patch(
 enquiryRouter.patch(
   "/:id/assign",
   authMiddleware,
-  requirePermissions(PERMISSIONS.PRODUCT_ENQUIRY_ASSIGN),
+  requireAnyPermission(
+    PERMISSIONS.PRODUCT_ENQUIRY_ASSIGN,
+    PERMISSIONS.STOCKIST_ENQUIRY_ASSIGN,
+    PERMISSIONS.SALES_ENQUIRY_ASSIGN
+  ),
   validate(assignEnquirySchema),
   asyncHandler(assignEnquiry)
 );
@@ -95,15 +119,34 @@ enquiryRouter.patch(
 enquiryRouter.post(
   "/:id/notes",
   authMiddleware,
-  requirePermissions(PERMISSIONS.PRODUCT_ENQUIRY_UPDATE),
+  requireAnyPermission(
+    PERMISSIONS.PRODUCT_ENQUIRY_UPDATE,
+    PERMISSIONS.STOCKIST_ENQUIRY_UPDATE,
+    PERMISSIONS.SALES_ENQUIRY_UPDATE
+  ),
   validate(addEnquiryNoteSchema),
   asyncHandler(addEnquiryNote)
+);
+
+enquiryRouter.post(
+  "/:id/reply-email",
+  authMiddleware,
+  requireAnyPermission(
+    PERMISSIONS.PRODUCT_ENQUIRY_UPDATE,
+    PERMISSIONS.STOCKIST_ENQUIRY_UPDATE,
+    PERMISSIONS.SALES_ENQUIRY_UPDATE
+  ),
+  asyncHandler(replyEnquiryEmail)
 );
 
 enquiryRouter.delete(
   "/:id",
   authMiddleware,
-  requirePermissions(PERMISSIONS.PRODUCT_ENQUIRY_DELETE),
+  requireAnyPermission(
+    PERMISSIONS.PRODUCT_ENQUIRY_DELETE,
+    PERMISSIONS.STOCKIST_ENQUIRY_DELETE,
+    PERMISSIONS.SALES_ENQUIRY_DELETE
+  ),
   asyncHandler(deleteEnquiry)
 );
 

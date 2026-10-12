@@ -146,4 +146,13 @@ export const enquiryService = {
     });
     return res.data;
   },
+
+  async adminReplyEnquiryEmail(id: string, message: string, subject?: string): Promise<{ success: boolean; message: string; recipient: string }> {
+    const res = await request<{ success: boolean; message: string; recipient: string }>(`/enquiries/${id}/reply-email`, {
+      method: 'POST',
+      body: JSON.stringify({ message, subject }),
+    });
+    return res.data;
+  },
 };
+

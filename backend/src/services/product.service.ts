@@ -211,6 +211,7 @@ const createProduct = async (body: ICreateProductRequest, user?: IAuthenticatedU
     regulatoryInfo: body.regulatoryInfo?.trim() || "",
     licenseNumber: body.licenseNumber?.trim() || "",
     countryOfOrigin: body.countryOfOrigin?.trim() || "India",
+    mrp: body.mrp !== undefined && body.mrp !== null && String(body.mrp).trim() !== "" ? Number(body.mrp) : null,
     availabilityStatus: body.availabilityStatus || "AVAILABLE",
     featuredImage: media?.url || null,
     featuredImageId: media?.id ? new mongoose.Types.ObjectId(media.id) : null,
@@ -646,6 +647,7 @@ const updateProduct = async (
   if (body.regulatoryInfo !== undefined) updatePayload.regulatoryInfo = body.regulatoryInfo.trim();
   if (body.licenseNumber !== undefined) updatePayload.licenseNumber = body.licenseNumber.trim();
   if (body.countryOfOrigin !== undefined) updatePayload.countryOfOrigin = body.countryOfOrigin.trim();
+  if (body.mrp !== undefined) updatePayload.mrp = body.mrp !== null && String(body.mrp).trim() !== "" ? Number(body.mrp) : null;
   if (body.availabilityStatus !== undefined) updatePayload.availabilityStatus = body.availabilityStatus;
   if (body.brochureName !== undefined) updatePayload.brochureName = body.brochureName.trim();
   if (body.featuredOrder !== undefined) updatePayload.featuredOrder = Number(body.featuredOrder);
@@ -863,6 +865,7 @@ const duplicateProduct = async (id: string, user?: IAuthenticatedUser) => {
     regulatoryInfo: existingProduct.regulatoryInfo || "",
     licenseNumber: existingProduct.licenseNumber || "",
     countryOfOrigin: existingProduct.countryOfOrigin || "India",
+    mrp: existingProduct.mrp ?? null,
     availabilityStatus: existingProduct.availabilityStatus || "AVAILABLE",
     featuredImage: existingProduct.featuredImage || null,
     featuredImageId: existingProduct.featuredImageId || null,

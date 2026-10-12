@@ -8,6 +8,7 @@ import AppError from "../utils/appError";
 import HTTP_STATUS from "../constants/httpStatus";
 import MESSAGES from "../constants/messages";
 import type { IMedia, MediaType, StorageProvider } from "../types/gallery.types";
+import { isCloudinaryConfigured, uploadImageToCloudinary } from "./cloudinary.service";
 
 interface SavedMedia {
   media: IMedia;
@@ -82,8 +83,9 @@ const registerUploadedMedia = async (
       : null;
 
   const mediaType: MediaType = detectMediaType(file.mimetype);
-  const storageKey = options.storageKey || file.filename;
-  const storageProvider: StorageProvider = options.storageProvider || "LOCAL";
+  let storageKey = options.storageKey || file.filename;
+  let storageProvider: StorageProvider = options.storageProvider || "LOCAL";
+  let url = `/uploads/gallery/${file.filename}`;
   const title =
     options.title !== undefined
       ? String(options.title).trim()
@@ -91,8 +93,26 @@ const registerUploadedMedia = async (
   const altText = options.altText ? String(options.altText).trim() : "";
   const caption = options.caption ? String(options.caption).trim() : "";
   const isPublic = options.isPublic !== undefined ? Boolean(options.isPublic) : true;
-  const width = options.width !== undefined ? options.width : null;
-  const height = options.height !== undefined ? options.height : null;
+  let width = options.width !== undefined ? options.width : null;
+  let height = options.height !== undefined ? options.height : null;
+
+  // Cloudinary Upload Integration
+  if (isCloudinaryConfigured()) {
+    try {
+      const cld = await uploadImageToCloudinary(file.path, {
+        folder,
+        tags,
+      });
+      url = cld.url;
+      storageKey = cld.publicId;
+      storageProvider = "CLOUDINARY";
+      if (cld.width) width = cld.width;
+      if (cld.height) height = cld.height;
+      console.log(`[CLOUDINARY] Image successfully uploaded to cloud: ${url}`);
+    } catch (cldErr) {
+      console.warn("[CLOUDINARY] Upload failed, falling back to local file:", cldErr);
+    }
+  }
 
   if (existing?.isDeleted === false) {
     await fs.unlink(file.path).catch(() => undefined);
@@ -106,7 +126,7 @@ const registerUploadedMedia = async (
       {
         originalName: file.originalname,
         filename: file.filename,
-        url: `/uploads/gallery/${file.filename}`,
+        url,
         storageKey,
         storageProvider,
         mediaType,
@@ -139,7 +159,7 @@ const registerUploadedMedia = async (
     await Media.create({
       originalName: file.originalname,
       filename: file.filename,
-      url: `/uploads/gallery/${file.filename}`,
+      url,
       storageKey,
       storageProvider,
       mediaType,

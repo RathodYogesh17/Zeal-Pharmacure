@@ -26,6 +26,8 @@ import { productService } from '../api/productService';
 import { categoryService } from '../api/categoryService';
 import { galleryService } from '../api/galleryService';
 import { MediaGalleryModal, ThemeSelect, ThemeQuillEditor } from '../components/common';
+import { useAppSelector } from '../store';
+import { selectEffectivePermissions, selectCurrentRole } from '../store/slices/authSlice';
 import type { ICategory, ISubCategory, IProduct } from '../types';
 
 const DOSAGE_FORMS = [
@@ -33,6 +35,8 @@ const DOSAGE_FORMS = [
   'Capsules',
   'Syrup',
   'Suspension',
+  'Toothpaste',
+  'Paste',
   'Injection',
   'Ointment',
   'Gel',
@@ -49,6 +53,7 @@ const PRESCRIPTION_TYPES = [
   { value: 'Schedule H', label: 'Schedule H (Prescription Required)', badge: 'Rx Required', color: '#EF4444' },
   { value: 'Rx', label: 'Rx (Medical Prescription)', badge: 'Prescription', color: '#DC2626' },
   { value: 'OTC', label: 'OTC (Over The Counter)', badge: 'OTC', color: '#10B981' },
+  { value: 'OTC / General', label: 'OTC / General (Over The Counter)', badge: 'OTC / General', color: '#10B981' },
   { value: 'Schedule H1', label: 'Schedule H1 (Controlled Rx)', badge: 'Strict Rx', color: '#B91C1C' },
   { value: 'General', label: 'General / Consumer Healthcare', badge: 'General', color: '#6828DC' },
 ];
@@ -57,6 +62,18 @@ export const AdminAddProductPage: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
   const isEditMode = Boolean(id);
   const navigate = useNavigate();
+
+  const activeRole = useAppSelector(selectCurrentRole);
+  const effectivePermissions = useAppSelector(selectEffectivePermissions);
+
+  const hasPerm = (perm: string) => {
+    if (activeRole === 'SUPER_ADMIN') return true;
+    if (!effectivePermissions || effectivePermissions.length === 0) return false;
+    if (effectivePermissions.includes('*')) return true;
+    return effectivePermissions.includes(perm);
+  };
+
+  const canAccess = isEditMode ? hasPerm('product:update') : hasPerm('product:create');
 
   // Categories & SubCategories from Database
   const [categories, setCategories] = useState<ICategory[]>([]);
@@ -114,6 +131,7 @@ export const AdminAddProductPage: React.FC = () => {
     countryOfOrigin: 'India',
 
     // Commercial & Publishing
+    mrp: '',
     status: 'PUBLISHED',
     availabilityStatus: 'AVAILABLE',
     isFeatured: false,
@@ -174,15 +192,15 @@ export const AdminAddProductPage: React.FC = () => {
       typeof prod.category === 'object' && prod.category?._id
         ? prod.category._id
         : typeof prod.category === 'string'
-        ? prod.category
-        : catsList[0]?._id || '';
+          ? prod.category
+          : catsList[0]?._id || '';
 
     const subCatId =
       typeof prod.subCategory === 'object' && prod.subCategory?._id
         ? prod.subCategory._id
         : typeof prod.subCategory === 'string'
-        ? prod.subCategory
-        : '';
+          ? prod.subCategory
+          : '';
 
     if (catId) {
       await loadSubCategories(catId);
@@ -192,16 +210,16 @@ export const AdminAddProductPage: React.FC = () => {
       Array.isArray(prod.indicationTags) && prod.indicationTags.length > 0
         ? prod.indicationTags.join(', ')
         : Array.isArray(prod.indications)
-        ? prod.indications.map((i: any) => (typeof i === 'object' ? i.name : i)).join(', ')
-        : '';
+          ? prod.indications.map((i: any) => (typeof i === 'object' ? i.name : i)).join(', ')
+          : '';
 
     const formattedGallery = Array.isArray(prod.mediaGallery)
       ? prod.mediaGallery.map((m: any) => {
-          if (typeof m === 'object' && m?.url) {
-            return { url: m.url, title: m.title || '', altText: m.altText || '' };
-          }
-          return { url: String(m), title: '', altText: '' };
-        })
+        if (typeof m === 'object' && m?.url) {
+          return { url: m.url, title: m.title || '', altText: m.altText || '' };
+        }
+        return { url: String(m), title: '', altText: '' };
+      })
       : [];
 
     setPrimaryImage(prod.featuredImage || '');
@@ -236,6 +254,7 @@ export const AdminAddProductPage: React.FC = () => {
       warnings: prod.warnings || '',
       licenseNumber: prod.licenseNumber || '',
       countryOfOrigin: prod.countryOfOrigin || 'India',
+      mrp: prod.mrp !== undefined && prod.mrp !== null ? String(prod.mrp) : '',
       status: prod.status || (prod.isActive ? 'PUBLISHED' : 'DRAFT'),
       availabilityStatus: prod.availabilityStatus || 'AVAILABLE',
       isFeatured: Boolean(prod.isFeatured),
@@ -365,9 +384,9 @@ export const AdminAddProductPage: React.FC = () => {
     try {
       const indicationsList = formData.indications
         ? formData.indications
-            .split(',')
-            .map((s) => s.trim())
-            .filter(Boolean)
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean)
         : [];
 
       const payload: any = {
@@ -399,6 +418,7 @@ export const AdminAddProductPage: React.FC = () => {
         warnings: formData.warnings.trim() || undefined,
         licenseNumber: formData.licenseNumber.trim() || undefined,
         countryOfOrigin: formData.countryOfOrigin.trim() || 'India',
+        mrp: formData.mrp !== '' && formData.mrp !== null ? Number(formData.mrp) : null,
         status: saveAsDraft ? 'DRAFT' : formData.status || 'PUBLISHED',
         isActive: saveAsDraft ? false : formData.status === 'PUBLISHED',
         availabilityStatus: formData.availabilityStatus || 'AVAILABLE',
@@ -428,6 +448,36 @@ export const AdminAddProductPage: React.FC = () => {
       setLoading(false);
     }
   };
+
+  if (!canAccess) {
+    return (
+      <div style={{ maxWidth: '640px', margin: '60px auto', padding: '36px 32px', background: '#FFFFFF', borderRadius: '16px', border: '1.5px solid #FECACA', textAlign: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}>
+        <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#FEF2F2', color: '#DC2626', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+          <AlertCircle size={30} />
+        </div>
+        <h2 style={{ fontSize: '22px', fontWeight: 800, color: '#0F172A', marginBottom: '8px' }}>
+          Access Restricted
+        </h2>
+        <p style={{ fontSize: '14px', color: '#64748B', lineHeight: 1.6, marginBottom: '24px' }}>
+          Your current staff role (<strong>{activeRole}</strong>) does not have permission to {isEditMode ? 'modify or update products' : 'create or add new formulations to the catalog'}. Please contact your administrator if you need access.
+        </p>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
+          <button
+            onClick={() => navigate('/admin')}
+            style={{ padding: '10px 20px', borderRadius: '8px', border: '1.5px solid #CBD5E1', background: '#FFFFFF', color: '#334155', fontWeight: 700, fontSize: '13.5px', cursor: 'pointer' }}
+          >
+            Go to Dashboard
+          </button>
+          <button
+            onClick={() => navigate('/admin/products')}
+            style={{ padding: '10px 20px', borderRadius: '8px', border: 'none', background: '#6828DC', color: '#FFFFFF', fontWeight: 700, fontSize: '13.5px', cursor: 'pointer' }}
+          >
+            View Products
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (initialLoading) {
     return (
@@ -801,7 +851,7 @@ export const AdminAddProductPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="form-grid-2">
+            <div className="form-grid-3">
               {/* Dosage Form */}
               <div className="field-group">
                 <label className="field-label">
@@ -825,6 +875,23 @@ export const AdminAddProductPage: React.FC = () => {
                   required
                   placeholder="e.g. 10 x 10 Alu-Alu Blister, 100 ml Bottle"
                   value={formData.packaging}
+                  onChange={handleChange}
+                  className="input-base"
+                />
+              </div>
+
+              {/* Maximum Retail Price (MRP) */}
+              <div className="field-group">
+                <label className="field-label">
+                  MRP (Maximum Retail Price ₹)
+                </label>
+                <input
+                  type="number"
+                  name="mrp"
+                  min="0"
+                  step="0.01"
+                  placeholder="e.g. 150.00"
+                  value={formData.mrp}
                   onChange={handleChange}
                   className="input-base"
                 />

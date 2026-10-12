@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, KeyRound, ArrowLeft, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Mail, Lock, KeyRound, ArrowLeft, CheckCircle2, ArrowRight, RefreshCw } from 'lucide-react';
 import { authService } from '../../api/authService';
 import { AuthCardLayout, AuthInputField, AuthSubmitButton } from '../../components/common/auth';
 
@@ -20,6 +20,31 @@ export const ForgotPasswordPage: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [devOtp, setDevOtp] = useState<string | null>(null);
 
+  // OTP Countdown Timer (1 minute = 60 seconds)
+  const [otpCountdown, setOtpCountdown] = useState(0);
+  const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const startOtpCountdown = () => {
+    if (countdownRef.current) clearInterval(countdownRef.current);
+    setOtpCountdown(60);
+    countdownRef.current = setInterval(() => {
+      setOtpCountdown((prev) => {
+        if (prev <= 1) {
+          if (countdownRef.current) clearInterval(countdownRef.current);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (countdownRef.current) clearInterval(countdownRef.current);
+    };
+  }, []);
+
   // Step 1: Send OTP
   const handleRequestOtp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,10 +62,28 @@ export const ForgotPasswordPage: React.FC = () => {
       if (res.otp) {
         setDevOtp(res.otp);
       }
-      setSuccessMessage(res.message || 'OTP sent successfully to your email address.');
+      setSuccessMessage(res.message || 'OTP sent successfully to your email. It expires in 1 minute.');
       setStep(2);
+      startOtpCountdown();
     } catch (err: any) {
       setErrorMessage(err.message || 'Failed to send OTP. Please verify your email.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Resend OTP
+  const handleResendOtp = async () => {
+    setErrorMessage(null);
+    setSuccessMessage(null);
+    try {
+      setIsLoading(true);
+      const res = await authService.forgotPassword(email.trim());
+      setSuccessMessage(res.message || 'New OTP sent to your email. It expires in 1 minute.');
+      setOtp('');
+      startOtpCountdown();
+    } catch (err: any) {
+      setErrorMessage(err.message || 'Failed to resend OTP.');
     } finally {
       setIsLoading(false);
     }
@@ -61,6 +104,8 @@ export const ForgotPasswordPage: React.FC = () => {
       setIsLoading(true);
       await authService.verifyOtp(email.trim(), otp.trim(), 'passwordReset');
       setSuccessMessage('OTP code verified! You can now set your new password.');
+      if (countdownRef.current) clearInterval(countdownRef.current);
+      setOtpCountdown(0);
       setStep(3);
     } catch (err: any) {
       setErrorMessage(err.message || 'Invalid or expired OTP code.');
@@ -108,27 +153,19 @@ export const ForgotPasswordPage: React.FC = () => {
 
   const getStepTitle = () => {
     switch (step) {
-      case 1:
-        return 'Forgot Password';
-      case 2:
-        return 'Verify Code';
-      case 3:
-        return 'Create New Password';
-      case 4:
-        return 'Password Reset!';
+      case 1: return 'Forgot Password';
+      case 2: return 'Verify Code';
+      case 3: return 'Create New Password';
+      case 4: return 'Password Reset!';
     }
   };
 
   const getStepSubtitle = () => {
     switch (step) {
-      case 1:
-        return 'Enter your registered email to receive a verification OTP code.';
-      case 2:
-        return `Enter the 6-digit OTP code sent to ${email}`;
-      case 3:
-        return 'Choose a strong password to secure your account.';
-      case 4:
-        return 'Your password has been changed. Redirecting to login...';
+      case 1: return 'Enter your registered email to receive a verification OTP code.';
+      case 2: return `Enter the 6-digit OTP sent to ${email}. It expires in 1 minute.`;
+      case 3: return 'Choose a strong password to secure your account.';
+      case 4: return 'Your password has been changed. Redirecting to login...';
     }
   };
 
@@ -196,6 +233,39 @@ export const ForgotPasswordPage: React.FC = () => {
       {/* Step 2: Verify OTP */}
       {step === 2 && (
         <form onSubmit={handleVerifyOtp} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+          {/* Countdown Timer Banner */}
+          <div
+            style={{
+              background: otpCountdown === 0 ? '#FEF2F2' : otpCountdown <= 15 ? '#FFF7ED' : '#F0FDF4',
+              border: `1.5px solid ${otpCountdown === 0 ? '#FECACA' : otpCountdown <= 15 ? '#FED7AA' : '#BBF7D0'}`,
+              borderRadius: '10px',
+              padding: '10px 16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              fontSize: '13px',
+            }}
+          >
+            <span style={{ color: '#475569', fontSize: '12.5px' }}>
+              OTP sent to <strong>{email}</strong>
+            </span>
+            {otpCountdown > 0 ? (
+              <span
+                style={{
+                  fontWeight: 800,
+                  fontSize: '15px',
+                  color: otpCountdown <= 15 ? '#DC2626' : '#059669',
+                  minWidth: '52px',
+                  textAlign: 'right',
+                }}
+              >
+                ⏱ 0:{String(otpCountdown).padStart(2, '0')}
+              </span>
+            ) : (
+              <span style={{ color: '#DC2626', fontWeight: 700, fontSize: '13px' }}>⚠️ Expired!</span>
+            )}
+          </div>
+
           <div>
             <label
               style={{
@@ -220,40 +290,82 @@ export const ForgotPasswordPage: React.FC = () => {
               style={{
                 width: '100%',
                 padding: '14px',
-                fontSize: '24px',
-                letterSpacing: '8px',
+                fontSize: '26px',
+                letterSpacing: '10px',
                 textAlign: 'center',
-                fontWeight: 700,
+                fontWeight: 800,
                 borderRadius: '12px',
-                border: '2px solid #6828DC',
+                border: `2px solid ${otpCountdown === 0 ? '#FECACA' : '#6828DC'}`,
                 outline: 'none',
                 boxSizing: 'border-box',
-                background: '#FAF5FF',
+                background: otpCountdown === 0 ? '#FEF2F2' : '#FAF5FF',
+                color: '#1E1B4B',
               }}
             />
+            {otpCountdown === 0 && (
+              <p style={{ fontSize: '12px', color: '#DC2626', marginTop: '6px', textAlign: 'center' }}>
+                OTP has expired. Please request a new code.
+              </p>
+            )}
           </div>
 
-          <AuthSubmitButton label="Verify OTP" loading={isLoading} />
+          <AuthSubmitButton
+            label="Verify OTP"
+            loading={isLoading}
+            disabled={isLoading || otp.trim().length !== 6 || otpCountdown === 0}
+          />
 
-          <button
-            type="button"
-            onClick={() => setStep(1)}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: '#64748B',
-              fontSize: '13.5px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '6px',
-            }}
-          >
-            <ArrowLeft size={16} />
-            <span>Change email address</span>
-          </button>
+          {/* Resend / Change Email row */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <button
+              type="button"
+              onClick={handleResendOtp}
+              disabled={isLoading || otpCountdown > 0}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: otpCountdown > 0 ? '#94A3B8' : '#6828DC',
+                fontSize: '13px',
+                fontWeight: 600,
+                cursor: isLoading || otpCountdown > 0 ? 'not-allowed' : 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                padding: 0,
+              }}
+            >
+              <RefreshCw size={13} />
+              <span>
+                {otpCountdown > 0
+                  ? `Resend in 0:${String(otpCountdown).padStart(2, '0')}`
+                  : 'Resend New Code'}
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setStep(1);
+                if (countdownRef.current) clearInterval(countdownRef.current);
+                setOtpCountdown(0);
+              }}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#64748B',
+                fontSize: '13.5px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px',
+                padding: 0,
+              }}
+            >
+              <ArrowLeft size={14} />
+              <span>Change email</span>
+            </button>
+          </div>
         </form>
       )}
 

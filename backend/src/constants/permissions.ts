@@ -21,6 +21,13 @@ const PERMISSIONS = {
   PRODUCT_ENQUIRY_DELETE: "product_enquiry:delete",
   PRODUCT_ENQUIRY_ASSIGN: "product_enquiry:assign",
 
+  // Stockist / Franchise Enquiry
+  STOCKIST_ENQUIRY_VIEW: "stockist_enquiry:view",
+  STOCKIST_ENQUIRY_UPDATE: "stockist_enquiry:update",
+  STOCKIST_ENQUIRY_DELETE: "stockist_enquiry:delete",
+  STOCKIST_ENQUIRY_ASSIGN: "stockist_enquiry:assign",
+  FRANCHISE_ENQUIRY_VIEW: "franchise_enquiry:view",
+
   // Sales
   SALES_ENQUIRY_VIEW: "sales_enquiry:view",
   SALES_ENQUIRY_UPDATE: "sales_enquiry:update",

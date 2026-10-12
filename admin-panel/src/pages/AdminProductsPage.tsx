@@ -18,6 +18,8 @@ import {
 import { productService } from '../api/productService';
 import { galleryService } from '../api/galleryService';
 import { EditProductModal } from '../components/products/EditProductModal';
+import { useAppSelector } from '../store';
+import { selectEffectivePermissions, selectCurrentRole } from '../store/slices/authSlice';
 import {
   ThemeSelect,
   DateFilterSelect,
@@ -30,6 +32,20 @@ import {
 import type { IProduct, ICategory } from '../types';
 
 export const AdminProductsPage: React.FC = () => {
+  const activeRole = useAppSelector(selectCurrentRole);
+  const permissions = useAppSelector(selectEffectivePermissions);
+
+  const hasPerm = (perm: string) => {
+    if (activeRole === 'SUPER_ADMIN') return true;
+    if (!permissions || permissions.length === 0) return false;
+    if (permissions.includes('*')) return true;
+    return permissions.includes(perm);
+  };
+
+  const canCreate = hasPerm('product:create');
+  const canUpdate = hasPerm('product:update');
+  const canDelete = hasPerm('product:delete');
+
   const [products, setProducts] = useState<IProduct[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [loading, setLoading] = useState(true);
@@ -232,14 +248,16 @@ export const AdminProductsPage: React.FC = () => {
             </button>
           </div>
 
-          <Link
-            to="/admin/products/new"
-            className="btn btn-primary"
-            style={{ padding: '9px 18px', borderRadius: '8px', fontSize: '13.5px' }}
-          >
-            <Plus size={16} />
-            <span>Add Product</span>
-          </Link>
+          {canCreate && (
+            <Link
+              to="/admin/products/new"
+              className="btn btn-primary"
+              style={{ padding: '9px 18px', borderRadius: '8px', fontSize: '13.5px' }}
+            >
+              <Plus size={16} />
+              <span>Add Product</span>
+            </Link>
+          )}
         </div>
       </div>
 
@@ -362,161 +380,174 @@ export const AdminProductsPage: React.FC = () => {
                   <th style={{ padding: '14px 18px', fontWeight: 800, color: '#334155', textAlign: 'right' }}>Actions</th>
                 </tr>
               </thead>
-            <tbody>
-              {paginatedProducts.length === 0 ? (
-                <tr>
-                  <td colSpan={8} style={{ padding: '48px', textAlign: 'center', color: '#64748B' }}>
-                    <Pill size={36} style={{ color: '#CBD5E1', margin: '0 auto 10px' }} />
-                    <div style={{ fontWeight: 700, fontSize: '15px', color: '#0F172A' }}>No products found in database</div>
-                    <p style={{ fontSize: '13px', marginTop: '4px' }}>Try adjusting your search query or add a new pharmaceutical product.</p>
-                  </td>
-                </tr>
-              ) : (
-                paginatedProducts.map((p, idx) => {
-                  const catName = typeof p.category === 'object' ? p.category?.name : p.category;
-                  const rowNumber = startIndex + idx + 1;
-                  return (
-                    <tr
-                      key={p._id}
-                      style={{
-                        borderBottom: '1px solid #F1F5F9',
-                        transition: 'background 0.15s',
-                      }}
-                      onMouseEnter={(e) => (e.currentTarget.style.background = '#F8FAFC')}
-                      onMouseLeave={(e) => (e.currentTarget.style.background = '#FFFFFF')}
-                    >
-                      <td style={{ padding: '14px 18px', color: '#94A3B8', fontWeight: 600 }}>
-                        {rowNumber}
-                      </td>
-                      <td style={{ padding: '14px 18px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                          <div style={{
-                            width: '40px',
-                            height: '40px',
-                            borderRadius: '8px',
-                            background: '#F8FAFC',
-                            border: '1px solid #E2E8F0',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            overflow: 'hidden',
-                            flexShrink: 0,
-                          }}>
-                            {p.featuredImage ? (
-                              <img
-                                src={galleryService.formatUrl(p.featuredImage)}
-                                alt={p.name}
-                                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                              />
-                            ) : (
-                              <Pill size={20} style={{ color: '#6828DC' }} />
-                            )}
+              <tbody>
+                {paginatedProducts.length === 0 ? (
+                  <tr>
+                    <td colSpan={8} style={{ padding: '48px', textAlign: 'center', color: '#64748B' }}>
+                      <Pill size={36} style={{ color: '#CBD5E1', margin: '0 auto 10px' }} />
+                      <div style={{ fontWeight: 700, fontSize: '15px', color: '#0F172A' }}>No products found in database</div>
+                      <p style={{ fontSize: '13px', marginTop: '4px' }}>Try adjusting your search query or add a new pharmaceutical product.</p>
+                    </td>
+                  </tr>
+                ) : (
+                  paginatedProducts.map((p, idx) => {
+                    const catName = typeof p.category === 'object' ? p.category?.name : p.category;
+                    const rowNumber = startIndex + idx + 1;
+                    return (
+                      <tr
+                        key={p._id}
+                        style={{
+                          borderBottom: '1px solid #F1F5F9',
+                          transition: 'background 0.15s',
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = '#F8FAFC')}
+                        onMouseLeave={(e) => (e.currentTarget.style.background = '#FFFFFF')}
+                      >
+                        <td style={{ padding: '14px 18px', color: '#94A3B8', fontWeight: 600 }}>
+                          {rowNumber}
+                        </td>
+                        <td style={{ padding: '14px 18px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <div style={{
+                              width: '40px',
+                              height: '40px',
+                              borderRadius: '8px',
+                              background: '#F8FAFC',
+                              border: '1px solid #E2E8F0',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              overflow: 'hidden',
+                              flexShrink: 0,
+                            }}>
+                              {p.featuredImage ? (
+                                <img
+                                  src={galleryService.formatUrl(p.featuredImage)}
+                                  alt={p.name}
+                                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                                />
+                              ) : (
+                                <Pill size={20} style={{ color: '#6828DC' }} />
+                              )}
+                            </div>
+                            <div>
+                              <Link
+                                to={`/admin/products/${p.slug || p._id}`}
+                                style={{ fontWeight: 800, color: '#0F172A', fontSize: '13.5px' }}
+                              >
+                                {p.name}
+                              </Link>
+                              {p.genericName && (
+                                <div style={{ fontSize: '11px', color: '#64748B', marginTop: '1px' }}>
+                                  {p.genericName}
+                                </div>
+                              )}
+                            </div>
                           </div>
-                          <div>
+                        </td>
+                        <td style={{ padding: '14px 18px', color: '#64748B' }}>
+                          <span className="badge badge-purple">
+                            {catName || 'General Medicine'}
+                          </span>
+                        </td>
+                        <td style={{ padding: '14px 18px', color: '#334155', fontWeight: 500 }}>
+                          <div>{p.dosageForm}</div>
+                          {p.mrp !== undefined && p.mrp !== null ? (
+                            <div style={{ fontSize: '11.5px', fontWeight: 800, color: '#059669', marginTop: '2px' }}>
+                              MRP: ₹{p.mrp}
+                            </div>
+                          ) : (
+                            <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>MRP: N/A</div>
+                          )}
+                        </td>
+                        {/* Created / Updated Date (ONE COLUMN, UP & DOWN) */}
+                        <td style={{ padding: '14px 18px', whiteSpace: 'nowrap' }}>
+                          <CombinedDateCell createdAt={p.createdAt} updatedAt={p.updatedAt} />
+                        </td>
+                        {/* Created / Updated By (ONE COLUMN, UP & DOWN) */}
+                        <td style={{ padding: '14px 18px', whiteSpace: 'nowrap' }}>
+                          <CombinedUserCell createdBy={p.createdBy} updatedBy={p.updatedBy} />
+                        </td>
+                        <td style={{ padding: '14px 18px' }}>
+                          <button
+                            onClick={() => handleToggleStatus(p._id, p.isActive)}
+                            style={{
+                              padding: '4px 12px',
+                              borderRadius: '999px',
+                              fontSize: '11.5px',
+                              fontWeight: 700,
+                              border: 'none',
+                              cursor: 'pointer',
+                              background: p.isActive ? '#ECFDF5' : '#FEF2F2',
+                              color: p.isActive ? '#065F46' : '#991B1B',
+                            }}
+                          >
+                            {p.isActive ? 'Active' : 'Inactive'}
+                          </button>
+                        </td>
+                        <td style={{ padding: '14px 18px', textAlign: 'right' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px' }}>
                             <Link
                               to={`/admin/products/${p.slug || p._id}`}
-                              style={{ fontWeight: 800, color: '#0F172A', fontSize: '13.5px' }}
+                              title="View Product"
+                              style={{
+                                width: '30px', height: '30px', borderRadius: '6px',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                color: '#6828DC', background: '#FAF5FF', border: '1px solid #EDE9FE',
+                                cursor: 'pointer',
+                              }}
                             >
-                              {p.name}
+                              <Eye size={14} />
                             </Link>
-                            {p.genericName && (
-                              <div style={{ fontSize: '11px', color: '#64748B', marginTop: '1px' }}>
-                                {p.genericName}
-                              </div>
+                            {canUpdate && (
+                              <Link
+                                to={`/admin/products/edit/${p._id}`}
+                                title="Edit Formulation Details"
+                                style={{
+                                  width: '30px', height: '30px', borderRadius: '6px',
+                                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                  color: '#2563EB', background: '#EFF6FF', border: '1px solid #BFDBFE',
+                                  cursor: 'pointer', textDecoration: 'none',
+                                }}
+                              >
+                                <Edit2 size={14} />
+                              </Link>
+                            )}
+                            {canCreate && (
+                              <button
+                                onClick={() => handleDuplicateProduct(p)}
+                                title="Duplicate Product"
+                                style={{
+                                  width: '30px', height: '30px', borderRadius: '6px',
+                                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                  color: '#0891B2', background: '#ECFEFF', border: '1px solid #A5F3FC',
+                                  cursor: 'pointer',
+                                }}
+                              >
+                                <Copy size={14} />
+                              </button>
+                            )}
+                            {canDelete && (
+                              <button
+                                onClick={() => handleDelete(p._id, p.name)}
+                                title="Delete Product"
+                                style={{
+                                  width: '30px', height: '30px', borderRadius: '6px',
+                                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                  color: '#DC2626', background: '#FEF2F2', border: '1px solid #FECACA',
+                                  cursor: 'pointer',
+                                }}
+                              >
+                                <Trash2 size={14} />
+                              </button>
                             )}
                           </div>
-                        </div>
-                      </td>
-                      <td style={{ padding: '14px 18px', color: '#64748B' }}>
-                        <span className="badge badge-purple">
-                          {catName || 'General Medicine'}
-                        </span>
-                      </td>
-                      <td style={{ padding: '14px 18px', color: '#334155', fontWeight: 500 }}>
-                        {p.dosageForm}
-                      </td>
-                      {/* Created / Updated Date (ONE COLUMN, UP & DOWN) */}
-                      <td style={{ padding: '14px 18px', whiteSpace: 'nowrap' }}>
-                        <CombinedDateCell createdAt={p.createdAt} updatedAt={p.updatedAt} />
-                      </td>
-                      {/* Created / Updated By (ONE COLUMN, UP & DOWN) */}
-                      <td style={{ padding: '14px 18px', whiteSpace: 'nowrap' }}>
-                        <CombinedUserCell createdBy={p.createdBy} updatedBy={p.updatedBy} />
-                      </td>
-                      <td style={{ padding: '14px 18px' }}>
-                        <button
-                          onClick={() => handleToggleStatus(p._id, p.isActive)}
-                          style={{
-                            padding: '4px 12px',
-                            borderRadius: '999px',
-                            fontSize: '11.5px',
-                            fontWeight: 700,
-                            border: 'none',
-                            cursor: 'pointer',
-                            background: p.isActive ? '#ECFDF5' : '#FEF2F2',
-                            color: p.isActive ? '#065F46' : '#991B1B',
-                          }}
-                        >
-                          {p.isActive ? 'Active' : 'Inactive'}
-                        </button>
-                      </td>
-                      <td style={{ padding: '14px 18px', textAlign: 'right' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px' }}>
-                          <Link
-                            to={`/admin/products/${p.slug || p._id}`}
-                            title="View Product"
-                            style={{
-                              width: '30px', height: '30px', borderRadius: '6px',
-                              display: 'flex', alignItems: 'center', justifyContent: 'center',
-                              color: '#6828DC', background: '#FAF5FF', border: '1px solid #EDE9FE',
-                              cursor: 'pointer',
-                            }}
-                          >
-                            <Eye size={14} />
-                          </Link>
-                          <button
-                            onClick={() => setEditingProduct(p)}
-                            title="Quick Edit"
-                            style={{
-                              width: '30px', height: '30px', borderRadius: '6px',
-                              display: 'flex', alignItems: 'center', justifyContent: 'center',
-                              color: '#2563EB', background: '#EFF6FF', border: '1px solid #BFDBFE',
-                              cursor: 'pointer',
-                            }}
-                          >
-                            <Edit2 size={14} />
-                          </button>
-                          <button
-                            onClick={() => handleDuplicateProduct(p)}
-                            title="Duplicate Product"
-                            style={{
-                              width: '30px', height: '30px', borderRadius: '6px',
-                              display: 'flex', alignItems: 'center', justifyContent: 'center',
-                              color: '#0891B2', background: '#ECFEFF', border: '1px solid #A5F3FC',
-                              cursor: 'pointer',
-                            }}
-                          >
-                            <Copy size={14} />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(p._id, p.name)}
-                            title="Delete Product"
-                            style={{
-                              width: '30px', height: '30px', borderRadius: '6px',
-                              display: 'flex', alignItems: 'center', justifyContent: 'center',
-                              color: '#DC2626', background: '#FEF2F2', border: '1px solid #FECACA',
-                              cursor: 'pointer',
-                            }}
-                          >
-                            <Trash2 size={14} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
             </table>
           </div>
 
@@ -543,12 +574,14 @@ export const AdminProductsPage: React.FC = () => {
             </div>
           ) : (
             <>
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-                gap: '18px',
-                marginBottom: '24px',
-              }}>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(270px, 1fr))',
+                  gap: '18px',
+                  marginBottom: '28px',
+                }}
+              >
                 {paginatedProducts.map((p) => {
                   const catName = typeof p.category === 'object' ? p.category?.name : p.category;
                   return (
@@ -556,112 +589,166 @@ export const AdminProductsPage: React.FC = () => {
                       key={p._id}
                       style={{
                         background: '#FFFFFF',
-                        borderRadius: '14px',
+                        borderRadius: '16px',
                         border: '1.5px solid #E2E8F0',
                         overflow: 'hidden',
-                        transition: 'all 0.2s ease',
                         boxShadow: '0 2px 8px rgba(15, 23, 42, 0.04)',
-                      }}
-                    >
-                      {/* Product Image */}
-                      <div style={{
-                        height: '160px',
-                        background: '#F8FAFC',
                         display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        borderBottom: '1px solid #E2E8F0',
-                      }}>
-                        {p.featuredImage ? (
-                          <img
-                            src={galleryService.formatUrl(p.featuredImage)}
-                            alt={p.name}
-                            style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', padding: '12px' }}
-                          />
-                        ) : (
-                          <Pill size={40} style={{ color: '#CBD5E1' }} />
-                        )}
-                      </div>
-
-                      {/* Product Info */}
-                      <div style={{ padding: '16px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                          <span className="badge badge-purple" style={{ fontSize: '10.5px' }}>
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        transition: 'all 0.2s ease',
+                      }}
+                      className="hover:border-purple-300 hover:-translate-y-0.5 hover:shadow-md"
+                    >
+                      <div>
+                        {/* Product Image Stage */}
+                        <div
+                          style={{
+                            position: 'relative',
+                            width: '100%',
+                            height: '165px',
+                            background: '#F8FAFC',
+                            borderBottom: '1px solid #E2E8F0',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: '14px',
+                            overflow: 'hidden',
+                          }}
+                        >
+                          {/* Category Pill Tag */}
+                          <span
+                            style={{
+                              position: 'absolute',
+                              top: '10px',
+                              left: '10px',
+                              background: 'rgba(255, 255, 255, 0.94)',
+                              backdropFilter: 'blur(4px)',
+                              color: '#6828DC',
+                              border: '1px solid #EDE9FE',
+                              fontWeight: 800,
+                              fontSize: '10.5px',
+                              padding: '3px 9px',
+                              borderRadius: '6px',
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.4px',
+                              zIndex: 2,
+                              boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                            }}
+                          >
                             {catName || 'General'}
                           </span>
+
+                          {/* Active Status Badge */}
                           <button
+                            type="button"
                             onClick={() => handleToggleStatus(p._id, p.isActive)}
                             style={{
+                              position: 'absolute',
+                              top: '10px',
+                              right: '10px',
                               padding: '3px 10px',
-                              borderRadius: '999px',
+                              borderRadius: '20px',
                               fontSize: '10.5px',
                               fontWeight: 700,
-                              border: 'none',
-                              cursor: 'pointer',
+                              border: '1px solid',
+                              borderColor: p.isActive ? '#A7F3D0' : '#FECACA',
                               background: p.isActive ? '#ECFDF5' : '#FEF2F2',
-                              color: p.isActive ? '#065F46' : '#991B1B',
+                              color: p.isActive ? '#059669' : '#DC2626',
+                              cursor: 'pointer',
+                              zIndex: 2,
                             }}
                           >
                             {p.isActive ? 'Active' : 'Inactive'}
                           </button>
+
+                          {p.featuredImage ? (
+                            <img
+                              src={galleryService.formatUrl(p.featuredImage)}
+                              alt={p.name}
+                              style={{ maxHeight: '135px', maxWidth: '85%', objectFit: 'contain' }}
+                            />
+                          ) : (
+                            <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: '#F5F3FF', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6828DC' }}>
+                              <Pill size={28} />
+                            </div>
+                          )}
                         </div>
 
-                        <Link
-                          to={`/admin/products/${p.slug || p._id}`}
-                          style={{ fontWeight: 800, color: '#0F172A', fontSize: '14px', display: 'block', marginBottom: '4px' }}
-                        >
-                          {p.name}
-                        </Link>
-
-                        {p.genericName && (
-                          <div style={{ fontSize: '11.5px', color: '#64748B', marginBottom: '8px' }}>
-                            {p.genericName}
-                          </div>
-                        )}
-
-                        <div style={{ fontSize: '12px', color: '#94A3B8', marginBottom: '12px' }}>
-                          {p.dosageForm} {p.packaging ? `• ${p.packaging}` : ''}
-                        </div>
-
-                        {/* Card Actions */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', borderTop: '1px solid #F1F5F9', paddingTop: '12px' }}>
+                        {/* Card Content Details */}
+                        <div style={{ padding: '14px 16px' }}>
                           <Link
                             to={`/admin/products/${p.slug || p._id}`}
-                            title="View"
-                            style={{
-                              flex: 1, padding: '6px', borderRadius: '6px',
-                              display: 'flex', alignItems: 'center', justifyContent: 'center',
-                              color: '#6828DC', background: '#FAF5FF', border: '1px solid #EDE9FE',
-                              cursor: 'pointer', fontSize: '11px', fontWeight: 700, gap: '4px',
-                            }}
+                            style={{ fontSize: '14.5px', fontWeight: 800, color: '#0F172A', textDecoration: 'none', display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                            title={p.name}
                           >
-                            <Eye size={13} /> View
+                            {p.name}
                           </Link>
-                          <button
-                            onClick={() => setEditingProduct(p)}
-                            title="Edit"
-                            style={{
-                              flex: 1, padding: '6px', borderRadius: '6px',
-                              display: 'flex', alignItems: 'center', justifyContent: 'center',
-                              color: '#2563EB', background: '#EFF6FF', border: '1px solid #BFDBFE',
-                              cursor: 'pointer', fontSize: '11px', fontWeight: 700, gap: '4px',
-                            }}
-                          >
-                            <Edit2 size={13} /> Edit
-                          </button>
-                          <button
-                            onClick={() => handleDelete(p._id, p.name)}
-                            title="Delete"
-                            style={{
-                              flex: 1, padding: '6px', borderRadius: '6px',
-                              display: 'flex', alignItems: 'center', justifyContent: 'center',
-                              color: '#DC2626', background: '#FEF2F2', border: '1px solid #FECACA',
-                              cursor: 'pointer', fontSize: '11px', fontWeight: 700, gap: '4px',
-                            }}
-                          >
-                            <Trash2 size={13} /> Delete
-                          </button>
+
+                          {p.genericName && (
+                            <div style={{ fontSize: '12px', color: '#64748B', fontWeight: 500, marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={p.genericName}>
+                              {p.genericName}
+                            </div>
+                          )}
+
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '12px', color: '#475569', marginTop: '10px', paddingTop: '10px', borderTop: '1px solid #F1F5F9' }}>
+                            <span style={{ fontWeight: 600, color: '#334155', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '65%' }}>
+                              {p.dosageForm} {p.packaging ? `• ${p.packaging}` : ''}
+                            </span>
+                            {p.mrp !== undefined && p.mrp !== null && (
+                              <span style={{ background: '#ECFDF5', color: '#059669', border: '1px solid #A7F3D0', fontWeight: 800, fontSize: '11.5px', padding: '2px 8px', borderRadius: '6px' }}>
+                                ₹{p.mrp}
+                              </span>
+                            )}
+                          </div>
                         </div>
+                      </div>
+
+                      {/* Pure Icon-Only Actions Footer Bar - STRICT HORIZONTAL FLEX ROW */}
+                      <div style={{ padding: '10px 14px', background: '#F8FAFC', borderTop: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+                        {/* Left Side: View, Edit & Duplicate Icon Buttons in Row */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <Link
+                            to={`/admin/products/${p.slug || p._id}`}
+                            title="View Product Dossier"
+                            style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#FAF5FF', border: '1.5px solid #EDE9FE', color: '#6828DC', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', textDecoration: 'none' }}
+                          >
+                            <Eye size={15} />
+                          </Link>
+
+                          {canUpdate && (
+                            <Link
+                              to={`/admin/products/edit/${p._id}`}
+                              title="Edit Product Details"
+                              style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#EFF6FF', border: '1.5px solid #BFDBFE', color: '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', textDecoration: 'none' }}
+                            >
+                              <Edit2 size={14} />
+                            </Link>
+                          )}
+
+                          {canCreate && (
+                            <button
+                              type="button"
+                              onClick={() => handleDuplicateProduct(p)}
+                              title="Duplicate Product Draft"
+                              style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#ECFEFF', border: '1.5px solid #A5F3FC', color: '#0891B2', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                            >
+                              <Copy size={14} />
+                            </button>
+                          )}
+                        </div>
+
+                        {/* Right Side: Delete Icon Button */}
+                        {canDelete && (
+                          <button
+                            type="button"
+                            onClick={() => handleDelete(p._id, p.name)}
+                            title="Delete Product"
+                            style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#FEF2F2', border: '1.5px solid #FECACA', color: '#DC2626', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        )}
                       </div>
                     </div>
                   );

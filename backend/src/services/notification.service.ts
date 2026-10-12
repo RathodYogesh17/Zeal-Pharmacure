@@ -63,8 +63,9 @@ export interface ICareerNotificationPayload {
 /**
  * Sanitize an Indian or international mobile number to E.164 without leading plus for wa.me links
  */
-export const sanitizeWhatsAppNumber = (rawPhone: string): string => {
-  const digits = rawPhone.replace(/\D/g, "");
+export const sanitizeWhatsAppNumber = (rawPhone?: string | null): string => {
+  if (!rawPhone) return "";
+  const digits = String(rawPhone).replace(/\D/g, "");
   // If 10-digit Indian number without country code, prepend 91
   if (digits.length === 10) {
     return `91${digits}`;
@@ -247,7 +248,7 @@ export const formatSalesAlertMessage = (lead: ILeadNotificationPayload): string 
     .join("\n");
 };
 
-import whatsAppBotService from "./whatsappBot.service";
+
 
 /**
  * Send Instant WhatsApp lead notification to Sales Manager (+91 9316227576)
@@ -283,34 +284,7 @@ export const sendLeadWhatsAppNotification = async (
   console.log(`🔗 Direct WhatsApp link to Admin: ${adminDirectWhatsAppUrl}`);
   console.log("=================================================");
 
-  // Option 1: Direct WhatsApp Bot Delivery (Zero package, pure server-to-phone push to Admin & HR)
-  const botStatus = whatsAppBotService.getStatus();
-  if (botStatus.status === "CONNECTED") {
-    try {
-      let anySent = false;
-      for (const phone of recipients) {
-        const botRes = await whatsAppBotService.sendDirectMessage(
-          phone,
-          salesManagerNotificationText
-        );
-        if (botRes.success) {
-          anySent = true;
-          console.log(`🤖 [WhatsApp Bot Delivered to ${phone}] MsgID: ${botRes.messageId}`);
-        }
-      }
 
-      if (anySent) {
-        return {
-          sent: true,
-          instantWhatsAppChatUrl,
-          adminDirectWhatsAppUrl,
-          salesManagerNotificationText,
-        };
-      }
-    } catch (botErr) {
-      console.error("WhatsApp Bot direct dispatch error:", botErr);
-    }
-  }
 
   // Option 2: Free CallMeBot Personal WhatsApp Gateway (if configured)
   if (callMeBotApiKey && callMeBotApiKey.trim()) {
@@ -458,31 +432,7 @@ export const sendCareerWhatsAppNotification = async (
   console.log(alertText);
   console.log("=================================================");
 
-  // Direct WhatsApp Bot Delivery via Baileys
-  const botStatus = whatsAppBotService.getStatus();
-  if (botStatus.status === "CONNECTED") {
-    try {
-      let anySent = false;
-      for (const phone of recipients) {
-        const botRes = await whatsAppBotService.sendDirectMessage(phone, alertText);
-        if (botRes.success) {
-          anySent = true;
-          console.log(`🤖 [Career Alert Delivered via WhatsApp Bot to ${phone}] MsgID: ${botRes.messageId}`);
-        }
-      }
 
-      if (anySent) {
-        return {
-          sent: true,
-          instantWhatsAppChatUrl,
-          adminDirectWhatsAppUrl: instantWhatsAppChatUrl,
-          salesManagerNotificationText: alertText,
-        };
-      }
-    } catch (botErr) {
-      console.error("WhatsApp Bot career dispatch error:", botErr);
-    }
-  }
 
   return {
     sent: true,
@@ -494,8 +444,10 @@ export const sendCareerWhatsAppNotification = async (
 
 export interface IStatusUpdateNotificationPayload {
   recipientType: "CAREER_CANDIDATE" | "FRANCHISE_CLIENT" | "PRODUCT_CLIENT" | "BULK_CLIENT";
+  referenceId?: string | undefined;
   recipientName: string;
   recipientPhone: string;
+  recipientEmail?: string | undefined;
   previousStatus?: string | undefined;
   newStatus: string;
   referenceTitle?: string | undefined;
@@ -507,6 +459,17 @@ export interface IStatusUpdateNotificationPayload {
     territory?: string | undefined;
     productName?: string | undefined;
     quantity?: string | undefined;
+    packaging?: string | undefined;
+    companyName?: string | undefined;
+    city?: string | undefined;
+    state?: string | undefined;
+    drugLicenseNumber?: string | undefined;
+    gstNumber?: string | undefined;
+    department?: string | undefined;
+    qualification?: string | undefined;
+    experienceYears?: string | number | undefined;
+    investmentBudget?: string | undefined;
+    interestedDivisions?: string | undefined;
   } | undefined;
   customMessage?: string | undefined;
 }
@@ -520,233 +483,482 @@ export interface IStatusUpdateDispatchResult {
 }
 
 /**
- * Generates tailored executive WhatsApp templates for lead & candidate status updates
+ * Generates tailored executive WhatsApp templates for lead & candidate status updates.
+ * Compulsorily displays:
+ * 1. Username / Client Name
+ * 2. Mobile Phone Number
+ * 3. Email Address
+ * 4. Reference / Lead ID
+ * 5. Domain-specific details (Product info, Franchise territory, or Career profile)
+ * 6. Detailed, professional corporate narrative with crystal-clear next steps
  */
 export const formatStatusUpdateMessage = (payload: IStatusUpdateNotificationPayload): string => {
-  const { recipientType, recipientName, newStatus, referenceTitle, additionalDetails } = payload;
-  const name = recipientName || "Associate";
-  const ref = referenceTitle || (recipientType === "CAREER_CANDIDATE" ? "your application" : "your inquiry");
+  const {
+    recipientType,
+    recipientName,
+    recipientPhone,
+    recipientEmail,
+    referenceId,
+    newStatus,
+    referenceTitle,
+    additionalDetails,
+  } = payload;
 
+  const name = recipientName?.trim() || "Valued Associate";
+  const phone = recipientPhone?.trim() || "N/A";
+  const email = recipientEmail?.trim() || "N/A";
+  const refId = referenceId
+    ? referenceId.startsWith("#")
+      ? referenceId
+      : `#${referenceId.slice(-8).toUpperCase()}`
+    : "N/A";
+  const statusUpper = (newStatus || "UPDATED").toUpperCase();
+  const location = [additionalDetails?.city, additionalDetails?.state].filter(Boolean).join(", ");
+  const company = additionalDetails?.companyName || "Independent Business Entity";
+
+  // Mandatory Common Profile Block (Compulsory in every single message)
+  const mandatoryDetailsBlock = [
+    `👤 *REGISTERED CLIENT / APPLICANT:*`,
+    `• *Full Name:* ${name}`,
+    `• *Mobile / WhatsApp:* ${phone}`,
+    `• *Email Address:* ${email}`,
+    `• *Reference Tracking ID:* ${refId}`,
+  ].join("\n");
+
+  // ==========================================
+  // 1. CAREER CANDIDATE
+  // ==========================================
   if (recipientType === "CAREER_CANDIDATE") {
-    switch (newStatus.toUpperCase()) {
+    const jobTitle = referenceTitle || "Pharmaceutical Career Opening";
+    const profileLines = [
+      `💼 *APPLICATION PROFILE DETAILS:*`,
+      `• *Position Applied:* ${jobTitle}`,
+      additionalDetails?.department ? `• *Department:* ${additionalDetails.department}` : null,
+      additionalDetails?.qualification ? `• *Qualification:* ${additionalDetails.qualification}` : null,
+      additionalDetails?.experienceYears !== undefined && additionalDetails?.experienceYears !== ""
+        ? `• *Total Experience:* ${additionalDetails.experienceYears} Years`
+        : null,
+      location ? `• *Current Location:* ${location}` : null,
+    ].filter(Boolean).join("\n");
+
+    let statusNarrative = "";
+    switch (statusUpper) {
       case "SHORTLISTED":
-        return [
-          `🎉 *APPLICATION SHORTLISTED - ZEAL PHARMACEUTICALS*`,
-          `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-          `Dear *${name}*,`,
+        statusNarrative = [
+          `🎉 *APPLICATION SHORTLISTED!*`,
+          `Congratulations! Following a comprehensive review by our Recruitment Committee, your application for *${jobTitle}* has been successfully *SHORTLISTED*.`,
           ``,
-          `Congratulations! We are delighted to inform you that your profile for *${ref}* has been *SHORTLISTED* by our Recruitment Committee.`,
-          ``,
-          `Our HR division will connect with you shortly with interview schedule details.`,
-          ``,
-          `📞 *HR Helpline:* +91 9316227576`,
-          `🌐 *Portal:* www.zealpharma.com`,
-          `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+          `📋 *Next Steps & Schedule:*`,
+          `1. Our Talent Acquisition Team is coordinating with the Technical Department Panel.`,
+          `2. You will receive an official invitation with your interview date, time slot, and meeting link.`,
+          `3. Please keep your updated resume, educational certificates, and experience documents handy for preliminary verification.`,
         ].join("\n");
+        break;
 
       case "INTERVIEW_SCHEDULED":
-        const dateStr = additionalDetails?.interviewDate ? `🗓️ *Date & Time:* ${additionalDetails.interviewDate}` : "";
-        const modeStr = additionalDetails?.interviewMode ? `💻 *Mode:* ${additionalDetails.interviewMode}` : "";
-        const linkStr = additionalDetails?.meetingLink ? `🔗 *Meeting Link / Venue:* ${additionalDetails.meetingLink}` : "";
-        return [
-          `📅 *INTERVIEW SCHEDULED - ZEAL PHARMACEUTICALS*`,
-          `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-          `Dear *${name}*,`,
+        statusNarrative = [
+          `📅 *INTERVIEW ROUND SCHEDULED & CONFIRMED:*`,
+          `Your interview round for the position of *${jobTitle}* has been officially scheduled.`,
           ``,
-          `Your interview round for the position of *${ref}* is confirmed:`,
-          dateStr,
-          modeStr,
-          linkStr,
+          `📌 *Interview Details:*`,
+          additionalDetails?.interviewDate ? `• *Date & Time:* ${additionalDetails.interviewDate}` : `• *Date & Time:* As notified by HR Desk`,
+          additionalDetails?.interviewMode ? `• *Meeting Mode:* ${additionalDetails.interviewMode}` : `• *Meeting Mode:* Virtual (Google Meet / Zoom)`,
+          additionalDetails?.meetingLink ? `• *Joining Link / Venue:* ${additionalDetails.meetingLink}` : `• *Venue:* Zeal Corporate Office / Virtual Link dispatched to your email`,
           ``,
-          `Please ensure you are available 5 minutes prior to the scheduled time. For any queries or rescheduling, reply directly on this number.`,
-          ``,
-          `📞 *HR Helpline:* +91 9316227576`,
-          `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+          `💡 *Candidate Guidelines:*`,
+          `• Please join or arrive 5 minutes prior to your allocated time slot.`,
+          `• Ensure stable high-speed internet connectivity if attending virtually.`,
+          `• Have a soft copy of your resume and recent salary slips available.`,
         ].filter(Boolean).join("\n");
+        break;
 
       case "OFFERED":
       case "HIRED":
-        return [
-          `🌟 *OFFER CONFIRMATION - ZEAL PHARMACEUTICALS*`,
-          `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-          `Dear *${name}*,`,
+        statusNarrative = [
+          `🌟 *OFFICIAL JOB OFFER & SELECTION CONFIRMATION!*`,
+          `On behalf of Zeal Pharmaceuticals Pvt. Ltd., we are thrilled to extend our official *Offer of Employment* for *${jobTitle}*!`,
           ``,
-          `Congratulations! We are thrilled to officially welcome you aboard for the role of *${ref}* at Zeal Pharmaceuticals Pvt. Ltd.`,
+          `📋 *Onboarding Next Steps:*`,
+          `1. Your Formal Offer Letter and Annexure detailing CTC, designation, and job responsibilities have been dispatched to: *${email}*.`,
+          `2. Please review, sign, and return the duplicate copy within 3 working days.`,
+          `3. Our HR Onboarding Officer will connect with you to guide you through KYC verification and induction schedules.`,
           ``,
-          `Please check your email for the formal Offer Letter and onboarding documentation. We look forward to your impactful contributions.`,
-          ``,
-          `🏢 *Head Office:* 7015, billiogo text tile market , Parvat Patiya < puna gam`,
-          `📞 *Helpline:* +91 9316227576`,
-          `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+          `Welcome to the Zeal Pharmaceuticals family! We look forward to a rewarding professional journey together.`,
         ].join("\n");
+        break;
+
+      case "ON_HOLD":
+        statusNarrative = [
+          `⏸️ *APPLICATION STATUS: ON HOLD*`,
+          `Thank you for your active interest in *${jobTitle}* at Zeal Pharmaceuticals.`,
+          ``,
+          `📌 *Current Status:*`,
+          `Your application has been placed on hold pending upcoming departmental restructuring and regional headcount approvals.`,
+          `• Your complete candidate file and test scores are retained in our Priority Talent Pool.`,
+          `• As soon as the next recruitment cycle resumes, our HR desk will proactively reach out to you first.`,
+        ].join("\n");
+        break;
 
       case "REJECTED":
-        return [
-          `📋 *APPLICATION STATUS - ZEAL PHARMACEUTICALS*`,
-          `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-          `Dear *${name}*,`,
+        statusNarrative = [
+          `📋 *APPLICATION STATUS UPDATE:*`,
+          `Thank you for taking the time to apply for *${jobTitle}* and engaging with Zeal Pharmaceuticals.`,
           ``,
-          `Thank you for taking the time to apply for the *${ref}* opening at Zeal Pharmaceuticals.`,
+          `📌 *Evaluation Decision:*`,
+          `After careful assessment of all candidate profiles against our specific technical requirements for this opening, we have decided to move forward with another applicant.`,
           ``,
-          `While we have chosen to proceed with another profile that closely matches our immediate requirements, we have preserved your resume in our Active Talent Pool for future department expansions.`,
-          ``,
-          `We sincerely wish you the very best in your career pursuits.`,
-          `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+          `💼 *Active Talent Pool:*`,
+          `Your curriculum vitae and credentials have been securely archived in our Talent Repository for 6 months. Should a role that closely aligns with your qualifications and experience open up, our recruitment team will gladly contact you.`,
+          `We wish you every success in your ongoing career endeavors!`,
         ].join("\n");
+        break;
 
       case "REVIEWING":
+      case "APPLIED":
       default:
-        return [
-          `📋 *APPLICATION UNDER REVIEW - ZEAL PHARMACEUTICALS*`,
-          `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-          `Dear *${name}*,`,
+        statusNarrative = [
+          `📌 *APPLICATION STATUS: ${statusUpper}*`,
+          `Thank you for submitting your job application for *${jobTitle}* at Zeal Pharmaceuticals Pvt. Ltd.`,
           ``,
-          `Your application for *${ref}* has entered *Active Screening* with our Technical Evaluation Team.`,
-          ``,
-          `We will keep you updated on the next evaluation stages.`,
-          ``,
-          `📞 *HR Recruitment Desk:* +91 9316227576`,
-          `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+          `📋 *Current Status & Workflow:*`,
+          `• Your application file has been registered under Tracking ID *${refId}*.`,
+          `• Our Human Resources and Technical Screening Board are currently evaluating your qualifications and experience profile.`,
+          `• If shortlisted, our Talent Acquisition team will reach out directly on this WhatsApp number or via email.`,
         ].join("\n");
+        break;
     }
+
+    const noteLine = additionalDetails?.note ? `\n\n📝 *HR Desk Remarks:* ${additionalDetails.note}` : "";
+
+    return [
+      `👔 *ZEAL PHARMACEUTICALS PVT. LTD.*`,
+      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+      `📢 *CAREER APPLICATION STATUS UPDATE*`,
+      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+      `📌 *Current Pipeline Status:* *${statusUpper}*`,
+      ``,
+      mandatoryDetailsBlock,
+      ``,
+      profileLines,
+      ``,
+      statusNarrative + noteLine,
+      ``,
+      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+      `📞 *HR Desk Direct Helpline:* +91 9316227576`,
+      `✉️ *HR Email:* careers@zealpharma.com`,
+      `🌐 *Careers Portal:* www.zealpharma.com/careers`,
+      `🏢 *Zeal Pharmaceuticals Pvt. Ltd.* (Ahmedabad, Gujarat)`,
+    ].filter(Boolean).join("\n");
   }
 
+  // ==========================================
+  // 2. FRANCHISE / STOCKIST CLIENT
+  // ==========================================
   if (recipientType === "FRANCHISE_CLIENT") {
-    const territory = additionalDetails?.territory || ref || "your district";
-    switch (newStatus.toUpperCase()) {
+    const territory = additionalDetails?.territory || referenceTitle || "Designated Territory";
+    const franchiseLines = [
+      `🏛️ *STOCKISTS & MONOPOLY PROPOSAL DETAILS:*`,
+      `• *Target Territory / District:* ${territory}`,
+      `• *Firm / Business Name:* ${company}`,
+      additionalDetails?.investmentBudget ? `• *Investment Capacity:* ${additionalDetails.investmentBudget}` : null,
+      additionalDetails?.interestedDivisions ? `• *Interested Divisions:* ${additionalDetails.interestedDivisions}` : null,
+      location ? `• *Operational Location:* ${location}` : null,
+      additionalDetails?.drugLicenseNumber ? `• *Drug License (DL):* ${additionalDetails.drugLicenseNumber}` : null,
+      additionalDetails?.gstNumber ? `• *GSTIN:* ${additionalDetails.gstNumber}` : null,
+    ].filter(Boolean).join("\n");
+
+    let statusNarrative = "";
+    switch (statusUpper) {
       case "APPROVED":
-        return [
-          `🏛️ *DISTRIBUTION ALLOTMENT APPROVED*`,
-          `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-          `*ZEAL PHARMACEUTICALS PVT. LTD.*`,
+        statusNarrative = [
+          `🎉 *CONGRATULATIONS! MONOPOLY ALLOTMENT APPROVED!*`,
+          `We are delighted to formally announce that your application for *Authorized Stockists Distribution Rights* for *${territory}* has been officially *APPROVED* by our Board of Directors!`,
           ``,
-          `Dear *${name}*,`,
+          `📋 *Onboarding Protocol & Next Steps:*`,
+          `1. *Formal Agreement:* Our Zonal Business Manager is drafting your Monopoly Stockists Agreement.`,
+          `2. *Starter Kit Dispatch:* Your Visual Aid Product Catalog, Sample Packs, M.R. Bag, and Promotional Literature Kit are being prepared for dispatch.`,
+          `3. *ERP Account Activation:* Our billing desk will issue your Authorized Distributor Code upon agreement signing.`,
           ``,
-          `Congratulations! Your application for *Authorized Stockists Distribution Rights* for *${territory}* has been *APPROVED* by our Executive Committee.`,
-          ``,
-          `Our Zonal Business Manager will connect with you to finalize territory agreement documentation and dispatch your Promotional Starter Kit.`,
-          ``,
-          `📞 *Stockists Helpline:* +91 9316227576`,
-          `🌐 *Official Website:* www.zealpharma.com`,
-          `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+          `Welcome to the Zeal Pharmaceuticals Distribution Network!`,
         ].join("\n");
+        break;
 
       case "DOCUMENTS_PENDING":
-        return [
-          `📑 *DOCUMENTATION REQUIRED - ZEAL PHARMA*`,
-          `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-          `Hello *${name}*,`,
+        statusNarrative = [
+          `📑 *DOCUMENTATION PENDING - REGULATORY VERIFICATION:*`,
+          `Thank you for your active interest in securing Stockists Distribution Rights for *${territory}*.`,
           ``,
-          `Regarding your Stockists Distribution allotment for *${territory}*:`,
+          `📋 *Required Documents to Finalize Allotment:*`,
+          `To clear your territory monopoly reservation and activate distributor billing, please provide clear copies of:`,
+          `1. Wholesale Drug License (Form 20B and Form 21B)`,
+          `2. GST Registration Certificate (GSTIN)`,
+          `3. Firm PAN Card & Registered Godown Address Details`,
+          `4. Cancelled Cheque (for commercial account verification)`,
           ``,
-          `Please share a clear copy/photo of your:`,
-          `1. Wholesale Drug License (Form 20B / 21B)`,
-          `2. GST Registration Certificate`,
-          ``,
-          `Kindly reply directly on this WhatsApp chat or call +91 9316227576 to fast-track your territory allocation.`,
-          `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+          `👉 *How to Submit:* Kindly reply with PDF/photocopies directly on this WhatsApp chat or email them to *distribution@zealpharma.com*.`,
         ].join("\n");
+        break;
 
-      case "CONTACTED":
-      case "QUALIFIED":
-        return [
-          `🏛️ *TERRITORY INQUIRY UPDATE - ZEAL PHARMA*`,
-          `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-          `Hello *${name}*,`,
+      case "QUOTED":
+        statusNarrative = [
+          `💰 *COMMERCIAL PROPOSAL & PRICE LIST READY:*`,
+          `Our Zonal Commercial Desk has generated the Wholesale Distributor Price List, Scheme Structure, and Net Margin Breakdown for *${territory}*.`,
           ``,
-          `Thank you for your interest in our Stockists Distribution Network for *${territory}*.`,
+          `📋 *What is Included:*`,
+          `• 250+ WHO-GMP Certified Formulation Catalog & Division Breakdown`,
+          `• Highly attractive Net Distributor Margins & Monthly Target Schemes`,
+          `• Complimentary Marketing & Promotional Material Support (Visual Aids, Catch Covers, Reminder Cards)`,
+          `• Standard Dispatch & Freight Delivery Schedule`,
           ``,
-          `Our Area Business Manager has pre-qualified your territory and will connect with you shortly to share our 250+ WHO-GMP formulation list, distributor profit margins, and district monopoly terms.`,
-          ``,
-          `📞 *Direct Sales Desk:* +91 9316227576`,
-          `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+          `Our Area Business Manager will connect with you today to discuss initial stock placement and territory planning.`,
         ].join("\n");
+        break;
+
+      case "QUALIFIED":
+      case "CONTACTED":
+      case "IN_TOUCH":
+        statusNarrative = [
+          `🤝 *TERRITORY PRE-QUALIFICATION CONFIRMED:*`,
+          `Thank you for expressing interest in partnering with Zeal Pharmaceuticals for *${territory}*.`,
+          ``,
+          `📌 *Current Status:*`,
+          `Our Market Expansion Desk has pre-screened your application and confirmed that *${territory}* is currently open for Exclusive Monopoly Allotment.`,
+          `• An Area Business Manager (ABM) has been assigned to your account.`,
+          `• We will contact you to review your division preferences, distributor margins, and initial stock requirements.`,
+        ].join("\n");
+        break;
+
+      case "FOLLOW_UP":
+        statusNarrative = [
+          `📞 *FOLLOW-UP CONSULTATION SCHEDULED:*`,
+          `A dedicated follow-up consultation has been scheduled regarding your Stockists Distribution Application for *${territory}*.`,
+          ``,
+          `📌 *Agenda for Discussion:*`,
+          `• Reviewing target division selection (General, Gynec, Derma, Ortho, Pediatric, Cardiac-Diabetic)`,
+          `• Finalizing initial order quantum and first batch dispatch timeline`,
+          `• Territory exclusivity boundary definition`,
+          ``,
+          `Our Zonal Business Manager will connect with you at your convenience.`,
+        ].join("\n");
+        break;
+
+      case "ON_HOLD":
+        statusNarrative = [
+          `⏸️ *APPLICATION STATUS: TEMPORARILY ON HOLD*`,
+          `Your application for Stockists Distribution in *${territory}* has been placed on temporary hold.`,
+          ``,
+          `📌 *Details:*`,
+          `• If you have pending documentation or wish to revise your target division/territory, please notify our desk.`,
+          `• To resume your application, simply reply to this message or call our Stockists Hotline.`,
+        ].join("\n");
+        break;
+
+      case "CLOSED":
+        statusNarrative = [
+          `✅ *DISTRIBUTOR ONBOARDING COMPLETED & ACCOUNT ACTIVE:*`,
+          `We are delighted to confirm that the Stockists Distribution onboarding file for *${territory}* has been successfully completed and finalized!`,
+          ``,
+          `• Your Distributor Account is active in our Central ERP.`,
+          `• For batch orders, billing queries, or replenishment, our Sales Desk is at your service 24/7.`,
+        ].join("\n");
+        break;
 
       case "REJECTED":
-        return [
-          `🏛️ *TERRITORY INQUIRY NOTICE - ZEAL PHARMA*`,
-          `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-          `Hello *${name}*,`,
+        statusNarrative = [
+          `🏛️ *TERRITORY AVAILABILITY UPDATE:*`,
+          `Thank you for your valued interest in Zeal Pharmaceuticals for *${territory}*.`,
           ``,
-          `Thank you for your application for Stockists Distribution in *${territory}*.`,
+          `📌 *Territory Status:*`,
+          `We regret to inform you that Authorized Stockists Rights for *${territory}* have already been committed to an existing monopoly franchise partner in our network.`,
           ``,
-          `Regrettably, authorized distribution rights for this territory are currently committed to an existing partner. We will contact you as soon as adjacent territories or new divisions open up.`,
-          ``,
-          `📞 *Zeal Pharma Helpline:* +91 9316227576`,
-          `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+          `💡 *Alternative Opportunities:*`,
+          `We warmly invite you to explore open adjacent districts or newly introduced specialized divisions. Our expansion desk will reach out as soon as new territory quotas unlock.`,
         ].join("\n");
+        break;
 
       default:
-        return [
-          `🏛️ *ZEAL PHARMACEUTICALS - LEAD UPDATE*`,
-          `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-          `Hello *${name}*,`,
-          ``,
-          `Your Stockists Distribution application status has been updated to *${newStatus}*.`,
-          `Territory: *${territory}*`,
-          ``,
-          `📞 *Helpline:* +91 9316227576`,
-          `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+        statusNarrative = [
+          `📌 *APPLICATION STATUS: ${statusUpper}*`,
+          `Your Stockists Distribution Application for *${territory}* is currently marked as *${statusUpper}*.`,
+          `Our Zonal Commercial Committee is actively evaluating your application parameters.`,
         ].join("\n");
+        break;
     }
+
+    const noteLine = additionalDetails?.note ? `\n\n📝 *Desk Remarks:* ${additionalDetails.note}` : "";
+
+    return [
+      `🏛️ *ZEAL PHARMACEUTICALS PVT. LTD.*`,
+      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+      `📦 *STOCKISTS DISTRIBUTION NETWORK UPDATE*`,
+      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+      `📌 *Application Status:* *${statusUpper}*`,
+      ``,
+      mandatoryDetailsBlock,
+      ``,
+      franchiseLines,
+      ``,
+      statusNarrative + noteLine,
+      ``,
+      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+      `📞 *Stockists Sales Desk Helpline:* +91 9316227576`,
+      `✉️ *Franchise Support Email:* distribution@zealpharma.com`,
+      `🌐 *Product Catalog & Portal:* www.zealpharma.com`,
+      `🏢 *Zeal Pharmaceuticals Pvt. Ltd.* (Ahmedabad, Gujarat)`,
+    ].filter(Boolean).join("\n");
   }
 
-  // Product / Bulk Client
-  const prod = additionalDetails?.productName || ref || "Pharmaceutical Formulations";
-  switch (newStatus.toUpperCase()) {
+  // ==========================================
+  // 3. PRODUCT / BULK INQUIRY
+  // ==========================================
+  const prodName = additionalDetails?.productName || referenceTitle || "Pharmaceutical Formulation Requirement";
+  const productLines = [
+    `📦 *PRODUCT & COMMERCIAL SPECIFICATIONS:*`,
+    `• *Formulation / Product:* ${prodName}`,
+    additionalDetails?.quantity ? `• *Order Quantity:* ${additionalDetails.quantity}` : null,
+    additionalDetails?.packaging ? `• *Packaging / Dosage Form:* ${additionalDetails.packaging}` : null,
+    `• *Hospital / Enterprise:* ${company}`,
+    location ? `• *Delivery Location:* ${location}` : null,
+    additionalDetails?.drugLicenseNumber ? `• *Drug License (DL):* ${additionalDetails.drugLicenseNumber}` : null,
+    additionalDetails?.gstNumber ? `• *GSTIN:* ${additionalDetails.gstNumber}` : null,
+  ].filter(Boolean).join("\n");
+
+  let statusNarrative = "";
+  switch (statusUpper) {
     case "QUOTED":
-      return [
-        `💊 *QUOTATION READY - ZEAL PHARMACEUTICALS*`,
-        `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-        `Hello *${name}*,`,
+      statusNarrative = [
+        `💊 *OFFICIAL COMMERCIAL QUOTATION GENERATED!*`,
+        `We are pleased to inform you that our Institutional Sales Division has prepared the official Rate Contract and Commercial Quotation for *${prodName}*.`,
         ``,
-        `Official distributor quotation for *${prod}* is ready!`,
+        `📋 *Quotation Highlights:*`,
+        `• Direct WHO-GMP Manufacturer Net Rates`,
+        `• Minimum Batch Order Quantity (MOQ) and Volume Discount Tier Applied`,
+        `• Standard Dispatch Timeline: 48 to 72 Hours from Order Confirmation`,
+        `• Complete Product Dossier, Certificate of Analysis (COA), and Batch Test Reports included`,
         ``,
-        `Our team has prepared competitive distributor net rates, sample packs, and dispatch schedules from our WHO-GMP facility.`,
-        ``,
-        `📞 *Sales Desk:* +91 9316227576`,
-        `🌐 *Catalog:* www.zealpharma.com`,
-        `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+        `Our Key Account Manager will connect shortly with the formal proforma invoice.`,
       ].join("\n");
+      break;
 
     case "IN_PROGRESS":
-      return [
-        `💊 *INQUIRY STATUS UPDATE - ZEAL PHARMA*`,
-        `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-        `Hello *${name}*,`,
+      statusNarrative = [
+        `⚙️ *ORDER FILE UNDER ACTIVE PROCESSING:*`,
+        `Your product inquiry for *${prodName}* is currently in progress with our Institutional Fulfillment Team.`,
         ``,
-        `Your inquiry regarding *${prod}* has been assigned to our Institutional Order Division.`,
-        ``,
-        `A dedicated sales manager will connect with you shortly with rate contracts and availability.`,
-        ``,
-        `📞 *Direct Helpline:* +91 9316227576`,
-        `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+        `📋 *Processing Workflow:*`,
+        `1. Batch availability and Quality Assurance release confirmation in progress.`,
+        `2. Logistics transit routes to ${location || "your destination"} being calculated.`,
+        `3. Proforma Invoice & Dispatch staging schedule being finalized.`,
       ].join("\n");
+      break;
+
+    case "DOCUMENTS_PENDING":
+      statusNarrative = [
+        `📑 *REGULATORY COMPLIANCE DOCUMENTS REQUIRED:*`,
+        `To process and dispatch your pharmaceutical order for *${prodName}*, statutory drug regulations mandate submission of:`,
+        ``,
+        `1. Wholesale Drug License (Form 20B / Form 21B)`,
+        `2. Valid GST Registration Certificate`,
+        `3. Consignee Delivery Address & Transport Godown Details`,
+        ``,
+        `👉 *How to Send:* Please reply directly to this WhatsApp message or email clear copies to *sales@zealpharma.com* so we can issue your tax invoice immediately.`,
+      ].join("\n");
+      break;
+
+    case "APPROVED":
+      statusNarrative = [
+        `🎉 *ORDER & COMMERCIAL TERMS APPROVED!*`,
+        `We are pleased to confirm that your order requirements for *${prodName}* have been formally *APPROVED* by our Commercial Sales Board!`,
+        ``,
+        `• Tax Invoice / Commercial Proforma generated.`,
+        `• Batch allocation and packing scheduled at our Central Logistics Warehouse.`,
+        `• Dispatch details and LR / Consignment tracking number will be shared upon handover to our transport partner.`,
+      ].join("\n");
+      break;
+
+    case "QUALIFIED":
+    case "CONTACTED":
+    case "IN_TOUCH":
+      statusNarrative = [
+        `🤝 *REQUIREMENT VERIFIED & ACCOUNT MANAGER ASSIGNED:*`,
+        `Thank you for your B2B pharmaceutical inquiry regarding *${prodName}*.`,
+        ``,
+        `📌 *Current Status:*`,
+        `Our Institutional Sales Team has verified your product requirement.`,
+        `• A dedicated Key Account Manager has been assigned to handle your request.`,
+        `• We will share complete product monographs, batch packaging details, and institutional pricing sheets shortly.`,
+      ].join("\n");
+      break;
+
+    case "FOLLOW_UP":
+      statusNarrative = [
+        `📞 *FOLLOW-UP DISCUSSION SCHEDULED:*`,
+        `A follow-up consultation has been scheduled regarding your ongoing requirement for *${prodName}*.`,
+        ``,
+        `Our sales manager will connect with you to review volume requirements, customized packaging options, and dispatch schedules.`,
+      ].join("\n");
+      break;
+
+    case "ON_HOLD":
+      statusNarrative = [
+        `⏸️ *INQUIRY STATUS: ON HOLD*`,
+        `Your inquiry for *${prodName}* has been kept on hold as per your request or pending clarification.`,
+        ``,
+        `Whenever you are ready to resume, simply reply to this WhatsApp chat or reach out to our Sales Desk to reactivate your order file instantly.`,
+      ].join("\n");
+      break;
 
     case "CLOSED":
-      return [
-        `💊 *ORDER UPDATE - ZEAL PHARMACEUTICALS*`,
-        `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-        `Hello *${name}*,`,
+      statusNarrative = [
+        `✅ *TRANSACTION COMPLETED & ORDER DELIVERED:*`,
+        `Thank you for partnering with Zeal Pharmaceuticals Pvt. Ltd. for *${prodName}*!`,
         ``,
-        `Thank you for partnering with Zeal Pharmaceuticals regarding *${prod}*. Your order file has been processed.`,
-        ``,
-        `For batch reorders or new division inquiries, reach us anytime on +91 9316227576.`,
-        `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+        `• Your order has been successfully fulfilled and closed in our system.`,
+        `• For repeat orders, batch replenishment, or additional formulations, our Key Account Desk is available at your service.`,
       ].join("\n");
+      break;
+
+    case "REJECTED":
+      statusNarrative = [
+        `📋 *INQUIRY UPDATE - STOCK ALLOCATION NOTICE:*`,
+        `Thank you for contacting Zeal Pharmaceuticals regarding *${prodName}*.`,
+        ``,
+        `📌 *Notice:*`,
+        `We regret to inform you that current manufacturing lots for this specific formulation are temporarily fully committed or under restricted institutional allocation.`,
+        `Our sales team will notify you immediately as soon as fresh manufacturing batches are released by our Quality Assurance division.`,
+      ].join("\n");
+      break;
 
     default:
-      return [
-        `💊 *ZEAL PHARMACEUTICALS - INQUIRY UPDATE*`,
-        `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-        `Hello *${name}*,`,
-        ``,
-        `Your inquiry for *${prod}* status is now: *${newStatus}*.`,
-        ``,
-        `📞 *Helpline:* +91 9316227576`,
-        `━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+      statusNarrative = [
+        `📌 *INQUIRY STATUS: ${statusUpper}*`,
+        `Your inquiry regarding *${prodName}* has been updated to *${statusUpper}*.`,
+        `Our sales fulfillment team is actively handling your request.`,
       ].join("\n");
+      break;
   }
+
+  const noteLine = additionalDetails?.note ? `\n\n📝 *Order Desk Remarks:* ${additionalDetails.note}` : "";
+
+  return [
+    `💊 *ZEAL PHARMACEUTICALS PVT. LTD.*`,
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+    `📋 *B2B PHARMACEUTICAL INQUIRY UPDATE*`,
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+    `📌 *Inquiry Status:* *${statusUpper}*`,
+    ``,
+    mandatoryDetailsBlock,
+    ``,
+    productLines,
+    ``,
+    statusNarrative + noteLine,
+    ``,
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+    `📞 *Institutional Sales Desk:* +91 9316227576`,
+    `✉️ *Sales Support Email:* sales@zealpharma.com`,
+    `🌐 *WHO-GMP Formulation Catalog:* www.zealpharma.com`,
+    `🏢 *Zeal Pharmaceuticals Pvt. Ltd.* (Ahmedabad, Gujarat)`,
+  ].filter(Boolean).join("\n");
 };
 
 /**
@@ -762,24 +974,7 @@ export const sendStatusUpdateWhatsAppNotification = async (
 
   const directWhatsAppUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(messageText)}`;
 
-  // Attempt direct WhatsApp bot push if connected
-  const botStatus = whatsAppBotService.getStatus();
-  if (botStatus.status === "CONNECTED" && cleanPhone) {
-    try {
-      const botRes = await whatsAppBotService.sendDirectMessage(cleanPhone, messageText);
-      if (botRes.success) {
-        console.log(`🤖 [Status Alert Delivered via WhatsApp Bot to ${cleanPhone}] Status: ${payload.newStatus} MsgID: ${botRes.messageId}`);
-        return {
-          sent: true,
-          deliveredViaBot: true,
-          directWhatsAppUrl,
-          messageText,
-        };
-      }
-    } catch (botErr: any) {
-      console.error("WhatsApp Bot status update dispatch error:", botErr);
-    }
-  }
+
 
   return {
     sent: true,

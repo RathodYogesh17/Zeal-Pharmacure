@@ -39,6 +39,7 @@ export interface IForgotPasswordRequest {
 export interface IVerifyOtpRequest {
   email: string;
   otp: string;
+  purpose?: string;
 }
 
 export interface IResetPasswordRequest {

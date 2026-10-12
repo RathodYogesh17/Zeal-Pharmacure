@@ -65,13 +65,56 @@ export const galleryService = {
 
   async uploadImages(files: File[], tag: string = 'PRODUCT'): Promise<IMediaItem[]> {
     const formData = new FormData();
-    files.forEach((file) => { formData.append('images', file);});
+    files.forEach((file) => { formData.append('images', file); });
     formData.append('tag', tag);
-    const res = await request<{ created: IMediaItem[]; existing: IMediaItem[]; total: number }>( '/gallery/upload', { method: 'POST',  body: formData, } );
+    formData.append('folder', tag);
+    const res = await request<{ created: IMediaItem[]; existing: IMediaItem[]; total: number }>(
+      '/gallery/upload',
+      { method: 'POST', body: formData }
+    );
     return [...(res.data.created || []), ...(res.data.existing || [])];
   },
 
+  async updateImage(
+    id: string,
+    data: {
+      folder?: string;
+      tag?: string;
+      title?: string;
+      altText?: string;
+      caption?: string;
+      tags?: string[];
+      isPublic?: boolean;
+    }
+  ): Promise<IMediaItem> {
+    const res = await request<IMediaItem>(`/gallery/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+    return res.data;
+  },
+
+  async batchMoveImages(ids: string[], folder: string): Promise<void> {
+    await request(`/gallery/batch-move`, {
+      method: 'POST',
+      body: JSON.stringify({ ids, folder }),
+    });
+  },
+
+  async autoOrganize(): Promise<{
+    totalUpdated: number;
+    profileCount: number;
+    productCount: number;
+    logoCount: number;
+    bannerCount: number;
+  }> {
+    const res = await request<any>(`/gallery/auto-organize`, {
+      method: 'POST',
+    });
+    return res.data;
+  },
+
   async deleteImage(id: string): Promise<void> {
-    await request(`/gallery/${id}`, { method: 'DELETE', });
+    await request(`/gallery/${id}`, { method: 'DELETE' });
   },
 };

@@ -40,14 +40,21 @@ const forgotPasswordSchema = Joi.object({
 
 const verifyOtpSchema = Joi.object({
   email: Joi.string().trim().lowercase().email().required(),
-  otp: Joi.string().length(6).pattern(/^[0-9]{6}$/).required(),
+  otp: Joi.alternatives().try(
+    Joi.string().length(6).pattern(/^[0-9]{6}$/),
+    Joi.number().integer().min(100000).max(999999)
+  ).required(),
+  purpose: Joi.string().trim().optional(),
 })
   .options({ abortEarly: false, stripUnknown: true, });
 
 
 const resetPasswordSchema = Joi.object({
   email: Joi.string().trim().lowercase().email().required(),
-  otp: Joi.string().length(6).pattern(/^[0-9]{6}$/).required(),
+  otp: Joi.alternatives().try(
+    Joi.string().length(6).pattern(/^[0-9]{6}$/),
+    Joi.number().integer().min(100000).max(999999)
+  ).required(),
   newPassword: Joi.string().min(8).max(30).required(),
   confirmPassword: Joi.string().valid(Joi.ref("newPassword")).required().messages({
     "any.only": "confirmPassword must match newPassword",

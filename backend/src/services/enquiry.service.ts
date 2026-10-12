@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import "../models/role.model";
 import ProductEnquiry from "../models/productEnquiry.model";
 import FranchiseEnquiry from "../models/franchiseEnquiry.model";
 import Product from "../models/product.model";
@@ -6,9 +7,11 @@ import User from "../models/user.model";
 import AppError from "../utils/appError";
 import HTTP_STATUS from "../constants/httpStatus";
 import MESSAGES from "../constants/messages";
+import PERMISSIONS from "../constants/permissions";
 import { buildPagination } from "../utils/pagination";
 import { validateDrugLicenseNumber } from "../utils/dlValidator";
 import { sendLeadWhatsAppNotification, sendStatusUpdateWhatsAppNotification } from "./notification.service";
+import { sendLeadAlertEmail, sendLeadConfirmationEmail, sendAdminReplyEmail } from "./mail.service";
 import type {
   ICreateEnquiryRequest,
   ICreateProductEnquiryRequest,
@@ -32,7 +35,16 @@ const productEnquiryPopulate = [
   },
   { path: "assignedTo", select: "name email role phone" },
   { path: "assignedBy", select: "name email role phone" },
-  { path: "internalNotes.addedBy", select: "name email role" },
+  {
+    path: "updatedBy",
+    select: "name email role phone designation",
+    populate: { path: "role", select: "name code description" },
+  },
+  {
+    path: "internalNotes.addedBy",
+    select: "name email role designation",
+    populate: { path: "role", select: "name code description" },
+  },
 ];
 
 const franchiseEnquiryPopulate = [
@@ -42,7 +54,16 @@ const franchiseEnquiryPopulate = [
   },
   { path: "assignedTo", select: "name email role phone" },
   { path: "assignedBy", select: "name email role phone" },
-  { path: "internalNotes.addedBy", select: "name email role" },
+  {
+    path: "updatedBy",
+    select: "name email role phone designation",
+    populate: { path: "role", select: "name code description" },
+  },
+  {
+    path: "internalNotes.addedBy",
+    select: "name email role designation",
+    populate: { path: "role", select: "name code description" },
+  },
 ];
 
 const validateEnquiryId = (id: string): void => {
@@ -172,6 +193,31 @@ const createProductEnquiry = async (body: ICreateProductEnquiryRequest) => {
       isConfirmed: true,
     });
 
+    void sendLeadAlertEmail({
+      enquiryType: enquiry.enquiryType,
+      name: enquiry.name,
+      phone: enquiry.phone,
+      email: enquiry.email,
+      city: enquiry.city,
+      state: enquiry.state,
+      companyName: enquiry.companyName,
+      productName: resolvedProductName,
+      quantity: enquiry.quantity ? String(enquiry.quantity) : "",
+      quantityUnit: enquiry.quantityUnit,
+      drugLicenseNumber: enquiry.drugLicenseNumber,
+      gstNumber: enquiry.gstNumber,
+      message: enquiry.message,
+      enquiryId: String(enquiry._id),
+    });
+
+    void sendLeadConfirmationEmail({
+      name: enquiry.name,
+      email: enquiry.email,
+      enquiryType: enquiry.enquiryType,
+      productName: resolvedProductName,
+      enquiryId: String(enquiry._id),
+    });
+
     return {
       ...populated,
       enquiryCategory: "PRODUCT",
@@ -284,6 +330,29 @@ const createFranchiseEnquiry = async (body: ICreateFranchiseEnquiryRequest) => {
       enquiryType: "FRANCHISE",
       source: enquiry.source,
       isConfirmed: true,
+    });
+
+    void sendLeadAlertEmail({
+      enquiryType: "FRANCHISE",
+      name: enquiry.name,
+      phone: enquiry.phone,
+      email: enquiry.email,
+      city: enquiry.city,
+      state: enquiry.state,
+      companyName: enquiry.companyName,
+      territoryDistrict: enquiry.district,
+      investmentBudget: enquiry.investmentBudget,
+      drugLicenseNumber: enquiry.drugLicenseNumber,
+      gstNumber: enquiry.gstNumber,
+      message: enquiry.message,
+      enquiryId: String(enquiry._id),
+    });
+
+    void sendLeadConfirmationEmail({
+      name: enquiry.name,
+      email: enquiry.email,
+      enquiryType: "FRANCHISE",
+      enquiryId: String(enquiry._id),
     });
 
     return {
@@ -542,12 +611,32 @@ const getAllFranchiseEnquiries = async (query: IEnquiryQuery = {}) => {
 // =====================================================
 // 7. GET ALL ENQUIRIES (SMART UNIFIED / CATEGORIZED)
 // =====================================================
-const getAllEnquiries = async (query: IEnquiryQuery = {}) => {
+const getAllEnquiries = async (query: IEnquiryQuery = {}, user?: IAuthenticatedUser) => {
   if (query.category === "franchise" || query.enquiryType === "FRANCHISE") {
     return getAllFranchiseEnquiries(query);
   }
   if (query.category === "product") {
     return getAllProductEnquiries(query);
+  }
+
+  // Permission-based automatic categorization when viewing unified overview
+  if (user && user.role !== "SUPER_ADMIN") {
+    const granted = user.permissions || [];
+    const hasWildcard = granted.includes("*");
+    const hasProduct =
+      hasWildcard || granted.includes(PERMISSIONS.PRODUCT_ENQUIRY_VIEW);
+    const hasFranchise =
+      hasWildcard ||
+      granted.includes(PERMISSIONS.STOCKIST_ENQUIRY_VIEW) ||
+      granted.includes(PERMISSIONS.SALES_ENQUIRY_VIEW) ||
+      granted.includes("franchise_enquiry:view");
+
+    if (hasFranchise && !hasProduct) {
+      return getAllFranchiseEnquiries(query);
+    }
+    if (hasProduct && !hasFranchise) {
+      return getAllProductEnquiries(query);
+    }
   }
 
   // Combined overview (runs both)
@@ -619,6 +708,9 @@ const updateEnquiryStatus = async (
   const productEnq = await ProductEnquiry.findOne({ _id: id, isDeleted: false });
   if (productEnq) {
     productEnq.status = body.status as any;
+    if (user?._id) {
+      productEnq.updatedBy = new mongoose.Types.ObjectId(user._id) as any;
+    }
     if (body.note && body.note.trim() && user?._id) {
       productEnq.internalNotes.push({
         note: `Status changed to ${body.status}: ${body.note.trim()}`,
@@ -629,28 +721,60 @@ const updateEnquiryStatus = async (
 
     let whatsAppDispatch = null;
     if (body.notifyClient !== false && productEnq.phone) {
-      const isBulk = Boolean(productEnq.products && productEnq.products.length > 1);
-      let prodName = isBulk ? `${productEnq.products.length} Formulations` : "Product Formulation";
-      if (!isBulk && productEnq.product) {
-        const pDoc = await Product.findById(productEnq.product).select("name").lean();
-        if (pDoc?.name) prodName = pDoc.name;
-      }
-      whatsAppDispatch = await sendStatusUpdateWhatsAppNotification({
-        recipientType: isBulk ? "BULK_CLIENT" : "PRODUCT_CLIENT",
-        recipientName: productEnq.name,
-        recipientPhone: productEnq.phone,
-        newStatus: body.status,
-        referenceTitle: prodName,
-        additionalDetails: { productName: prodName, quantity: productEnq.quantity ? String(productEnq.quantity) : "" },
-        customMessage: body.customWhatsAppMessage || undefined,
-      });
+      try {
+        const isBulk = Boolean(productEnq.products && productEnq.products.length > 1);
+        let prodName = isBulk ? `${productEnq.products.length} Formulations (Bulk Inquiry)` : "Product Formulation";
+        let dosageOrPkg = "";
 
-      if (user?._id) {
-        productEnq.internalNotes.push({
-          note: `WhatsApp status update (${body.status}) dispatched to client: ${productEnq.phone} (Bot Delivered: ${whatsAppDispatch.deliveredViaBot})`,
-          addedBy: new mongoose.Types.ObjectId(user._id),
-          addedAt: new Date(),
+        if (!isBulk && productEnq.product) {
+          const pDoc = await Product.findById(productEnq.product).select("name packaging dosageForm genericName").lean();
+          if (pDoc?.name) {
+            prodName = pDoc.name;
+            dosageOrPkg = [pDoc.dosageForm, pDoc.packaging].filter(Boolean).join(" - ");
+          }
+        } else if (isBulk && productEnq.products && productEnq.products.length > 0) {
+          const prodIds = productEnq.products.map((p: any) => p.product).filter(Boolean);
+          const pDocs = await Product.find({ _id: { $in: prodIds } }).select("name").lean();
+          if (pDocs.length > 0) {
+            prodName = pDocs.map((p: any) => p.name).slice(0, 3).join(", ") + (pDocs.length > 3 ? ` +${pDocs.length - 3} more` : "");
+          }
+        }
+
+        const qtyStr = productEnq.quantity
+          ? `${productEnq.quantity} ${productEnq.quantityUnit || "Units"}`.trim()
+          : undefined;
+
+        whatsAppDispatch = await sendStatusUpdateWhatsAppNotification({
+          recipientType: isBulk ? "BULK_CLIENT" : "PRODUCT_CLIENT",
+          referenceId: String(productEnq._id),
+          recipientName: productEnq.name,
+          recipientPhone: productEnq.phone,
+          recipientEmail: productEnq.email,
+          newStatus: body.status,
+          referenceTitle: prodName,
+          additionalDetails: {
+            productName: prodName,
+            quantity: qtyStr,
+            packaging: dosageOrPkg || undefined,
+            companyName: productEnq.companyName || undefined,
+            city: productEnq.city || undefined,
+            state: productEnq.state || undefined,
+            drugLicenseNumber: productEnq.drugLicenseNumber || undefined,
+            gstNumber: productEnq.gstNumber || undefined,
+            note: body.note ? body.note.trim() : undefined,
+          },
+          customMessage: body.customWhatsAppMessage || undefined,
         });
+
+        if (user?._id) {
+          productEnq.internalNotes.push({
+            note: `WhatsApp status update (${body.status}) dispatched to client: ${productEnq.phone} (Bot Delivered: ${whatsAppDispatch?.deliveredViaBot ?? false})`,
+            addedBy: new mongoose.Types.ObjectId(user._id),
+            addedAt: new Date(),
+          });
+        }
+      } catch (notifErr) {
+        console.warn("Could not dispatch WhatsApp status notification for product enquiry:", notifErr);
       }
     }
 
@@ -663,6 +787,9 @@ const updateEnquiryStatus = async (
   const franchiseEnq = await FranchiseEnquiry.findOne({ _id: id, isDeleted: false });
   if (franchiseEnq) {
     franchiseEnq.status = body.status as any;
+    if (user?._id) {
+      franchiseEnq.updatedBy = new mongoose.Types.ObjectId(user._id) as any;
+    }
     if (body.nextFollowUpAt !== undefined) {
       franchiseEnq.nextFollowUpAt = body.nextFollowUpAt ? new Date(body.nextFollowUpAt) : null;
     }
@@ -676,23 +803,43 @@ const updateEnquiryStatus = async (
 
     let whatsAppDispatch = null;
     if (body.notifyClient !== false && franchiseEnq.phone) {
-      const territory = franchiseEnq.district || franchiseEnq.city || "your territory";
-      whatsAppDispatch = await sendStatusUpdateWhatsAppNotification({
-        recipientType: "FRANCHISE_CLIENT",
-        recipientName: franchiseEnq.name,
-        recipientPhone: franchiseEnq.phone,
-        newStatus: body.status,
-        referenceTitle: territory,
-        additionalDetails: { territory },
-        customMessage: body.customWhatsAppMessage || undefined,
-      });
+      try {
+        const territory = franchiseEnq.district || franchiseEnq.city || franchiseEnq.preferredTerritory || "Designated Territory";
+        const divisionsStr = franchiseEnq.interestedDivisions && franchiseEnq.interestedDivisions.length > 0
+          ? franchiseEnq.interestedDivisions.join(", ")
+          : undefined;
 
-      if (user?._id) {
-        franchiseEnq.internalNotes.push({
-          note: `WhatsApp status update (${body.status}) dispatched to client: ${franchiseEnq.phone} (Bot Delivered: ${whatsAppDispatch.deliveredViaBot})`,
-          addedBy: new mongoose.Types.ObjectId(user._id),
-          addedAt: new Date(),
+        whatsAppDispatch = await sendStatusUpdateWhatsAppNotification({
+          recipientType: "FRANCHISE_CLIENT",
+          referenceId: String(franchiseEnq._id),
+          recipientName: franchiseEnq.name,
+          recipientPhone: franchiseEnq.phone,
+          recipientEmail: franchiseEnq.email,
+          newStatus: body.status,
+          referenceTitle: territory,
+          additionalDetails: {
+            territory,
+            companyName: franchiseEnq.companyName || undefined,
+            investmentBudget: franchiseEnq.investmentBudget || undefined,
+            interestedDivisions: divisionsStr,
+            city: franchiseEnq.city || undefined,
+            state: franchiseEnq.state || undefined,
+            drugLicenseNumber: franchiseEnq.drugLicenseNumber || undefined,
+            gstNumber: franchiseEnq.gstNumber || undefined,
+            note: body.note ? body.note.trim() : undefined,
+          },
+          customMessage: body.customWhatsAppMessage || undefined,
         });
+
+        if (user?._id) {
+          franchiseEnq.internalNotes.push({
+            note: `WhatsApp status update (${body.status}) dispatched to client: ${franchiseEnq.phone} (Bot Delivered: ${whatsAppDispatch?.deliveredViaBot ?? false})`,
+            addedBy: new mongoose.Types.ObjectId(user._id),
+            addedAt: new Date(),
+          });
+        }
+      } catch (notifErr) {
+        console.warn("Could not dispatch WhatsApp status notification for franchise enquiry:", notifErr);
       }
     }
 
@@ -850,6 +997,80 @@ const deleteEnquiry = async (id: string, user?: IAuthenticatedUser) => {
   throw new AppError(MESSAGES.ENQUIRY_NOT_FOUND, HTTP_STATUS.NOT_FOUND);
 };
 
+// =====================================================
+// 12. REPLY ENQUIRY VIA EMAIL (ADMIN / EMPLOYEE DIRECT OUTREACH)
+// =====================================================
+const replyEnquiryEmail = async (
+  id: string,
+  replyMessage: string,
+  user?: IAuthenticatedUser,
+  customSubject?: string
+) => {
+  validateEnquiryId(id);
+
+  if (!replyMessage || !replyMessage.trim()) {
+    throw new AppError("Reply message content cannot be empty", HTTP_STATUS.BAD_REQUEST);
+  }
+
+  let targetEnquiry: any = await ProductEnquiry.findOne({ _id: id, isDeleted: false }).lean();
+  let modelType: "PRODUCT" | "FRANCHISE" = "PRODUCT";
+
+  if (!targetEnquiry) {
+    targetEnquiry = await FranchiseEnquiry.findOne({ _id: id, isDeleted: false }).lean();
+    modelType = "FRANCHISE";
+  }
+
+  if (!targetEnquiry) {
+    throw new AppError(MESSAGES.ENQUIRY_NOT_FOUND, HTTP_STATUS.NOT_FOUND);
+  }
+
+  if (!targetEnquiry.email) {
+    throw new AppError("Recipient email address is missing for this lead", HTTP_STATUS.BAD_REQUEST);
+  }
+
+  const clientName = targetEnquiry.name || "Valued Client";
+  const subject = customSubject?.trim() || `Response regarding your inquiry - Zeal Pharmaceuticals`;
+  const senderName = (user as any)?.name || "Zeal Pharma Sales Management";
+  const senderDesignation = (user as any)?.designation || "Sales & Distribution Department";
+
+  await sendAdminReplyEmail({
+    to: targetEnquiry.email,
+    subject,
+    message: replyMessage.trim(),
+    clientName,
+    senderName,
+    senderDesignation,
+  });
+
+  // Automatically append an internal note detailing the email outreach
+  const preview = replyMessage.trim().slice(0, 100);
+  const noteText = `✉️ Email response sent to ${targetEnquiry.email}: "${preview}${replyMessage.length > 100 ? '...' : ''}"`;
+  const noteEntry = {
+    note: noteText,
+    addedBy: user?._id ? new mongoose.Types.ObjectId(user._id) : null,
+    addedAt: new Date(),
+  };
+
+  if (modelType === "PRODUCT") {
+    await ProductEnquiry.findByIdAndUpdate(id, {
+      $push: { internalNotes: noteEntry },
+      status: targetEnquiry.status === "NEW" ? "CONTACTED" : targetEnquiry.status,
+    });
+  } else {
+    await FranchiseEnquiry.findByIdAndUpdate(id, {
+      $push: { internalNotes: noteEntry },
+      status: targetEnquiry.status === "NEW" ? "CONTACTED" : targetEnquiry.status,
+    });
+  }
+
+  return {
+    success: true,
+    recipient: targetEnquiry.email,
+    subject,
+    message: "Email reply successfully dispatched to client",
+  };
+};
+
 export {
   createProductEnquiry,
   createFranchiseEnquiry,
@@ -863,4 +1084,6 @@ export {
   assignEnquiry,
   addEnquiryNote,
   deleteEnquiry,
+  replyEnquiryEmail,
 };
+

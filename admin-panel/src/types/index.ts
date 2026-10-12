@@ -111,6 +111,7 @@ export interface IProduct {
   regulatoryInfo?: string;
   licenseNumber?: string;
   countryOfOrigin?: string;
+  mrp?: number | null;
   availabilityStatus?: 'AVAILABLE' | 'OUT_OF_STOCK' | 'COMING_SOON' | 'DISCONTINUED';
   featuredImage?: string | null;
   featuredImageId?: string | null;

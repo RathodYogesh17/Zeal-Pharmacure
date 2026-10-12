@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Users,
   Plus,
@@ -14,6 +14,7 @@ import {
   Settings2,
   Search,
   X,
+  Image as ImageIcon,
 } from 'lucide-react';
 import {
   useStaffUsersQuery,
@@ -22,7 +23,8 @@ import {
   useDeleteUserMutation,
   useAssignUserPermissionsMutation,
 } from '../hooks/queries/useUsersQuery';
-import { useAppDispatch } from '../store';
+import { useAppDispatch, useAppSelector } from '../store';
+import { request } from '../api/apiClient';
 import {
   setSimulatedRole,
   updateRolePermissions,
@@ -40,6 +42,7 @@ import {
   TablePagination,
   filterByDateRange,
   DateFilterType,
+  MediaGalleryModal,
 } from '../components/common';
 import type { IStaffUser } from '../api/userService';
 
@@ -84,12 +87,21 @@ const PERMISSION_MODULES: PermissionModuleGroup[] = [
     ],
   },
   {
-    module: 'Stockists Distribution & Commercial Enquiries',
-    icon: '📥',
+    module: 'Product Formulation Enquiries',
+    icon: '💊',
     permissions: [
-      { key: 'product_enquiry:view', name: 'View Enquiries', description: 'Read lead enquiries, drug license checks, and budget' },
+      { key: 'product_enquiry:view', name: 'View Product Enquiries', description: 'Read formulation enquiries, packaging requests & lead details' },
       { key: 'product_enquiry:update', name: 'Update Lead Status', description: 'Change status to In Touch, Quoted, or Closed' },
-      { key: 'product_enquiry:delete', name: 'Delete Enquiries', description: 'Remove enquiry leads from database' },
+      { key: 'product_enquiry:delete', name: 'Delete Enquiries', description: 'Remove product lead enquiries from database' },
+    ],
+  },
+  {
+    module: 'Stockists & Franchise Distribution Enquiries',
+    icon: '🏢',
+    permissions: [
+      { key: 'stockist_enquiry:view', name: 'View Stockist Enquiries', description: 'Inspect stockist applications, territory & drug license data' },
+      { key: 'stockist_enquiry:update', name: 'Process Stockist Leads', description: 'Assign territory, change stockist lead status' },
+      { key: 'stockist_enquiry:delete', name: 'Delete Stockist Leads', description: 'Remove stockist distribution leads from database' },
     ],
   },
   {
@@ -164,18 +176,43 @@ const INITIAL_STAFF: IStaffUser[] = [
   },
 ];
 
+const getRoleCode = (role: any): string => {
+  if (!role) return 'USER';
+  if (typeof role === 'object') return role.name || role.code || 'USER';
+  return String(role);
+};
+
 export const AdminUsersPage: React.FC = () => {
   const dispatch = useAppDispatch();
+  const customPermissions = useAppSelector((state) => state.auth.customRolePermissions);
 
   const [activeTab, setActiveTab] = useState<'users' | 'matrix'>('users');
   const [feedbackMsg, setFeedbackMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
   // Selected target for Permission Matrix (can be a Role like 'HR_MANAGER' or a Staff user ID)
-  const [selectedTargetRole, setSelectedTargetRole] = useState<string>('HR_MANAGER');
+  const [selectedTargetRole, setSelectedTargetRole] = useState<string>('SALES_MANAGER');
   const [activePermissionsMap, setActivePermissionsMap] = useState<Record<string, string[]>>({
     ...DEFAULT_ROLE_PERMISSIONS,
+    ...customPermissions,
   });
+
+  useEffect(() => {
+    request<any>('/settings/matrix')
+      .then((res: any) => {
+        const matrix = res?.data?.matrix || res?.data;
+        if (matrix && typeof matrix === 'object') {
+          setActivePermissionsMap((prev) => {
+            const merged = { ...prev, ...matrix };
+            try {
+              localStorage.setItem('zeal_role_permissions', JSON.stringify(merged));
+            } catch {}
+            return merged;
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   // Filters & Pagination for Users Table
   const [searchQuery, setSearchQuery] = useState('');
@@ -187,12 +224,14 @@ export const AdminUsersPage: React.FC = () => {
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
 
   // Create Staff Form state
+  const [profileModalOpen, setProfileModalOpen] = useState(false);
   const [createForm, setCreateForm] = useState({
     name: '',
     email: '',
     phone: '',
     password: '',
     role: 'SALES_MANAGER',
+    profileImage: '',
     isActive: true,
   });
 
@@ -233,6 +272,7 @@ export const AdminUsersPage: React.FC = () => {
         phone: '',
         password: '',
         role: 'SALES_MANAGER',
+        profileImage: '',
         isActive: true,
       });
       setIsAddUserModalOpen(false);
@@ -307,8 +347,17 @@ export const AdminUsersPage: React.FC = () => {
     const perms = activePermissionsMap[selectedTargetRole] || [];
     dispatch(updateRolePermissions({ role: selectedTargetRole, permissions: perms }));
 
+    try {
+      await request(`/settings/matrix/${selectedTargetRole}`, {
+        method: 'PUT',
+        body: JSON.stringify({ permissions: perms }),
+      });
+    } catch {
+      // Local fallback
+    }
+
     // If an actual user was selected, also save to backend
-    const matchingUser = displayUsers.find((u) => u.role === selectedTargetRole);
+    const matchingUser = displayUsers.find((u) => getRoleCode(u.role) === selectedTargetRole);
     if (matchingUser) {
       try {
         await assignPermissionsMutation.mutateAsync({
@@ -333,7 +382,7 @@ export const AdminUsersPage: React.FC = () => {
       u.name?.toLowerCase().includes(term) ||
       u.email?.toLowerCase().includes(term) ||
       u.phone?.toLowerCase().includes(term);
-    const matchesRole = roleFilter === 'ALL' || u.role === roleFilter;
+    const matchesRole = roleFilter === 'ALL' || getRoleCode(u.role) === roleFilter;
     const matchesStatus =
       statusFilter === 'ALL' ||
       (statusFilter === 'ACTIVE' && u.isActive) ||
@@ -347,7 +396,8 @@ export const AdminUsersPage: React.FC = () => {
     currentPage * pageSize
   );
 
-  const getRoleVariant = (role: string): any => {
+  const getRoleVariant = (role: any): any => {
+    const code = getRoleCode(role);
     const map: Record<string, any> = {
       SUPER_ADMIN: 'purple',
       ADMIN: 'blue',
@@ -356,7 +406,7 @@ export const AdminUsersPage: React.FC = () => {
       CONTENT_MANAGER: 'gray',
       EMPLOYEE: 'gray',
     };
-    return map[role] || 'purple';
+    return map[code] || 'purple';
   };
 
   return (
@@ -672,7 +722,7 @@ export const AdminUsersPage: React.FC = () => {
 
                         {/* Role */}
                         <td style={{ padding: '14px 18px' }}>
-                          <Badge variant={getRoleVariant(u.role)}>{u.role}</Badge>
+                          <Badge variant={getRoleVariant(u.role)}>{getRoleCode(u.role)}</Badge>
                         </td>
 
                         {/* Phone */}
@@ -717,7 +767,7 @@ export const AdminUsersPage: React.FC = () => {
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px' }}>
                             <button
                               onClick={() => {
-                                setSelectedTargetRole(u.role);
+                                setSelectedTargetRole(getRoleCode(u.role));
                                 setActiveTab('matrix');
                               }}
                               title="Configure Permissions Matrix"
@@ -739,7 +789,7 @@ export const AdminUsersPage: React.FC = () => {
                               <span>Permissions</span>
                             </button>
 
-                            {u.role !== 'SUPER_ADMIN' && (
+                            {getRoleCode(u.role) !== 'SUPER_ADMIN' && (
                               <button
                                 onClick={() => handleDeleteUser(u._id, u.name)}
                                 title="Delete Staff"
@@ -822,6 +872,48 @@ export const AdminUsersPage: React.FC = () => {
             </div>
 
             <form onSubmit={handleCreateStaff} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              {/* Profile Photo Avatar Picker */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '10px 14px', background: '#F8FAFC', borderRadius: '10px', border: '1px solid #E2E8F0' }}>
+                <div style={{
+                  width: '46px',
+                  height: '46px',
+                  borderRadius: '50%',
+                  background: createForm.profileImage ? `url(${createForm.profileImage}) center/cover no-repeat` : '#EDE9FE',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#6828DC',
+                  flexShrink: 0,
+                  border: '1.5px solid #DDD6FE'
+                }}>
+                  {!createForm.profileImage && <Users size={20} />}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '13px', fontWeight: 700, color: '#1E293B' }}>Profile Picture</div>
+                  <div style={{ fontSize: '11px', color: '#64748B' }}>Select professional staff photo from gallery</div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setProfileModalOpen(true)}
+                  style={{
+                    padding: '6px 12px',
+                    borderRadius: '7px',
+                    background: '#FFFFFF',
+                    border: '1px solid #CBD5E1',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    color: '#6828DC',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '5px'
+                  }}
+                >
+                  <ImageIcon size={13} />
+                  <span>{createForm.profileImage ? 'Change' : 'Choose Photo'}</span>
+                </button>
+              </div>
+
               {[
                 { label: 'Full Name', name: 'name', type: 'text', required: true, placeholder: 'e.g. Rahul Sharma' },
                 { label: 'Email Address', name: 'email', type: 'email', required: true, placeholder: 'e.g. rahul@zealpharma.com' },
@@ -862,6 +954,18 @@ export const AdminUsersPage: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Media Gallery Picker for Staff Profile */}
+      <MediaGalleryModal
+        isOpen={profileModalOpen}
+        onClose={() => setProfileModalOpen(false)}
+        defaultTag="PROFILE"
+        title="Select Staff Photo from Media Gallery"
+        onSelect={(imgUrl) => {
+          setCreateForm((prev) => ({ ...prev, profileImage: imgUrl }));
+          setProfileModalOpen(false);
+        }}
+      />
 
       {/* ============================================================ */}
       {/* TAB 2: GRANULAR ROLE PERMISSIONS ACCESS MATRIX */}
@@ -919,6 +1023,8 @@ export const AdminUsersPage: React.FC = () => {
               <Button
                 variant="secondary"
                 onClick={() => {
+                  const perms = activePermissionsMap[selectedTargetRole] || [];
+                  dispatch(updateRolePermissions({ role: selectedTargetRole, permissions: perms }));
                   dispatch(setSimulatedRole(selectedTargetRole === 'SUPER_ADMIN' ? null : selectedTargetRole));
                   showFeedback(`Now simulating website & admin as "${selectedTargetRole}"!`);
                 }}

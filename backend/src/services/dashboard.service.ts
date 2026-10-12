@@ -15,14 +15,18 @@ interface IDashboardOverview {
   summary: {
     totalProducts: number;
     activeProducts: number;
+    inactiveProducts: number;
     featuredProducts: number;
     totalCategories: number;
     totalDivisions: number;
     totalIndications: number;
     totalEnquiries: number;
     pendingEnquiries: number;
+    contactedEnquiries: number;
+    documentsPendingEnquiries: number;
     inTouchEnquiries: number;
     quotedEnquiries: number;
+    approvedEnquiries: number;
     closedEnquiries: number;
     totalFranchiseEnquiries: number;
     totalJobOpenings: number;
@@ -145,10 +149,6 @@ const getDashboardOverview = async (): Promise<IDashboardOverview> => {
   ]);
 
   const totalEnquiries = totalProductEnquiries + totalFranchiseEnquiries;
-  const pendingEnquiries = 0;
-  const inTouchEnquiries = 0;
-  const quotedEnquiries = 0;
-  const closedEnquiries = 0;
 
   const averagePlatformRating =
     avgReviewAgg.length > 0 ? Math.round(avgReviewAgg[0].avgRating * 10) / 10 : 5.0;
@@ -235,6 +235,15 @@ const getDashboardOverview = async (): Promise<IDashboardOverview> => {
   }
   const combinedEnquiriesByStatus = Array.from(statusMap.entries()).map(([status, count]) => ({ status, count }));
 
+  const pendingEnquiries = (statusMap.get("NEW") || 0) + (statusMap.get("PENDING") || 0);
+  const contactedEnquiries = (statusMap.get("CONTACTED") || 0) + (statusMap.get("IN_PROGRESS") || 0);
+  const documentsPendingEnquiries = statusMap.get("DOCUMENTS_PENDING") || 0;
+  const inTouchEnquiries = (statusMap.get("IN_TOUCH") || 0);
+  const quotedEnquiries = statusMap.get("QUOTED") || 0;
+  const approvedEnquiries = statusMap.get("APPROVED") || 0;
+  const closedEnquiries = (statusMap.get("CLOSED") || 0) + (statusMap.get("REJECTED") || 0);
+  const inactiveProducts = Math.max(0, totalProducts - activeProducts);
+
   // Combine enquiry types across Product & Franchise
   const typeMap = new Map<string, number>();
   for (const t of productEnquiriesByTypeAgg) {
@@ -246,11 +255,18 @@ const getDashboardOverview = async (): Promise<IDashboardOverview> => {
   }
   const combinedEnquiriesByType = Array.from(typeMap.entries()).map(([type, count]) => ({ type, count }));
 
-  // Combine top states
+  // Combine top states (normalized so cases like 'Gujarat' and 'gujarat' merge)
   const stateMap = new Map<string, number>();
   for (const st of [...productEnquiriesByTopStatesAgg, ...franchiseEnquiriesByTopStatesAgg]) {
-    if (st._id) {
-      stateMap.set(st._id, (stateMap.get(st._id) || 0) + st.count);
+    if (st._id && typeof st._id === "string") {
+      const clean = st._id.trim();
+      if (clean) {
+        const normalizedState = clean
+          .split(/\s+/)
+          .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+          .join(" ");
+        stateMap.set(normalizedState, (stateMap.get(normalizedState) || 0) + st.count);
+      }
     }
   }
   const combinedEnquiriesByTopStates = Array.from(stateMap.entries())
@@ -435,14 +451,18 @@ const getDashboardOverview = async (): Promise<IDashboardOverview> => {
     summary: {
       totalProducts,
       activeProducts,
+      inactiveProducts,
       featuredProducts,
       totalCategories,
       totalDivisions,
       totalIndications,
       totalEnquiries,
       pendingEnquiries,
+      contactedEnquiries,
+      documentsPendingEnquiries,
       inTouchEnquiries,
       quotedEnquiries,
+      approvedEnquiries,
       closedEnquiries,
       totalFranchiseEnquiries,
       totalJobOpenings,

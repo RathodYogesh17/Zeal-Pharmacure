@@ -156,6 +156,7 @@ export const BulkProductEnquiryModal: React.FC<BulkProductEnquiryModalProps> = (
           quantity: quantities[p._id] || 100,
           unit: quantityUnits[p._id] || 'Boxes',
           composition: p.genericName || p.composition,
+          mrp: p.mrp,
         })),
         fullName: formData.fullName || user?.name || '',
         phone: formData.phone || user?.phone || '',
@@ -532,21 +533,24 @@ export const BulkProductEnquiryModal: React.FC<BulkProductEnquiryModalProps> = (
                           value={unit}
                           onChange={(e) => handleUnitChange(p._id, e.target.value)}
                           style={{
-                            padding: '4px 8px',
+                            padding: '6px 10px',
                             borderRadius: '8px',
-                            border: '1px solid #CBD5E1',
-                            fontSize: '11.5px',
-                            fontWeight: 600,
-                            color: '#475569',
-                            background: '#FFFFFF',
+                            border: '1.5px solid #DDD6FE',
+                            fontSize: '12px',
+                            fontWeight: 700,
+                            color: '#6828DC',
+                            background: '#FAF5FF',
                             outline: 'none',
                             cursor: 'pointer',
                           }}
                         >
                           <option value="Boxes">Boxes</option>
                           <option value="Strips">Strips</option>
+                          <option value="Bottles / Syrup">Bottles / Syrup</option>
+                          <option value="Tablets / Capsules">Tablets / Capsules</option>
+                          <option value="Vials / Injections">Vials / Injections</option>
+                          <option value="Tubes">Tubes (Ointment/Gel)</option>
                           <option value="Cartons">Cartons</option>
-                          <option value="Bottles">Bottles</option>
                         </select>
 
                         <button

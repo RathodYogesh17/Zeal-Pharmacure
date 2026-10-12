@@ -10,13 +10,13 @@ const envPath = [
 dotenv.config(envPath ? { path: envPath } : {});
 
 import "./models/user.model";
+import "./models/role.model";
 import "./models/media.model";
 import "./models/category.model";
 import "./models/subCategory.model";
 
 import app from "./app";
 import connectDatabase from "./config/database/database";
-import whatsAppBotService from "./services/whatsappBot.service";
 const PORT = Number(process.env.PORT) || 5000;
 
 const startServer = async (): Promise<void> => {
@@ -24,7 +24,6 @@ const startServer = async (): Promise<void> => {
     await connectDatabase();
     app.listen(PORT, () => {
       console.log(`Server running on http://localhost:${PORT}`);
-      void whatsAppBotService.initWhatsAppBot();
     });
   } catch (error: unknown) {
     console.error("Server startup failed:", error);

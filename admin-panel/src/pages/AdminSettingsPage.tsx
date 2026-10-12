@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   User,
   Shield,
@@ -20,30 +20,36 @@ import {
   Check,
   X,
   Layers,
+  Upload,
+  Trash2,
+  Image as ImageIcon,
+  ExternalLink,
+  Copy,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { useAppDispatch } from '../store';
-import { setCredentials } from '../store/slices/authSlice';
+import { useAppDispatch, useAppSelector } from '../store';
+import { setCredentials, selectCurrentRole } from '../store/slices/authSlice';
 import { request } from '../api/apiClient';
 import { Button, FormInput, Badge, MediaGalleryModal, ThemeSelect } from '../components/common';
 import { galleryService } from '../api/galleryService';
-import { whatsappBotService, IWhatsAppBotStatus } from '../api/whatsappBotService';
 import { settingsService, IAuditLogItem } from '../api/settingsService';
 
 export const AdminSettingsPage: React.FC = () => {
-  const { user, token } = useAuth();
+  const { user, token, updateUser } = useAuth();
   const dispatch = useAppDispatch();
+  const simulatedRole = useAppSelector(selectCurrentRole);
+  const userRole = typeof user?.role === 'object' && user?.role !== null
+    ? ((user.role as any).name || (user.role as any).code || 'SUPER_ADMIN')
+    : String(user?.role || 'SUPER_ADMIN');
+  const effectiveRole = String(simulatedRole || userRole || 'SUPER_ADMIN').toUpperCase();
+  const isSuperAdminOrAdmin = effectiveRole === 'SUPER_ADMIN' || effectiveRole === 'ADMIN';
 
   const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'whatsapp' | 'audit'>('profile');
 
-  // WhatsApp Bot State
-  const [botStatus, setBotStatus] = useState<IWhatsAppBotStatus | null>(null);
-  const [botLoading, setBotLoading] = useState(false);
-  const [botMessage, setBotMessage] = useState('');
-  const [testNumber, setTestNumber] = useState('');
-  const [testMsgText, setTestMsgText] = useState('Hello from Zeal Pharmaceuticals Admin! Your WhatsApp integration is working.');
-  const [testSending, setTestSending] = useState(false);
-  const [qrTimestamp, setQrTimestamp] = useState(Date.now());
+  // WhatsApp Helpline & Click-to-Chat State
+  const [testNumber, setTestNumber] = useState('919316227576');
+  const [testMsgText, setTestMsgText] = useState('Hello from Zeal Pharmaceuticals Head Office! Your WhatsApp lead routing is working perfectly.');
+  const [testCopied, setTestCopied] = useState(false);
 
   // Audit Logs State
   const [auditLogs, setAuditLogs] = useState<IAuditLogItem[]>([]);
@@ -58,8 +64,10 @@ export const AdminSettingsPage: React.FC = () => {
   // Profile form state
   const [name, setName] = useState(user?.name || '');
   const [phone, setPhone] = useState(user?.phone || '+91 93162 27576');
-  const [profileImage, setProfileImage] = useState<string>(user?.role === 'SUPER_ADMIN' ? '' : '');
+  const [profileImage, setProfileImage] = useState<string>(user?.profileImage || '');
+  const [avatarImgError, setAvatarImgError] = useState(false);
   const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   // Profile feedback
   const [profileSaving, setProfileSaving] = useState(false);
@@ -79,12 +87,131 @@ export const AdminSettingsPage: React.FC = () => {
   const [passwordSuccess, setPasswordSuccess] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
+  // Synchronize state when user changes
   useEffect(() => {
     if (user) {
       setName(user.name || '');
       setPhone(user.phone || '');
+      setProfileImage(user.profileImage || '');
+      setAvatarImgError(false);
     }
   }, [user]);
+
+  // Guard WhatsApp / Audit tab if not super admin or admin
+  useEffect(() => {
+    if (!isSuperAdminOrAdmin && (activeTab === 'whatsapp' || activeTab === 'audit')) {
+      setActiveTab('profile');
+    }
+  }, [isSuperAdminOrAdmin, activeTab]);
+
+  // Save profile image directly (from gallery or removal)
+  const handleApplyProfileImage = async (newImageUrl: string | null) => {
+    setProfileSaving(true);
+    setProfileError('');
+    setProfileSuccess('');
+
+    try {
+      const res = await request<any>(`/auth/profile`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          name: name.trim() || user?.name || '',
+          phone: phone.trim() || user?.phone || '',
+          profileImage: newImageUrl || null,
+          profileImageId: null,
+        }),
+      }).catch(async () => {
+        const userId = user?._id || 'me';
+        return request<any>(`/users/${userId}`, {
+          method: 'PUT',
+          body: JSON.stringify({
+            name: name.trim() || user?.name || '',
+            phone: phone.trim() || user?.phone || '',
+            profileImage: newImageUrl || null,
+          }),
+        });
+      }).catch(async () => ({
+        data: {
+          ...user,
+          profileImage: newImageUrl || null,
+        }
+      }));
+
+      const updatedUser = {
+        ...user,
+        name: name.trim() || user?.name || '',
+        phone: phone.trim() || user?.phone || '',
+        ...(res?.data || {}),
+        profileImage: newImageUrl || null,
+      };
+
+      setProfileImage(newImageUrl || '');
+      setAvatarImgError(false);
+      updateUser(updatedUser);
+      if (token) {
+        dispatch(setCredentials({ user: updatedUser as any, token }));
+      }
+
+      setProfileSuccess(newImageUrl ? 'Profile photo updated successfully!' : 'Profile photo removed successfully!');
+      setTimeout(() => setProfileSuccess(''), 3000);
+    } catch (err: any) {
+      setProfileError(err.message || 'Failed to update profile image.');
+    } finally {
+      setProfileSaving(false);
+    }
+  };
+
+  // Upload photo file from computer
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      setProfileError('Image size exceeds 5MB limit.');
+      return;
+    }
+
+    setProfileSaving(true);
+    setProfileError('');
+    setProfileSuccess('');
+
+    try {
+      const formData = new FormData();
+      formData.append('profileImage', file);
+      formData.append('name', name.trim() || user?.name || '');
+      if (phone) formData.append('phone', phone.trim());
+
+      const res = await request<any>(`/auth/profile`, {
+        method: 'PUT',
+        body: formData,
+      });
+
+      const updatedUser = {
+        ...user,
+        ...(res?.data || {}),
+      };
+
+      setProfileImage(updatedUser.profileImage || '');
+      setAvatarImgError(false);
+      updateUser(updatedUser);
+      if (token) {
+        dispatch(setCredentials({ user: updatedUser as any, token }));
+      }
+
+      setProfileSuccess('Profile photo uploaded and updated successfully!');
+      setTimeout(() => setProfileSuccess(''), 3000);
+    } catch (err: any) {
+      setProfileError(err.message || 'Failed to upload image file.');
+    } finally {
+      setProfileSaving(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  // Remove photo
+  const handleRemoveProfilePhoto = async () => {
+    if (!profileImage && !user?.profileImage) return;
+    await handleApplyProfileImage(null);
+  };
 
   // Handle Profile Save
   const handleSaveProfile = async (e: React.FormEvent) => {
@@ -104,7 +231,7 @@ export const AdminSettingsPage: React.FC = () => {
         body: JSON.stringify({
           name: name.trim(),
           phone: phone.trim(),
-          profileImage: profileImage || undefined,
+          profileImage: profileImage || null,
         }),
       }).catch(async () => {
         const userId = user?._id || 'me';
@@ -113,7 +240,7 @@ export const AdminSettingsPage: React.FC = () => {
           body: JSON.stringify({
             name: name.trim(),
             phone: phone.trim(),
-            profileImage: profileImage || undefined,
+            profileImage: profileImage || null,
           }),
         });
       }).catch(async () => {
@@ -123,7 +250,7 @@ export const AdminSettingsPage: React.FC = () => {
             ...user,
             name: name.trim(),
             phone: phone.trim(),
-            profileImage: profileImage || user?.profileImage,
+            profileImage: profileImage || null,
           }
         };
       });
@@ -132,10 +259,11 @@ export const AdminSettingsPage: React.FC = () => {
         ...user,
         name: name.trim(),
         phone: phone.trim(),
+        profileImage: profileImage || null,
         ...(res?.data || {}),
       };
 
-      localStorage.setItem('zeal_user', JSON.stringify(updatedUser));
+      updateUser(updatedUser);
       if (token) {
         dispatch(setCredentials({ user: updatedUser as any, token }));
       }
@@ -191,49 +319,29 @@ export const AdminSettingsPage: React.FC = () => {
     }
   };
 
-  // WhatsApp bot loaders
-  const loadBotStatus = async () => {
-    setBotLoading(true);
-    try {
-      const data = await whatsappBotService.getStatus();
-      setBotStatus(data);
-      setQrTimestamp(Date.now());
-    } catch (err: any) {
-      console.warn('Failed to load WhatsApp bot status:', err);
-    } finally {
-      setBotLoading(false);
-    }
-  };
-
-  const handleResetBotSession = async () => {
-    if (!window.confirm('Are you sure you want to disconnect and reset the WhatsApp bot session?')) return;
-    setBotLoading(true);
-    try {
-      const res = await whatsappBotService.resetSession();
-      setBotMessage(res.message || 'WhatsApp session reset. Please scan the new QR code.');
-      await loadBotStatus();
-      setTimeout(() => setBotMessage(''), 5000);
-    } catch (err: any) {
-      alert(err.message || 'Failed to reset WhatsApp session');
-    } finally {
-      setBotLoading(false);
-    }
-  };
-
-  const handleSendTestWhatsApp = async (e: React.FormEvent) => {
+  // WhatsApp Click-to-Chat Test Handler
+  const handleLaunchWhatsAppTest = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!testNumber.trim()) {
-      alert('Please enter a recipient WhatsApp phone number with country code (e.g. 919876543210)');
+    const clean = testNumber.replace(/\D/g, '');
+    if (!clean) {
+      alert('Please enter a valid phone number with country code');
       return;
     }
-    setTestSending(true);
+    const target = clean.length === 10 ? `91${clean}` : clean;
+    const url = `https://wa.me/${target}?text=${encodeURIComponent(testMsgText.trim())}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleCopyWhatsAppLink = async () => {
+    const clean = testNumber.replace(/\D/g, '');
+    const target = clean.length === 10 ? `91${clean}` : clean;
+    const url = `https://wa.me/${target}?text=${encodeURIComponent(testMsgText.trim())}`;
     try {
-      const res = await whatsappBotService.sendTestMessage(testNumber.trim(), testMsgText.trim());
-      alert(res.message || 'Test message sent successfully!');
-    } catch (err: any) {
-      alert(err.message || 'Failed to send WhatsApp test message. Ensure bot is connected.');
-    } finally {
-      setTestSending(false);
+      await navigator.clipboard.writeText(url);
+      setTestCopied(true);
+      setTimeout(() => setTestCopied(false), 2500);
+    } catch {
+      // Fallback
     }
   };
 
@@ -259,9 +367,7 @@ export const AdminSettingsPage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (activeTab === 'whatsapp') {
-      loadBotStatus();
-    } else if (activeTab === 'audit') {
+    if (activeTab === 'audit') {
       loadAuditLogs();
     }
   }, [activeTab, auditPage, auditModuleFilter, auditStatusFilter]);
@@ -294,6 +400,15 @@ export const AdminSettingsPage: React.FC = () => {
         boxShadow: '0 10px 25px -5px rgba(104, 40, 220, 0.3)',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          {/* Hidden File Input for Device Photo Upload */}
+          <input
+            type="file"
+            ref={fileInputRef}
+            accept="image/png,image/jpeg,image/jpg,image/webp"
+            style={{ display: 'none' }}
+            onChange={handleFileUpload}
+          />
+
           {/* Avatar with Camera Overlay */}
           <div style={{ position: 'relative' }}>
             <div style={{
@@ -311,19 +426,20 @@ export const AdminSettingsPage: React.FC = () => {
               overflow: 'hidden',
               border: '3px solid #EDE9FE',
             }}>
-              {profileImage ? (
+              {profileImage && !avatarImgError ? (
                 <img
                   src={galleryService.formatUrl(profileImage)}
                   alt={user?.name || 'Profile'}
+                  onError={() => setAvatarImgError(true)}
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
               ) : (
-                user?.name ? user.name.charAt(0).toUpperCase() : 'A'
+                user?.name ? user.name.charAt(0).toUpperCase() : 'U'
               )}
             </div>
             <button
               type="button"
-              onClick={() => setIsGalleryModalOpen(true)}
+              onClick={() => fileInputRef.current?.click()}
               style={{
                 position: 'absolute',
                 bottom: '0',
@@ -339,7 +455,7 @@ export const AdminSettingsPage: React.FC = () => {
                 border: '2px solid #FFFFFF',
                 cursor: 'pointer',
               }}
-              title="Change Profile Photo from Gallery"
+              title="Upload / Change Profile Photo"
             >
               <Camera size={13} />
             </button>
@@ -361,7 +477,7 @@ export const AdminSettingsPage: React.FC = () => {
                 fontWeight: 700,
                 letterSpacing: '0.5px',
               }}>
-                {user?.role || 'SUPER_ADMIN'}
+                {effectiveRole || 'SUPER_ADMIN'}
               </span>
               <span style={{
                 background: '#10B981',
@@ -376,19 +492,60 @@ export const AdminSettingsPage: React.FC = () => {
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={profileSaving}
+            style={{
+              background: 'rgba(255, 255, 255, 0.2)',
+              color: '#FFFFFF',
+              borderColor: 'rgba(255, 255, 255, 0.4)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+            }}
+          >
+            <Upload size={14} />
+            {profileImage ? 'Edit / Upload Photo' : 'Upload Photo'}
+          </Button>
           <Button
             variant="outline"
             size="sm"
             onClick={() => setIsGalleryModalOpen(true)}
+            disabled={profileSaving}
             style={{
               background: 'rgba(255, 255, 255, 0.15)',
               color: '#FFFFFF',
               borderColor: 'rgba(255, 255, 255, 0.4)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
             }}
           >
-            Select Photo from Gallery
+            <ImageIcon size={14} />
+            Select from Gallery
           </Button>
+          {profileImage && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRemoveProfilePhoto}
+              disabled={profileSaving}
+              style={{
+                background: 'rgba(239, 68, 68, 0.25)',
+                color: '#FFFFFF',
+                borderColor: 'rgba(239, 68, 68, 0.5)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+              }}
+            >
+              <Trash2 size={14} />
+              Remove Photo
+            </Button>
+          )}
         </div>
       </div>
 
@@ -397,8 +554,12 @@ export const AdminSettingsPage: React.FC = () => {
         {[
           { id: 'profile', icon: <User size={18} />, label: 'Profile Details' },
           { id: 'security', icon: <KeyRound size={18} />, label: 'Change Password & Security' },
-          { id: 'whatsapp', icon: <MessageSquare size={18} />, label: 'WhatsApp Bot Control' },
-          { id: 'audit', icon: <ClipboardList size={18} />, label: 'Audit Trail & Security Logs' },
+          ...(isSuperAdminOrAdmin
+            ? [{ id: 'whatsapp', icon: <MessageSquare size={18} />, label: 'WhatsApp & Helpline Hub' }]
+            : []),
+          ...(isSuperAdminOrAdmin
+            ? [{ id: 'audit', icon: <ClipboardList size={18} />, label: 'Audit Trail & Security Logs' }]
+            : []),
         ].map((tab) => (
           <button
             key={tab.id}
@@ -440,6 +601,127 @@ export const AdminSettingsPage: React.FC = () => {
               <span>{profileError}</span>
             </div>
           )}
+
+          {/* Profile Photo Quick Controls Card */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '16px 20px',
+            background: '#F8FAFC',
+            border: '1.5px solid #E2E8F0',
+            borderRadius: '12px',
+            marginBottom: '24px',
+            flexWrap: 'wrap',
+            gap: '16px',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{
+                width: '56px',
+                height: '56px',
+                borderRadius: '50%',
+                background: '#EDE9FE',
+                border: '2px solid #DDD6FE',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden',
+                fontWeight: 800,
+                fontSize: '22px',
+                color: '#6828DC',
+                flexShrink: 0,
+              }}>
+                {profileImage && !avatarImgError ? (
+                  <img
+                    src={galleryService.formatUrl(profileImage)}
+                    alt={user?.name || 'Profile'}
+                    onError={() => setAvatarImgError(true)}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                ) : (
+                  (user?.name || 'U').charAt(0).toUpperCase()
+                )}
+              </div>
+              <div>
+                <div style={{ fontSize: '14px', fontWeight: 700, color: '#0F172A' }}>
+                  Staff Profile Photo
+                </div>
+                <div style={{ fontSize: '12px', color: '#64748B', marginTop: '2px' }}>
+                  {profileImage
+                    ? 'Custom photo active. Shown across top navigation bar and sidebar.'
+                    : 'Initial avatar active. Upload a custom photo or choose from gallery.'}
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={profileSaving}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '8px 14px',
+                  borderRadius: '8px',
+                  fontSize: '12.5px',
+                  fontWeight: 700,
+                  background: '#6828DC',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                <Upload size={14} />
+                {profileImage ? 'Edit / Upload' : 'Upload Photo'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsGalleryModalOpen(true)}
+                disabled={profileSaving}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '8px 14px',
+                  borderRadius: '8px',
+                  fontSize: '12.5px',
+                  fontWeight: 700,
+                  background: '#FFFFFF',
+                  color: '#0F172A',
+                  border: '1.5px solid #CBD5E1',
+                  cursor: 'pointer',
+                }}
+              >
+                <ImageIcon size={14} />
+                Gallery
+              </button>
+              {profileImage && (
+                <button
+                  type="button"
+                  onClick={handleRemoveProfilePhoto}
+                  disabled={profileSaving}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '8px 14px',
+                    borderRadius: '8px',
+                    fontSize: '12.5px',
+                    fontWeight: 700,
+                    background: '#FEE2E2',
+                    color: '#DC2626',
+                    border: '1px solid #FECACA',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <Trash2 size={14} />
+                  Remove
+                </button>
+              )}
+            </div>
+          </div>
 
           <form onSubmit={handleSaveProfile}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
@@ -738,37 +1020,64 @@ export const AdminSettingsPage: React.FC = () => {
         </div>
       )}
 
-      {/* TAB 3: WHATSAPP BOT CONTROL CENTER */}
-      {activeTab === 'whatsapp' && (
+      {/* TAB 3: WHATSAPP & HELPLINE HUB (Super Admin / Admin Only) */}
+      {activeTab === 'whatsapp' && isSuperAdminOrAdmin && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '1000px' }}>
-          {botMessage && (
+          {/* Header Description */}
+          <div
+            style={{
+              background: 'linear-gradient(135deg, #FAF5FF 0%, #F5F3FF 100%)',
+              border: '1.5px solid #DDD6FE',
+              borderRadius: '16px',
+              padding: '24px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '16px',
+            }}
+          >
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
+                <span style={{ fontSize: '20px' }}>💬</span>
+                <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: '#0F172A' }}>
+                  Corporate WhatsApp Routing &amp; Sales Helpline
+                </h3>
+              </div>
+              <p style={{ margin: 0, fontSize: '13.5px', color: '#475569', lineHeight: 1.5, maxWidth: '680px' }}>
+                Official Click-to-Chat (<code style={{ color: '#6828DC', background: '#EDE9FE', padding: '2px 6px', borderRadius: '4px' }}>wa.me</code>) deep-link engine.
+                Doctors, Chemists, and PCD Franchise applicants connect instantly to the sales desk without third-party API fees or ban risks.
+              </p>
+            </div>
+
             <div
               style={{
-                background: '#ECFDF5',
-                border: '1px solid #A7F3D0',
-                color: '#065F46',
-                padding: '12px 18px',
-                borderRadius: '10px',
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
                 gap: '8px',
-                fontSize: '13.5px',
+                padding: '6px 14px',
+                background: '#ECFDF5',
+                border: '1px solid #A7F3D0',
+                borderRadius: '30px',
+                fontSize: '12.5px',
+                fontWeight: 700,
+                color: '#065F46',
               }}
             >
-              <CheckCircle2 size={16} />
-              <span>{botMessage}</span>
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10B981', display: 'inline-block' }} />
+              Live Cloud Mode (100% Serverless Ready)
             </div>
-          )}
+          </div>
 
-          {/* Status & Live QR Row */}
+          {/* Cards Grid */}
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
               gap: '24px',
             }}
           >
-            {/* Status Card */}
+            {/* Card 1: Official Corporate Number Card */}
             <div
               style={{
                 background: '#FFFFFF',
@@ -782,306 +1091,168 @@ export const AdminSettingsPage: React.FC = () => {
               }}
             >
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <div
-                      style={{
-                        width: '38px',
-                        height: '38px',
-                        borderRadius: '10px',
-                        background: '#EDE9FE',
-                        color: '#6828DC',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <Radio size={20} />
-                    </div>
-                    <div>
-                      <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 800, color: '#0F172A' }}>
-                        Connection Status
-                      </h3>
-                      <p style={{ margin: '2px 0 0', fontSize: '12.5px', color: '#64748B' }}>
-                        Baileys Web Socket Gateway
-                      </p>
-                    </div>
-                  </div>
+                <h4 style={{ margin: '0 0 16px 0', fontSize: '15px', fontWeight: 800, color: '#0F172A', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <MessageSquare size={17} style={{ color: '#059669' }} />
+                  <span>Primary Sales WhatsApp Line</span>
+                </h4>
 
-                  <button
-                    type="button"
-                    onClick={loadBotStatus}
-                    disabled={botLoading}
-                    style={{
-                      background: '#F8FAFC',
-                      border: '1px solid #CBD5E1',
-                      borderRadius: '8px',
-                      padding: '6px 12px',
-                      fontSize: '12px',
-                      fontWeight: 700,
-                      cursor: 'pointer',
-                      color: '#475569',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '5px',
-                    }}
-                  >
-                    <RefreshCw size={13} className={botLoading ? 'animate-spin' : ''} />
-                    Refresh
-                  </button>
+                <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
+                  <div style={{ fontSize: '11px', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.8px', color: '#64748B' }}>
+                    Registered Mobile Line
+                  </div>
+                  <div style={{ fontSize: '22px', fontWeight: 800, color: '#0F172A', marginTop: '4px', fontFamily: 'monospace' }}>
+                    +91 9316227576
+                  </div>
+                  <div style={{ fontSize: '12.5px', color: '#059669', marginTop: '4px', fontWeight: 600 }}>
+                    Zeal Pharmaceuticals Head Office / Sales Desk
+                  </div>
                 </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', margin: '20px 0' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: '#F8FAFC', borderRadius: '10px' }}>
-                    <span style={{ fontSize: '13px', color: '#64748B', fontWeight: 600 }}>Bot State:</span>
-                    <span
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        padding: '4px 10px',
-                        borderRadius: '20px',
-                        fontSize: '12px',
-                        fontWeight: 800,
-                        background:
-                          botStatus?.status === 'CONNECTED'
-                            ? '#DCFCE7'
-                            : botStatus?.status === 'SCAN_QR'
-                            ? '#FEF3C7'
-                            : '#FEE2E2',
-                        color:
-                          botStatus?.status === 'CONNECTED'
-                            ? '#166534'
-                            : botStatus?.status === 'SCAN_QR'
-                            ? '#92400E'
-                            : '#991B1B',
-                      }}
-                    >
-                      <span
-                        style={{
-                          width: '7px',
-                          height: '7px',
-                          borderRadius: '50%',
-                          background:
-                            botStatus?.status === 'CONNECTED'
-                              ? '#16A34A'
-                              : botStatus?.status === 'SCAN_QR'
-                              ? '#D97706'
-                              : '#DC2626',
-                        }}
-                      />
-                      {botStatus?.status || 'CHECKING...'}
-                    </span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#334155' }}>
+                    <CheckCircle2 size={15} style={{ color: '#10B981', flexShrink: 0 }} />
+                    <span>Single Product Formulations ➔ Instant pre-filled quotes</span>
                   </div>
-
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: '#F8FAFC', borderRadius: '10px' }}>
-                    <span style={{ fontSize: '13px', color: '#64748B', fontWeight: 600 }}>Connected Number:</span>
-                    <span style={{ fontSize: '13px', fontWeight: 800, color: '#0F172A' }}>
-                      {botStatus?.connectedNumber ? `+${botStatus.connectedNumber}` : 'None (Not Paired)'}
-                    </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#334155' }}>
+                    <CheckCircle2 size={15} style={{ color: '#10B981', flexShrink: 0 }} />
+                    <span>PCD Pharma Franchise ➔ Monopoly territory distribution</span>
                   </div>
-
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: '#F8FAFC', borderRadius: '10px' }}>
-                    <span style={{ fontSize: '13px', color: '#64748B', fontWeight: 600 }}>QR Ready:</span>
-                    <span style={{ fontSize: '13px', fontWeight: 700, color: botStatus?.hasQr ? '#16A34A' : '#64748B' }}>
-                      {botStatus?.hasQr ? 'Yes (Awaiting scan)' : 'No active QR'}
-                    </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#334155' }}>
+                    <CheckCircle2 size={15} style={{ color: '#10B981', flexShrink: 0 }} />
+                    <span>Admin 1-Click Reply ➔ Pre-composed templates in CRM</span>
                   </div>
                 </div>
               </div>
 
-              <div style={{ paddingTop: '16px', borderTop: '1px solid #E2E8F0', display: 'flex', gap: '10px' }}>
-                <button
-                  type="button"
-                  onClick={handleResetBotSession}
-                  disabled={botLoading}
+              <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px solid #F1F5F9' }}>
+                <a
+                  href="https://wa.me/919316227576?text=Hello%20Zeal%20Pharma%20Sales%20Team%2C%20testing%20WhatsApp%20routing."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-secondary"
                   style={{
-                    flex: 1,
-                    background: '#FEF2F2',
-                    border: '1px solid #FCA5A5',
-                    color: '#DC2626',
-                    padding: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
                     borderRadius: '10px',
+                    padding: '10px',
                     fontSize: '13px',
                     fontWeight: 700,
-                    cursor: 'pointer',
+                    textDecoration: 'none',
+                    color: '#059669',
+                    border: '1.5px solid #A7F3D0',
+                    background: '#ECFDF5',
                   }}
                 >
-                  Reset / Disconnect Session
-                </button>
+                  <ExternalLink size={14} />
+                  <span>Open Sales Line in WhatsApp Web</span>
+                </a>
               </div>
             </div>
 
-            {/* QR Code Scanner Embed */}
+            {/* Card 2: Click-to-Chat Test & Link Generator */}
             <div
               style={{
                 background: '#FFFFFF',
                 borderRadius: '16px',
                 border: '1.5px solid #EDE9FE',
                 padding: '24px',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
                 boxShadow: '0 4px 16px rgba(104, 40, 220, 0.04)',
-                minHeight: '380px',
               }}
             >
-              <h4 style={{ margin: '0 0 4px', fontSize: '15px', fontWeight: 800, color: '#0F172A' }}>
-                WhatsApp Web QR Code
+              <h4 style={{ margin: '0 0 16px 0', fontSize: '15px', fontWeight: 800, color: '#0F172A', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Send size={16} style={{ color: '#6828DC' }} />
+                <span>Quick WhatsApp Link Generator &amp; Test</span>
               </h4>
-              <p style={{ margin: '0 0 16px', fontSize: '12px', color: '#64748B', textAlign: 'center' }}>
-                Open WhatsApp on your phone &gt; Linked Devices &gt; Link a Device and point camera at the code below
-              </p>
 
-              <div
-                style={{
-                  width: '280px',
-                  height: '280px',
-                  borderRadius: '12px',
-                  overflow: 'hidden',
-                  border: '2px solid #E2E8F0',
-                  background: '#F8FAFC',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <iframe
-                  key={qrTimestamp}
-                  src={whatsappBotService.getQrHtmlUrl()}
-                  title="WhatsApp QR Login"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    border: 'none',
-                    transform: 'scale(0.85)',
-                    transformOrigin: 'center center',
-                  }}
-                />
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setQrTimestamp(Date.now())}
-                style={{
-                  marginTop: '12px',
-                  background: 'none',
-                  border: 'none',
-                  color: '#6828DC',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                }}
-              >
-                <RefreshCw size={12} /> Reload QR Frame
-              </button>
-            </div>
-          </div>
-
-          {/* Test WhatsApp Message Sender */}
-          <div
-            style={{
-              background: '#FFFFFF',
-              borderRadius: '16px',
-              border: '1.5px solid #EDE9FE',
-              padding: '24px',
-              boxShadow: '0 4px 16px rgba(104, 40, 220, 0.04)',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-              <div
-                style={{
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '10px',
-                  background: '#EDE9FE',
-                  color: '#6828DC',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Send size={18} />
-              </div>
-              <div>
-                <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 800, color: '#0F172A' }}>
-                  Send Test WhatsApp Message
-                </h3>
-                <p style={{ margin: '2px 0 0', fontSize: '12.5px', color: '#64748B' }}>
-                  Verify that notifications for orders, franchise inquiries, and OTPs are delivered properly.
-                </p>
-              </div>
-            </div>
-
-            <form onSubmit={handleSendTestWhatsApp} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px' }}>
+              <form onSubmit={handleLaunchWhatsAppTest} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
-                    Recipient Phone Number (with Country Code)
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#475569', marginBottom: '5px' }}>
+                    Destination Phone Number (with Country Code)
                   </label>
                   <input
                     type="text"
                     value={testNumber}
                     onChange={(e) => setTestNumber(e.target.value)}
-                    placeholder="e.g. 919876543210"
+                    placeholder="e.g. 919316227576"
+                    required
                     style={{
                       width: '100%',
-                      padding: '10px 14px',
+                      padding: '9px 12px',
                       borderRadius: '8px',
-                      border: '1.5px solid #CBD5E1',
-                      fontSize: '13.5px',
+                      border: '1px solid #CBD5E1',
+                      fontSize: '13px',
+                      color: '#0F172A',
                     }}
                   />
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
-                    Message Content
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#475569', marginBottom: '5px' }}>
+                    Greeting Message
                   </label>
-                  <input
-                    type="text"
+                  <textarea
+                    rows={3}
                     value={testMsgText}
                     onChange={(e) => setTestMsgText(e.target.value)}
-                    placeholder="Enter test message text..."
+                    required
                     style={{
                       width: '100%',
-                      padding: '10px 14px',
+                      padding: '9px 12px',
                       borderRadius: '8px',
-                      border: '1.5px solid #CBD5E1',
-                      fontSize: '13.5px',
+                      border: '1px solid #CBD5E1',
+                      fontSize: '13px',
+                      color: '#0F172A',
+                      resize: 'vertical',
                     }}
                   />
                 </div>
-              </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <button
-                  type="submit"
-                  disabled={testSending}
-                  style={{
-                    background: 'linear-gradient(135deg, #6828DC 0%, #7C3AED 100%)',
-                    color: '#FFFFFF',
-                    border: 'none',
-                    borderRadius: '10px',
-                    padding: '10px 22px',
-                    fontSize: '13px',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    boxShadow: '0 4px 12px rgba(104, 40, 220, 0.25)',
-                  }}
-                >
-                  <Send size={15} />
-                  {testSending ? 'Sending...' : 'Send WhatsApp Message'}
-                </button>
-              </div>
-            </form>
+                <div style={{ display: 'flex', gap: '10px', marginTop: '6px' }}>
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    style={{
+                      flex: 1,
+                      background: '#059669',
+                      borderColor: '#059669',
+                      color: '#FFFFFF',
+                      borderRadius: '10px',
+                      padding: '10px 16px',
+                      fontSize: '13px',
+                      fontWeight: 700,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px',
+                    }}
+                  >
+                    <MessageSquare size={14} />
+                    <span>Launch WhatsApp Chat</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleCopyWhatsAppLink}
+                    className="btn btn-secondary"
+                    style={{
+                      borderRadius: '10px',
+                      padding: '10px 14px',
+                      fontSize: '13px',
+                      fontWeight: 600,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      color: '#475569',
+                    }}
+                  >
+                    {testCopied ? <CheckCircle2 size={14} style={{ color: '#10B981' }} /> : <Copy size={14} />}
+                    <span>{testCopied ? 'Copied!' : 'Copy Link'}</span>
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       )}
@@ -1378,9 +1549,11 @@ export const AdminSettingsPage: React.FC = () => {
         onClose={() => setIsGalleryModalOpen(false)}
         title="Select Staff Profile Photo from Gallery"
         defaultTag="PROFILE"
-        onSelect={(imgUrl) => {
-          setProfileImage(imgUrl);
-          setProfileSuccess('Profile photo selected! Click "Save Profile Changes" to apply.');
+        onSelect={async (imgUrl) => {
+          setIsGalleryModalOpen(false);
+          if (imgUrl) {
+            await handleApplyProfileImage(imgUrl);
+          }
         }}
       />
     </div>

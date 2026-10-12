@@ -10,6 +10,8 @@ import {
   getUserPermissions,
   assignUserPermissions,
   getAuditLogs,
+  getRolePermissionsMatrix,
+  saveRolePermissionsMatrix,
 } from "../controllers/settings.controller";
 import {
   createRoleSchema,
@@ -104,6 +106,20 @@ settingsRouter.put(
   requirePermissions(PERMISSIONS.PERMISSION_ASSIGN),
   validate(assignUserPermissionsSchema),
   asyncHandler(assignUserPermissions)
+);
+
+// ==========================================
+// ROLE PERMISSIONS MATRIX (KEY-BASED)
+// ==========================================
+settingsRouter.get(
+  "/matrix",
+  asyncHandler(getRolePermissionsMatrix)
+);
+
+settingsRouter.put(
+  "/matrix/:roleCode",
+  requirePermissions(PERMISSIONS.PERMISSION_ASSIGN),
+  asyncHandler(saveRolePermissionsMatrix)
 );
 
 export { settingsRouter };

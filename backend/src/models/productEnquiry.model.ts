@@ -86,8 +86,23 @@ const productEnquirySchema = new Schema(
 
     status: {
       type: String,
-      enum: ["NEW", "IN_PROGRESS", "QUOTED", "FOLLOW_UP", "CLOSED", "REJECTED",],
-      default: "NEW", index: true,
+      enum: [
+        "NEW",
+        "CONTACTED",
+        "IN_TOUCH",
+        "IN_PROGRESS",
+        "QUALIFIED",
+        "DOCUMENTS_PENDING",
+        "QUOTED",
+        "FOLLOW_UP",
+        "APPROVED",
+        "REJECTED",
+        "ON_HOLD",
+        "CLOSED",
+        "PENDING",
+      ],
+      default: "NEW",
+      index: true,
     },
 
     assignedTo: { type: Schema.Types.ObjectId, ref: "User",  default: null,  index: true,},
@@ -123,6 +138,7 @@ const productEnquirySchema = new Schema(
     isDeleted: { type: Boolean, default: false, index: true, },
     deletedAt: { type: Date, default: null, },
     deletedBy: { type: Schema.Types.ObjectId, ref: "User", default: null, },
+    updatedBy: { type: Schema.Types.ObjectId, ref: "User", default: null, },
   },
   {
     timestamps: true,

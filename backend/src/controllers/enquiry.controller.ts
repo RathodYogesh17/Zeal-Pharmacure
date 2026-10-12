@@ -75,7 +75,8 @@ const getAllFranchiseEnquiries = async (req: IEnquiryRequest, res: Response): Pr
 
 const getAllEnquiries = async (req: IEnquiryRequest, res: Response): Promise<void> => {
   const query: IEnquiryQuery = req.validatedQuery ?? (req.query as IEnquiryQuery);
-  const result = await enquiryService.getAllEnquiries(query);
+  const user = req.user ? (req.user as unknown as IAuthenticatedUser) : undefined;
+  const result = await enquiryService.getAllEnquiries(query, user);
   sendSuccess(res, HTTP_STATUS.OK, MESSAGES.ENQUIRIES_FETCHED, result);
 };
 
@@ -116,6 +117,13 @@ const confirmEnquiry = async (req: Request, res: Response): Promise<void> => {
   sendSuccess(res, HTTP_STATUS.OK, "Enquiry confirmed and sales management notified successfully.", result);
 };
 
+const replyEnquiryEmail = async (req: IEnquiryRequest, res: Response): Promise<void> => {
+  const user = req.user ? (req.user as unknown as IAuthenticatedUser) : undefined;
+  const { message, subject } = req.body;
+  const result = await enquiryService.replyEnquiryEmail(String(req.params.id), message, user, subject);
+  sendSuccess(res, HTTP_STATUS.OK, result.message, result);
+};
+
 export {
   createProductEnquiry,
   createFranchiseEnquiry,
@@ -130,4 +138,6 @@ export {
   assignEnquiry,
   addEnquiryNote,
   deleteEnquiry,
+  replyEnquiryEmail,
 };
+

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Plus, UploadCloud, Image as ImageIcon, Save, AlertCircle, CheckCircle,} from 'lucide-react';
+import { X, Plus, UploadCloud, Image as ImageIcon, Save, AlertCircle, CheckCircle, } from 'lucide-react';
 import { Modal } from '../common/ui/Modal';
 import { MediaGalleryModal } from '../common/ui/MediaGalleryModal';
 import { ThemeSelect, ThemeQuillEditor } from '../common';
@@ -16,7 +16,7 @@ export interface EditProductModalProps {
   onSuccess: (updated: IProduct) => void;
 }
 
-export const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onClose, product,categories, onSuccess,}) => {
+export const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onClose, product, categories, onSuccess, }) => {
   const [subCategories, setSubCategories] = useState<ISubCategory[]>([]);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -53,20 +53,20 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onCl
     const catId = typeof product.category === 'object' && product.category?._id
       ? product.category._id
       : typeof product.category === 'string'
-      ? product.category
-      : categories[0]?._id || '';
+        ? product.category
+        : categories[0]?._id || '';
 
     const subCatId = typeof product.subCategory === 'object' && product.subCategory?._id
       ? product.subCategory._id
       : typeof product.subCategory === 'string'
-      ? product.subCategory
-      : '';
+        ? product.subCategory
+        : '';
 
     const indicationsStr = Array.isArray(product.indicationTags)
       ? product.indicationTags.join(', ')
       : Array.isArray(product.indications)
-      ? product.indications.map((i: any) => (typeof i === 'object' ? i.name : i)).join(', ')
-      : '';
+        ? product.indications.map((i: any) => (typeof i === 'object' ? i.name : i)).join(', ')
+        : '';
 
     const extraImages: string[] = Array.isArray(product.mediaGallery)
       ? product.mediaGallery.map((m: any) => (typeof m === 'object' && m?.url ? m.url : String(m)))
@@ -203,7 +203,7 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onCl
           )}
 
           {successMsg && (
-            <div style={{ background: '#ECFDF5', border: '1.5px solid #A7F3D0', color: '#065F46', padding: '12px 16px', borderRadius: '8px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px',}}>
+            <div style={{ background: '#ECFDF5', border: '1.5px solid #A7F3D0', color: '#065F46', padding: '12px 16px', borderRadius: '8px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px', }}>
               <CheckCircle size={18} style={{ color: '#10B981', flexShrink: 0 }} />
               <div>{successMsg}</div>
             </div>
@@ -216,7 +216,7 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onCl
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 600, color: '#334155', marginBottom: '4px' }}>  Product Name *</label>
-                  <input type="text" name="name"  required value={formData.name}  onChange={handleChange} style={{ width: '100%', padding: '8px 12px' }} />
+                  <input type="text" name="name" required value={formData.name} onChange={handleChange} style={{ width: '100%', padding: '8px 12px' }} />
                 </div>
 
                 <div>
@@ -234,7 +234,7 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onCl
                 <div>
                   <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 600, color: '#334155', marginBottom: '4px' }}> Therapeutic Category *</label>
                   <ThemeSelect name="category" value={formData.category} onChange={(e) => handleCategoryChange(e.target.value)} style={{ width: '100%' }} containerStyle={{ width: '100%' }}>
-                    {categories.map((c) => (<option key={c._id} value={c._id}> {c.name} </option> ))}
+                    {categories.map((c) => (<option key={c._id} value={c._id}> {c.name} </option>))}
                   </ThemeSelect>
                 </div>
 
@@ -312,7 +312,7 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onCl
               <div style={{ background: '#F8FAFC', border: '1.5px solid #E2E8F0', borderRadius: '12px', padding: '16px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                   <span style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A' }}>Primary 3D Packaging</span>
-                  <button  type="button" onClick={() => { setActiveSlot('primary'); setGalleryModalOpen(true); }} className="btn btn-secondary btn-sm" >
+                  <button type="button" onClick={() => { setActiveSlot('primary'); setGalleryModalOpen(true); }} className="btn btn-secondary btn-sm" >
                     <ImageIcon size={13} />
                     <span>Choose</span>
                   </button>
@@ -335,9 +335,9 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onCl
                   </div>
                 ) : (
                   <div
-                    onClick={() => {setActiveSlot('primary'); setGalleryModalOpen(true); }}
-                    style={{ border: '2px dashed #CBD5E1', borderRadius: '8px',  padding: '24px', textAlign: 'center', cursor: 'pointer', background: '#FFFFFF', }}>
-                       <UploadCloud size={24} style={{ color: '#6828DC', margin: '0 auto 6px' }} />
+                    onClick={() => { setActiveSlot('primary'); setGalleryModalOpen(true); }}
+                    style={{ border: '2px dashed #CBD5E1', borderRadius: '8px', padding: '24px', textAlign: 'center', cursor: 'pointer', background: '#FFFFFF', }}>
+                    <UploadCloud size={24} style={{ color: '#6828DC', margin: '0 auto 6px' }} />
                     <div style={{ fontSize: '12px', color: '#64748B', fontWeight: 600 }}>Click to select packaging</div>
                   </div>
                 )}
@@ -357,7 +357,7 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onCl
                   {mediaGallery.map((img, idx) => (
                     <div
                       key={idx}
-                      style={{ position: 'relative', width: '56px',  height: '56px', borderRadius: '6px', overflow: 'hidden', border: '1px solid #CBD5E1', background: '#FFFFFF', }}>
+                      style={{ position: 'relative', width: '56px', height: '56px', borderRadius: '6px', overflow: 'hidden', border: '1px solid #CBD5E1', background: '#FFFFFF', }}>
                       <img src={galleryService.formatUrl(img)} alt={`Extra ${idx}`} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                       <button
                         type="button"
@@ -370,8 +370,8 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onCl
 
                   <button
                     type="button"
-                    onClick={() => {setActiveSlot('extra');setGalleryModalOpen(true); }}
-                    style={{ width: '56px', height: '56px', borderRadius: '6px', border: '1.5px dashed #6828DC', background: '#EDE9FE', color: '#6828DC', display: 'flex', alignItems: 'center',justifyContent: 'center', cursor: 'pointer', }}
+                    onClick={() => { setActiveSlot('extra'); setGalleryModalOpen(true); }}
+                    style={{ width: '56px', height: '56px', borderRadius: '6px', border: '1.5px dashed #6828DC', background: '#EDE9FE', color: '#6828DC', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', }}
                     title="Add more extra images">
                     <Plus size={18} />
                   </button>
@@ -382,7 +382,7 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onCl
 
           {/* Modal Actions */}
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', borderTop: '1px solid #E2E8F0', paddingTop: '16px' }}>
-            <button type="button" onClick={onClose}className="btn btn-secondary"> Cancel </button>
+            <button type="button" onClick={onClose} className="btn btn-secondary"> Cancel </button>
             <button type="submit" disabled={loading} className="btn btn-primary" >
               <Save size={15} />
               <span>{loading ? 'Saving Changes...' : 'Save Product Changes'}</span>

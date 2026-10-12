@@ -67,13 +67,14 @@ const productSchema = new Schema(
 
     prescriptionType: {
     type: String,
-    enum: [ "Rx",  "OTC",  "Schedule H", "Schedule H1", "General",], default: "Rx", index: true,},
+    enum: [ "Rx",  "OTC",  "Schedule H", "Schedule H1", "General", "OTC / General"], default: "Rx", index: true,},
     regulatoryInfo: { type: String,  default: "", trim: true,},
     licenseNumber: {  type: String, default: "", trim: true,},
     countryOfOrigin: { type: String, default: "India", trim: true,},
+    mrp: { type: Number, default: null, min: 0, },
 
     // =====================================================
-    // AVAILABILITY STATUS (PRICE/MRP DELETED FOR ENQUIRY MODEL)
+    // AVAILABILITY STATUS & PRICING
     // =====================================================
 
     availabilityStatus: { type: String, enum: [  "AVAILABLE", "OUT_OF_STOCK",  "COMING_SOON", "DISCONTINUED",  ], default: "AVAILABLE", index: true,},

@@ -6,6 +6,8 @@ import {
   getGalleryImages,
   updateGalleryImage,
   deleteGalleryImage,
+  autoOrganizeGallery,
+  batchMoveGalleryImages,
 } from "../controllers/gallery.controller";
 import asyncHandler from "../utils/asyncHandler";
 
@@ -13,6 +15,12 @@ const galleryRouter = Router();
 
 // Allow browsing gallery images for modal picker & admin gallery
 galleryRouter.get("/", asyncHandler(getGalleryImages));
+
+// Auto-organize all old & unassigned media into correct folders (PROFILE, PRODUCT, LOGO, BANNER)
+galleryRouter.post("/auto-organize", authMiddleware, asyncHandler(autoOrganizeGallery));
+
+// Batch move media assets into a folder
+galleryRouter.post("/batch-move", authMiddleware, asyncHandler(batchMoveGalleryImages));
 
 // Upload requires authenticated staff
 galleryRouter.post(

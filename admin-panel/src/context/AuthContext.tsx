@@ -1,65 +1,101 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { IUser } from '../types';
-import { authService } from '../api/authService';
+import { authService, type LoginResult } from '../api/authService';
 
 interface AuthContextType {
   user: IUser | null;
   token: string | null;
   isAuthenticated: boolean;
-  login: (email: string, pass: string) => Promise<void>;
+  isAuthReady: boolean;
+  login: (email: string, pass: string) => Promise<LoginResult>;
+  verifyOtp: (email: string, otp: string) => Promise<void>;
   logout: () => void;
+  updateUser: (updatedUser: IUser) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<IUser | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  // Synchronous initialization prevents any async null-flash redirect on refresh
+  const [token, setToken] = useState<string | null>(() => authService.getToken());
+  const [user, setUser] = useState<IUser | null>(() => authService.getCurrentUser());
+  const [isAuthReady, setIsAuthReady] = useState<boolean>(true);
 
   useEffect(() => {
-    const initAuth = async () => {
+    const initAuth = () => {
+      // 1. If 15-day session expired, log out automatically
+      if (authService.isSessionExpired()) {
+        authService.logout();
+        setUser(null);
+        setToken(null);
+        return;
+      }
+
+      // 2. Refresh state if needed
       const savedToken = authService.getToken();
       const savedUser = authService.getCurrentUser();
 
-      const isTokenValid = (tokenStr: string | null): boolean => {
-        if (!tokenStr || tokenStr === 'mock-admin-token') return false;
-        try {
-          const parts = tokenStr.split('.');
-          if (parts.length !== 3) return false;
-          const payload = JSON.parse(atob(parts[1]));
-          return !payload.exp || Date.now() < payload.exp * 1000;
-        } catch {
-          return false;
-        }
-      };
-
-      if (savedToken && savedUser && isTokenValid(savedToken)) {
+      if (savedToken && savedUser) {
         setToken(savedToken);
         setUser(savedUser);
       } else {
-        // Auto-authenticate with backend in development so uploads and API work seamlessly
-        try {
-          const res = await authService.login('admin@zealpharma.com', 'Admin@123456');
-          setUser(res.user);
-          setToken(res.token);
-        } catch (e) {
-          console.warn('Auto-auth notice:', e);
-        }
+        setUser(null);
+        setToken(null);
       }
     };
+
     initAuth();
+
+    // Background sync to fetch fresh profile image & details
+    if (authService.getToken() && !authService.isSessionExpired()) {
+      authService.getMe().then((fresh) => {
+        if (fresh) {
+          setUser(fresh);
+        }
+      }).catch(() => {});
+    }
+
+    // Periodic check every 30 minutes for 15-day expiration
+    const interval = setInterval(() => {
+      if (authService.isSessionExpired()) {
+        authService.logout();
+        setUser(null);
+        setToken(null);
+      }
+    }, 30 * 60 * 1000);
+
+    return () => clearInterval(interval);
   }, []);
 
-  const login = async (email: string, pass: string) => {
+  const login = async (email: string, pass: string): Promise<LoginResult> => {
     const res = await authService.login(email, pass);
+    if (!res.requiresOtp && res.token && res.user) {
+      setUser(res.user);
+      setToken(res.token);
+    }
+    return res;
+  };
+
+  const verifyOtp = async (email: string, otp: string): Promise<void> => {
+    const res = await authService.verifyOtp(email, otp);
     setUser(res.user);
     setToken(res.token);
   };
 
-  const logout = () => { authService.logout(); setUser(null); setToken(null);};
+  const logout = () => {
+    authService.logout();
+    setUser(null);
+    setToken(null);
+  };
+
+  const updateUser = (updatedUser: IUser) => {
+    setUser(updatedUser);
+    localStorage.setItem('zeal_user', JSON.stringify(updatedUser));
+    localStorage.setItem('zeal_admin_user', JSON.stringify(updatedUser));
+  };
 
   return (
-    <AuthContext.Provider value={{ user, token, isAuthenticated: !!token, login,  logout, }}>
+    <AuthContext.Provider value={{ user, token, isAuthenticated: !!token, isAuthReady, login, verifyOtp, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

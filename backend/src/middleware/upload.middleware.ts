@@ -46,7 +46,12 @@ const attachProductImageUrl = (
       const authenticatedRequest = req as import("express").Request & {
         user?: { _id: string };
       };
-      const result = await registerUploadedMedia(req.file, authenticatedRequest.user?._id || null);
+      const result = await registerUploadedMedia(req.file, authenticatedRequest.user?._id || null, {
+        tag: "PRODUCT",
+        folder: "PRODUCT",
+        tags: ["PRODUCT", "FORMULATION"],
+        title: req.body?.name ? `Product - ${req.body.name}` : undefined,
+      });
       req.body = {
         ...req.body,
         featuredImage: result.media.url,
@@ -57,17 +62,32 @@ const attachProductImageUrl = (
   })().catch(next);
 };
 
-const attachProfileImageUrl = (  req: import("express").Request,_res: import("express").Response, next: import("express").NextFunction
-   ) => {  void (async () => {
-      if (req.file) {
-        const authenticatedRequest = req as import("express").Request & {
-          user?: { _id: string };
-        };
-        const result = await registerUploadedMedia(req.file, authenticatedRequest.user?._id || null);
-        req.body = { ...req.body,  profileImage: result.media.url,  profileImageId: String(result.media._id), };
-      }
-      next();
-    })().catch(next);
+const attachProfileImageUrl = (
+  req: import("express").Request,
+  _res: import("express").Response,
+  next: import("express").NextFunction
+) => {
+  void (async () => {
+    if (req.file) {
+      const authenticatedRequest = req as import("express").Request & {
+        user?: { _id: string; name?: string };
+      };
+      const userName = (authenticatedRequest.user?.name || req.body?.name || "Staff Member").trim();
+      const result = await registerUploadedMedia(req.file, authenticatedRequest.user?._id || null, {
+        tag: "PROFILE",
+        folder: "PROFILE",
+        tags: ["PROFILE", "STAFF", "AVATAR"],
+        title: `Profile Photo - ${userName}`,
+        caption: `User / Staff Profile Photo for ${userName}`,
+      });
+      req.body = {
+        ...req.body,
+        profileImage: result.media.url,
+        profileImageId: String(result.media._id),
+      };
+    }
+    next();
+  })().catch(next);
 };
 
 const attachCategoryImageUrl = (
@@ -80,7 +100,12 @@ const attachCategoryImageUrl = (
       const authenticatedRequest = req as import("express").Request & {
         user?: { _id: string };
       };
-      const result = await registerUploadedMedia(req.file, authenticatedRequest.user?._id || null);
+      const result = await registerUploadedMedia(req.file, authenticatedRequest.user?._id || null, {
+        tag: "CATEGORY",
+        folder: "CATEGORY",
+        tags: ["CATEGORY", "THERAPEUTIC"],
+        title: req.body?.name ? `Category - ${req.body.name}` : undefined,
+      });
       req.body = {
         ...req.body,
         image: result.media.url,

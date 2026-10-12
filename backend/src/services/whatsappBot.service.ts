@@ -27,6 +27,11 @@ class WhatsAppBotService {
   }
 
   public async initWhatsAppBot(): Promise<void> {
+    if (process.env.ENABLE_WHATSAPP_BOT !== "true") {
+      this.status = "DISCONNECTED";
+      return;
+    }
+
     if (this.isInitializing || this.status === "CONNECTED") {
       return;
     }

@@ -31,16 +31,30 @@ const requireRoles = (...roles: string[]) => {
 const requireAdminAccess = requireRoles(...allowedStaffRoles);
 const requireSuperAdmin = requireRoles(USER_ROLES.SUPER_ADMIN);
 
-const requirePermissions = (...permissions: Permission[]) => {
-  return ( req: IAuthenticatedRequest,  res: import("express").Response, next: import("express").NextFunction
+const requirePermissions = (...permissions: (Permission | string)[]) => {
+  return (
+    req: IAuthenticatedRequest,
+    res: import("express").Response,
+    next: import("express").NextFunction
   ): void => {
     if (!req.user) {
       res.status(HTTP_STATUS.UNAUTHORIZED).json({ success: false, message: MESSAGES.AUTHENTICATION_REQUIRED });
-      return;}
-    if (req.user.role === USER_ROLES.SUPER_ADMIN) {  next(); return;}
+      return;
+    }
+    if (req.user.role === USER_ROLES.SUPER_ADMIN) {
+      next();
+      return;
+    }
 
     const grantedPermissions = req.user.permissions || [];
-    const hasAllPermissions = permissions.every((permission) => grantedPermissions.includes(permission));
+    if (grantedPermissions.includes("*")) {
+      next();
+      return;
+    }
+
+    const hasAllPermissions = permissions.every((permission) =>
+      grantedPermissions.includes(permission as Permission)
+    );
     if (!hasAllPermissions) {
       res.status(HTTP_STATUS.FORBIDDEN).json({ success: false, message: MESSAGES.FORBIDDEN });
       return;
@@ -49,4 +63,42 @@ const requirePermissions = (...permissions: Permission[]) => {
   };
 };
 
-export { requireRoles, requireAdminAccess, requireSuperAdmin, requirePermissions,};
+const requireAnyPermission = (...permissions: (Permission | string)[]) => {
+  return (
+    req: IAuthenticatedRequest,
+    res: import("express").Response,
+    next: import("express").NextFunction
+  ): void => {
+    if (!req.user) {
+      res.status(HTTP_STATUS.UNAUTHORIZED).json({ success: false, message: MESSAGES.AUTHENTICATION_REQUIRED });
+      return;
+    }
+    if (req.user.role === USER_ROLES.SUPER_ADMIN) {
+      next();
+      return;
+    }
+
+    const grantedPermissions = req.user.permissions || [];
+    if (grantedPermissions.includes("*")) {
+      next();
+      return;
+    }
+
+    const hasAnyPermission = permissions.some((permission) =>
+      grantedPermissions.includes(permission as Permission)
+    );
+    if (!hasAnyPermission) {
+      res.status(HTTP_STATUS.FORBIDDEN).json({ success: false, message: MESSAGES.FORBIDDEN });
+      return;
+    }
+    next();
+  };
+};
+
+export {
+  requireRoles,
+  requireAdminAccess,
+  requireSuperAdmin,
+  requirePermissions,
+  requireAnyPermission,
+};

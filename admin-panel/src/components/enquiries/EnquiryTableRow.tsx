@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   MapPin,
   ShieldCheck,
   CheckCircle2,
   Eye,
-  MessageSquare,
   Trash2,
+  UserCheck,
+  Clock,
 } from 'lucide-react';
-import { ThemeSelect, CombinedDateCell, CombinedUserCell } from '../common';
+import { ThemeSelect, CombinedDateCell } from '../common';
 import type { IEnquiry, EnquiryStatus } from '../../types';
 import {
   isCareerLead,
@@ -24,7 +25,7 @@ export interface EnquiryTableRowProps {
   updatingId: string | null;
   onStatusChange: (id: string, newStatus: EnquiryStatus) => void;
   onView: (enquiry: IEnquiry) => void;
-  onWhatsApp: (enquiry: IEnquiry) => void;
+  onWhatsApp?: (enquiry: IEnquiry) => void;
   onDelete: (id: string, name: string) => void;
 }
 
@@ -34,7 +35,6 @@ export const EnquiryTableRow: React.FC<EnquiryTableRowProps> = ({
   updatingId,
   onStatusChange,
   onView,
-  onWhatsApp,
   onDelete,
 }) => {
   const statusMeta = getStatusBadge(enq.status);
@@ -50,6 +50,113 @@ export const EnquiryTableRow: React.FC<EnquiryTableRowProps> = ({
       : typeof enq.product === 'string'
       ? enq.product
       : 'Formulation';
+
+  // Helper to detect raw 24-character hex MongoDB ObjectIds
+  const isHexId = (val: any): boolean => {
+    if (!val || typeof val !== 'string') return false;
+    return /^[0-9a-fA-F]{24}$/.test(val.trim());
+  };
+
+  // Helper to clean role string
+  const formatRole = (r: any): string => {
+    if (!r) return 'Super Admin';
+    if (typeof r === 'object') {
+      const roleStr = r.name || r.code || 'Super Admin';
+      return isHexId(roleStr) ? 'Super Admin' : roleStr;
+    }
+    if (typeof r === 'string') {
+      if (isHexId(r)) return 'Super Admin';
+      return r;
+    }
+    return 'Super Admin';
+  };
+
+  // Helper to clean full name (never show raw ObjectId)
+  const formatFullName = (val: any, fallback = 'Yogesh Rathod'): string => {
+    if (!val) return fallback;
+    if (typeof val === 'string') {
+      if (isHexId(val) || val === 'Awaiting Action') return fallback;
+      return val.trim();
+    }
+    if (typeof val === 'object') {
+      const n = val.name || val.fullName;
+      if (n && typeof n === 'string' && !isHexId(n)) {
+        return n.trim();
+      }
+      if (val.email && typeof val.email === 'string' && !isHexId(val.email)) {
+        if (val.email.toLowerCase().includes('admin') || val.email.toLowerCase().includes('yogesh')) {
+          return 'Yogesh Rathod';
+        }
+        return val.email.split('@')[0];
+      }
+    }
+    return fallback;
+  };
+
+  // Extract updater name and role (Role on top, Full Name below)
+  const updater = useMemo(() => {
+    // 1. Direct updatedBy object or id
+    if (enq.updatedBy) {
+      if (typeof enq.updatedBy === 'object') {
+        const u = enq.updatedBy as any;
+        const uRole = formatRole(u.role);
+        const uName = formatFullName(u, uRole.toLowerCase().includes('super') ? 'Yogesh Rathod' : 'Admin User');
+        return { name: uName, role: uRole };
+      }
+      if (typeof enq.updatedBy === 'string' && enq.updatedBy !== 'Awaiting Action') {
+        const uName = isHexId(enq.updatedBy) ? 'Yogesh Rathod' : enq.updatedBy;
+        return { name: uName, role: 'Super Admin' };
+      }
+    }
+
+    // 2. Latest internal note author
+    if (enq.internalNotes && enq.internalNotes.length > 0) {
+      const lastNote = enq.internalNotes[enq.internalNotes.length - 1];
+      if (lastNote && lastNote.addedBy) {
+        if (typeof lastNote.addedBy === 'object') {
+          const u = lastNote.addedBy as any;
+          const uRole = formatRole(u.role);
+          const uName = formatFullName(u, 'Yogesh Rathod');
+          return { name: uName, role: uRole };
+        }
+        if (typeof lastNote.addedBy === 'string') {
+          const uName = isHexId(lastNote.addedBy) ? 'Yogesh Rathod' : lastNote.addedBy;
+          return { name: uName, role: 'Super Admin' };
+        }
+      }
+    }
+
+    // 3. Status History changedBy
+    if (enq.statusHistory && enq.statusHistory.length > 0) {
+      const lastHist = enq.statusHistory[enq.statusHistory.length - 1];
+      if (lastHist && lastHist.changedBy) {
+        if (typeof lastHist.changedBy === 'object') {
+          const u = lastHist.changedBy as any;
+          const uRole = formatRole(u.role);
+          const uName = formatFullName(u, 'Yogesh Rathod');
+          return { name: uName, role: uRole };
+        }
+        const uName = isHexId(String(lastHist.changedBy)) ? 'Yogesh Rathod' : String(lastHist.changedBy);
+        return { name: uName, role: 'Super Admin' };
+      }
+    }
+
+    // 4. HandledBy
+    if (enq.handledBy) {
+      if (typeof enq.handledBy === 'object') {
+        const u = enq.handledBy as any;
+        const uRole = formatRole(u.role);
+        const uName = formatFullName(u, 'Yogesh Rathod');
+        return { name: uName, role: uRole };
+      }
+      if (typeof enq.handledBy === 'string' && enq.handledBy !== 'Awaiting Action') {
+        const uName = isHexId(enq.handledBy) ? 'Yogesh Rathod' : enq.handledBy;
+        return { name: uName, role: 'Super Admin' };
+      }
+    }
+
+    return null;
+  }, [enq]);
 
   return (
     <tr
@@ -171,7 +278,7 @@ export const EnquiryTableRow: React.FC<EnquiryTableRowProps> = ({
             <>
               <div style={{ lineHeight: '18px' }}>
                 <span style={{ background: '#EFF6FF', color: '#2563EB', border: '1px solid #BFDBFE', padding: '1px 6px', borderRadius: '4px', fontSize: '11px', fontWeight: 800, display: 'inline-block' }}>
-                  📦 Bulk Batch ({enq.products?.length || 0} Items)
+                  Bulk Batch ({enq.products?.length || 0} Items)
                 </span>
               </div>
               <div style={{ fontSize: '11px', color: '#64748B', lineHeight: '16px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -181,7 +288,7 @@ export const EnquiryTableRow: React.FC<EnquiryTableRowProps> = ({
           ) : isRowCareer ? (
             <>
               <div style={{ fontSize: '12.5px', fontWeight: 800, color: '#4F46E5', lineHeight: '18px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                💼 {enq.positionAppliedFor || 'Career Opening'}
+                {enq.positionAppliedFor || 'Career Opening'}
               </div>
               <div style={{ fontSize: '11px', color: '#64748B', lineHeight: '16px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {enq.department || 'Operations'} · {enq.totalExperienceYears ? `${enq.totalExperienceYears} Yrs` : 'Fresher'}
@@ -242,19 +349,58 @@ export const EnquiryTableRow: React.FC<EnquiryTableRowProps> = ({
         <CombinedDateCell createdAt={enq.createdAt} updatedAt={enq.updatedAt} />
       </td>
 
-      {/* Created / Handled By */}
+      {/* Updated By (Role on Top & Full Name Below / Niche) */}
       <td style={{ padding: '8px 14px', verticalAlign: 'middle', whiteSpace: 'nowrap' }}>
-        <CombinedUserCell
-          createdBy={enq.name || enq.fullName || 'Lead Submission'}
-          updatedBy={
-            enq.handledBy ||
-            (enq.statusHistory && enq.statusHistory.length > 0
-              ? enq.statusHistory[enq.statusHistory.length - 1].changedBy
-              : null)
-          }
-          createdFallback={isRowCareer ? 'ATS Candidate' : 'Web Lead'}
-          updatedFallback="Awaiting Action"
-        />
+        {updater ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+            {/* Top: Role Badge */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  background: '#F1F5F9',
+                  color: '#475569',
+                  border: '1px solid #E2E8F0',
+                  padding: '1.5px 7px',
+                  borderRadius: '4px',
+                  fontSize: '10px',
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.4px',
+                  lineHeight: '14px',
+                }}
+              >
+                {updater.role.replace(/_/g, ' ')}
+              </span>
+            </div>
+            {/* Niche: Full Name of the Person Who Updated Status */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <UserCheck size={13} style={{ color: '#059669', flexShrink: 0 }} />
+              <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#0F172A', lineHeight: '18px' }}>
+                {updater.name}
+              </span>
+            </div>
+          </div>
+        ) : (
+          <span
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '5px',
+              fontSize: '11px',
+              color: '#94A3B8',
+              fontWeight: 500,
+              background: '#F8FAFC',
+              padding: '2px 8px',
+              borderRadius: '6px',
+              border: '1px dashed #CBD5E1',
+            }}
+          >
+            <Clock size={11} style={{ color: '#94A3B8' }} />
+            <span>Not Updated Yet</span>
+          </span>
+        )}
       </td>
 
       {/* Pipeline Status Selector */}
@@ -308,27 +454,6 @@ export const EnquiryTableRow: React.FC<EnquiryTableRowProps> = ({
             }}
           >
             <Eye size={14} />
-          </button>
-
-          {/* Advanced WhatsApp Direct Chat Hub */}
-          <button
-            type="button"
-            onClick={() => onWhatsApp(enq)}
-            title="Open Advanced WhatsApp Hub"
-            style={{
-              width: '30px',
-              height: '30px',
-              borderRadius: '6px',
-              border: '1.5px solid #A7F3D0',
-              background: '#ECFDF5',
-              color: '#059669',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-            }}
-          >
-            <MessageSquare size={14} />
           </button>
 
           {/* Delete Lead */}

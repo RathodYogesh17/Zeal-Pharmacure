@@ -13,7 +13,6 @@ import { contentRouter } from "./content.route";
 import { dashboardRouter } from "./dashboard.route";
 import { settingsRouter } from "./settings.route";
 import { auditLogRouter } from "./auditLog.route";
-import { whatsappBotRouter } from "./whatsappBot.route";
 
 const router = Router();
 
@@ -34,6 +33,5 @@ router.use("/content", contentRouter);
 router.use("/dashboard", dashboardRouter);
 router.use("/settings", settingsRouter);
 router.use("/audit-logs", auditLogRouter);
-router.use("/whatsapp-bot", whatsappBotRouter);
 
 export default router;

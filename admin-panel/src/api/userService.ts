@@ -20,8 +20,13 @@ export const userService = {
       if (params.limit) query.append('limit', String(params.limit || 50));
 
       const qs = query.toString();
-      const res = await request<{ users: IStaffUser[]; total: number }>(`/users${qs ? `?${qs}` : ''}`);
-      return res.data;
+      const res = await request<{ users: any[]; total: number }>(`/users${qs ? `?${qs}` : ''}`);
+      const rawUsers = res.data?.users || [];
+      const normalizedUsers: IStaffUser[] = rawUsers.map((u: any) => ({
+        ...u,
+        role: typeof u.role === 'object' && u.role !== null ? (u.role.name || u.role.code || 'USER') : String(u.role || 'USER'),
+      }));
+      return { users: normalizedUsers, total: res.data?.total ?? normalizedUsers.length };
     } catch {
       return { users: [], total: 0 };
     }

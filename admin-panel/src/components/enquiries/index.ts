@@ -3,4 +3,5 @@ export * from './EnquiryStatsCards';
 export * from './EnquiryCategoryTabs';
 export * from './EnquiryFilterToolbar';
 export * from './EnquiryTableRow';
+export * from './StatusChangeConfirmModal';
 export * from './enquiryUtils';

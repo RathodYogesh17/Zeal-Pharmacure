@@ -11,8 +11,9 @@ import type { IProduct } from '../../types';
 import { useAuth } from '../../context/AuthContext';
 import { useEnquiryAuth } from '../../context/EnquiryAuthContext';
 import { enquiryService } from '../../api/enquiryService';
-import { FormAlert, SuccessStateView } from '../common';
+import { FormAlert, SuccessStateView, ThemedSelect } from '../common';
 import { VerifiedUserBadge } from '../common/VerifiedUserBadge';
+import { getMediaUrl } from '../../utils/mediaUtils';
 import { B2BCustomerFields } from '../common/forms';
 import { buildProductWhatsAppMessage } from '../../utils/whatsappMessageBuilder';
 
@@ -21,13 +22,14 @@ interface SingleProductEnquiryModalProps {
   onClose: () => void;
 }
 
-const QUANTITY_PRESETS = ['50 Boxes', '100 Boxes', '250 Boxes', '500 Boxes', '1000+ Boxes'];
-
 export const SingleProductEnquiryModal: React.FC<SingleProductEnquiryModalProps> = ({
   product,
   onClose,
 }) => {
   const { user } = useAuth();
+
+  const [quantityCount, setQuantityCount] = useState<number | string>(100);
+  const [selectedUnit, setSelectedUnit] = useState<string>('Boxes');
 
   const [formData, setFormData] = useState({
     name: user?.name || '',
@@ -113,6 +115,7 @@ export const SingleProductEnquiryModal: React.FC<SingleProductEnquiryModalProps>
         genericName: product.genericName,
         dosageForm: product.dosageForm,
         packaging: product.packaging,
+        mrp: product.mrp,
         fullName: formData.name || user?.name || '',
         phone: formData.phone || user?.phone || '',
         email: formData.email || user?.email || '',
@@ -121,6 +124,7 @@ export const SingleProductEnquiryModal: React.FC<SingleProductEnquiryModalProps>
         state: formData.state,
         quantity: formData.quantity,
         drugLicenseNumber: formData.drugLicenseNumber,
+        gstNumber: formData.gstNumber,
         message: formData.message,
         authUser: user ? { name: user.name, phone: user.phone || formData.phone, email: user.email } : undefined,
       });
@@ -168,7 +172,7 @@ export const SingleProductEnquiryModal: React.FC<SingleProductEnquiryModalProps>
             >
               {product.featuredImage ? (
                 <img
-                  src={product.featuredImage}
+                  src={getMediaUrl(product.featuredImage)}
                   alt={product.name}
                   style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '4px' }}
                 />
@@ -269,37 +273,79 @@ export const SingleProductEnquiryModal: React.FC<SingleProductEnquiryModalProps>
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <FormAlert type="error" message={errorMsg} onClose={() => setErrorMsg('')} />
 
-            {/* Quantity Selector */}
+            {/* Quantity & Unit Selector */}
             <div>
               <label className="zp-label" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                 <Package size={13} color="#6828DC" />
-                <span>ESTIMATED QUANTITY REQUIREMENT</span>
+                <span>ESTIMATED QUANTITY & PACK TYPE</span>
               </label>
-              <input
-                type="text"
-                placeholder="e.g. 100 Boxes / 500 Strips"
-                value={formData.quantity}
-                onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
-                className="zp-input"
-              />
-              <div style={{ display: 'flex', gap: '6px', marginTop: '6px', flexWrap: 'wrap' }}>
-                {QUANTITY_PRESETS.map((qty) => (
+
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <input
+                  type="number"
+                  min="1"
+                  placeholder="e.g. 100"
+                  value={quantityCount}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setQuantityCount(val);
+                    setFormData((prev) => ({ ...prev, quantity: val ? `${val} ${selectedUnit}` : '' }));
+                  }}
+                  className="zp-input"
+                  style={{ flex: '1 1 120px', fontWeight: 700 }}
+                />
+
+                <div style={{ flex: '1 1 200px' }}>
+                  <ThemedSelect
+                    value={selectedUnit}
+                    onChange={(u) => {
+                      setSelectedUnit(u);
+                      setFormData((prev) => ({ ...prev, quantity: quantityCount ? `${quantityCount} ${u}` : u }));
+                    }}
+                    options={[
+                      { value: 'Boxes', label: 'Boxes' },
+                      { value: 'Strips', label: 'Strips' },
+                      { value: 'Bottles / Syrup', label: 'Bottles / Syrup' },
+                      { value: 'Tablets / Capsules', label: 'Tablets / Capsules' },
+                      { value: 'Vials / Injections', label: 'Vials / Injections' },
+                      { value: 'Tubes', label: 'Tubes (Ointment/Gel)' },
+                      { value: 'Cartons', label: 'Cartons' },
+                    ]}
+                    buttonStyle={{
+                      padding: '10px 14px',
+                      borderRadius: '10px',
+                      background: '#FAF5FF',
+                      border: '1.5px solid #DDD6FE',
+                      color: '#6828DC',
+                      fontWeight: 700,
+                      fontSize: '13px',
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '6px', marginTop: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+                <span style={{ fontSize: '11px', color: '#64748B', fontWeight: 600 }}>Quick Select:</span>
+                {[50, 100, 200, 500, 1000].map((num) => (
                   <button
-                    key={qty}
+                    key={num}
                     type="button"
-                    onClick={() => setFormData({ ...formData, quantity: qty })}
+                    onClick={() => {
+                      setQuantityCount(num);
+                      setFormData((prev) => ({ ...prev, quantity: `${num} ${selectedUnit}` }));
+                    }}
                     style={{
-                      background: formData.quantity === qty ? '#EDE9FE' : '#F8FAFC',
-                      color: formData.quantity === qty ? '#6828DC' : '#64748B',
-                      border: formData.quantity === qty ? '1px solid #6828DC' : '1px solid #E2E8F0',
-                      padding: '3px 8px',
+                      background: String(quantityCount) === String(num) ? '#EDE9FE' : '#F8FAFC',
+                      color: String(quantityCount) === String(num) ? '#6828DC' : '#64748B',
+                      border: String(quantityCount) === String(num) ? '1px solid #6828DC' : '1px solid #E2E8F0',
+                      padding: '3px 10px',
                       borderRadius: '6px',
                       fontSize: '11px',
-                      fontWeight: 600,
+                      fontWeight: 700,
                       cursor: 'pointer',
                     }}
                   >
-                    {qty}
+                    {num} {selectedUnit}
                   </button>
                 ))}
               </div>

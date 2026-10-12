@@ -12,6 +12,13 @@ export * from './ui/Modal';
 export * from './ui/DataTable';
 export * from './ui/PermissionGuard';
 export * from './ui/MediaGalleryModal';
+export * from './ui/PageHeader';
+export * from './ui/StatCard';
+export * from './ui/TabBar';
+export * from './ui/SearchFilterBar';
+export * from './ui/ConfirmModal';
+export * from './ui/GalleryImagePicker';
+
 export * from './ThemeQuillEditor';
 export * from './tableTheme';
 export * from './whatsapp';

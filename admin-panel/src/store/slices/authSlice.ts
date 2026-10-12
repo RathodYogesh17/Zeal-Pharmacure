@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createSelector } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../index';
 
@@ -33,9 +33,8 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<string, string[]> = {
   ],
   SALES_MANAGER: [
     'dashboard:view',
-    'product:view', 'category:view',
-    'product_enquiry:view', 'product_enquiry:update', 'product_enquiry:assign',
-    'sales_enquiry:view', 'sales_enquiry:update', 'sales_enquiry:assign'
+    'product:view', 'product:create', 'product:update',
+    'category:view',
   ],
   CONTENT_MANAGER: [
     'dashboard:view',
@@ -82,11 +81,22 @@ if (!initialUser) {
   };
 }
 
+const storedRolePermsStr = localStorage.getItem('zeal_role_permissions');
+let initialRolePermissions = { ...DEFAULT_ROLE_PERMISSIONS };
+if (storedRolePermsStr) {
+  try {
+    const parsed = JSON.parse(storedRolePermsStr);
+    initialRolePermissions = { ...DEFAULT_ROLE_PERMISSIONS, ...parsed };
+  } catch {
+    // fallback
+  }
+}
+
 const initialState: AuthState = {
   user: initialUser,
   token: storedToken,
   simulatedRole: null,
-  customRolePermissions: { ...DEFAULT_ROLE_PERMISSIONS },
+  customRolePermissions: initialRolePermissions,
   userPermissionOverrides: {},
 };
 
@@ -119,6 +129,11 @@ export const authSlice = createSlice({
       action: PayloadAction<{ role: string; permissions: string[] }>
     ) => {
       state.customRolePermissions[action.payload.role] = action.payload.permissions;
+      try {
+        localStorage.setItem('zeal_role_permissions', JSON.stringify(state.customRolePermissions));
+      } catch {
+        // storage fallback
+      }
     },
     updateUserPermissions: (
       state,
@@ -158,23 +173,52 @@ export const selectCurrentRole = (state: RootState): string => {
   return str.toUpperCase();
 };
 
-export const selectEffectivePermissions = (state: RootState): string[] => {
-  const activeRole = selectCurrentRole(state);
-  if (activeRole === 'SUPER_ADMIN' || activeRole === 'ADMIN') {
-    return ['*'];
-  }
+const ALL_PERMISSIONS: string[] = ['*'];
+const EMPTY_PERMISSIONS: string[] = [];
 
-  const userId = state.auth.user?._id;
-  if (userId && state.auth.userPermissionOverrides[userId]) {
-    return state.auth.userPermissionOverrides[userId];
-  }
+export const selectEffectivePermissions = createSelector(
+  [
+    (state: RootState): string => selectCurrentRole(state),
+    (state: RootState): string | null => state.auth.simulatedRole,
+    (state: RootState): Record<string, string[]> => state.auth.customRolePermissions,
+    (state: RootState): string | undefined => state.auth.user?._id,
+    (state: RootState): Record<string, string[]> => state.auth.userPermissionOverrides,
+    (state: RootState): string[] | undefined => state.auth.user?.permissions,
+  ],
+  (
+    activeRole: string,
+    simulatedRole: string | null,
+    customRolePermissions: Record<string, string[]>,
+    userId: string | undefined,
+    userPermissionOverrides: Record<string, string[]>,
+    userPermissions: string[] | undefined
+  ): string[] => {
+    if (activeRole === 'SUPER_ADMIN') {
+      return ALL_PERMISSIONS;
+    }
 
-  if (state.auth.customRolePermissions[activeRole]) {
-    return state.auth.customRolePermissions[activeRole];
-  }
+    if (simulatedRole) {
+      if (customRolePermissions[simulatedRole]) {
+        return customRolePermissions[simulatedRole];
+      }
+      return DEFAULT_ROLE_PERMISSIONS[simulatedRole] || EMPTY_PERMISSIONS;
+    }
 
-  return DEFAULT_ROLE_PERMISSIONS[activeRole] || ['*'];
-};
+    if (userId && userPermissionOverrides[userId]) {
+      return userPermissionOverrides[userId];
+    }
+
+    if (userPermissions && Array.isArray(userPermissions) && userPermissions.length > 0) {
+      return userPermissions;
+    }
+
+    if (customRolePermissions[activeRole]) {
+      return customRolePermissions[activeRole];
+    }
+
+    return DEFAULT_ROLE_PERMISSIONS[activeRole] || EMPTY_PERMISSIONS;
+  }
+);
 
 export const selectHasPermission = (permissionKey: string) => (state: RootState): boolean => {
   const permissions = selectEffectivePermissions(state);

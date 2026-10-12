@@ -27,6 +27,7 @@ import {
   Building2,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { galleryService } from '../api/galleryService';
 import { CustomRoleDropdown } from '../components/common/CustomRoleDropdown';
 import { useAppDispatch, useAppSelector } from '../store';
 import {
@@ -41,10 +42,19 @@ import {
 } from '../store/slices/authSlice';
 
 export const AdminLayout: React.FC = () => {
-  const { user: authContextUser, logout, isAuthenticated } = useAuth();
+  const { user: authContextUser, logout, isAuthenticated, isAuthReady } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
+  const [avatarImgError, setAvatarImgError] = useState(false);
+  const userAvatarUrl = authContextUser?.profileImage
+    ? galleryService.formatUrl(authContextUser.profileImage)
+    : null;
+
+  React.useEffect(() => {
+    setAvatarImgError(false);
+  }, [authContextUser?.profileImage]);
 
   const isSidebarCollapsed = useAppSelector((state) => state.ui.isSidebarCollapsed);
   const isMobileSidebarOpen = useAppSelector((state) => state.ui.isMobileSidebarOpen);
@@ -56,17 +66,17 @@ export const AdminLayout: React.FC = () => {
   );
 
   React.useEffect(() => {
-    if (!isAuthenticated) {
-      navigate('/admin/login');
+    if (isAuthReady && !isAuthenticated) {
+      navigate('/admin/login', { replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthReady, isAuthenticated, navigate]);
 
   // Close mobile sidebar on route change
   React.useEffect(() => {
     dispatch(setMobileSidebarOpen(false));
   }, [location.pathname, dispatch]);
 
-  if (!isAuthenticated) return null;
+  if (!isAuthReady || !isAuthenticated) return null;
 
   const isCurrent = (path: string, exact = false) => {
     if (exact) return location.pathname === path;
@@ -79,8 +89,9 @@ export const AdminLayout: React.FC = () => {
   };
 
   const hasPerm = (perm: string | string[]) => {
-    if (!effectivePermissions || effectivePermissions.length === 0 || effectivePermissions.includes('*')) return true;
-    if (activeRole === 'SUPER_ADMIN' || activeRole === 'ADMIN') return true;
+    if (activeRole === 'SUPER_ADMIN') return true;
+    if (!effectivePermissions || effectivePermissions.length === 0) return false;
+    if (effectivePermissions.includes('*')) return true;
     if (Array.isArray(perm)) {
       return perm.some((p) => effectivePermissions.includes(p));
     }
@@ -352,9 +363,9 @@ export const AdminLayout: React.FC = () => {
 
             {/* Standard Navigation Links */}
             {[
-              { to: '/admin/enquiries', title: 'All Inquiries Pipeline', label: 'All Leads Pipeline', icon: Layers, perm: ['product_enquiry:view', 'sales_enquiry:view', 'franchise_enquiry:view', 'enquiry:view'] },
-              { to: '/admin/product-enquiries', title: 'Product Formulation Enquiries', label: 'Product Enquiries', icon: Pill, perm: ['product_enquiry:view', 'sales_enquiry:view', 'enquiry:view'] },
-              { to: '/admin/stockist-enquiries', title: 'Stockist Distribution Enquiries', label: 'Stockist Enquiries', icon: Building2, perm: ['franchise:view', 'franchise_enquiry:view', 'sales_enquiry:view', 'enquiry:view'] },
+              { to: '/admin/enquiries', title: 'All Inquiries Pipeline', label: 'All Leads Pipeline', icon: Layers, perm: ['product_enquiry:view', 'stockist_enquiry:view', 'sales_enquiry:view'] },
+              { to: '/admin/product-enquiries', title: 'Product Formulation Enquiries', label: 'Product Enquiries', icon: Pill, perm: 'product_enquiry:view' },
+              { to: '/admin/stockist-enquiries', title: 'Stockist Distribution Enquiries', label: 'Stockist Enquiries', icon: Building2, perm: ['stockist_enquiry:view', 'sales_enquiry:view', 'franchise_enquiry:view'] },
               { to: '/admin/career-enquiries', title: 'Career Applications & ATS', label: 'Career Enquiries', icon: Briefcase, perm: ['job:view', 'application:view', 'career:view', 'hr:view'] },
               { to: '/admin/gallery', title: 'Media Gallery & Assets', label: 'Gallery', icon: GalleryIcon, perm: ['gallery:view', 'media:view'] },
               { to: '/admin/cms', title: 'Website Content', label: 'Website Content', icon: Palette, perm: 'cms:view' },
@@ -470,7 +481,30 @@ export const AdminLayout: React.FC = () => {
                 flexShrink: 0,
               }}
             >
-              <img src="/images/zeal-logo.png" alt="User" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+              {userAvatarUrl && !avatarImgError ? (
+                <img
+                  src={userAvatarUrl}
+                  alt={authContextUser?.name || 'User'}
+                  onError={() => setAvatarImgError(true)}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              ) : (
+                <div
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    background: 'linear-gradient(135deg, #6828DC 0%, #4F46E5 100%)',
+                    color: '#FFFFFF',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: 800,
+                    fontSize: '14px',
+                  }}
+                >
+                  {(authContextUser?.name || 'U').charAt(0).toUpperCase()}
+                </div>
+              )}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', minWidth: 0 }}>
               <span style={{ fontSize: '13px', fontWeight: 800, color: '#0F172A', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -494,7 +528,7 @@ export const AdminLayout: React.FC = () => {
                 }}
               >
                 <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#10B981' }} />
-                {activeRole || 'SUPER_ADMIN'}
+                {typeof activeRole === 'object' && activeRole ? ((activeRole as any).name || (activeRole as any).code || 'SUPER_ADMIN') : (activeRole || 'SUPER_ADMIN')}
               </span>
             </div>
           </div>
@@ -636,7 +670,11 @@ export const AdminLayout: React.FC = () => {
             </div>
 
             {/* Profile Avatar & Info Stack */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '9px', flexShrink: 0 }}>
+            <Link
+              to="/admin/settings"
+              title="Go to Account Profile & Settings"
+              style={{ display: 'flex', alignItems: 'center', gap: '9px', flexShrink: 0, textDecoration: 'none', cursor: 'pointer' }}
+            >
               <div
                 className="header-avatar-circle"
                 style={{
@@ -652,13 +690,31 @@ export const AdminLayout: React.FC = () => {
                   flexShrink: 0,
                   boxShadow: '0 1px 4px rgba(104, 40, 220, 0.12)',
                 }}
-                title={authContextUser?.name || 'Super Admin'}
               >
-                <img
-                  src="/images/zeal-logo.png"
-                  alt="Zeal User Avatar"
-                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                />
+                {userAvatarUrl && !avatarImgError ? (
+                  <img
+                    src={userAvatarUrl}
+                    alt={authContextUser?.name || 'User'}
+                    onError={() => setAvatarImgError(true)}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                ) : (
+                  <div
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      background: 'linear-gradient(135deg, #6828DC 0%, #4F46E5 100%)',
+                      color: '#FFFFFF',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: 800,
+                      fontSize: '14px',
+                    }}
+                  >
+                    {(authContextUser?.name || 'U').charAt(0).toUpperCase()}
+                  </div>
+                )}
               </div>
 
               {/* User Name on top, Role Pill directly underneath */}
@@ -712,10 +768,10 @@ export const AdminLayout: React.FC = () => {
                       display: 'inline-block',
                     }}
                   />
-                  {activeRole || 'SUPER_ADMIN'}
+                  {typeof activeRole === 'object' && activeRole ? ((activeRole as any).name || (activeRole as any).code || 'SUPER_ADMIN') : (activeRole || 'SUPER_ADMIN')}
                 </span>
               </div>
-            </div>
+            </Link>
           </div>
         </header>
 

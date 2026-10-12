@@ -11,6 +11,8 @@ import {
   Truck,
   Share2,
   FileText,
+  IndianRupee,
+  Tag,
 } from 'lucide-react';
 import type { IProduct } from '../../types';
 import { RatingStars } from '../common/RatingStars';
@@ -50,6 +52,8 @@ export const ProductDetailInfo: React.FC<ProductDetailInfoProps> = ({
         genericName: product.genericName,
         dosageForm: product.dosageForm,
         packaging: product.packaging,
+        mrp: product.mrp,
+        quantity: selectedVolume,
         authUser: user ? {
           name: user.name,
           phone: user.phone,
@@ -165,6 +169,23 @@ export const ProductDetailInfo: React.FC<ProductDetailInfoProps> = ({
           ● In Ready Stock for Distribution
         </span>
       </div>
+
+      {/* MRP Price Box — shown only when MRP is set (compact box on one side) */}
+      {product.mrp !== undefined && product.mrp !== null && (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+          <div className="zp-mrp-detail-box">
+            <div className="zp-mrp-detail-label">
+              <Tag size={13} />
+              <span>MRP</span>
+            </div>
+            <div className="zp-mrp-detail-price">
+              <IndianRupee size={20} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '2px', strokeWidth: 2.5 }} />
+              {product.mrp.toLocaleString('en-IN')}
+            </div>
+            <span className="zp-mrp-detail-note">Incl. all taxes</span>
+          </div>
+        </div>
+      )}
 
       {/* 3. Key Bullet Highlights (as seen in photo) */}
       <div

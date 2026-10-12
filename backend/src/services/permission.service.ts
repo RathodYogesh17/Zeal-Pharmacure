@@ -17,8 +17,14 @@ const getEffectivePermissions = async (user: PermissionUser): Promise<Set<string
     return new Set(Object.values(PERMISSIONS));
   }
 
-  const configuredRole = ROLE_PERMISSIONS[user.role];
-  const role = await Role.findOne({ name: user.role, isActive: true }).lean();
+  const configuredRole = ROLE_PERMISSIONS[user.role] || [];
+  const role = await Role.findOne({
+    $or: [
+      { name: new RegExp(`^${user.role}$`, "i") },
+      { code: new RegExp(`^${user.role}$`, "i") },
+    ],
+    isActive: true,
+  }).lean();
   const rolePermissionIds = role
     ? await RolePermission.find({ roleId: role._id, isActive: true }).distinct("permissionId")
     : [];

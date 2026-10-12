@@ -2,6 +2,7 @@ import React from 'react';
 import { Pill, FileText, Send, CheckSquare, Square } from 'lucide-react';
 import type { IProduct } from '../../types';
 import { RatingStars } from '../common/RatingStars';
+import { getMediaUrl } from '../../utils/mediaUtils';
 
 export interface ProductCardProps {
   product: IProduct;
@@ -72,7 +73,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         >
           {product.featuredImage ? (
             <img
-              src={product.featuredImage}
+              src={getMediaUrl(product.featuredImage)}
               alt={product.name}
             />
           ) : (
@@ -95,14 +96,23 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           )}
         </div>
 
-        {/* Product Brand Name */}
-        <h4
-          onClick={() => onViewDossier(product)}
-          className="zp-product-title"
-          title={product.name}
-        >
-          {product.name}
-        </h4>
+        {/* Product Brand Name & MRP Row */}
+        <div className="zp-product-title-row">
+          <h4
+            onClick={() => onViewDossier(product)}
+            className="zp-product-title"
+            title={product.name}
+          >
+            {product.name}
+          </h4>
+
+          {product.mrp !== undefined && product.mrp !== null && (
+            <div className="zp-card-title-mrp" title={`MRP: ₹${product.mrp.toLocaleString('en-IN')}`}>
+              <span className="zp-card-title-mrp-label">MRP</span>
+              <span className="zp-card-title-mrp-val">₹{product.mrp.toLocaleString('en-IN')}</span>
+            </div>
+          )}
+        </div>
 
         {/* Generic Molecule / Salt */}
         <p className="zp-product-generic">
@@ -119,12 +129,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           <RatingStars rating={product.averageRating} totalReviews={product.totalReviews} fallbackText="WHO-GMP Quality" />
         </div>
 
-        {/* Packaging Specification & Monopoly Ready Stock */}
+        {/* Packaging Specification & Ready Stock row */}
         <div className="zp-product-pack-row">
           <span style={{ color: '#334155', fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '65%' }}>
             {product.packaging || 'Standard Pack'}
           </span>
-          <span className="zp-badge-green" style={{ border: 'none', padding: 0, background: 'none' }}>
+          <span className="zp-badge-green" style={{ border: 'none', padding: 0, background: 'none', flexShrink: 0 }}>
             ● Ready Stock
           </span>
         </div>

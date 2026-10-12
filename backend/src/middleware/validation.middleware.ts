@@ -11,10 +11,12 @@ const validate = (schema: AnySchema) => {
   return ( req: import("express").Request, res: import("express").Response, next: import("express").NextFunction ) => {
     const result = schema.validate(req.body, { abortEarly: false, stripUnknown: true, });
     if (result.error) {
+      const errorList = result.error.details.map((detail) => detail.message);
+      console.warn(`[VALIDATION ERROR] [${req.method} ${req.originalUrl}]:`, errorList);
       return res.status(HTTP_STATUS.BAD_REQUEST).json({
         success: false,
         message: MESSAGES.VALIDATION_ERROR,
-        errors: result.error.details.map((detail) => detail.message),
+        errors: errorList,
       });
     }
     const requestWithBody = req as RequestWithValidatedBody;

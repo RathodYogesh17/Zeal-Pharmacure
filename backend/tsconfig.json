@@ -53,6 +53,7 @@
   },
    "include": [
     "src/**/*",
+    "api/**/*",
     "scripts/**/*"
   ],
    "exclude": [

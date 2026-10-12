@@ -5,6 +5,7 @@ export interface NormalizedWhatsAppRecipient {
   category: WhatsAppEnquiryCategory;
   recipientName: string;
   recipientPhone: string;
+  recipientEmail?: string;
   cleanPhone: string;
   currentStatus?: string;
   referenceTitle?: string;
@@ -130,14 +131,17 @@ export const normalizeWhatsAppRecipient = (input: any): NormalizedWhatsAppRecipi
     meetingLink: input.details?.meetingLink || entity.meetingLink,
     qualification: input.details?.qualification || entity.qualification,
     experience: input.details?.experience || entity.totalExperienceYears,
-    dosageForm: input.details?.dosageForm || entity.dosageForm,
-    packaging: input.details?.packaging || entity.packaging,
+    dosageForm: input.details?.dosageForm || entity.dosageForm || (typeof entity.product === 'object' ? entity.product?.dosageForm : undefined),
+    packaging: input.details?.packaging || entity.packaging || (typeof entity.product === 'object' ? entity.product?.packaging : undefined),
+    mrp: input.details?.mrp || (typeof entity.product === 'object' && entity.product?.mrp ? entity.product.mrp : entity.mrp),
+    quantity: input.details?.quantity || (entity.quantity ? `${entity.quantity} ${entity.quantityUnit || 'Boxes'}` : undefined),
   };
 
   return {
     category,
     recipientName,
     recipientPhone: rawPhone,
+    recipientEmail: input.recipientEmail || entity.email || 'N/A',
     cleanPhone: cleanWhatsAppPhone(rawPhone),
     currentStatus: input.currentStatus || entity.status,
     referenceTitle,

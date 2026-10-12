@@ -1,6 +1,7 @@
-﻿import React from "react";
+import React from "react";
 import { Pill, FileText, Send, CheckSquare, Square, CheckCircle2 } from "lucide-react";
 import type { IProduct } from "../../types";
+import { getMediaUrl } from "../../utils/mediaUtils";
 
 export interface ProductListItemProps {
   product: IProduct;
@@ -22,7 +23,7 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({
       <div className="zp-pli-left">
         <div className="zp-pli-img-box">
           {product.featuredImage ? (
-            <img src={product.featuredImage} alt={product.name} className="zp-pli-img" />
+            <img src={getMediaUrl(product.featuredImage)} alt={product.name} className="zp-pli-img" />
           ) : (
             <Pill size={36} className="zp-pli-pill-icon" />
           )}
