@@ -5,11 +5,11 @@ import {
   Mail,
   MapPin,
   ShieldCheck,
-  FileCheck,
   ArrowRight,
   Clock,
   Sparkles,
-  Award
+  Award,
+  CheckCircle2,
 } from 'lucide-react';
 import { useSiteSettings } from '../../context/SiteSettingsContext';
 
@@ -17,96 +17,141 @@ export const Footer: React.FC = () => {
   const { settings, openFranchiseModal } = useSiteSettings();
 
   return (
-    <footer style={{
-      background: 'linear-gradient(180deg, #1A0D33 0%, #0F0721 100%)',
-      color: '#CBD5E1',
-      paddingTop: '76px',
-      fontSize: '14px',
-      borderTop: '1px solid rgba(124, 58, 237, 0.25)',
-      position: 'relative',
-      overflow: 'hidden',
-    }}>
-      {/* Subtle background ambient mesh */}
-      <div style={{
-        position: 'absolute',
-        top: '-150px',
-        right: '-100px',
-        width: '450px',
-        height: '450px',
-        borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(104, 40, 220, 0.15) 0%, rgba(0,0,0,0) 70%)',
-        pointerEvents: 'none',
-      }} />
-      <div style={{
-        position: 'absolute',
-        bottom: '0',
-        left: '-100px',
-        width: '400px',
-        height: '400px',
-        borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(124, 58, 237, 0.1) 0%, rgba(0,0,0,0) 70%)',
-        pointerEvents: 'none',
-      }} />
+    <footer
+      style={{
+        background: 'linear-gradient(180deg, #130826 0%, #080312 100%)',
+        color: '#CBD5E1',
+        paddingTop: '68px',
+        fontSize: '14px',
+        borderTop: '1px solid rgba(139, 92, 246, 0.25)',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Top illuminated line */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: '5%',
+          right: '5%',
+          height: '1px',
+          background: 'linear-gradient(90deg, transparent, rgba(167, 139, 250, 0.7), transparent)',
+        }}
+      />
+
+      {/* Subtle ambient purple glow */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '-120px',
+          right: '-60px',
+          width: '420px',
+          height: '420px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(104, 40, 220, 0.16) 0%, rgba(0,0,0,0) 70%)',
+          pointerEvents: 'none',
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '0',
+          left: '-80px',
+          width: '380px',
+          height: '380px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, rgba(0,0,0,0) 70%)',
+          pointerEvents: 'none',
+        }}
+      />
 
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-        {/* 5-Column Executive Pharmaceutical Grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 210px), 1fr))',
-          gap: '40px',
-          paddingBottom: '56px',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-        }}>
-          {/* Column 1: Brand, Regulatory & Quality Statement */}
-          <div style={{ gridColumn: 'span 1' }}>
+        {/* 4-Column Balanced Pharma Executive Grid */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))',
+            gap: 'clamp(28px, 4vw, 44px)',
+            paddingBottom: '52px',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          }}
+        >
+          {/* Column 1: Brand Identity & Trust */}
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
             <Link
               to="/"
               style={{
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
-                gap: '12px',
+                gap: '14px',
                 textDecoration: 'none',
-                marginBottom: '16px',
+                marginBottom: '14px',
               }}
             >
-              <img
-                src={settings.logoUrl || '/images/zeal-logo.png'}
-                alt={settings.companyName || 'Zeal Pharmacure'}
+              {/* Logo Emblem Badge */}
+              <div
                 style={{
-                  width: '44px',
-                  height: '44px',
-                  borderRadius: '50%',
-                  objectFit: 'contain',
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '12px',
                   background: '#FFFFFF',
-                  padding: '2px',
-                  boxShadow: '0 4px 14px rgba(104, 40, 220, 0.4)',
+                  padding: '3px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 4px 18px rgba(104, 40, 220, 0.4)',
+                  border: '1.5px solid rgba(255, 255, 255, 0.3)',
                   flexShrink: 0,
                 }}
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = '/images/zeal-logo.png';
-                }}
-              />
-              <div>
+              >
+                <img
+                  src={settings.logoUrl || '/images/zeal-logo.png'}
+                  alt={settings.companyName || 'Zeal Pharmacure'}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                  }}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/images/zeal-logo.png';
+                  }}
+                />
+              </div>
+
+              {/* Brand Typography Lockup */}
+              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <div
                   style={{
                     fontFamily: 'var(--font-heading, "Outfit", sans-serif)',
                     fontSize: '22px',
                     fontWeight: 900,
-                    color: '#FFFFFF',
-                    letterSpacing: '-0.5px',
-                    lineHeight: 1.1,
+                    letterSpacing: '-0.3px',
+                    lineHeight: 1.15,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
                   }}
                 >
-                  <span style={{ color: '#A78BFA' }}>ZEAL</span> PHARMACURE
+                  <span
+                    style={{
+                      background: 'linear-gradient(135deg, #C4B5FD 0%, #A78BFA 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                    }}
+                  >
+                    ZEAL
+                  </span>
+                  <span style={{ color: '#FFFFFF' }}>PHARMACURE</span>
                 </div>
                 <div
                   style={{
-                    fontSize: '10.5px',
-                    fontWeight: 600,
-                    letterSpacing: '1px',
+                    fontSize: '10px',
+                    fontWeight: 700,
+                    letterSpacing: '1.2px',
                     color: '#94A3B8',
                     textTransform: 'uppercase',
-                    marginTop: '2px',
+                    marginTop: '3px',
                   }}
                 >
                   {settings.tagline || 'A Legacy of Better Healthcare'}
@@ -114,74 +159,181 @@ export const Footer: React.FC = () => {
               </div>
             </Link>
 
-            <p style={{ color: '#94A3B8', lineHeight: 1.65, marginBottom: '20px', fontSize: '13.5px' }}>
-              An ISO 9001:2015 &amp; WHO-GMP compliant pharmaceutical leader offering premium Stockists Distribution Network opportunities across India.
+            <p
+              style={{
+                color: '#94A3B8',
+                lineHeight: 1.6,
+                margin: '0 0 16px 0',
+                fontSize: '13.5px',
+                maxWidth: '380px',
+              }}
+            >
+              An ISO 9001:2015 &amp; WHO-GMP certified pharmaceutical enterprise delivering research-backed therapeutics and verified PCD franchise stockist opportunities across India.
             </p>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '9px', fontSize: '12.5px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#34D399', fontWeight: 600 }}>
-                <ShieldCheck size={16} />
-                <span>WHO-GMP &amp; cGMP Compliant Plant</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#60A5FA', fontWeight: 600 }}>
-                <Award size={16} />
-                <span>ISO 9001:2015 QMS Certified</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#DDD6FE' }}>
-                <FileCheck size={16} />
-                <span>DL No: {settings.drugLicenseNumber || '20B-123456 / 21B-123456'}</span>
-              </div>
+            {/* Quality Accreditations Badges */}
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '8px',
+                marginBottom: '18px',
+              }}
+            >
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  padding: '4px 9px',
+                  borderRadius: '6px',
+                  background: 'rgba(104, 40, 220, 0.16)',
+                  border: '1px solid rgba(139, 92, 246, 0.28)',
+                  color: '#DDD6FE',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                }}
+              >
+                <ShieldCheck size={12} style={{ color: '#A78BFA' }} />
+                <span>WHO-GMP Certified</span>
+              </span>
+
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  padding: '4px 9px',
+                  borderRadius: '6px',
+                  background: 'rgba(104, 40, 220, 0.16)',
+                  border: '1px solid rgba(139, 92, 246, 0.28)',
+                  color: '#DDD6FE',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                }}
+              >
+                <Award size={12} style={{ color: '#A78BFA' }} />
+                <span>ISO 9001:2015</span>
+              </span>
+
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  padding: '4px 9px',
+                  borderRadius: '6px',
+                  background: 'rgba(104, 40, 220, 0.16)',
+                  border: '1px solid rgba(139, 92, 246, 0.28)',
+                  color: '#DDD6FE',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                }}
+              >
+                <CheckCircle2 size={12} style={{ color: '#A78BFA' }} />
+                <span>FDCA Compliant</span>
+              </span>
+            </div>
+
+            {/* Partnership CTA Button */}
+            <div>
+              <button
+                type="button"
+                onClick={openFranchiseModal}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  background: 'linear-gradient(135deg, #6828DC 0%, #8B5CF6 100%)',
+                  color: '#FFFFFF',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  padding: '9px 18px',
+                  borderRadius: '8px',
+                  fontSize: '13px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 14px rgba(104, 40, 220, 0.35)',
+                  transition: 'all 0.2s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 6px 18px rgba(104, 40, 220, 0.5)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 4px 14px rgba(104, 40, 220, 0.35)';
+                }}
+              >
+                <Sparkles size={14} style={{ color: '#FDE047' }} />
+                <span>Apply for PCD Franchise</span>
+                <ArrowRight size={14} />
+              </button>
             </div>
           </div>
 
           {/* Column 2: Quick Links */}
           <div>
-            <h4 style={{ color: '#FFFFFF', fontSize: '16px', fontWeight: 800, marginBottom: '20px', letterSpacing: '0.3px' }}>
-              Quick Navigation
+            <h4
+              style={{
+                color: '#FFFFFF',
+                fontSize: '15px',
+                fontWeight: 800,
+                marginBottom: '18px',
+                letterSpacing: '0.4px',
+                textTransform: 'uppercase',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+              }}
+            >
+              <span style={{ width: '4px', height: '14px', borderRadius: '2px', background: '#8B5CF6' }} />
+              <span>Quick Navigation</span>
             </h4>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '11px', padding: 0, margin: 0 }}>
               {[
                 { to: '/', label: 'Home' },
                 { to: '/about', label: 'About Company' },
                 { to: '/products', label: 'Pharmaceutical Catalog' },
-                { to: '/career', label: 'Careers & Job Openings' },
+                { to: '/career', label: 'Careers & Openings' },
                 { to: '/contact', label: 'Contact & Branch Offices' },
               ].map((link) => (
                 <li key={link.to}>
-                  <Link to={link.to} className="zp-footer-link">
-                    {link.label}
+                  <Link
+                    to={link.to}
+                    className="zp-footer-link"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '7px',
+                      fontSize: '13.5px',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    <span style={{ color: '#8B5CF6', opacity: 0.7, fontSize: '11px' }}>›</span>
+                    <span>{link.label}</span>
                   </Link>
                 </li>
               ))}
-              <li style={{ marginTop: '4px' }}>
-                <button
-                  type="button"
-                  onClick={openFranchiseModal}
-                  style={{
-                    color: '#A78BFA',
-                    fontWeight: 700,
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    background: 'none',
-                    border: 'none',
-                    padding: 0,
-                    cursor: 'pointer',
-                    fontSize: '13.5px',
-                  }}
-                >
-                  <Sparkles size={13} />
-                  <span>Apply for Stockists Distribution</span>
-                  <ArrowRight size={13} />
-                </button>
-              </li>
             </ul>
           </div>
 
-          {/* Column 3: Products / Categories */}
+          {/* Column 3: Therapeutic Ranges */}
           <div>
-            <h4 style={{ color: '#FFFFFF', fontSize: '16px', fontWeight: 800, marginBottom: '20px', letterSpacing: '0.3px' }}>
-              Therapeutic Ranges
+            <h4
+              style={{
+                color: '#FFFFFF',
+                fontSize: '15px',
+                fontWeight: 800,
+                marginBottom: '18px',
+                letterSpacing: '0.4px',
+                textTransform: 'uppercase',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+              }}
+            >
+              <span style={{ width: '4px', height: '14px', borderRadius: '2px', background: '#8B5CF6' }} />
+              <span>Therapeutic Ranges</span>
             </h4>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '11px', padding: 0, margin: 0 }}>
               {[
@@ -193,99 +345,213 @@ export const Footer: React.FC = () => {
                 { to: '/products?category=general-medicine', label: 'General Medicine' },
               ].map((cat) => (
                 <li key={cat.to}>
-                  <Link to={cat.to} className="zp-footer-link">
-                    {cat.label}
+                  <Link
+                    to={cat.to}
+                    className="zp-footer-link"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '7px',
+                      fontSize: '13.5px',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    <span style={{ color: '#8B5CF6', opacity: 0.7, fontSize: '11px' }}>›</span>
+                    <span>{cat.label}</span>
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Column 4: Important Regulatory & Quality Compliance */}
+          {/* Column 4: Corporate Headquarters & Helplines */}
           <div>
-            <h4 style={{ color: '#FFFFFF', fontSize: '16px', fontWeight: 800, marginBottom: '20px', letterSpacing: '0.3px' }}>
-              Quality &amp; Standards
+            <h4
+              style={{
+                color: '#FFFFFF',
+                fontSize: '15px',
+                fontWeight: 800,
+                marginBottom: '18px',
+                letterSpacing: '0.4px',
+                textTransform: 'uppercase',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+              }}
+            >
+              <span style={{ width: '4px', height: '14px', borderRadius: '2px', background: '#8B5CF6' }} />
+              <span>Corporate Inquiries</span>
             </h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '13px' }}>
-              <div style={{ color: '#94A3B8', lineHeight: 1.55 }}>
-                <strong style={{ color: '#EDE9FE' }}>Schedule M Adherence:</strong> Cleanrooms, AHU filtration systems, and zero-defect packaging compliance.
-              </div>
-              <div style={{ color: '#94A3B8', lineHeight: 1.55 }}>
-                <strong style={{ color: '#EDE9FE' }}>DCGI Approved:</strong> Bioequivalent molecules with proven bioavailability.
-              </div>
-              <div style={{
-                marginTop: '6px',
-                padding: '12px 14px',
-                background: 'rgba(255, 255, 255, 0.05)',
-                borderRadius: '10px',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                fontSize: '12.5px',
-                color: '#CBD5E1',
-              }}>
-                <div><strong>GSTIN:</strong> {settings.gstNumber || '24AAACZ1234F1Z5'}</div>
-                <div style={{ marginTop: '4px' }}><strong>State:</strong> Gujarat, India</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Column 5: Direct Contacts & Helplines */}
-          <div>
-            <h4 style={{ color: '#FFFFFF', fontSize: '16px', fontWeight: 800, marginBottom: '20px', letterSpacing: '0.3px' }}>
-              Corporate Inquiries
-            </h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', fontSize: '13px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '13px', fontSize: '13px' }}>
+              {/* Address */}
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                <MapPin size={17} style={{ color: '#A78BFA', flexShrink: 0, marginTop: '2px' }} />
-                <span style={{ color: '#94A3B8', lineHeight: 1.5 }}>
-                  7015, BTM (Bellagio Textile Market), Sita Nagar, Parvat Patiya, Puna Gam, Surat, Gujarat – 395010, India
+                <div
+                  style={{
+                    width: '30px',
+                    height: '30px',
+                    borderRadius: '8px',
+                    background: 'rgba(104, 40, 220, 0.2)',
+                    border: '1px solid rgba(139, 92, 246, 0.3)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                    color: '#A78BFA',
+                    marginTop: '2px',
+                  }}
+                >
+                  <MapPin size={15} />
+                </div>
+                <span style={{ color: '#94A3B8', lineHeight: 1.5, fontSize: '13px' }}>
+                  {settings.headOfficeAddress || '7015, BTM (Bellagio Textile Market), Sita Nagar, Parvat Patiya, Puna Gam, Surat, Gujarat – 395010, India'}
                 </span>
               </div>
 
+              {/* Phone */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Phone size={17} style={{ color: '#34D399', flexShrink: 0 }} />
-                <a href={`tel:${settings.phone}`} style={{ color: '#FFFFFF', fontWeight: 700, textDecoration: 'none' }}>
-                  {settings.phone}
+                <div
+                  style={{
+                    width: '30px',
+                    height: '30px',
+                    borderRadius: '8px',
+                    background: 'rgba(16, 185, 129, 0.15)',
+                    border: '1px solid rgba(16, 185, 129, 0.3)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                    color: '#34D399',
+                  }}
+                >
+                  <Phone size={15} />
+                </div>
+                <a
+                  href={`tel:${settings.phone || '+919316227576'}`}
+                  style={{ color: '#FFFFFF', fontWeight: 700, textDecoration: 'none', fontSize: '14px' }}
+                >
+                  {settings.phone || '+91 9316227576'}
                 </a>
               </div>
 
+              {/* Email */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Mail size={17} style={{ color: '#60A5FA', flexShrink: 0 }} />
-                <a href={`mailto:${settings.email}`} style={{ color: '#94A3B8', textDecoration: 'none' }}>
-                  {settings.email}
+                <div
+                  style={{
+                    width: '30px',
+                    height: '30px',
+                    borderRadius: '8px',
+                    background: 'rgba(56, 189, 248, 0.15)',
+                    border: '1px solid rgba(56, 189, 248, 0.3)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                    color: '#60A5FA',
+                  }}
+                >
+                  <Mail size={15} />
+                </div>
+                <a
+                  href={`mailto:${settings.email || 'info@zealpharma.com'}`}
+                  style={{ color: '#CBD5E1', textDecoration: 'none', fontSize: '13px' }}
+                >
+                  {settings.email || 'info@zealpharma.com'}
                 </a>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#94A3B8', fontSize: '12px' }}>
-                <Clock size={16} style={{ color: '#FBBF24', flexShrink: 0 }} />
-                <span>{settings.workingHours}</span>
+              {/* Working Hours */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div
+                  style={{
+                    width: '30px',
+                    height: '30px',
+                    borderRadius: '8px',
+                    background: 'rgba(245, 158, 11, 0.15)',
+                    border: '1px solid rgba(245, 158, 11, 0.3)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                    color: '#FBBF24',
+                  }}
+                >
+                  <Clock size={15} />
+                </div>
+                <span style={{ color: '#94A3B8', fontSize: '12.5px' }}>
+                  {settings.workingHours || 'Monday – Saturday: 9:30 AM – 6:30 PM'}
+                </span>
+              </div>
+
+              {/* Compact GST verification badge */}
+              <div
+                style={{
+                  marginTop: '4px',
+                  padding: '7px 11px',
+                  background: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '7px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '7px',
+                  fontSize: '11.5px',
+                  color: '#94A3B8',
+                  width: 'fit-content',
+                }}
+              >
+                <span style={{ color: '#A78BFA', fontWeight: 800 }}>GSTIN:</span>
+                <span style={{ color: '#E2E8F0', letterSpacing: '0.4px' }}>
+                  {settings.gstNumber || '24AAACZ1234F1Z5'}
+                </span>
+                <span style={{ color: '#64748B' }}>• Gujarat</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom Clean Copyright Bar */}
-        <div style={{
-          padding: '24px 0',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: '16px',
-          fontSize: '12.5px',
-          color: '#94A3B8',
-        }}>
+        {/* Clean Copyright & Regulatory Sub-Bar */}
+        <div
+          style={{
+            padding: '22px 0',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '14px',
+            fontSize: '12.5px',
+            color: '#64748B',
+          }}
+        >
           <div>
-            &copy; {new Date().getFullYear()} {settings.companyName || 'Zeal Pharmacure Pvt. Ltd.'}. All Rights Reserved. WHO-GMP &amp; ISO 9001:2015 Certified.
+            &copy; {new Date().getFullYear()}{' '}
+            <strong style={{ color: '#CBD5E1', fontWeight: 700 }}>
+              {settings.companyName || 'Zeal Pharmacure Pvt. Ltd.'}
+            </strong>
+            . All Rights Reserved. WHO-GMP &amp; ISO 9001:2015 Compliant.
           </div>
 
           <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-            <Link to="/contact" style={{ color: '#94A3B8', textDecoration: 'none' }}>
-              Franchise Terms &amp; Conditions
+            <Link
+              to="/contact"
+              style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s ease' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#EDE9FE')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#94A3B8')}
+            >
+              Franchise Terms
             </Link>
-            <Link to="/contact" style={{ color: '#94A3B8', textDecoration: 'none' }}>
+            <Link
+              to="/contact"
+              style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s ease' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#EDE9FE')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#94A3B8')}
+            >
               Privacy Policy
             </Link>
-            <Link to="/contact" style={{ color: '#94A3B8', textDecoration: 'none' }}>
+            <Link
+              to="/contact"
+              style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s ease' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#EDE9FE')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#94A3B8')}
+            >
               Pharmacovigilance
             </Link>
           </div>
