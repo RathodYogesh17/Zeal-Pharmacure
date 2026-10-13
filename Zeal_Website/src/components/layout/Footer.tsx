@@ -426,10 +426,10 @@ export const Footer: React.FC = () => {
                   <Phone size={15} />
                 </div>
                 <a
-                  href={`tel:${settings.phone || '+919316227576'}`}
+                  href={`tel:${settings.phone || '+919909160190'}`}
                   style={{ color: '#FFFFFF', fontWeight: 700, textDecoration: 'none', fontSize: '14px' }}
                 >
-                  {settings.phone || '+91 9316227576'}
+                  {settings.phone || '+91 9909160190'}
                 </a>
               </div>
 
@@ -452,10 +452,10 @@ export const Footer: React.FC = () => {
                   <Mail size={15} />
                 </div>
                 <a
-                  href={`mailto:${settings.email || 'info@zealpharma.com'}`}
+                  href={`mailto:${settings.email || 'zealpharmacure@gmail.com'}`}
                   style={{ color: '#CBD5E1', textDecoration: 'none', fontSize: '13px' }}
                 >
-                  {settings.email || 'info@zealpharma.com'}
+                  {settings.email || 'zealpharmacure@gmail.com'}
                 </a>
               </div>
 

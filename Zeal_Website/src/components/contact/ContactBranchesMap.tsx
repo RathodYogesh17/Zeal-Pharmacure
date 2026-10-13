@@ -17,8 +17,8 @@ export interface ContactBranchesMapProps {
 }
 
 export const ContactBranchesMap: React.FC<ContactBranchesMapProps> = ({ settings }) => {
-  const corporatePhone = settings.phone || '+91 9316227576';
-  const corporateEmail = settings.email || 'info@zealpharma.com';
+  const corporatePhone = settings.phone || '+91 9909160190';
+  const corporateEmail = settings.email || 'zealpharmacure@gmail.com';
   const googleMapsUrl = 'https://maps.app.goo.gl/Fyn1U464AMUPgTPH7';
 
   return (

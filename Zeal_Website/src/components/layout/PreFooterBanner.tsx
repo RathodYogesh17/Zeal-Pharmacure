@@ -5,7 +5,7 @@ import { useSiteSettings } from '../../context/SiteSettingsContext';
 export const PreFooterBanner: React.FC = () => {
   const { settings, openFranchiseModal, productCount } = useSiteSettings();
 
-  const helplineNumber = settings.salesHelpline || settings.phone || '+91 9316227576';
+  const helplineNumber = settings.salesHelpline || settings.phone || '+91 9909160190';
   const helplineClean = helplineNumber.replace(/\s+/g, '');
 
   return (

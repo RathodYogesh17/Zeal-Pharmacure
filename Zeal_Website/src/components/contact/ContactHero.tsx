@@ -21,7 +21,7 @@ export interface ContactHeroProps {
 export const ContactHero: React.FC<ContactHeroProps> = ({ onOpenFranchise, onScrollToForm }) => {
   const { settings, about, productCount } = useSiteSettings();
   const depotImg = getMediaUrl((settings as any)?.promoBanners?.warehouseDepot || (about as any)?.depotImage, '/banners/pharma_warehouse_depot.jpg');
-  const corporatePhone = settings.phone || '+91 9316227576';
+  const corporatePhone = settings.phone || '+91 9909160190';
   const cleanPhone = corporatePhone.replace(/[^0-9]/g, '');
 
   return (

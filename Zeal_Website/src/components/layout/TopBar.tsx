@@ -41,7 +41,7 @@ export const TopBar: React.FC = () => {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#CBD5E1' }} className="hide-mobile">
             <Clock size={13} style={{ color: '#A78BFA' }} />
-            <span>{settings.workingHours}</span>
+            <span>{settings.workingHours || 'Monday - Saturday: 9:30 AM - 6:30 PM'}</span>
           </div>
         </div>
 

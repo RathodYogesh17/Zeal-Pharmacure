@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import type { IProduct } from '../../types';
 import { useAuth } from '../../context/AuthContext';
+import { useSiteSettings } from '../../context/SiteSettingsContext';
 import { enquiryService } from '../../api/enquiryService';
 import { FormAlert, SuccessStateView, ThemedSelect } from '../common';
 import { VerifiedUserBadge } from '../common/VerifiedUserBadge';
@@ -26,6 +27,7 @@ export const SingleProductEnquiryModal: React.FC<SingleProductEnquiryModalProps>
   onClose,
 }) => {
   const { user } = useAuth();
+  const { settings } = useSiteSettings();
 
   const [quantityCount, setQuantityCount] = useState<number | string>(100);
   const [selectedUnit, setSelectedUnit] = useState<string>('Boxes');
@@ -160,7 +162,8 @@ export const SingleProductEnquiryModal: React.FC<SingleProductEnquiryModalProps>
       message: formData.message,
       authUser: user ? { name: user.name, phone: user.phone || formData.phone, email: user.email } : undefined,
     });
-    window.open(`https://wa.me/919316227576?text=${encodeURIComponent(waText)}`, '_blank');
+    const waTarget = (settings?.whatsappNumber || '919909160190').replace(/[^0-9]/g, '');
+    window.open(`https://wa.me/${waTarget}?text=${encodeURIComponent(waText)}`, '_blank');
   };
 
   return (

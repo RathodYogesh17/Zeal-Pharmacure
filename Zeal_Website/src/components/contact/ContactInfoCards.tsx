@@ -8,9 +8,9 @@ export interface ContactInfoCardsProps {
 }
 
 export const ContactInfoCards: React.FC<ContactInfoCardsProps> = ({ settings }) => {
-  const corporatePhone = settings.phone || '+91 9316227576';
+  const corporatePhone = settings.phone || '+91 9909160190';
   const cleanPhone = corporatePhone.replace(/[^0-9]/g, '');
-  const corporateEmail = settings.email || 'info@zealpharma.com';
+  const corporateEmail = settings.email || 'zealpharmacure@gmail.com';
   const googleMapsUrl = 'https://maps.app.goo.gl/Fyn1U464AMUPgTPH7';
 
   const channels = [

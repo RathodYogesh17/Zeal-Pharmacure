@@ -77,62 +77,104 @@ interface SiteSettingsContextType {
 
 const SiteSettingsContext = createContext<SiteSettingsContextType | undefined>(undefined);
 
+const getCachedData = <T,>(key: string, fallback: T): T => {
+  try {
+    const raw = localStorage.getItem(`zeal_cms_${key}`);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed) {
+        if (Array.isArray(fallback)) {
+          return Array.isArray(parsed) && parsed.length > 0 ? (parsed as unknown as T) : fallback;
+        }
+        return { ...fallback, ...parsed };
+      }
+    }
+  } catch {}
+  return fallback;
+};
+
+const setCachedData = (key: string, data: any) => {
+  try {
+    localStorage.setItem(`zeal_cms_${key}`, JSON.stringify(data));
+  } catch {}
+};
+
 export const SiteSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [settings, setSettings] = useState<ISiteSettings>(fallbackContactInfo);
-  const [banners, setBanners] = useState<IBannerItem[]>(fallbackBanners);
-  const [about, setAbout] = useState<IAboutContent>(fallbackAbout);
-  const [faqs, setFaqs] = useState<IFaqItem[]>(fallbackFaqs);
-  const [certifications, setCertifications] = useState<ICertificationItem[]>(fallbackCertifications);
-  const [testimonials, setTestimonials] = useState<ITestimonialItem[]>(fallbackTestimonials);
-  const [productCount, setProductCount] = useState<number>(18);
-  const [isLoading, setIsLoading] = useState(true);
+  const [settings, setSettings] = useState<ISiteSettings>(() => getCachedData('contact-info', fallbackContactInfo));
+  const [banners, setBanners] = useState<IBannerItem[]>(() => getCachedData('banners', fallbackBanners));
+  const [about, setAbout] = useState<IAboutContent>(() => getCachedData('about-us', fallbackAbout));
+  const [faqs, setFaqs] = useState<IFaqItem[]>(() => getCachedData('faqs', fallbackFaqs));
+  const [certifications, setCertifications] = useState<ICertificationItem[]>(() => getCachedData('certifications', fallbackCertifications));
+  const [testimonials, setTestimonials] = useState<ITestimonialItem[]>(() => getCachedData('testimonials', fallbackTestimonials));
+  const [productCount, setProductCount] = useState<number>(() => {
+    try {
+      const c = localStorage.getItem('zeal_product_count');
+      return c ? Number(c) : 18;
+    } catch {
+      return 18;
+    }
+  });
+  const [isLoading, setIsLoading] = useState(false);
   const [isFranchiseModalOpen, setIsFranchiseModalOpen] = useState(false);
 
   const refreshSettings = async () => {
     try {
-      setIsLoading(true);
-      const [contactData, bannerData, aboutData, faqData, certData, testData, productsRes] = await Promise.all([
-        contentService.getContentByKey<ISiteSettings>('contact-info'),
-        contentService.getContentByKey<IBannerItem[]>('banners'),
-        contentService.getContentByKey<IAboutContent>('about-us'),
-        contentService.getContentByKey<{ items: IFaqItem[] }>('faqs'),
-        contentService.getContentByKey<{ items: ICertificationItem[] }>('certifications'),
-        contentService.getContentByKey<ITestimonialItem[]>('testimonials'),
-        productService.getProducts({ limit: 1 }).catch(() => null),
-      ]);
+      // 1. Fetch products count asynchronously in background
+      productService.getProducts({ limit: 1 })
+        .then((productsRes) => {
+          if (productsRes && typeof productsRes.total === 'number') {
+            setProductCount(productsRes.total);
+            try { localStorage.setItem('zeal_product_count', String(productsRes.total)); } catch {}
+          }
+        })
+        .catch(() => null);
 
-      if (productsRes && typeof productsRes.total === 'number') {
-        setProductCount(productsRes.total);
-      }
+      // 2. Fetch ALL CMS content in ONE fast single HTTP request
+      const cmsItems = await contentService.getPublicContentList();
 
-      if (contactData) {
-        setSettings(prev => ({
-          ...prev,
-          ...contactData,
-        }));
-      }
+      if (Array.isArray(cmsItems) && cmsItems.length > 0) {
+        const itemMap = new Map<string, any>();
+        cmsItems.forEach((item) => {
+          if (item && item.key) {
+            itemMap.set(item.key, item.content);
+          }
+        });
 
-      if (bannerData && Array.isArray(bannerData) && bannerData.length > 0) {
-        setBanners(bannerData);
-      }
+        const contactData = itemMap.get('contact-info');
+        if (contactData) {
+          setSettings((prev) => ({ ...prev, ...contactData }));
+          setCachedData('contact-info', contactData);
+        }
 
-      if (aboutData) {
-        setAbout(prev => ({
-          ...prev,
-          ...aboutData,
-        }));
-      }
+        const bannerData = itemMap.get('banners');
+        if (bannerData && Array.isArray(bannerData) && bannerData.length > 0) {
+          setBanners(bannerData);
+          setCachedData('banners', bannerData);
+        }
 
-      if (faqData?.items && Array.isArray(faqData.items)) {
-        setFaqs(faqData.items);
-      }
+        const aboutData = itemMap.get('about-us');
+        if (aboutData) {
+          setAbout((prev) => ({ ...prev, ...aboutData }));
+          setCachedData('about-us', aboutData);
+        }
 
-      if (certData?.items && Array.isArray(certData.items)) {
-        setCertifications(certData.items);
-      }
+        const faqData = itemMap.get('faqs');
+        if (faqData?.items && Array.isArray(faqData.items)) {
+          setFaqs(faqData.items);
+          setCachedData('faqs', faqData.items);
+        }
 
-      if (testData && Array.isArray(testData) && testData.length > 0) {
-        setTestimonials(testData);
+        const certData = itemMap.get('certifications');
+        if (certData?.items && Array.isArray(certData.items)) {
+          setCertifications(certData.items);
+          setCachedData('certifications', certData.items);
+        }
+
+        const testData = itemMap.get('testimonials');
+        if (testData && Array.isArray(testData) && testData.length > 0) {
+          setTestimonials(testData);
+          setCachedData('testimonials', testData);
+        }
       }
     } catch (err) {
       console.warn('Failed to load CMS content, using fallbacks:', err);
@@ -143,6 +185,14 @@ export const SiteSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
   useEffect(() => {
     refreshSettings();
+
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key && e.key.startsWith('zeal_cms_')) {
+        refreshSettings();
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   const openFranchiseModal = () => setIsFranchiseModalOpen(true);

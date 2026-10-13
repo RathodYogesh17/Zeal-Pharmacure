@@ -35,7 +35,7 @@ export const CareerApplicationForm: React.FC<CareerApplicationFormProps> = ({
   const { settings } = useSiteSettings();
   const { user } = useAuth();
   const allPositions = jobs && jobs.length > 0 ? jobs : DEFAULT_POSITIONS;
-  const hrWhatsAppNumber = (settings?.whatsappNumber || settings?.hrHelpline || '919316227576').replace(/[^0-9]/g, '');
+  const hrWhatsAppNumber = (settings?.whatsappNumber || settings?.hrHelpline || '919909160190').replace(/[^0-9]/g, '');
 
   const positionOptions = useMemo(() => {
     const list = allPositions.map((p) => ({
@@ -260,7 +260,7 @@ export const CareerApplicationForm: React.FC<CareerApplicationFormProps> = ({
         email: user.email,
       } : undefined,
     });
-    window.open(`https://wa.me/${hrWhatsAppNumber || '919316227576'}?text=${encodeURIComponent(waText)}`, '_blank');
+    window.open(`https://wa.me/${hrWhatsAppNumber || '919909160190'}?text=${encodeURIComponent(waText)}`, '_blank');
   };
 
   return (

@@ -269,7 +269,16 @@ export const AdminCmsPage: React.FC = () => {
         isActive: true,
       });
 
-      // 6. Refresh site settings in reactive context
+      // 6. Sync to local storage for instant browser cache
+      try {
+        localStorage.setItem('zeal_cms_contact-info', JSON.stringify(formSettings));
+        localStorage.setItem('zeal_cms_banners', JSON.stringify(bannerList));
+        localStorage.setItem('zeal_cms_about-us', JSON.stringify(aboutForm));
+        localStorage.setItem('zeal_cms_faqs', JSON.stringify(faqList));
+        localStorage.setItem('zeal_cms_certifications', JSON.stringify(certList));
+      } catch {}
+
+      // 7. Refresh site settings in reactive context
       await refreshSettings();
 
       setSaveSuccess(

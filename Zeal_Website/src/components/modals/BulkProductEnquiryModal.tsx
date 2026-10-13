@@ -206,7 +206,7 @@ export const BulkProductEnquiryModal: React.FC<BulkProductEnquiryModalProps> = (
       message: formData.message,
       authUser: user ? { name: user.name, phone: user.phone || formData.phone, email: user.email } : undefined,
     });
-    window.open(`https://wa.me/${(settings.whatsappNumber || '919316227576').replace(/[^0-9]/g, '')}?text=${encodeURIComponent(waText)}`, '_blank');
+    window.open(`https://wa.me/${(settings.whatsappNumber || '919909160190').replace(/[^0-9]/g, '')}?text=${encodeURIComponent(waText)}`, '_blank');
   };
 
   return (

@@ -95,7 +95,7 @@ export const FloatingWhatsAppWidget: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const cleanNumber = (settings.whatsappNumber || '+91 93162 27576').replace(/[^0-9]/g, '');
+  const cleanNumber = (settings.whatsappNumber || '+91 99091 60190').replace(/[^0-9]/g, '');
 
   const handleSelectTopic = (topic: QuickTopic) => {
     setSelectedTopic(topic.id);

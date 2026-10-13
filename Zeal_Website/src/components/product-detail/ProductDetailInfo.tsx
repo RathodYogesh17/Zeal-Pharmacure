@@ -18,6 +18,7 @@ import type { IProduct } from '../../types';
 import { RatingStars } from '../common/RatingStars';
 import { productService } from '../../api/productService';
 import { useAuth } from '../../context/AuthContext';
+import { useSiteSettings } from '../../context/SiteSettingsContext';
 import { useEnquiryAuth } from '../../context/EnquiryAuthContext';
 import { buildProductWhatsAppMessage } from '../../utils/whatsappMessageBuilder';
 
@@ -41,6 +42,7 @@ export const ProductDetailInfo: React.FC<ProductDetailInfoProps> = ({
   const [selectedVolume, setSelectedVolume] = useState('100 Packs');
   const [copiedShare, setCopiedShare] = useState(false);
   const { user } = useAuth();
+  const { settings } = useSiteSettings();
   const { requireAuth } = useEnquiryAuth();
 
   const visualAidUrl = productService.getVisualAidUrl(product.slug || product._id);
@@ -60,7 +62,8 @@ export const ProductDetailInfo: React.FC<ProductDetailInfoProps> = ({
           email: user.email,
         } : undefined,
       });
-      window.open(`https://wa.me/919316227576?text=${encodeURIComponent(waText)}`, '_blank');
+      const waTarget = (settings?.whatsappNumber || '919909160190').replace(/[^0-9]/g, '');
+      window.open(`https://wa.me/${waTarget}?text=${encodeURIComponent(waText)}`, '_blank');
     }, {
       title: `Inquire for ${product.name}`,
       subtitle: 'Sign in or register to verify your credentials for official distributor pricing on WhatsApp.',

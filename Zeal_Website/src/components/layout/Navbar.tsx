@@ -62,30 +62,30 @@ export const Navbar: React.FC = () => {
       }}>
         {/* Brand Logo */}
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
-          {settings.logoUrl ? (
-            <img
-              src={settings.logoUrl}
-              alt={settings.companyName}
-              style={{ height: '48px', objectFit: 'contain' }}
-            />
-          ) : (
-            <div style={{
-              width: '46px',
-              height: '46px',
+          <div
+            style={{
+              width: '48px',
+              height: '48px',
               borderRadius: '12px',
-              background: 'linear-gradient(135deg, #6828DC 0%, #8B5CF6 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: '0 4px 14px rgba(104, 40, 220, 0.35)',
-            }}>
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2V6M12 18V22M6 12H2M22 12H18" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round"/>
-                <circle cx="12" cy="12" r="3.5" fill="#FFFFFF"/>
-                <path d="M16.24 7.76L19.07 4.93M4.93 19.07L7.76 16.24M16.24 16.24L19.07 19.07M4.93 4.93L7.76 7.76" stroke="#EDE9FE" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
-            </div>
-          )}
+              flexShrink: 0,
+            }}
+          >
+            <img
+              src={settings.logoUrl || '/images/zeal-logo.png'}
+              alt={settings.companyName || 'Zeal Pharmacure'}
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
+              }}
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = '/images/zeal-logo.png';
+              }}
+            />
+          </div>
 
           <div>
             <div style={{
