@@ -119,7 +119,7 @@ export const PreFooterBanner: React.FC = () => {
               margin: '0 0 24px 0',
             }}
           >
-            Become an authorized Stockist Distribution Partner with {settings.companyName || 'Zeal Pharmacure'}. Benefit from {productCount}+ DCGI formulations, direct factory pricing, and comprehensive promotional marketing support.
+            Become an authorized Stockist Distribution Partner with {settings.companyName || 'Zeal Pharmacure'}. Benefit from {productCount}+ DCGI formulations, direct brand wholesale pricing, and comprehensive promotional marketing support.
           </p>
 
           {/* 3 Mini Trust Feature Badges */}
@@ -218,7 +218,7 @@ export const PreFooterBanner: React.FC = () => {
               Apply for Territory Rights
             </div>
             <div style={{ fontSize: '13px', color: '#94A3B8' }}>
-              Direct factory pricing with verified WHO-GMP certificates.
+              Direct brand wholesale pricing with verified WHO-GMP certificates.
             </div>
           </div>
 

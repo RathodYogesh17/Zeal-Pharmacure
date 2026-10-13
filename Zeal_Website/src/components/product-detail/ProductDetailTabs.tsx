@@ -15,6 +15,7 @@ import {
   Sparkles,
   BarChart3,
   UserCheck,
+  Building2,
 } from 'lucide-react';
 import type { IProduct } from '../../types';
 
@@ -420,6 +421,59 @@ export const ProductDetailTabs: React.FC<ProductDetailTabsProps> = ({
                   <span style={{ background: '#EFF6FF', color: '#1D4ED8', padding: '5px 12px', borderRadius: '8px', fontSize: '12.5px', fontWeight: 700, border: '1px solid #BFDBFE' }}>
                     Stockists Distribution Protected
                   </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Regulatory & Sourcing Blueprint (Marketed By vs Manufactured At) */}
+            <div
+              style={{
+                background: '#FFFFFF',
+                borderRadius: '16px',
+                border: '1.5px solid #E2E8F0',
+                padding: '20px',
+                boxShadow: '0 2px 8px rgba(15, 23, 42, 0.04)',
+              }}
+            >
+              <h4 style={{ fontSize: '15px', fontWeight: 800, color: '#0F172A', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Building2 size={18} style={{ color: 'var(--zp-primary)' }} />
+                <span>Regulatory &amp; Manufacturing Compliance</span>
+              </h4>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
+                <div style={{ background: '#FAF5FF', border: '1px solid #DDD6FE', borderRadius: '10px', padding: '12px 14px' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#6828DC', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block', marginBottom: '4px' }}>
+                    Marketed By
+                  </span>
+                  <div style={{ fontSize: '13.5px', fontWeight: 700, color: '#0F172A' }}>
+                    Zeal Pharmacure
+                  </div>
+                  <div style={{ fontSize: '12px', color: '#64748B', marginTop: '2px' }}>
+                    Brand Owner &amp; Exclusive Marketing
+                  </div>
+                </div>
+
+                <div style={{ background: '#ECFDF5', border: '1px solid #A7F3D0', borderRadius: '10px', padding: '12px 14px' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#059669', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block', marginBottom: '4px' }}>
+                    Manufactured At
+                  </span>
+                  <div style={{ fontSize: '13.5px', fontWeight: 700, color: '#0F172A' }}>
+                    {product.manufacturer || 'WHO-GMP Certified Partner Facility'}
+                  </div>
+                  <div style={{ fontSize: '12px', color: '#64748B', marginTop: '2px' }}>
+                    Schedule M &amp; cGMP Compliant Production
+                  </div>
+                </div>
+
+                <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '10px', padding: '12px 14px' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block', marginBottom: '4px' }}>
+                    Central Dispatch Hub
+                  </span>
+                  <div style={{ fontSize: '13.5px', fontWeight: 700, color: '#0F172A' }}>
+                    Surat Central Logistics Depot
+                  </div>
+                  <div style={{ fontSize: '12px', color: '#64748B', marginTop: '2px' }}>
+                    7015 BTM, Parvat Patiya, Surat, GJ
+                  </div>
                 </div>
               </div>
             </div>

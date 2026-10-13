@@ -98,7 +98,7 @@ export const ProductDetailPromoBanner: React.FC<ProductDetailPromoBannerProps> =
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12.5px', fontWeight: 700, color: '#065F46' }}>
             <CheckCircle2 size={15} style={{ color: '#059669' }} />
-            <span>Direct Manufacturer B2B Pricing</span>
+            <span>Direct Brand Wholesale Pricing</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12.5px', fontWeight: 700, color: '#065F46' }}>
             <ShieldCheck size={15} style={{ color: '#059669' }} />

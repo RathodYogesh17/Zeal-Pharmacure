@@ -51,7 +51,7 @@ export const HomeShowcaseCards: React.FC<HomeShowcaseCardsProps> = ({ onOpenFran
               margin: '0 0 10px 0',
             }}
           >
-            Direct Factory Supply &amp; Monopoly Protection
+            Direct Depot Supply &amp; Monopoly Protection
           </h2>
 
           <p
@@ -150,7 +150,7 @@ export const HomeShowcaseCards: React.FC<HomeShowcaseCardsProps> = ({ onOpenFran
                 className="zp-home-wide-desc"
                 style={{ color: '#4C1D95' }}
               >
-                Direct factory pricing on {productCount}+ DCGI-approved formulations in ready stock at our air-conditioned 7015 BTM depot. Computerized batch tracking with zero supply delays.
+                Direct depot wholesale pricing on {productCount}+ DCGI-approved formulations in ready stock at our air-conditioned 7015 BTM depot. Computerized batch tracking with zero supply delays.
               </p>
 
               <Link

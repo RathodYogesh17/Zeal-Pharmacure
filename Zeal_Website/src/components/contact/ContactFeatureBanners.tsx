@@ -48,7 +48,7 @@ const getSeamlessFeatures = (productCount: number): ContactSeamlessFeatureItem[]
     badgeText: 'WHO-GMP INSTITUTIONAL SUPPLY',
     badgeColor: 'var(--zp-primary)',
     title: 'Institutional Supply &\nContract Formulations',
-    desc: `State-of-the-art automated formulation plant with ${productCount}+ DCGI-approved molecules ready for bulk commercial batch production and hospital tenders.`,
+    desc: `Extensive network of WHO-GMP certified partner manufacturing units with ${productCount}+ DCGI-approved molecules ready for bulk commercial batch supply and hospital tenders.`,
     btnText: 'Request Institutional RFQ',
     btnBg: 'linear-gradient(135deg, #7C3AED 0%, #6828DC 100%)',
     btnShadow: '0 4px 14px rgba(104, 40, 220, 0.3)',

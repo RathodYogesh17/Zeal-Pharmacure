@@ -198,7 +198,7 @@ const defaultCmsSeeds: Array<{
       content: [
         {
           id: "banner-1",
-          title: "Stockists / Distribution with Direct Factory Pricing",
+          title: "Stockists / Distribution with Direct Brand Wholesale Pricing",
           subtitle:
             "Partner with an ISO 9001:2015 & WHO-GMP certified company. Over 250+ DCGI approved formulations with highest doctor prescription support.",
           badge: "Stockists / Distribution Available",

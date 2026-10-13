@@ -417,7 +417,7 @@ export const FloatingWhatsAppWidget: React.FC = () => {
               <div style={{ fontSize: '12.5px', color: '#1E293B', lineHeight: 1.55 }}>
                 Namaste! 🙏 Welcome to <strong>Zeal Pharmacure</strong>.
                 <div style={{ marginTop: '4px', fontSize: '12px', color: '#475569' }}>
-                  Leading manufacturer of WHO-GMP certified Tablets, Capsules, Syrups & Injections.
+                  Premier pharmaceutical brand offering 250+ WHO-GMP certified Tablets, Capsules, Syrups & Injections.
                 </div>
                 <div style={{ marginTop: '5px', fontSize: '11px', color: '#64748B', display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <MapPin size={11} color="#6828DC" />

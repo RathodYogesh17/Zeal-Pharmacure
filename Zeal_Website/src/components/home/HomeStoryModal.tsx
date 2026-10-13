@@ -22,7 +22,7 @@ export const HomeStoryModal: React.FC<HomeStoryModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title="Zeal Pharmacure Corporate Story"
-      subtitle="WHO-GMP Manufacturing Excellence & Stockist Monopoly Leadership"
+      subtitle="WHO-GMP Quality Formulations & Stockists / Distribution Leadership"
       maxWidth="640px"
     >
       <div style={{ textAlign: 'center' }}>
@@ -32,7 +32,7 @@ export const HomeStoryModal: React.FC<HomeStoryModalProps> = ({
           </div>
           <div style={{ fontSize: '16px', fontWeight: 700 }}>A Legacy of Better Healthcare</div>
           <div style={{ fontSize: '12px', color: '#CBD5E1', marginTop: '4px' }}>
-            WHO-GMP Approved Cleanrooms &bull; {productCount}+ Formulations &bull; Pan-India Monopoly
+            WHO-GMP Sourced Quality &bull; {productCount}+ Formulations &bull; Pan-India Network
           </div>
         </div>
 
@@ -46,7 +46,7 @@ export const HomeStoryModal: React.FC<HomeStoryModalProps> = ({
             className="btn btn-primary"
             style={{ borderRadius: '8px', padding: '10px 22px' }}
           >
-            Apply for Franchise Monopoly
+            Apply for Stockists / Distribution
           </button>
           <Link
             to="/about"

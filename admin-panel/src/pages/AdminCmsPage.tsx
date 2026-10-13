@@ -904,12 +904,12 @@ export const AdminCmsPage: React.FC = () => {
                 <div>
                   <label className="cms-label">
                     <Building size={14} style={{ color: '#64748B' }} />
-                    <span>Manufacturing Plant / Formulation Unit</span>
+                    <span>Central Logistics Depot / Distribution Hub</span>
                   </label>
                   <input
                     type="text"
                     name="plantAddress"
-                    placeholder="e.g. Sanand GIDC Industrial Estate, Phase II, Ahmedabad, Gujarat 382110, India"
+                    placeholder="e.g. 7015, BTM (Bellagio Textile Market), Central Logistics Depot, Surat, Gujarat – 395010, India"
                     value={formSettings.plantAddress || ''}
                     onChange={handleSettingsChange}
                     className="cms-input"

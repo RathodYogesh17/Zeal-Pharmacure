@@ -36,7 +36,7 @@ const getFallbackSlides = (productCount: number) => [
     image: DEFAULT_HERO_IMAGES[0],
   },
   {
-    title: 'Guaranteed Stockists Distribution Rights with Direct Factory Pricing',
+    title: 'Guaranteed Stockists Distribution Rights with Direct Brand Wholesale Pricing',
     subtitle: 'Become our authorized stockist partner. Zero market competition, transparent B2B wholesale pricing, and verified cGMP formulation quality.',
     badge: 'Stockists Distribution Rights',
     ctaText: 'Apply for Territory',

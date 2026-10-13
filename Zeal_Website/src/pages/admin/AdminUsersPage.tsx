@@ -102,7 +102,7 @@ const PERMISSION_MODULES: PermissionModuleGroup[] = [
     icon: '🌐',
     permissions: [
       { key: 'cms:view', name: 'View Site Content', description: 'View current hotline, addresses, banners, and certifications' },
-      { key: 'cms:update', name: 'Update Site Settings', description: 'Modify logo, sales/HR helplines, plant address, and CTAs' },
+      { key: 'cms:update', name: 'Update Site Settings', description: 'Modify logo, sales/HR helplines, central depot address, and CTAs' },
     ],
   },
   {

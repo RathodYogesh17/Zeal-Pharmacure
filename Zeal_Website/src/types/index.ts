@@ -28,6 +28,7 @@ export interface IProduct {
   genericName: string;
   composition: string;
   strength?: string;
+  manufacturer?: string;
   dosageForm: string;
   packaging: string;
   packSize?: { value?: number; unit?: string };

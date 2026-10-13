@@ -488,8 +488,13 @@ export const AdminProductDetailPage: React.FC = () => {
               </div>
 
               <div className="dossier-blueprint-item">
+                <span className="dossier-blueprint-label whitespace-nowrap">Marketed By</span>
+                <span className="dossier-blueprint-val font-bold text-brand-purple break-words">Zeal Pharmacure (Brand Owner)</span>
+              </div>
+
+              <div className="dossier-blueprint-item">
                 <span className="dossier-blueprint-label whitespace-nowrap">Manufacturing Facility</span>
-                <span className="dossier-blueprint-val break-words">{p.manufacturer || 'Zeal Pharmacure'}</span>
+                <span className="dossier-blueprint-val break-words">{p.manufacturer || 'WHO-GMP Certified Partner Facility'}</span>
               </div>
 
               {p.licenseNumber && (

@@ -522,7 +522,7 @@ export const AdminDashboardPage: React.FC = () => {
           </div>
 
           <div style={{ fontSize: '12px', color: '#BAE6FD', marginTop: '16px' }}>
-            WHO-GMP Certified Plant & In-House Analytical QC
+            WHO-GMP Certified Formulations & In-House Analytical QC
           </div>
         </div>
       </div>

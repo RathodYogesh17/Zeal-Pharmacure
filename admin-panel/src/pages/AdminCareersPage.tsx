@@ -2318,7 +2318,7 @@ export const AdminCareersPage: React.FC = () => {
                     {viewJobModal.seo?.metaTitle || `${viewJobModal.title} | Zeal Pharmaceuticals Careers`}
                   </div>
                   <div style={{ fontSize: '12.5px', color: '#4D5156', lineHeight: 1.45 }}>
-                    {viewJobModal.seo?.metaDescription || viewJobModal.description || 'Join Zeal Pharmaceuticals - leading WHO-GMP certified pharmaceutical formulation manufacturer.'}
+                    {viewJobModal.seo?.metaDescription || viewJobModal.description || 'Join Zeal Pharmaceuticals - leading WHO-GMP certified pharmaceutical marketing and distribution enterprise.'}
                   </div>
                 </div>
               </div>
