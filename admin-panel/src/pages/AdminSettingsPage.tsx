@@ -73,6 +73,7 @@ export const AdminSettingsPage: React.FC = () => {
   const [profileSaving, setProfileSaving] = useState(false);
   const [profileSuccess, setProfileSuccess] = useState('');
   const [profileError, setProfileError] = useState('');
+  const [nameError, setNameError] = useState('');
 
   // Password form state
   const [currentPassword, setCurrentPassword] = useState('');
@@ -81,6 +82,17 @@ export const AdminSettingsPage: React.FC = () => {
   const [showCurrentPass, setShowCurrentPass] = useState(false);
   const [showNewPass, setShowNewPass] = useState(false);
   const [showConfirmPass, setShowConfirmPass] = useState(false);
+  const [passErrors, setPassErrors] = useState<Record<string, string>>({});
+
+  const clearPassError = (key: string) => {
+    if (passErrors[key]) {
+      setPassErrors((prev) => {
+        const next = { ...prev };
+        delete next[key];
+        return next;
+      });
+    }
+  };
 
   // Password feedback
   const [passwordSaving, setPasswordSaving] = useState(false);
@@ -217,9 +229,10 @@ export const AdminSettingsPage: React.FC = () => {
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) {
-      setProfileError('Full Name is required.');
+      setNameError('Full Name is required.');
       return;
     }
+    setNameError('');
 
     setProfileSaving(true);
     setProfileError('');
@@ -283,18 +296,26 @@ export const AdminSettingsPage: React.FC = () => {
     setPasswordError('');
     setPasswordSuccess('');
 
+    const errs: Record<string, string> = {};
     if (!currentPassword) {
-      setPasswordError('Current password is required.');
+      errs.current = 'Current password is required.';
+    }
+    if (!newPassword) {
+      errs.new = 'New password is required.';
+    } else if (newPassword.length < 6) {
+      errs.new = 'New password must be at least 6 characters.';
+    }
+    if (!confirmPassword) {
+      errs.confirm = 'Confirm new password is required.';
+    } else if (newPassword !== confirmPassword) {
+      errs.confirm = 'New password and confirm password do not match.';
+    }
+
+    if (Object.keys(errs).length > 0) {
+      setPassErrors(errs);
       return;
     }
-    if (newPassword.length < 6) {
-      setPasswordError('New password must be at least 6 characters.');
-      return;
-    }
-    if (newPassword !== confirmPassword) {
-      setPasswordError('New password and confirm password do not match.');
-      return;
-    }
+    setPassErrors({});
 
     setPasswordSaving(true);
     try {
@@ -723,14 +744,18 @@ export const AdminSettingsPage: React.FC = () => {
             </div>
           </div>
 
-          <form onSubmit={handleSaveProfile}>
+          <form onSubmit={handleSaveProfile} noValidate>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
               {/* Full Name */}
               <FormInput
                 label="Full Name"
                 required
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                error={nameError}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  setNameError('');
+                }}
                 placeholder="e.g. Dr. Amit Shah"
                 prefixIcon={<User size={16} />}
               />
@@ -891,7 +916,7 @@ export const AdminSettingsPage: React.FC = () => {
             </div>
           )}
 
-          <form onSubmit={handleChangePassword}>
+          <form onSubmit={handleChangePassword} noValidate>
             {/* Current Password */}
             <div style={{ marginBottom: '18px' }}>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '6px' }}>
@@ -902,15 +927,19 @@ export const AdminSettingsPage: React.FC = () => {
                   type={showCurrentPass ? 'text' : 'password'}
                   placeholder="Enter current password"
                   value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  onChange={(e) => {
+                    setCurrentPassword(e.target.value);
+                    clearPassError('current');
+                  }}
                   style={{
                     width: '100%',
                     padding: '10px 40px 10px 14px',
                     borderRadius: '8px',
-                    border: '1.5px solid #CBD5E1',
+                    border: passErrors.current ? '1.5px solid #EF4444' : '1.5px solid #CBD5E1',
+                    boxShadow: passErrors.current ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none',
                     fontSize: '14px',
+                    outline: 'none',
                   }}
-                  required
                 />
                 <button
                   type="button"
@@ -928,6 +957,11 @@ export const AdminSettingsPage: React.FC = () => {
                   {showCurrentPass ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
+              {passErrors.current && (
+                <p style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, margin: '5px 0 0 0', lineHeight: 1.4 }}>
+                  {passErrors.current}
+                </p>
+              )}
             </div>
 
             {/* New Password */}
@@ -940,15 +974,19 @@ export const AdminSettingsPage: React.FC = () => {
                   type={showNewPass ? 'text' : 'password'}
                   placeholder="Minimum 6 characters"
                   value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
+                  onChange={(e) => {
+                    setNewPassword(e.target.value);
+                    clearPassError('new');
+                  }}
                   style={{
                     width: '100%',
                     padding: '10px 40px 10px 14px',
                     borderRadius: '8px',
-                    border: '1.5px solid #CBD5E1',
+                    border: passErrors.new ? '1.5px solid #EF4444' : '1.5px solid #CBD5E1',
+                    boxShadow: passErrors.new ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none',
                     fontSize: '14px',
+                    outline: 'none',
                   }}
-                  required
                 />
                 <button
                   type="button"
@@ -966,6 +1004,11 @@ export const AdminSettingsPage: React.FC = () => {
                   {showNewPass ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
+              {passErrors.new && (
+                <p style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, margin: '5px 0 0 0', lineHeight: 1.4 }}>
+                  {passErrors.new}
+                </p>
+              )}
             </div>
 
             {/* Confirm New Password */}
@@ -978,15 +1021,19 @@ export const AdminSettingsPage: React.FC = () => {
                   type={showConfirmPass ? 'text' : 'password'}
                   placeholder="Re-enter new password"
                   value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                    clearPassError('confirm');
+                  }}
                   style={{
                     width: '100%',
                     padding: '10px 40px 10px 14px',
                     borderRadius: '8px',
-                    border: '1.5px solid #CBD5E1',
+                    border: passErrors.confirm ? '1.5px solid #EF4444' : '1.5px solid #CBD5E1',
+                    boxShadow: passErrors.confirm ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none',
                     fontSize: '14px',
+                    outline: 'none',
                   }}
-                  required
                 />
                 <button
                   type="button"
@@ -1004,6 +1051,11 @@ export const AdminSettingsPage: React.FC = () => {
                   {showConfirmPass ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
+              {passErrors.confirm && (
+                <p style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, margin: '5px 0 0 0', lineHeight: 1.4 }}>
+                  {passErrors.confirm}
+                </p>
+              )}
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
@@ -1166,7 +1218,7 @@ export const AdminSettingsPage: React.FC = () => {
                 <span>Quick WhatsApp Link Generator &amp; Test</span>
               </h4>
 
-              <form onSubmit={handleLaunchWhatsAppTest} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <form onSubmit={handleLaunchWhatsAppTest} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#475569', marginBottom: '5px' }}>
                     Destination Phone Number (with Country Code)

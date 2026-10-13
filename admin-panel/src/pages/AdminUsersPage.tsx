@@ -226,6 +226,7 @@ export const AdminUsersPage: React.FC = () => {
 
   // Create Staff Form state
   const [profileModalOpen, setProfileModalOpen] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [createForm, setCreateForm] = useState({
     name: '',
     email: '',
@@ -235,6 +236,16 @@ export const AdminUsersPage: React.FC = () => {
     profileImage: '',
     isActive: true,
   });
+
+  const clearFieldError = (fieldName: string) => {
+    if (fieldErrors[fieldName]) {
+      setFieldErrors((prev) => {
+        const next = { ...prev };
+        delete next[fieldName];
+        return next;
+      });
+    }
+  };
 
   // TanStack Query Hooks
   const { data: usersData, isLoading: usersLoading, refetch } = useStaffUsersQuery();
@@ -259,10 +270,25 @@ export const AdminUsersPage: React.FC = () => {
   // Handle Staff Creation
   const handleCreateStaff = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!createForm.name || !createForm.email || !createForm.password) {
-      showError('Please fill all required fields.');
+    const errs: Record<string, string> = {};
+    if (!createForm.name.trim()) errs.name = 'Full Name is required.';
+    if (!createForm.email.trim()) {
+      errs.email = 'Email Address is required.';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(createForm.email.trim())) {
+      errs.email = 'Please enter a valid email address.';
+    }
+    if (!createForm.password) {
+      errs.password = 'Account Password is required.';
+    } else if (createForm.password.length < 8) {
+      errs.password = 'Password must be at least 8 characters.';
+    }
+
+    if (Object.keys(errs).length > 0) {
+      setFieldErrors(errs);
       return;
     }
+
+    setFieldErrors({});
 
     try {
       await createUserMutation.mutateAsync(createForm);
@@ -874,7 +900,7 @@ export const AdminUsersPage: React.FC = () => {
               </button>
             </div>
 
-            <form onSubmit={handleCreateStaff} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <form onSubmit={handleCreateStaff} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               {/* Profile Photo Avatar Picker */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '10px 14px', background: '#F8FAFC', borderRadius: '10px', border: '1px solid #E2E8F0' }}>
                 <div style={{
@@ -930,7 +956,11 @@ export const AdminUsersPage: React.FC = () => {
                   required={f.required}
                   placeholder={f.placeholder}
                   value={(createForm as any)[f.name]}
-                  onChange={(e) => setCreateForm({ ...createForm, [f.name]: e.target.value })}
+                  error={fieldErrors[f.name]}
+                  onChange={(e) => {
+                    setCreateForm({ ...createForm, [f.name]: e.target.value });
+                    clearFieldError(f.name);
+                  }}
                 />
               ))}
 

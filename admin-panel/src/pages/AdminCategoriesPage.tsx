@@ -325,9 +325,11 @@ export const AdminCategoriesPage: React.FC = () => {
 
   // Category Form State
   const [categoryForm, setCategoryForm] = useState(initialCategoryForm);
+  const [catNameError, setCatNameError] = useState('');
 
   // SubCategory Form State
   const [subCategoryForm, setSubCategoryForm] = useState(initialSubCategoryForm);
+  const [subCatNameError, setSubCatNameError] = useState('');
 
   useEffect(() => {
     loadData();
@@ -437,12 +439,14 @@ export const AdminCategoriesPage: React.FC = () => {
   const handleOpenAddCategory = () => {
     setEditingCategory(null);
     setCategoryForm(initialCategoryForm);
+    setCatNameError('');
     setShowCatSeo(false);
     setIsCategoryModalOpen(true);
   };
 
   const handleOpenEditCategory = (c: ICategory) => {
     setEditingCategory(c);
+    setCatNameError('');
     setCategoryForm({
       name: c.name || '',
       code: c.code || '',
@@ -467,6 +471,12 @@ export const AdminCategoriesPage: React.FC = () => {
 
   const handleSaveCategory = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!categoryForm.name.trim()) {
+      setCatNameError('Category Name is required.');
+      return;
+    }
+    setCatNameError('');
+
     try {
       const payload = {
         ...categoryForm,
@@ -504,6 +514,7 @@ export const AdminCategoriesPage: React.FC = () => {
   // SubCategory Modal Handlers
   const handleOpenAddSubCategory = () => {
     setEditingSubCategory(null);
+    setSubCatNameError('');
     setSubCategoryForm({
       ...initialSubCategoryForm,
       category: categories.length > 0 ? categories[0]._id : '',
@@ -514,6 +525,7 @@ export const AdminCategoriesPage: React.FC = () => {
 
   const handleOpenEditSubCategory = (s: ISubCategory) => {
     setEditingSubCategory(s);
+    setSubCatNameError('');
     const parentId = typeof s.category === 'object' && s.category !== null ? s.category._id : s.category || '';
     setSubCategoryForm({
       name: s.name || '',
@@ -540,6 +552,12 @@ export const AdminCategoriesPage: React.FC = () => {
 
   const handleSaveSubCategory = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!subCategoryForm.name.trim()) {
+      setSubCatNameError('SubCategory Name is required.');
+      return;
+    }
+    setSubCatNameError('');
+
     try {
       const payload = {
         ...subCategoryForm,
@@ -1406,7 +1424,7 @@ export const AdminCategoriesPage: React.FC = () => {
             </div>
 
             {/* Modal Body */}
-            <form onSubmit={handleSaveCategory} style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
+            <form onSubmit={handleSaveCategory} noValidate style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
               <div style={{ padding: '24px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '18px', flex: 1 }}>
                 {/* 1. Category Name & Code */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: '14px' }}>
@@ -1416,29 +1434,41 @@ export const AdminCategoriesPage: React.FC = () => {
                     </label>
                     <input
                       type="text"
-                      required
                       placeholder="e.g. Antibiotics & Anti-Infectives"
                       value={categoryForm.name}
-                      onChange={(e) => setCategoryForm((prev) => ({ ...prev, name: e.target.value }))}
+                      onChange={(e) => {
+                        setCategoryForm((prev) => ({ ...prev, name: e.target.value }));
+                        setCatNameError('');
+                      }}
                       style={{
                         width: '100%',
                         padding: '10px 14px',
                         borderRadius: '9px',
-                        border: '1.5px solid #CBD5E1',
+                        border: catNameError ? '1.5px solid #EF4444' : '1.5px solid #CBD5E1',
+                        boxShadow: catNameError ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none',
                         fontSize: '13.5px',
                         outline: 'none',
                         boxSizing: 'border-box',
-                        transition: 'border 0.15s ease',
+                        transition: 'border 0.15s ease, box-shadow 0.15s ease',
                       }}
                       onFocus={(e) => {
-                        e.target.style.borderColor = '#6828DC';
-                        e.target.style.boxShadow = '0 0 0 3px rgba(104, 40, 220, 0.12)';
+                        if (!catNameError) {
+                          e.target.style.borderColor = '#6828DC';
+                          e.target.style.boxShadow = '0 0 0 3px rgba(104, 40, 220, 0.12)';
+                        }
                       }}
                       onBlur={(e) => {
-                        e.target.style.borderColor = '#CBD5E1';
-                        e.target.style.boxShadow = 'none';
+                        if (!catNameError) {
+                          e.target.style.borderColor = '#CBD5E1';
+                          e.target.style.boxShadow = 'none';
+                        }
                       }}
                     />
+                    {catNameError && (
+                      <p style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, margin: '5px 0 0 0', lineHeight: 1.4 }}>
+                        {catNameError}
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -1868,7 +1898,7 @@ export const AdminCategoriesPage: React.FC = () => {
             </div>
 
             {/* Modal Body */}
-            <form onSubmit={handleSaveSubCategory} style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
+            <form onSubmit={handleSaveSubCategory} noValidate style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
               <div style={{ padding: '24px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '18px', flex: 1 }}>
                 {/* Parent Category Selector */}
                 <div>
@@ -1897,28 +1927,41 @@ export const AdminCategoriesPage: React.FC = () => {
                     </label>
                     <input
                       type="text"
-                      required
                       placeholder="e.g. Dermatology & Cosmetology"
                       value={subCategoryForm.name}
-                      onChange={(e) => setSubCategoryForm((prev) => ({ ...prev, name: e.target.value }))}
+                      onChange={(e) => {
+                        setSubCategoryForm((prev) => ({ ...prev, name: e.target.value }));
+                        setSubCatNameError('');
+                      }}
                       style={{
                         width: '100%',
                         padding: '10px 14px',
                         borderRadius: '9px',
-                        border: '1.5px solid #CBD5E1',
+                        border: subCatNameError ? '1.5px solid #EF4444' : '1.5px solid #CBD5E1',
+                        boxShadow: subCatNameError ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none',
                         fontSize: '13.5px',
                         outline: 'none',
                         boxSizing: 'border-box',
+                        transition: 'border 0.15s ease, box-shadow 0.15s ease',
                       }}
                       onFocus={(e) => {
-                        e.target.style.borderColor = '#6828DC';
-                        e.target.style.boxShadow = '0 0 0 3px rgba(104, 40, 220, 0.15)';
+                        if (!subCatNameError) {
+                          e.target.style.borderColor = '#6828DC';
+                          e.target.style.boxShadow = '0 0 0 3px rgba(104, 40, 220, 0.15)';
+                        }
                       }}
                       onBlur={(e) => {
-                        e.target.style.borderColor = '#CBD5E1';
-                        e.target.style.boxShadow = 'none';
+                        if (!subCatNameError) {
+                          e.target.style.borderColor = '#CBD5E1';
+                          e.target.style.boxShadow = 'none';
+                        }
                       }}
                     />
+                    {subCatNameError && (
+                      <p style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, margin: '5px 0 0 0', lineHeight: 1.4 }}>
+                        {subCatNameError}
+                      </p>
+                    )}
                   </div>
 
                   <div>

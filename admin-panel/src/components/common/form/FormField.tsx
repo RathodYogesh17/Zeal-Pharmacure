@@ -23,7 +23,7 @@ export const FormField: React.FC<FormFieldProps> = ({ label, required, error, he
         </label>
       )}
       {children}
-      {error && (<p style={{ fontSize: '12px', color: '#EF4444', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}> <span>•</span> {error} </p> )}
+      {error && (<p style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, margin: '4px 0 0 0', lineHeight: 1.4 }}>{error}</p>)}
       {!error && helperText && (<p style={{ fontSize: '12px', color: '#64748B', marginTop: '4px' }}> {helperText}</p>)}
     </div>
   );

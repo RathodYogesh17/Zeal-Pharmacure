@@ -25,7 +25,7 @@ export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
             maxLength={maxLength}
             value={value}
             rows={props.rows || 3}
-            style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: error ? '1.5px solid #EF4444' : '1.5px solid #CBD5E1', fontSize: '13.5px', color: '#0F172A', backgroundColor: disabled ? '#F1F5F9' : '#FFFFFF', outline: 'none', resize: 'vertical', boxSizing: 'border-box', transition: 'border-color 0.2s, box-shadow 0.2s', ...style, }}
+            style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: error ? '1.5px solid #EF4444' : '1.5px solid #CBD5E1', boxShadow: error ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none', fontSize: '13.5px', color: '#0F172A', backgroundColor: disabled ? '#F1F5F9' : '#FFFFFF', outline: 'none', resize: 'vertical', boxSizing: 'border-box', transition: 'border-color 0.2s, box-shadow 0.2s', ...style, }}
             onFocus={(e) => { if (!error) { e.currentTarget.style.borderColor = '#6828DC'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(104, 40, 220, 0.12)';} props.onFocus?.(e);}}
             onBlur={(e) => { if (!error) {e.currentTarget.style.borderColor = '#CBD5E1'; e.currentTarget.style.boxShadow = 'none'; } props.onBlur?.(e);}}
             {...props}

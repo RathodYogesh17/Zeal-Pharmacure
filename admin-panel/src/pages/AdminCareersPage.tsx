@@ -82,6 +82,7 @@ export const AdminCareersPage: React.FC = () => {
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
   const [creatingJob, setCreatingJob] = useState(false);
   const [showJobSeo, setShowJobSeo] = useState(false);
+  const [jobTitleError, setJobTitleError] = useState('');
 
   // View Job Details Modal State
   const [viewJobModal, setViewJobModal] = useState<IJobOpening | null>(null);
@@ -175,9 +176,10 @@ export const AdminCareersPage: React.FC = () => {
   const handleCreateJob = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!jobForm.title.trim()) {
-      setErrorMsg('Job Title is required.');
+      setJobTitleError('Job Designation / Title is required.');
       return;
     }
+    setJobTitleError('');
 
     const desc = jobForm.description.trim() ||
       `Exciting career opening for ${jobForm.title} in our ${jobForm.department} team at ${jobForm.location}. Candidates must possess strong pharmaceutical ethics, technical competence, and dedication to WHO-GMP standards.`;
@@ -1338,7 +1340,7 @@ export const AdminCareersPage: React.FC = () => {
             </div>
 
             {/* Modal Body */}
-            <form onSubmit={handleCreateJob} style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
+            <form onSubmit={handleCreateJob} noValidate style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
               <div style={{ padding: '24px 28px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '20px', flex: 1 }}>
                 
                 {/* 0. Preset Wholesale Stockist Role Selector (Auto Pre-fills all fields) */}
@@ -1373,15 +1375,18 @@ export const AdminCareersPage: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    required
                     placeholder="e.g. Pharmacist, Purchase Executive, Dispatch Executive"
                     value={jobForm.title}
-                    onChange={(e) => setJobForm((prev) => ({ ...prev, title: e.target.value }))}
+                    onChange={(e) => {
+                      setJobForm((prev) => ({ ...prev, title: e.target.value }));
+                      setJobTitleError('');
+                    }}
                     style={{
                       width: '100%',
                       padding: '11px 16px',
                       borderRadius: '10px',
-                      border: '1.5px solid #CBD5E1',
+                      border: jobTitleError ? '1.5px solid #EF4444' : '1.5px solid #CBD5E1',
+                      boxShadow: jobTitleError ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none',
                       fontSize: '14px',
                       outline: 'none',
                       boxSizing: 'border-box',
@@ -1390,14 +1395,23 @@ export const AdminCareersPage: React.FC = () => {
                       transition: 'all 0.15s ease',
                     }}
                     onFocus={(e) => {
-                      e.target.style.borderColor = '#6828DC';
-                      e.target.style.boxShadow = '0 0 0 3px rgba(104, 40, 220, 0.12)';
+                      if (!jobTitleError) {
+                        e.target.style.borderColor = '#6828DC';
+                        e.target.style.boxShadow = '0 0 0 3px rgba(104, 40, 220, 0.12)';
+                      }
                     }}
                     onBlur={(e) => {
-                      e.target.style.borderColor = '#CBD5E1';
-                      e.target.style.boxShadow = 'none';
+                      if (!jobTitleError) {
+                        e.target.style.borderColor = '#CBD5E1';
+                        e.target.style.boxShadow = 'none';
+                      }
                     }}
                   />
+                  {jobTitleError && (
+                    <p style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, margin: '5px 0 0 0', lineHeight: 1.4 }}>
+                      {jobTitleError}
+                    </p>
+                  )}
                 </div>
 
                 {/* 2. Half-Width Dropdowns (Department & Employment Type) */}
@@ -2441,7 +2455,7 @@ export const AdminCareersPage: React.FC = () => {
               </button>
             </div>
 
-            <form onSubmit={handleScheduleInterviewRound} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <form onSubmit={handleScheduleInterviewRound} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
                   Interview Round Title
@@ -2632,7 +2646,7 @@ export const AdminCareersPage: React.FC = () => {
               </button>
             </div>
 
-            <form onSubmit={handleAddCandidateNote} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <form onSubmit={handleAddCandidateNote} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
                   Note Content

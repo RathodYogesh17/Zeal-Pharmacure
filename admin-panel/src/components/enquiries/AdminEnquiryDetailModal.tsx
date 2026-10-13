@@ -988,7 +988,7 @@ export const AdminEnquiryDetailModal: React.FC<AdminEnquiryDetailModalProps> = (
             </div>
 
             {/* Add Note Input */}
-            <form onSubmit={handleNoteSubmit} style={{ display: 'flex', gap: '8px' }}>
+            <form onSubmit={handleNoteSubmit} noValidate style={{ display: 'flex', gap: '8px' }}>
               <input
                 type="text"
                 placeholder="Log internal note (e.g. 'Customer confirmed order of 500 boxes. Sent net price list')..."
@@ -1214,7 +1214,7 @@ export const AdminEnquiryDetailModal: React.FC<AdminEnquiryDetailModalProps> = (
               </div>
 
               {/* Form */}
-              <form onSubmit={handleSendEmailReply} style={{ padding: '20px' }}>
+              <form onSubmit={handleSendEmailReply} noValidate style={{ padding: '20px' }}>
                 {emailStatusMsg && (
                   <div
                     style={{

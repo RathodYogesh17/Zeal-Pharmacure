@@ -41,6 +41,17 @@ export const AdminLoginPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  const clearFieldError = (fieldName: string) => {
+    if (fieldErrors[fieldName]) {
+      setFieldErrors((prev) => {
+        const next = { ...prev };
+        delete next[fieldName];
+        return next;
+      });
+    }
+  };
 
   // OTP Countdown Timer (1 minute = 60 seconds) for forgot password
   const [otpCountdown, setOtpCountdown] = useState(0);
@@ -81,11 +92,22 @@ export const AdminLoginPage: React.FC = () => {
   // ==========================================
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim() || !password) {
-      setError('Please enter both email address and password.');
+    const errs: Record<string, string> = {};
+    if (!email.trim()) {
+      errs.email = 'Email address is required.';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      errs.email = 'Please enter a valid email address.';
+    }
+    if (!password) {
+      errs.password = 'Password is required.';
+    }
+
+    if (Object.keys(errs).length > 0) {
+      setFieldErrors(errs);
       return;
     }
 
+    setFieldErrors({});
     setLoading(true);
     setError('');
     setSuccessMessage('');
@@ -112,11 +134,16 @@ export const AdminLoginPage: React.FC = () => {
   const handleOtpSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const cleanOtp = otpCode.trim();
-    if (!cleanOtp || cleanOtp.length !== 6) {
-      setError('Please enter a valid 6-digit OTP code.');
+    if (!cleanOtp) {
+      setFieldErrors({ otpCode: 'OTP code is required.' });
+      return;
+    }
+    if (cleanOtp.length !== 6) {
+      setFieldErrors({ otpCode: 'Please enter a valid 6-digit OTP code.' });
       return;
     }
 
+    setFieldErrors({});
     setLoading(true);
     setError('');
 
@@ -151,10 +178,15 @@ export const AdminLoginPage: React.FC = () => {
   const handleForgotRequestSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!forgotEmail.trim()) {
-      setError('Please enter your registered email address.');
+      setFieldErrors({ forgotEmail: 'Registered email address is required.' });
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(forgotEmail.trim())) {
+      setFieldErrors({ forgotEmail: 'Please enter a valid email address.' });
       return;
     }
 
+    setFieldErrors({});
     setLoading(true);
     setError('');
     setSuccessMessage('');
@@ -177,11 +209,16 @@ export const AdminLoginPage: React.FC = () => {
   const handleForgotOtpSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const cleanOtp = forgotOtp.trim();
-    if (!cleanOtp || cleanOtp.length !== 6) {
-      setError('Please enter the 6-digit verification code.');
+    if (!cleanOtp) {
+      setFieldErrors({ forgotOtp: 'OTP code is required.' });
+      return;
+    }
+    if (cleanOtp.length !== 6) {
+      setFieldErrors({ forgotOtp: 'Please enter a valid 6-digit OTP code.' });
       return;
     }
 
+    setFieldErrors({});
     setLoading(true);
     setError('');
     setSuccessMessage('');
@@ -220,15 +257,24 @@ export const AdminLoginPage: React.FC = () => {
   // ==========================================
   const handleForgotNewPasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!forgotNewPassword || forgotNewPassword.length < 8) {
-      setError('Password must be at least 8 characters long.');
-      return;
+    const errs: Record<string, string> = {};
+    if (!forgotNewPassword) {
+      errs.forgotNewPassword = 'New password is required.';
+    } else if (forgotNewPassword.length < 8) {
+      errs.forgotNewPassword = 'Password must be at least 8 characters long.';
     }
-    if (forgotNewPassword !== forgotConfirmPassword) {
-      setError('Passwords do not match. Please verify.');
+    if (!forgotConfirmPassword) {
+      errs.forgotConfirmPassword = 'Confirm password is required.';
+    } else if (forgotNewPassword !== forgotConfirmPassword) {
+      errs.forgotConfirmPassword = 'Passwords do not match.';
+    }
+
+    if (Object.keys(errs).length > 0) {
+      setFieldErrors(errs);
       return;
     }
 
+    setFieldErrors({});
     setLoading(true);
     setError('');
     try {
@@ -404,8 +450,11 @@ export const AdminLoginPage: React.FC = () => {
         {/* ==================================================== */}
         {/* VIEW 1: LOGIN FORM */}
         {/* ==================================================== */}
+        {/* ==================================================== */}
+        {/* VIEW 1: LOGIN FORM */}
+        {/* ==================================================== */}
         {mode === 'LOGIN' && (
-          <form onSubmit={handleLoginSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <form onSubmit={handleLoginSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#334155', marginBottom: '6px' }}>
                 Email Address
@@ -414,23 +463,31 @@ export const AdminLoginPage: React.FC = () => {
                 <Mail size={16} style={{ position: 'absolute', left: '14px', top: '13px', color: '#94A3B8' }} />
                 <input
                   type="email"
-                  required
                   placeholder="name@zealpharma.com"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    clearFieldError('email');
+                  }}
                   style={{
                     width: '100%',
                     padding: '10px 14px 10px 40px',
                     borderRadius: '8px',
-                    border: '1.5px solid #CBD5E1',
+                    border: fieldErrors.email ? '1.5px solid #EF4444' : '1.5px solid #CBD5E1',
+                    boxShadow: fieldErrors.email ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none',
                     fontSize: '14px',
                     outline: 'none',
-                    transition: 'border-color 0.2s',
+                    transition: 'border-color 0.2s, box-shadow 0.2s',
                   }}
-                  onFocus={(e) => (e.target.style.borderColor = '#6828DC')}
-                  onBlur={(e) => (e.target.style.borderColor = '#CBD5E1')}
+                  onFocus={(e) => { if (!fieldErrors.email) e.target.style.borderColor = '#6828DC'; }}
+                  onBlur={(e) => { if (!fieldErrors.email) e.target.style.borderColor = '#CBD5E1'; }}
                 />
               </div>
+              {fieldErrors.email && (
+                <p style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, margin: '5px 0 0 0', lineHeight: 1.4 }}>
+                  {fieldErrors.email}
+                </p>
+              )}
             </div>
 
             <div>
@@ -463,21 +520,24 @@ export const AdminLoginPage: React.FC = () => {
                 <Lock size={16} style={{ position: 'absolute', left: '14px', top: '13px', color: '#94A3B8' }} />
                 <input
                   type={showPassword ? 'text' : 'password'}
-                  required
                   placeholder="••••••••"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    clearFieldError('password');
+                  }}
                   style={{
                     width: '100%',
                     padding: '10px 40px 10px 40px',
                     borderRadius: '8px',
-                    border: '1.5px solid #CBD5E1',
+                    border: fieldErrors.password ? '1.5px solid #EF4444' : '1.5px solid #CBD5E1',
+                    boxShadow: fieldErrors.password ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none',
                     fontSize: '14px',
                     outline: 'none',
-                    transition: 'border-color 0.2s',
+                    transition: 'border-color 0.2s, box-shadow 0.2s',
                   }}
-                  onFocus={(e) => (e.target.style.borderColor = '#6828DC')}
-                  onBlur={(e) => (e.target.style.borderColor = '#CBD5E1')}
+                  onFocus={(e) => { if (!fieldErrors.password) e.target.style.borderColor = '#6828DC'; }}
+                  onBlur={(e) => { if (!fieldErrors.password) e.target.style.borderColor = '#CBD5E1'; }}
                 />
                 <button
                   type="button"
@@ -498,6 +558,11 @@ export const AdminLoginPage: React.FC = () => {
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
+              {fieldErrors.password && (
+                <p style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, margin: '5px 0 0 0', lineHeight: 1.4 }}>
+                  {fieldErrors.password}
+                </p>
+              )}
             </div>
 
             <button
@@ -536,7 +601,7 @@ export const AdminLoginPage: React.FC = () => {
         {/* VIEW 2: OTP VERIFICATION */}
         {/* ==================================================== */}
         {mode === 'OTP' && (
-          <form onSubmit={handleOtpSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <form onSubmit={handleOtpSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#334155', marginBottom: '6px', textAlign: 'center' }}>
                 Enter 6-Digit OTP Code
@@ -545,25 +610,34 @@ export const AdminLoginPage: React.FC = () => {
                 <KeyRound size={18} style={{ position: 'absolute', left: '16px', top: '14px', color: '#6828DC' }} />
                 <input
                   type="text"
-                  required
                   maxLength={6}
                   placeholder="123456"
                   value={otpCode}
-                  onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
+                  onChange={(e) => {
+                    setOtpCode(e.target.value.replace(/\D/g, ''));
+                    clearFieldError('otpCode');
+                  }}
                   autoFocus
                   style={{
                     width: '100%',
                     padding: '10px 14px 10px 46px',
                     borderRadius: '8px',
-                    border: '2px solid #8B5CF6',
+                    border: fieldErrors.otpCode ? '2px solid #EF4444' : '2px solid #8B5CF6',
+                    boxShadow: fieldErrors.otpCode ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none',
                     fontSize: '20px',
                     fontWeight: 800,
                     letterSpacing: '6px',
                     textAlign: 'center',
                     outline: 'none',
+                    transition: 'border-color 0.2s, box-shadow 0.2s',
                   }}
                 />
               </div>
+              {fieldErrors.otpCode && (
+                <p style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, margin: '5px 0 0 0', textAlign: 'center', lineHeight: 1.4 }}>
+                  {fieldErrors.otpCode}
+                </p>
+              )}
             </div>
 
             <button
@@ -643,7 +717,7 @@ export const AdminLoginPage: React.FC = () => {
         {/* VIEW 3: FORGOT PASSWORD - STEP 1 (REQUEST OTP) */}
         {/* ==================================================== */}
         {mode === 'FORGOT_REQUEST' && (
-          <form onSubmit={handleForgotRequestSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <form onSubmit={handleForgotRequestSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#334155', marginBottom: '6px' }}>
                 Email Address
@@ -652,21 +726,30 @@ export const AdminLoginPage: React.FC = () => {
                 <Mail size={16} style={{ position: 'absolute', left: '14px', top: '13px', color: '#94A3B8' }} />
                 <input
                   type="email"
-                  required
                   placeholder="name@zealpharma.com"
                   value={forgotEmail}
-                  onChange={(e) => setForgotEmail(e.target.value)}
+                  onChange={(e) => {
+                    setForgotEmail(e.target.value);
+                    clearFieldError('forgotEmail');
+                  }}
                   autoFocus
                   style={{
                     width: '100%',
                     padding: '10px 14px 10px 40px',
                     borderRadius: '8px',
-                    border: '1.5px solid #CBD5E1',
+                    border: fieldErrors.forgotEmail ? '1.5px solid #EF4444' : '1.5px solid #CBD5E1',
+                    boxShadow: fieldErrors.forgotEmail ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none',
                     fontSize: '14px',
                     outline: 'none',
+                    transition: 'border-color 0.2s, box-shadow 0.2s',
                   }}
                 />
               </div>
+              {fieldErrors.forgotEmail && (
+                <p style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, margin: '5px 0 0 0', lineHeight: 1.4 }}>
+                  {fieldErrors.forgotEmail}
+                </p>
+              )}
             </div>
 
             <button
@@ -730,7 +813,7 @@ export const AdminLoginPage: React.FC = () => {
         {/* VIEW 4: FORGOT PASSWORD - STEP 2 (VERIFY OTP) */}
         {/* ==================================================== */}
         {mode === 'FORGOT_OTP' && (
-          <form onSubmit={handleForgotOtpSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <form onSubmit={handleForgotOtpSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {/* Countdown Timer Banner */}
             <div
               style={{
@@ -771,17 +854,20 @@ export const AdminLoginPage: React.FC = () => {
                 <KeyRound size={16} style={{ position: 'absolute', left: '14px', top: '13px', color: '#6828DC' }} />
                 <input
                   type="text"
-                  required
                   maxLength={6}
                   placeholder="123456"
                   value={forgotOtp}
-                  onChange={(e) => setForgotOtp(e.target.value.replace(/\D/g, ''))}
+                  onChange={(e) => {
+                    setForgotOtp(e.target.value.replace(/\D/g, ''));
+                    clearFieldError('forgotOtp');
+                  }}
                   autoFocus
                   style={{
                     width: '100%',
                     padding: '10px 14px 10px 40px',
                     borderRadius: '8px',
-                    border: `1.5px solid ${otpCountdown === 0 ? '#FECACA' : '#8B5CF6'}`,
+                    border: fieldErrors.forgotOtp ? '1.5px solid #EF4444' : `1.5px solid ${otpCountdown === 0 ? '#FECACA' : '#8B5CF6'}`,
+                    boxShadow: fieldErrors.forgotOtp ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none',
                     fontSize: '22px',
                     fontWeight: 800,
                     letterSpacing: '6px',
@@ -789,10 +875,16 @@ export const AdminLoginPage: React.FC = () => {
                     textAlign: 'center',
                     color: '#1E1B4B',
                     background: otpCountdown === 0 ? '#FEF2F2' : '#FAFAFA',
+                    transition: 'border-color 0.2s, box-shadow 0.2s',
                   }}
                 />
               </div>
-              {otpCountdown === 0 && (
+              {fieldErrors.forgotOtp && (
+                <p style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, margin: '5px 0 0 0', textAlign: 'center', lineHeight: 1.4 }}>
+                  {fieldErrors.forgotOtp}
+                </p>
+              )}
+              {!fieldErrors.forgotOtp && otpCountdown === 0 && (
                 <p style={{ fontSize: '12px', color: '#DC2626', marginTop: '6px', textAlign: 'center' }}>
                   OTP has expired. Please resend a new code.
                 </p>
@@ -880,7 +972,7 @@ export const AdminLoginPage: React.FC = () => {
         {/* VIEW 5: FORGOT PASSWORD - STEP 3 (CREATE NEW PASSWORD) */}
         {/* ==================================================== */}
         {mode === 'FORGOT_NEW_PASSWORD' && (
-          <form onSubmit={handleForgotNewPasswordSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          <form onSubmit={handleForgotNewPasswordSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <div>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#334155', marginBottom: '6px' }}>
                 New Password (Min 8 Characters)
@@ -889,18 +981,22 @@ export const AdminLoginPage: React.FC = () => {
                 <Lock size={16} style={{ position: 'absolute', left: '14px', top: '13px', color: '#94A3B8' }} />
                 <input
                   type={showForgotNewPass ? 'text' : 'password'}
-                  required
                   placeholder="••••••••"
                   value={forgotNewPassword}
-                  onChange={(e) => setForgotNewPassword(e.target.value)}
+                  onChange={(e) => {
+                    setForgotNewPassword(e.target.value);
+                    clearFieldError('forgotNewPassword');
+                  }}
                   autoFocus
                   style={{
                     width: '100%',
                     padding: '10px 40px 10px 40px',
                     borderRadius: '8px',
-                    border: '1.5px solid #CBD5E1',
+                    border: fieldErrors.forgotNewPassword ? '1.5px solid #EF4444' : '1.5px solid #CBD5E1',
+                    boxShadow: fieldErrors.forgotNewPassword ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none',
                     fontSize: '14px',
                     outline: 'none',
+                    transition: 'border-color 0.2s, box-shadow 0.2s',
                   }}
                 />
                 <button
@@ -922,6 +1018,11 @@ export const AdminLoginPage: React.FC = () => {
                   {showForgotNewPass ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
+              {fieldErrors.forgotNewPassword && (
+                <p style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, margin: '5px 0 0 0', lineHeight: 1.4 }}>
+                  {fieldErrors.forgotNewPassword}
+                </p>
+              )}
             </div>
 
             <div>
@@ -932,20 +1033,29 @@ export const AdminLoginPage: React.FC = () => {
                 <Lock size={16} style={{ position: 'absolute', left: '14px', top: '13px', color: '#94A3B8' }} />
                 <input
                   type={showForgotNewPass ? 'text' : 'password'}
-                  required
                   placeholder="••••••••"
                   value={forgotConfirmPassword}
-                  onChange={(e) => setForgotConfirmPassword(e.target.value)}
+                  onChange={(e) => {
+                    setForgotConfirmPassword(e.target.value);
+                    clearFieldError('forgotConfirmPassword');
+                  }}
                   style={{
                     width: '100%',
                     padding: '10px 14px 10px 40px',
                     borderRadius: '8px',
-                    border: '1.5px solid #CBD5E1',
+                    border: fieldErrors.forgotConfirmPassword ? '1.5px solid #EF4444' : '1.5px solid #CBD5E1',
+                    boxShadow: fieldErrors.forgotConfirmPassword ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none',
                     fontSize: '14px',
                     outline: 'none',
+                    transition: 'border-color 0.2s, box-shadow 0.2s',
                   }}
                 />
               </div>
+              {fieldErrors.forgotConfirmPassword && (
+                <p style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, margin: '5px 0 0 0', lineHeight: 1.4 }}>
+                  {fieldErrors.forgotConfirmPassword}
+                </p>
+              )}
             </div>
 
             <button

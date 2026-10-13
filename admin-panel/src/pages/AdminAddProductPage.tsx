@@ -86,6 +86,17 @@ export const AdminAddProductPage: React.FC = () => {
   const [initialLoading, setInitialLoading] = useState(isEditMode);
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  const clearFieldError = (fieldName: string) => {
+    if (fieldErrors[fieldName]) {
+      setFieldErrors((prev) => {
+        const next = { ...prev };
+        delete next[fieldName];
+        return next;
+      });
+    }
+  };
 
   // Media
   const [primaryImage, setPrimaryImage] = useState<string>('');
@@ -265,11 +276,13 @@ export const AdminAddProductPage: React.FC = () => {
 
   const handleCategoryChange = (catId: string) => {
     setFormData((prev) => ({ ...prev, category: catId, subCategory: '' }));
+    clearFieldError('category');
     loadSubCategories(catId);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
+    clearFieldError(name);
     if (type === 'checkbox') {
       const checked = (e.target as HTMLInputElement).checked;
       setFormData((prev) => ({ ...prev, [name]: checked }));
@@ -353,31 +366,30 @@ export const AdminAddProductPage: React.FC = () => {
     setErrorMsg('');
     setSuccessMsg('');
 
-    // Validations
+    // Field-level Validations
+    const errs: Record<string, string> = {};
     if (!formData.name.trim()) {
-      setErrorMsg('Product / Brand Name is required.');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
+      errs.name = 'Product / Brand Name is required.';
     }
     if (!formData.genericName.trim()) {
-      setErrorMsg('Generic / Scientific Name is required.');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
+      errs.genericName = 'Generic / Scientific Name is required.';
     }
     if (!formData.composition.trim()) {
-      setErrorMsg('Active Pharmaceutical Composition is required.');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
+      errs.composition = 'Active Pharmaceutical Composition is required.';
     }
     if (!formData.category) {
-      setErrorMsg('Please select a Therapeutic Category.');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
+      errs.category = 'Please select a Therapeutic Category.';
     }
     if (!formData.packaging.trim()) {
-      setErrorMsg('Packaging details are required (e.g. 10 x 10 Tablets).');
+      errs.packaging = 'Packaging details are required (e.g. 10 x 10 Tablets).';
+    }
+
+    if (Object.keys(errs).length > 0) {
+      setFieldErrors(errs);
       return;
     }
+
+    setFieldErrors({});
 
     setLoading(true);
 
@@ -707,12 +719,20 @@ export const AdminAddProductPage: React.FC = () => {
                 <input
                   type="text"
                   name="name"
-                  required
                   placeholder="e.g. ZEALOX-OZ"
                   value={formData.name}
                   onChange={handleChange}
                   className="input-base"
+                  style={{
+                    borderColor: fieldErrors.name ? '#EF4444' : undefined,
+                    boxShadow: fieldErrors.name ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : undefined,
+                  }}
                 />
+                {fieldErrors.name && (
+                  <p style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, margin: '5px 0 0 0', lineHeight: 1.4 }}>
+                    {fieldErrors.name}
+                  </p>
+                )}
               </div>
 
               {/* Generic / Scientific Name */}
@@ -723,12 +743,20 @@ export const AdminAddProductPage: React.FC = () => {
                 <input
                   type="text"
                   name="genericName"
-                  required
                   placeholder="e.g. Ofloxacin & Ornidazole Tablets"
                   value={formData.genericName}
                   onChange={handleChange}
                   className="input-base"
+                  style={{
+                    borderColor: fieldErrors.genericName ? '#EF4444' : undefined,
+                    boxShadow: fieldErrors.genericName ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : undefined,
+                  }}
                 />
+                {fieldErrors.genericName && (
+                  <p style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, margin: '5px 0 0 0', lineHeight: 1.4 }}>
+                    {fieldErrors.genericName}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -739,14 +767,23 @@ export const AdminAddProductPage: React.FC = () => {
               </label>
               <textarea
                 name="composition"
-                required
                 rows={2}
                 placeholder="e.g. Each film coated tablet contains: Ofloxacin IP 200 mg, Ornidazole IP 500 mg, Excipients q.s."
                 value={formData.composition}
                 onChange={handleChange}
                 className="input-base"
-                style={{ resize: 'vertical', minHeight: '60px' }}
+                style={{
+                  resize: 'vertical',
+                  minHeight: '60px',
+                  borderColor: fieldErrors.composition ? '#EF4444' : undefined,
+                  boxShadow: fieldErrors.composition ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : undefined,
+                }}
               />
+              {fieldErrors.composition && (
+                <p style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, margin: '5px 0 0 0', lineHeight: 1.4 }}>
+                  {fieldErrors.composition}
+                </p>
+              )}
             </div>
 
             <div className="form-grid-3">
@@ -828,7 +865,16 @@ export const AdminAddProductPage: React.FC = () => {
                     onChange={(e) => handleCategoryChange(e.target.value)}
                     options={categories.map((c) => ({ value: c._id, label: c.name }))}
                     placeholder="Select Category"
+                    style={{
+                      borderColor: fieldErrors.category ? '#EF4444' : undefined,
+                      boxShadow: fieldErrors.category ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : undefined,
+                    }}
                   />
+                )}
+                {fieldErrors.category && (
+                  <p style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, margin: '5px 0 0 0', lineHeight: 1.4 }}>
+                    {fieldErrors.category}
+                  </p>
                 )}
               </div>
 
@@ -872,12 +918,20 @@ export const AdminAddProductPage: React.FC = () => {
                 <input
                   type="text"
                   name="packaging"
-                  required
                   placeholder="e.g. 10 x 10 Alu-Alu Blister, 100 ml Bottle"
                   value={formData.packaging}
                   onChange={handleChange}
                   className="input-base"
+                  style={{
+                    borderColor: fieldErrors.packaging ? '#EF4444' : undefined,
+                    boxShadow: fieldErrors.packaging ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : undefined,
+                  }}
                 />
+                {fieldErrors.packaging && (
+                  <p style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, margin: '5px 0 0 0', lineHeight: 1.4 }}>
+                    {fieldErrors.packaging}
+                  </p>
+                )}
               </div>
 
               {/* Maximum Retail Price (MRP) */}

@@ -46,6 +46,17 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onCl
   const [mediaGallery, setMediaGallery] = useState<string[]>([]);
   const [galleryModalOpen, setGalleryModalOpen] = useState(false);
   const [activeSlot, setActiveSlot] = useState<'primary' | 'extra'>('primary');
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  const clearFieldError = (fieldName: string) => {
+    if (fieldErrors[fieldName]) {
+      setFieldErrors((prev) => {
+        const next = { ...prev };
+        delete next[fieldName];
+        return next;
+      });
+    }
+  };
 
   useEffect(() => {
     if (!product) return;
@@ -94,6 +105,7 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onCl
     setMediaGallery(extraImages);
     setErrorMsg('');
     setSuccessMsg('');
+    setFieldErrors({});
 
     if (catId) {
       categoryService.getSubCategories(catId).then(setSubCategories).catch(() => setSubCategories([]));
@@ -102,6 +114,7 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onCl
 
   const handleCategoryChange = async (catId: string) => {
     setFormData((prev) => ({ ...prev, category: catId, subCategory: '' }));
+    clearFieldError('category');
     if (catId) {
       const subs = await categoryService.getSubCategories(catId).catch(() => []);
       setSubCategories(subs);
@@ -114,6 +127,7 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onCl
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { name, value, type } = e.target;
+    clearFieldError(name);
     if (type === 'checkbox') {
       const checked = (e.target as HTMLInputElement).checked;
       setFormData((prev) => ({ ...prev, [name]: checked }));
@@ -126,16 +140,19 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onCl
     e.preventDefault();
     if (!product) return;
 
-    if (!formData.name.trim() || !formData.genericName.trim() || !formData.composition.trim()) {
-      setErrorMsg('Please enter Product Name, Generic Name, and Active Composition.');
-      return;
-    }
-
+    const errs: Record<string, string> = {};
+    if (!formData.name.trim()) errs.name = 'Product Name is required.';
+    if (!formData.genericName.trim()) errs.genericName = 'Generic Clinical Name is required.';
+    if (!formData.composition.trim()) errs.composition = 'Composition / Formulation is required.';
     const catId = formData.category || categories[0]?._id;
-    if (!catId) {
-      setErrorMsg('Please select a valid product category.');
+    if (!catId) errs.category = 'Please select a valid product category.';
+    if (!formData.packaging?.trim()) errs.packaging = 'Packaging details are required.';
+
+    if (Object.keys(errs).length > 0) {
+      setFieldErrors(errs);
       return;
     }
+    setFieldErrors({});
 
     setLoading(true);
     setErrorMsg('');
@@ -194,7 +211,7 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onCl
         title={`Edit Product: ${product.name}`}
         size="xl"
       >
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {errorMsg && (
             <div style={{ background: '#FEF2F2', border: '1.5px solid #FECACA', color: '#991B1B', padding: '12px 16px', borderRadius: '8px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px', }}>
               <AlertCircle size={18} style={{ color: '#EF4444', flexShrink: 0 }} />
@@ -216,26 +233,95 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onCl
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 600, color: '#334155', marginBottom: '4px' }}>  Product Name *</label>
-                  <input type="text" name="name" required value={formData.name} onChange={handleChange} style={{ width: '100%', padding: '8px 12px' }} />
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px',
+                      borderRadius: '6px',
+                      border: fieldErrors.name ? '1.5px solid #EF4444' : '1px solid #CBD5E1',
+                      boxShadow: fieldErrors.name ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none',
+                      outline: 'none',
+                    }}
+                  />
+                  {fieldErrors.name && (
+                    <p style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, margin: '4px 0 0 0', lineHeight: 1.4 }}>
+                      {fieldErrors.name}
+                    </p>
+                  )}
                 </div>
 
                 <div>
                   <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 600, color: '#334155', marginBottom: '4px' }}> Generic Clinical Name * </label>
-                  <input type="text" name="genericName" required value={formData.genericName} onChange={handleChange} style={{ width: '100%', padding: '8px 12px' }} />
+                  <input
+                    type="text"
+                    name="genericName"
+                    value={formData.genericName}
+                    onChange={handleChange}
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px',
+                      borderRadius: '6px',
+                      border: fieldErrors.genericName ? '1.5px solid #EF4444' : '1px solid #CBD5E1',
+                      boxShadow: fieldErrors.genericName ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none',
+                      outline: 'none',
+                    }}
+                  />
+                  {fieldErrors.genericName && (
+                    <p style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, margin: '4px 0 0 0', lineHeight: 1.4 }}>
+                      {fieldErrors.genericName}
+                    </p>
+                  )}
                 </div>
               </div>
 
               <div>
                 <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 600, color: '#334155', marginBottom: '4px' }}> Composition / Formulation *</label>
-                <input type="text" name="composition" required value={formData.composition} onChange={handleChange} style={{ width: '100%', padding: '8px 12px' }} />
+                <input
+                  type="text"
+                  name="composition"
+                  value={formData.composition}
+                  onChange={handleChange}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    borderRadius: '6px',
+                    border: fieldErrors.composition ? '1.5px solid #EF4444' : '1px solid #CBD5E1',
+                    boxShadow: fieldErrors.composition ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none',
+                    outline: 'none',
+                  }}
+                />
+                {fieldErrors.composition && (
+                  <p style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, margin: '4px 0 0 0', lineHeight: 1.4 }}>
+                    {fieldErrors.composition}
+                  </p>
+                )}
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 600, color: '#334155', marginBottom: '4px' }}> Therapeutic Category *</label>
-                  <ThemeSelect name="category" value={formData.category} onChange={(e) => handleCategoryChange(e.target.value)} style={{ width: '100%' }} containerStyle={{ width: '100%' }}>
+                  <ThemeSelect
+                    name="category"
+                    value={formData.category}
+                    onChange={(e) => handleCategoryChange(e.target.value)}
+                    style={{
+                      width: '100%',
+                      borderColor: fieldErrors.category ? '#EF4444' : undefined,
+                      boxShadow: fieldErrors.category ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : undefined,
+                    }}
+                    containerStyle={{ width: '100%' }}
+                  >
                     {categories.map((c) => (<option key={c._id} value={c._id}> {c.name} </option>))}
                   </ThemeSelect>
+                  {fieldErrors.category && (
+                    <p style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, margin: '4px 0 0 0', lineHeight: 1.4 }}>
+                      {fieldErrors.category}
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -264,7 +350,26 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onCl
 
                 <div>
                   <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 600, color: '#334155', marginBottom: '4px' }}> Packaging * </label>
-                  <input type="text" name="packaging" value={formData.packaging} onChange={handleChange} placeholder="e.g. 10 x 10 Alu-Alu" style={{ width: '100%', padding: '8px 12px' }} />
+                  <input
+                    type="text"
+                    name="packaging"
+                    value={formData.packaging}
+                    onChange={handleChange}
+                    placeholder="e.g. 10 x 10 Alu-Alu"
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px',
+                      borderRadius: '6px',
+                      border: fieldErrors.packaging ? '1.5px solid #EF4444' : '1px solid #CBD5E1',
+                      boxShadow: fieldErrors.packaging ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none',
+                      outline: 'none',
+                    }}
+                  />
+                  {fieldErrors.packaging && (
+                    <p style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, margin: '4px 0 0 0', lineHeight: 1.4 }}>
+                      {fieldErrors.packaging}
+                    </p>
+                  )}
                 </div>
               </div>
 
