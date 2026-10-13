@@ -521,7 +521,7 @@ export const Navbar: React.FC = () => {
               borderRadius: '999px',
             }}
           >
-            <span>{settings.primaryCtaText || 'Enquire Now'}</span>
+            <span>{settings.primaryCtaText || 'Apply for Stockists / Distribution'}</span>
             <ArrowRight size={16} />
           </button>
 
@@ -648,7 +648,7 @@ export const Navbar: React.FC = () => {
             className="btn btn-primary"
             style={{ marginTop: '10px', width: '100%', borderRadius: '8px' }}
           >
-            <span>Enquire for Franchise</span>
+            <span>Apply for Stockists / Distribution</span>
             <ArrowRight size={16} />
           </button>
         </div>

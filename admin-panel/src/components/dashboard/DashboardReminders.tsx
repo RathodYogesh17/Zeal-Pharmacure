@@ -207,7 +207,7 @@ export const DashboardReminders: React.FC<DashboardRemindersProps> = ({
               </span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '10px', borderTop: '1px solid #F1F5F9' }}>
-              <span style={{ fontSize: '11.5px', color: '#64748B' }}>PCD & Bulk Verification</span>
+              <span style={{ fontSize: '11.5px', color: '#64748B' }}>Stockists / Distribution & Bulk Verification</span>
               <Link
                 to="/admin/stockist-enquiries"
                 style={{

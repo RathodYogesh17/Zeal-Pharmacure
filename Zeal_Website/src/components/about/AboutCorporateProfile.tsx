@@ -101,7 +101,7 @@ export const AboutCorporateProfile: React.FC = () => {
                   <div style={{ fontFamily: 'var(--font-heading, "Outfit", sans-serif)', fontSize: '13.5px', fontWeight: 800, color: '#0F172A' }}>
                     Doctor Visual Aids &amp; Marketing Inputs
                   </div>
-                  <div style={{ fontSize: '11.5px', color: '#64748B' }}>Free promotional tools provided for franchise distributors</div>
+                  <div style={{ fontSize: '11.5px', color: '#64748B' }}>Free promotional tools provided for Stockists / Distribution partners</div>
                 </div>
                 <Package size={20} style={{ color: '#D97706' }} />
               </div>

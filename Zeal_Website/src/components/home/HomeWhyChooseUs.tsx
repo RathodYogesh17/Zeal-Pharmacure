@@ -37,7 +37,7 @@ export const HomeWhyChooseUs: React.FC = () => {
     },
     {
       title: '1000+ Satisfied Partners',
-      desc: 'Trusted nationwide by authorized medical practitioners, hospital procurement units, and PCD stockists.',
+      desc: 'Trusted nationwide by authorized medical practitioners, hospital procurement units, and authorized Stockists / Distribution partners.',
       icon: <Smile size={24} style={{ color: '#D97706' }} />,
       bg: '#FEF3C7',
       border: '#FDE68A',

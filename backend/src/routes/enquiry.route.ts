@@ -34,7 +34,7 @@ import asyncHandler from "../utils/asyncHandler";
 const enquiryRouter = Router();
 
 // =====================================================
-// PUBLIC ROUTES (Doctors, Chemists, B2B PCD Franchisees)
+// PUBLIC ROUTES (Doctors, Chemists, B2B Stockists / Distribution Partners)
 // =====================================================
 enquiryRouter.post("/", validate(createEnquirySchema), asyncHandler(createEnquiry));
 enquiryRouter.post("/product", validate(createProductEnquirySchema), asyncHandler(createProductEnquiry));

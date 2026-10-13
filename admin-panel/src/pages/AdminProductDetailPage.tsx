@@ -360,7 +360,7 @@ export const AdminProductDetailPage: React.FC = () => {
             <Activity size={20} />
           </div>
           <div className="min-w-0">
-            <span className="text-[11px] text-slate-400 font-semibold block whitespace-nowrap">B2B Franchise Leads</span>
+            <span className="text-[11px] text-slate-400 font-semibold block whitespace-nowrap">B2B Stockists / Distribution Leads</span>
             <span className="text-xs sm:text-sm font-bold text-brand-purple truncate block">{p.enquiryCount || 0} Inquiries Received</span>
           </div>
         </div>
@@ -891,7 +891,7 @@ export const AdminProductDetailPage: React.FC = () => {
                     <div className="dossier-metric-card">
                       <div className="dossier-metric-header">
                         <Users size={14} className={p.allowEnquiry ? 'text-emerald-600' : 'text-red-500'} />
-                        <span>B2B Franchise Enquiries</span>
+                        <span>B2B Stockists / Distribution Enquiries</span>
                       </div>
                       <span className={`dossier-metric-val ${p.allowEnquiry ? 'text-emerald-600' : 'text-red-500'}`}>
                         {p.allowEnquiry ? 'Accepting Inquiries' : 'Enquiries Disabled'}

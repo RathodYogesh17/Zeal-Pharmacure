@@ -107,7 +107,7 @@ export const DashboardTerritoryCatalog: React.FC<DashboardTerritoryCatalogProps>
                         )}
                       </div>
                       <div style={{ fontSize: '11.5px', color: '#64748B', marginTop: '2px' }}>
-                        Exclusive Monopoly & PCD Franchise Requests
+                        Exclusive Monopoly & Stockists / Distribution Requests
                       </div>
                     </div>
                   </div>
@@ -156,7 +156,7 @@ export const DashboardTerritoryCatalog: React.FC<DashboardTerritoryCatalogProps>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '14px', borderTop: '1px solid #F1F5F9', marginTop: '18px', fontSize: '12px', color: '#64748B' }}>
-          <span>Pan-India PCD Franchises</span>
+          <span>Pan-India Stockists / Distribution</span>
           <Link
             to="/admin/stockist-enquiries"
             style={{

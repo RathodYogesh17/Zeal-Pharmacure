@@ -278,7 +278,7 @@ export const ProductDetailSidebar: React.FC<ProductDetailSidebarProps> = ({
             boxShadow: '0 4px 12px rgba(217, 119, 6, 0.3)',
           }}
         >
-          <span>Claim District Now</span>
+          <span>Apply for Stockists / Distribution</span>
           <ArrowRight size={13} />
         </button>
       </div>

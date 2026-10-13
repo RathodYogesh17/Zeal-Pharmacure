@@ -304,7 +304,7 @@ export const AdminCmsPage: React.FC = () => {
                 <input
                   type="text"
                   name="primaryCtaLink"
-                  placeholder="e.g. /contact or opens Franchise Modal"
+                  placeholder="e.g. /contact or opens Stockists / Distribution Modal"
                   value={formSettings.primaryCtaLink || '/contact'}
                   onChange={handleSettingsChange}
                   style={{

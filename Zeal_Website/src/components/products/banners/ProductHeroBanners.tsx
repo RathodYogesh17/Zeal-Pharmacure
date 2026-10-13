@@ -231,7 +231,7 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
         {/* RIGHT SIDE: TOP BANNER + BOTTOM 2 CARDS */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           
-          {/* Top Card: PCD Supply Chain */}
+          {/* Top Card: Stockists / Distribution Supply Chain */}
           <div style={{
             backgroundImage: `linear-gradient(90deg, rgba(245, 243, 255, 0.97) 0%, rgba(245, 243, 255, 0.92) 52%, rgba(245, 243, 255, 0.55) 78%, rgba(245, 243, 255, 0.15) 100%), url('${rackBgImg}')`,
             backgroundSize: 'cover',
@@ -287,7 +287,7 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
                 className="zp-btn-emerald"
               >
                 <Send size={12} />
-                <span>Apply for Stockists Distribution</span>
+                <span>Apply for Stockists / Distribution</span>
               </button>
             </div>
           </div>

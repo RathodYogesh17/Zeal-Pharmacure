@@ -105,7 +105,7 @@ export const AboutHero: React.FC<AboutHeroProps> = ({ onOpenFranchiseModal }) =>
                   boxShadow: '0 8px 24px -4px rgba(104, 40, 220, 0.65)',
                 }}
               >
-                <span>Apply for Territory Monopoly</span>
+                <span>Apply for Stockists / Distribution</span>
                 <ArrowRight size={15} />
               </button>
 

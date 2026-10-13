@@ -761,7 +761,7 @@ export const AdminEnquiriesPage: React.FC = () => {
                   <DollarSign size={13} /> Investment Budget
                 </span>
                 <p style={{ fontSize: '14px', fontWeight: 700, color: '#0F172A', marginTop: '4px' }}>
-                  {selectedEnquiry.investmentBudget || 'Standard Franchise Tier'}
+                  {selectedEnquiry.investmentBudget || 'Standard Stockists / Distribution Tier'}
                 </p>
               </div>
 

@@ -251,7 +251,7 @@ const getDashboardOverview = async (): Promise<IDashboardOverview> => {
     typeMap.set(label, (typeMap.get(label) || 0) + t.count);
   }
   if (totalFranchiseEnquiries > 0) {
-    typeMap.set("Franchise / PCD", totalFranchiseEnquiries);
+    typeMap.set("Stockists / Distribution", totalFranchiseEnquiries);
   }
   const combinedEnquiriesByType = Array.from(typeMap.entries()).map(([type, count]) => ({ type, count }));
 

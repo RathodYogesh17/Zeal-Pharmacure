@@ -97,7 +97,7 @@ const PERMISSION_MODULES: PermissionModuleGroup[] = [
     ],
   },
   {
-    module: 'Stockists & Franchise Distribution Enquiries',
+    module: 'Stockists & Distribution Enquiries',
     icon: '🏢',
     permissions: [
       { key: 'stockist_enquiry:view', name: 'View Stockist Enquiries', description: 'Inspect stockist applications, territory & drug license data' },

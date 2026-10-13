@@ -252,7 +252,7 @@ export const PreFooterBanner: React.FC = () => {
                 e.currentTarget.style.boxShadow = '0 8px 22px -3px rgba(104, 40, 220, 0.55)';
               }}
             >
-              <span>{settings.primaryCtaText || 'Enquire Now'}</span>
+              <span>{settings.primaryCtaText || 'Apply for Stockists / Distribution'}</span>
               <ArrowRight size={17} />
             </button>
 

@@ -28,7 +28,7 @@ const createFranchiseEnquiry = async (req: Request, res: Response): Promise<void
   sendSuccess(
     res,
     HTTP_STATUS.CREATED,
-    "PCD Pharma franchise enquiry submitted successfully.",
+    "Stockists / Distribution enquiry submitted successfully.",
     result
   );
 };

@@ -291,7 +291,7 @@ export const ProfileHero: React.FC<ProfileHeroProps> = ({
             }}
           >
             <Sparkles size={15} color="#7C3AED" />
-            <span>Stockists Distribution Inquiry</span>
+            <span>Apply for Stockists / Distribution</span>
           </button>
 
           <button

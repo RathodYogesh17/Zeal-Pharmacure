@@ -187,7 +187,7 @@ export const buildBulkBatchWhatsAppMessage = (data: BulkBatchInquiryData): strin
 };
 
 // -------------------------------------------------------------
-// 3. Stockist / PCD Distribution Application (User -> Sales Desk)
+// 3. Stockists / Distribution Application (User -> Sales Desk)
 // -------------------------------------------------------------
 export const buildStockistsWhatsAppMessage = (data: StockistLeadData): string => {
   const clientName = data.authUser?.name || data.fullName || 'Valued Associate';

@@ -29,7 +29,7 @@ export const ProfileEnquiriesTab: React.FC<ProfileEnquiriesTabProps> = ({
           style={{ padding: '8px 16px', fontSize: '12px' }}
         >
           <Sparkles size={14} />
-          <span>New Stockists Enquiry</span>
+          <span>Apply for Stockists / Distribution</span>
         </button>
       </div>
 

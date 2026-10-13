@@ -99,7 +99,7 @@ export const ProductMiddleBanners: React.FC<ProductMiddleBannersProps> = ({ onOp
                 boxShadow: banner.btnShadow,
               }}
             >
-              <span>Enquire Now</span>
+              <span>Apply for Stockists / Distribution</span>
               <ArrowRight size={13} />
             </button>
           </div>

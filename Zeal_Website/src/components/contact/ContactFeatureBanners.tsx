@@ -33,7 +33,7 @@ const getSeamlessFeatures = (productCount: number): ContactSeamlessFeatureItem[]
     badgeColor: '#059669',
     title: 'Exclusive Territory\nMonopoly Rights',
     desc: 'Secure guaranteed territorial monopoly for your district with direct depot margins, promotional bags, visual aids, and zero intra-brand territory conflict.',
-    btnText: 'Apply For Stockist Monopoly',
+    btnText: 'Apply for Stockists / Distribution',
     btnBg: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
     btnShadow: '0 4px 14px rgba(5, 150, 105, 0.3)',
     bg: 'linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 50%, #E6FFFA 100%)',

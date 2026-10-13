@@ -108,7 +108,7 @@ export const HomeShowcaseCards: React.FC<HomeShowcaseCardsProps> = ({ onOpenFran
                   boxShadow: '0 4px 14px rgba(5, 150, 105, 0.35)',
                 }}
               >
-                <span>Apply For Stockist Monopoly</span>
+                <span>Apply for Stockists / Distribution</span>
                 <ArrowRight size={14} />
               </button>
             </div>

@@ -198,12 +198,12 @@ const defaultCmsSeeds: Array<{
       content: [
         {
           id: "banner-1",
-          title: "Stockists Distribution with Direct Factory Pricing",
+          title: "Stockists / Distribution with Direct Factory Pricing",
           subtitle:
             "Partner with an ISO 9001:2015 & WHO-GMP certified company. Over 250+ DCGI approved formulations with highest doctor prescription support.",
-          badge: "Stockists Distribution Available",
+          badge: "Stockists / Distribution Available",
           imageUrl: "/uploads/gallery/hero-banner-pcd-franchise.webp",
-          ctaText: "Apply for Stockists Distribution",
+          ctaText: "Apply for Stockists / Distribution",
           ctaLink: "/franchise-enquiry",
           sortOrder: 1,
           isActive: true,
@@ -234,7 +234,7 @@ const defaultCmsSeeds: Array<{
         },
       ],
       seo: {
-        metaTitle: "Zeal Pharmaceuticals - Premier PCD Pharma Franchise",
+        metaTitle: "Zeal Pharmaceuticals - Premier Stockists & Distribution Partner",
       },
       status: "PUBLISHED",
       publishedAt: new Date("2024-01-01"),

@@ -81,7 +81,7 @@ const EXPERIENCE_OPTIONS = [
   { value: 'Fresh Entrepreneur', label: 'New to Pharma / Fresh Entrepreneur' },
   { value: '1-3 Years', label: '1 - 3 Years (Ex-Medical Rep / Chemist Counter)' },
   { value: '3-7 Years', label: '3 - 7 Years (Wholesale Stockist / Sub-Stockist)' },
-  { value: '7+ Years', label: '7+ Years (Established C&F / PCD Franchise Partner)' },
+  { value: '7+ Years', label: '7+ Years (Established C&F / Stockists / Distribution Partner)' },
 ];
 
 const PRODUCT_DIVISIONS = [
@@ -492,7 +492,7 @@ export const FranchiseEnquiryModal: React.FC = () => {
               }}
             >
               <Sparkles size={13} color="#6828DC" />
-              <span>STOCKISTS DISTRIBUTION</span>
+              <span>STOCKISTS / DISTRIBUTION</span>
             </div>
 
             {/* Title */}
@@ -519,7 +519,7 @@ export const FranchiseEnquiryModal: React.FC = () => {
                 fontWeight: 500,
               }}
             >
-              Exclusive territorial Stockists Distribution network with promotional support.
+              Exclusive territorial Stockists / Distribution network with promotional support.
             </p>
 
             {/* Highlights Bar */}
@@ -1102,7 +1102,7 @@ export const FranchiseEnquiryModal: React.FC = () => {
                   ) : (
                     <>
                       <Send size={16} />
-                      <span>Submit Stockists Distribution Application</span>
+                      <span>Apply for Stockists / Distribution</span>
                     </>
                   )}
                 </button>

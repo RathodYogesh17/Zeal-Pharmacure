@@ -41,7 +41,7 @@ export const AboutPillars: React.FC = () => {
           badge="Ethical Distribution Standards"
           badgeIcon={<CheckCircle2 size={13} />}
           title="The Four Pillars of Zeal Excellence"
-          subtitle="How we protect, empower, and deliver value to our stockists, franchise partners, and prescribing doctors."
+          subtitle="How we protect, empower, and deliver value to our stockists, distribution partners, and prescribing doctors."
           centered={true}
         />
 

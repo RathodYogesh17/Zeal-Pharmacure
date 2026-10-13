@@ -1098,7 +1098,7 @@ export const AdminSettingsPage: React.FC = () => {
               </div>
               <p style={{ margin: 0, fontSize: '13.5px', color: '#475569', lineHeight: 1.5, maxWidth: '680px' }}>
                 Official Click-to-Chat (<code style={{ color: '#6828DC', background: '#EDE9FE', padding: '2px 6px', borderRadius: '4px' }}>wa.me</code>) deep-link engine.
-                Doctors, Chemists, and PCD Franchise applicants connect instantly to the sales desk without third-party API fees or ban risks.
+                Doctors, Chemists, and Stockists / Distribution applicants connect instantly to the sales desk without third-party API fees or ban risks.
               </p>
             </div>
 
@@ -1167,7 +1167,7 @@ export const AdminSettingsPage: React.FC = () => {
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#334155' }}>
                     <CheckCircle2 size={15} style={{ color: '#10B981', flexShrink: 0 }} />
-                    <span>PCD Pharma Franchise ➔ Monopoly territory distribution</span>
+                    <span>Stockists / Distribution ➔ Monopoly territory distribution</span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#334155' }}>
                     <CheckCircle2 size={15} style={{ color: '#10B981', flexShrink: 0 }} />

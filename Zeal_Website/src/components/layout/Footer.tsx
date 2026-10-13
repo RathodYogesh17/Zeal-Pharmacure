@@ -168,7 +168,7 @@ export const Footer: React.FC = () => {
                 maxWidth: '380px',
               }}
             >
-              An ISO 9001:2015 &amp; WHO-GMP certified pharmaceutical enterprise delivering research-backed therapeutics and verified PCD franchise stockist opportunities across India.
+              An ISO 9001:2015 &amp; WHO-GMP certified pharmaceutical enterprise delivering research-backed therapeutics and verified Stockists / Distribution opportunities across India.
             </p>
 
             {/* Quality Accreditations Badges */}
@@ -265,7 +265,7 @@ export const Footer: React.FC = () => {
                 }}
               >
                 <Sparkles size={14} style={{ color: '#FDE047' }} />
-                <span>Apply for PCD Franchise</span>
+                <span>Apply for Stockists / Distribution</span>
                 <ArrowRight size={14} />
               </button>
             </div>

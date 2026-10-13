@@ -22,7 +22,7 @@ export interface IVisualAidProduct {
 
 /**
  * Generate a high-resolution, print-ready A4 Visual Aid / Leave Behind Leaflet (LBL) PDF
- * for Medical Representatives (MRs), Doctors, and PCD Franchise Partners.
+ * for Medical Representatives (MRs), Doctors, and Stockists / Distribution Partners.
  */
 export const generateVisualAidPdf = async (
   product: IVisualAidProduct
@@ -36,7 +36,7 @@ export const generateVisualAidPdf = async (
           Title: `${product.name} - Official Visual Aid & Product Monograph`,
           Author: "ZEAL PHARMACEUTICALS",
           Subject: `Clinical Visual Aid and Leave Behind Leaflet for ${product.name}`,
-          Keywords: "Zeal Pharma, Visual Aid, LBL, PCD Franchise, Medicine Monograph",
+          Keywords: "Zeal Pharma, Visual Aid, LBL, Stockists Distribution, Medicine Monograph",
           CreationDate: new Date(),
         },
       });
@@ -72,7 +72,7 @@ export const generateVisualAidPdf = async (
         .fontSize(8)
         .fillColor("#93c5fd")
         .text(
-          "INNOVATION IN HEALTHCARE  |  WHO-GMP & ISO 9001:2015 CERTIFIED PCD DIVISION",
+          "INNOVATION IN HEALTHCARE  |  WHO-GMP & ISO 9001:2015 CERTIFIED STOCKIST DISTRIBUTION DIVISION",
           margin + 14,
           68
         );
@@ -452,7 +452,7 @@ export const generateVisualAidPdf = async (
       yPos += 42;
 
       // =========================================================================
-      // 8. FOOTER - ZEAL PHARMA PCD FRANCHISE & ENQUIRY CONTACT
+      // 8. FOOTER - ZEAL PHARMA STOCKISTS / DISTRIBUTION & ENQUIRY CONTACT
       // =========================================================================
       const footerY = 740;
       doc.rect(margin, footerY, contentWidth, 64).fill("#0a1f44");

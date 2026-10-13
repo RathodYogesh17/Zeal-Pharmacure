@@ -187,7 +187,7 @@ export const EnquiryStatsCards: React.FC<EnquiryStatsCardsProps> = ({
           <StatCard
             label="New Territory Leads"
             value={stats.franchiseNew}
-            subtext="Unprocessed franchise leads"
+            subtext="Unprocessed Stockists / Distribution leads"
             icon={<Clock size={18} />}
             iconBg="#FEF3C7"
             iconColor="#B45309"

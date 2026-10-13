@@ -77,7 +77,7 @@ const PERMISSION_MODULES: PermissionModuleGroup[] = [
     ],
   },
   {
-    module: 'Monopoly Franchise & Commercial Enquiries',
+    module: 'Stockists / Distribution & Commercial Enquiries',
     icon: '📥',
     permissions: [
       { key: 'product_enquiry:view', name: 'View Enquiries', description: 'Read lead enquiries, drug license checks, and budget' },

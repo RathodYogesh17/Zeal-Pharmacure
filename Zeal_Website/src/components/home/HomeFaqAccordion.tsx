@@ -14,7 +14,7 @@ export const HomeFaqAccordion: React.FC<HomeFaqAccordionProps> = ({ faqs }) => {
       title="Common Questions About Zeal Pharma Stockists Distribution"
       subtitle="Transparent answers regarding authorized stockists distribution, minimum order requirements, and marketing collaterals."
       footerLink="/contact"
-      footerText="Have more questions? Contact our franchise helpdesk"
+      footerText="Have more questions? Contact our stockists & distribution helpdesk"
     />
   );
 };

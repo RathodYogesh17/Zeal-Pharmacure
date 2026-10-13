@@ -87,7 +87,7 @@ export const ContactHero: React.FC<ContactHeroProps> = ({ onOpenFranchise, onScr
                 className="zp-contact-btn-primary"
               >
                 <Sparkles size={16} />
-                <span>Apply For Stockist Monopoly</span>
+                <span>Apply for Stockists / Distribution</span>
               </button>
 
               <a

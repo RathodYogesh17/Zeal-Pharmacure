@@ -606,7 +606,7 @@ export const AdminCmsPage: React.FC = () => {
                   <input
                     type="text"
                     name="primaryCtaLink"
-                    placeholder="e.g. /contact or /franchise-enquiry"
+                    placeholder="e.g. /contact or opens Stockists / Distribution Modal"
                     value={formSettings.primaryCtaLink || '/contact'}
                     onChange={handleSettingsChange}
                     className="cms-input"
@@ -1226,7 +1226,7 @@ export const AdminCmsPage: React.FC = () => {
                 <input
                   type="text"
                   name="ctaLink"
-                  placeholder="e.g. /contact or /franchise-enquiry"
+                  placeholder="e.g. /contact or opens Stockists / Distribution Modal"
                   value={bannerItem.ctaLink || ''}
                   onChange={handleBannerChange}
                   className="cms-input"
@@ -1911,12 +1911,12 @@ export const AdminCmsPage: React.FC = () => {
                     <span>📍</span>
                     <span>Homepage (Middle Feature Card) &amp; Contact Page</span>
                   </div>
-                  <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>PCD Monopoly Rights Card</div>
+                  <div style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>Stockists / Distribution Monopoly Rights Card</div>
                   <p style={{ fontSize: '11.5px', color: '#64748B', margin: '0 0 10px' }}>Shows in Home showcase &amp; Contact page feature card</p>
                   <div style={{ height: '130px', borderRadius: '8px', background: '#FFFFFF', border: '1px dashed #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '10px' }}>
                     <img
                       src={galleryService.formatUrl(formSettings.promoBanners?.cardMonopoly) || '/banners/card_monopoly_formulations.jpg'}
-                      alt="PCD Monopoly"
+                      alt="Stockists / Distribution Monopoly"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
                   </div>
