@@ -19,7 +19,6 @@ import type { IProduct } from '../../types';
 import { enquiryService } from '../../api/enquiryService';
 import { useSiteSettings } from '../../context/SiteSettingsContext';
 import { useAuth } from '../../context/AuthContext';
-import { useEnquiryAuth } from '../../context/EnquiryAuthContext';
 import { VerifiedUserBadge } from '../common/VerifiedUserBadge';
 import { B2BCustomerFields } from '../common/forms';
 import { buildBulkBatchWhatsAppMessage } from '../../utils/whatsappMessageBuilder';
@@ -102,7 +101,6 @@ export const BulkProductEnquiryModal: React.FC<BulkProductEnquiryModalProps> = (
     setQuantityUnits((prev) => ({ ...prev, [id]: unit }));
   };
 
-  const { requireAuth } = useEnquiryAuth();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (products.length === 0) {
@@ -142,83 +140,73 @@ export const BulkProductEnquiryModal: React.FC<BulkProductEnquiryModalProps> = (
       return;
     }
 
-    requireAuth(async () => {
-      setLoading(true);
-      setErrorMsg('');
+    setLoading(true);
+    setErrorMsg('');
 
-      try {
-        const items = products.map((p) => ({
-          productId: p._id,
-          quantity: quantities[p._id] || 100,
-          quantityUnit: quantityUnits[p._id] || 'Boxes',
-          message: `${p.name} (${p.packaging || 'Standard Pack'})`,
-        }));
+    try {
+      const items = products.map((p) => ({
+        productId: p._id,
+        quantity: quantities[p._id] || 100,
+        quantityUnit: quantityUnits[p._id] || 'Boxes',
+        message: `${p.name} (${p.packaging || 'Standard Pack'})`,
+      }));
 
-        await enquiryService.submitProductEnquiry({
-          enquiryType: 'BULK_PRODUCT',
-          products: items,
-          fullName: effectiveName,
-          name: effectiveName,
-          phone: cleanPhone,
-          email: effectiveEmail,
-          companyName: formData.companyName.trim() || undefined,
-          city: formData.city.trim(),
-          state: formData.state.trim(),
-          drugLicenseNumber: formData.drugLicenseNumber.trim() || undefined,
-          gstNumber: formData.gstNumber.trim() || undefined,
-          message:
-            formData.message.trim() ||
-            `Bulk Stockist Distribution Enquiry for ${products.length} formulations`,
-          source: 'BULK_ENQUIRY',
-        });
+      await enquiryService.submitProductEnquiry({
+        enquiryType: 'BULK_PRODUCT',
+        products: items,
+        fullName: effectiveName,
+        name: effectiveName,
+        phone: cleanPhone,
+        email: effectiveEmail,
+        companyName: formData.companyName.trim() || undefined,
+        city: formData.city.trim(),
+        state: formData.state.trim(),
+        drugLicenseNumber: formData.drugLicenseNumber.trim() || undefined,
+        gstNumber: formData.gstNumber.trim() || undefined,
+        message:
+          formData.message.trim() ||
+          `Bulk Stockist Distribution Enquiry for ${products.length} formulations`,
+        source: 'BULK_ENQUIRY',
+      });
 
-        setSuccessMsg(
-          `Your bulk enquiry for ${products.length} formulations has been submitted successfully! Wholesale stockist rates, territory monopoly verification & batch dispatch schedules are being prepared.`
-        );
-        setTimeout(() => {
-          onClearAll();
-          onClose();
-          setSuccessMsg('');
-        }, 4000);
-      } catch (err: any) {
-        setErrorMsg(
-          err.message ||
-          'Failed to submit bulk enquiry. Please verify your contact details and try again.'
-        );
-      } finally {
-        setLoading(false);
-      }
-    }, {
-      title: 'Bulk Order Wholesale Enquiry',
-      subtitle: 'Please sign in or register to submit your wholesale bulk requisition.',
-    });
+      setSuccessMsg(
+        `Your bulk enquiry for ${products.length} formulations has been submitted successfully! Wholesale stockist rates, territory monopoly verification & batch dispatch schedules are being prepared.`
+      );
+      setTimeout(() => {
+        onClearAll();
+        onClose();
+        setSuccessMsg('');
+      }, 4000);
+    } catch (err: any) {
+      setErrorMsg(
+        err.message ||
+        'Failed to submit bulk enquiry. Please verify your contact details and try again.'
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleWhatsAppClick = () => {
-    requireAuth(() => {
-      const waText = buildBulkBatchWhatsAppMessage({
-        items: products.map((p) => ({
-          name: p.name,
-          quantity: quantities[p._id] || 100,
-          unit: quantityUnits[p._id] || 'Boxes',
-          composition: p.genericName || p.composition,
-          mrp: p.mrp,
-        })),
-        fullName: formData.fullName || user?.name || '',
-        phone: formData.phone || user?.phone || '',
-        email: formData.email || user?.email || '',
-        companyName: formData.companyName,
-        city: formData.city,
-        state: formData.state,
-        gstNumber: formData.gstNumber,
-        message: formData.message,
-        authUser: user ? { name: user.name, phone: user.phone || formData.phone, email: user.email } : undefined,
-      });
-      window.open(`https://wa.me/${(settings.whatsappNumber || '919316227576').replace(/[^0-9]/g, '')}?text=${encodeURIComponent(waText)}`, '_blank');
-    }, {
-      title: 'Bulk Order WhatsApp Chat',
-      subtitle: 'Please sign in or register so your verified business details are forwarded to distribution.',
+    const waText = buildBulkBatchWhatsAppMessage({
+      items: products.map((p) => ({
+        name: p.name,
+        quantity: quantities[p._id] || 100,
+        unit: quantityUnits[p._id] || 'Boxes',
+        composition: p.genericName || p.composition,
+        mrp: p.mrp,
+      })),
+      fullName: formData.fullName || user?.name || '',
+      phone: formData.phone || user?.phone || '',
+      email: formData.email || user?.email || '',
+      companyName: formData.companyName,
+      city: formData.city,
+      state: formData.state,
+      gstNumber: formData.gstNumber,
+      message: formData.message,
+      authUser: user ? { name: user.name, phone: user.phone || formData.phone, email: user.email } : undefined,
     });
+    window.open(`https://wa.me/${(settings.whatsappNumber || '919316227576').replace(/[^0-9]/g, '')}?text=${encodeURIComponent(waText)}`, '_blank');
   };
 
   return (
@@ -649,7 +637,7 @@ export const BulkProductEnquiryModal: React.FC<BulkProductEnquiryModalProps> = (
             </p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {errorMsg && (
               <div
                 style={{

@@ -360,7 +360,7 @@ export const EnquiryAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
             {/* Form Body */}
             <div style={{ padding: '0 24px 24px' }}>
               {tab === 'login' ? (
-                <form onSubmit={handleLoginSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                <form onSubmit={handleLoginSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                   <AuthInputField
                     label="Email Address"
                     type="email"
@@ -396,7 +396,7 @@ export const EnquiryAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
                   />
                 </form>
               ) : (
-                <form onSubmit={handleRegisterSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '13px' }}>
+                <form onSubmit={handleRegisterSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '13px' }}>
                   <AuthInputField
                     label="Full Name"
                     type="text"

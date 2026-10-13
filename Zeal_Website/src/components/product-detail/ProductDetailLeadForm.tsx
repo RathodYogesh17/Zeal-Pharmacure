@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Building2, Send, CheckCircle2, AlertCircle, ShieldCheck } from 'lucide-react';
 import type { IProduct } from '../../types';
 import { useAuth } from '../../context/AuthContext';
@@ -40,6 +40,85 @@ export const ProductDetailLeadForm: React.FC<ProductDetailLeadFormProps> = ({
   handleLeadSubmit,
 }) => {
   const { user } = useAuth();
+  const [fieldErrors, setFieldErrors] = useState<{
+    fullName?: string;
+    phone?: string;
+    email?: string;
+    city?: string;
+    state?: string;
+  }>({});
+
+  const handleInputChange = (field: keyof typeof leadForm, val: string) => {
+    setLeadForm(prev => ({ ...prev, [field]: val }));
+    if (fieldErrors[field as keyof typeof fieldErrors]) {
+      setFieldErrors(prev => ({ ...prev, [field]: undefined }));
+    }
+  };
+
+  const onSubmitLocal = (e: React.FormEvent) => {
+    e.preventDefault();
+    const errs: typeof fieldErrors = {};
+
+    const effName = leadForm.fullName.trim() || user?.name || '';
+    if (!effName) {
+      errs.fullName = 'Full name is required';
+    } else if (effName.length < 2) {
+      errs.fullName = 'Name must be at least 2 characters';
+    }
+
+    const effPhone = leadForm.phone.trim() || user?.phone || '';
+    const rawDigits = effPhone.replace(/[\s\-\(\)\+]/g, '');
+    const cleanPhone = rawDigits.length > 10 && rawDigits.startsWith('91') ? rawDigits.slice(2) : rawDigits;
+    if (!rawDigits) {
+      errs.phone = 'Mobile number is required';
+    } else if (!/^[0-9]{10}$/.test(cleanPhone)) {
+      errs.phone = 'Please enter a valid 10-digit mobile number';
+    }
+
+    const effEmail = leadForm.email.trim() || user?.email || '';
+    if (!effEmail) {
+      errs.email = 'Email address is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(effEmail)) {
+      errs.email = 'Please enter a valid email address';
+    }
+
+    if (!leadForm.city.trim()) {
+      errs.city = 'Target district / city is required';
+    }
+
+    if (!leadForm.state.trim()) {
+      errs.state = 'State is required';
+    }
+
+    if (Object.keys(errs).length > 0) {
+      setFieldErrors(errs);
+      return;
+    }
+
+    handleLeadSubmit(e);
+  };
+
+  const getInputStyle = (field: keyof typeof fieldErrors) => ({
+    width: '100%',
+    padding: '11px 14px',
+    borderRadius: '10px',
+    border: fieldErrors[field] ? '1.5px solid #EF4444' : '1.5px solid #CBD5E1',
+    boxShadow: fieldErrors[field] ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none',
+    fontSize: '13.5px',
+    outline: 'none',
+    background: '#F8FAFC',
+    boxSizing: 'border-box' as const,
+    transition: 'border-color 0.2s, box-shadow 0.2s',
+  });
+
+  const renderError = (field: keyof typeof fieldErrors) => {
+    if (!fieldErrors[field]) return null;
+    return (
+      <span style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, lineHeight: 1.35, marginTop: '4px', display: 'block' }}>
+        {fieldErrors[field]}
+      </span>
+    );
+  };
 
   return (
     <div className="zp-product-leadform-card">
@@ -142,7 +221,7 @@ export const ProductDetailLeadForm: React.FC<ProductDetailLeadFormProps> = ({
         </div>
       )}
 
-      <form onSubmit={handleLeadSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <form onSubmit={onSubmitLocal} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <div className="zp-product-leadform-grid">
           <div>
             <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
@@ -150,20 +229,12 @@ export const ProductDetailLeadForm: React.FC<ProductDetailLeadFormProps> = ({
             </label>
             <input
               type="text"
-              required
               placeholder="e.g. Ramesh Patel"
               value={leadForm.fullName}
-              onChange={(e) => setLeadForm({ ...leadForm, fullName: e.target.value })}
-              style={{
-                width: '100%',
-                padding: '11px 14px',
-                borderRadius: '10px',
-                border: '1.5px solid #CBD5E1',
-                fontSize: '13.5px',
-                outline: 'none',
-                background: '#F8FAFC',
-              }}
+              onChange={(e) => handleInputChange('fullName', e.target.value)}
+              style={getInputStyle('fullName')}
             />
+            {renderError('fullName')}
           </div>
 
           <div>
@@ -172,20 +243,12 @@ export const ProductDetailLeadForm: React.FC<ProductDetailLeadFormProps> = ({
             </label>
             <input
               type="tel"
-              required
               placeholder="+91 98765 43210"
               value={leadForm.phone}
-              onChange={(e) => setLeadForm({ ...leadForm, phone: e.target.value })}
-              style={{
-                width: '100%',
-                padding: '11px 14px',
-                borderRadius: '10px',
-                border: '1.5px solid #CBD5E1',
-                fontSize: '13.5px',
-                outline: 'none',
-                background: '#F8FAFC',
-              }}
+              onChange={(e) => handleInputChange('phone', e.target.value)}
+              style={getInputStyle('phone')}
             />
+            {renderError('phone')}
           </div>
 
           <div>
@@ -194,20 +257,12 @@ export const ProductDetailLeadForm: React.FC<ProductDetailLeadFormProps> = ({
             </label>
             <input
               type="email"
-              required
               placeholder="pharma@distributor.com"
               value={leadForm.email}
-              onChange={(e) => setLeadForm({ ...leadForm, email: e.target.value })}
-              style={{
-                width: '100%',
-                padding: '11px 14px',
-                borderRadius: '10px',
-                border: '1.5px solid #CBD5E1',
-                fontSize: '13.5px',
-                outline: 'none',
-                background: '#F8FAFC',
-              }}
+              onChange={(e) => handleInputChange('email', e.target.value)}
+              style={getInputStyle('email')}
             />
+            {renderError('email')}
           </div>
 
           <div>
@@ -218,7 +273,7 @@ export const ProductDetailLeadForm: React.FC<ProductDetailLeadFormProps> = ({
               type="text"
               placeholder="e.g. 20B/21B..."
               value={leadForm.drugLicenseNumber}
-              onChange={(e) => setLeadForm({ ...leadForm, drugLicenseNumber: e.target.value })}
+              onChange={(e) => handleInputChange('drugLicenseNumber', e.target.value)}
               style={{
                 width: '100%',
                 padding: '11px 14px',
@@ -227,6 +282,7 @@ export const ProductDetailLeadForm: React.FC<ProductDetailLeadFormProps> = ({
                 fontSize: '13.5px',
                 outline: 'none',
                 background: '#F8FAFC',
+                boxSizing: 'border-box',
               }}
             />
           </div>
@@ -237,20 +293,12 @@ export const ProductDetailLeadForm: React.FC<ProductDetailLeadFormProps> = ({
             </label>
             <input
               type="text"
-              required
               placeholder="e.g. Rajkot"
               value={leadForm.city}
-              onChange={(e) => setLeadForm({ ...leadForm, city: e.target.value })}
-              style={{
-                width: '100%',
-                padding: '11px 14px',
-                borderRadius: '10px',
-                border: '1.5px solid #CBD5E1',
-                fontSize: '13.5px',
-                outline: 'none',
-                background: '#F8FAFC',
-              }}
+              onChange={(e) => handleInputChange('city', e.target.value)}
+              style={getInputStyle('city')}
             />
+            {renderError('city')}
           </div>
 
           <div>
@@ -259,20 +307,12 @@ export const ProductDetailLeadForm: React.FC<ProductDetailLeadFormProps> = ({
             </label>
             <input
               type="text"
-              required
               placeholder="e.g. Gujarat"
               value={leadForm.state}
-              onChange={(e) => setLeadForm({ ...leadForm, state: e.target.value })}
-              style={{
-                width: '100%',
-                padding: '11px 14px',
-                borderRadius: '10px',
-                border: '1.5px solid #CBD5E1',
-                fontSize: '13.5px',
-                outline: 'none',
-                background: '#F8FAFC',
-              }}
+              onChange={(e) => handleInputChange('state', e.target.value)}
+              style={getInputStyle('state')}
             />
+            {renderError('state')}
           </div>
         </div>
 

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { X, Send, CheckCheck, Sparkles, MapPin, ShieldCheck, ChevronRight } from 'lucide-react';
 import { useSiteSettings } from '../../context/SiteSettingsContext';
 import { useAuth } from '../../context/AuthContext';
-import { useEnquiryAuth } from '../../context/EnquiryAuthContext';
 import { VerifiedUserBadge } from '../common/VerifiedUserBadge';
 import { buildQuickWhatsAppMessage } from '../../utils/whatsappMessageBuilder';
 
@@ -75,7 +74,6 @@ const QUICK_TOPICS: QuickTopic[] = [
 export const FloatingWhatsAppWidget: React.FC = () => {
   const { settings } = useSiteSettings();
   const { user } = useAuth();
-  const { requireAuth } = useEnquiryAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedTopic, setSelectedTopic] = useState<string>('stockist');
   const [userMsg, setUserMsg] = useState(QUICK_TOPICS[0].message);
@@ -108,23 +106,18 @@ export const FloatingWhatsAppWidget: React.FC = () => {
     e.preventDefault();
     if (!userMsg.trim()) return;
 
-    requireAuth(() => {
-      const activeTopic = QUICK_TOPICS.find((t) => t.id === selectedTopic);
-      const text = buildQuickWhatsAppMessage({
-        topicLabel: activeTopic?.label || 'General Inquiry',
-        message: userMsg.trim(),
-        user: user ? {
-          name: user.name,
-          phone: user.phone,
-          email: user.email,
-        } : undefined,
-      });
-      window.open(`https://wa.me/${cleanNumber}?text=${encodeURIComponent(text)}`, '_blank');
-      setIsOpen(false);
-    }, {
-      title: 'WhatsApp Desk Sign In',
-      subtitle: 'Please sign in or register so your name and contact are verified for the sales manager.',
+    const activeTopic = QUICK_TOPICS.find((t) => t.id === selectedTopic);
+    const text = buildQuickWhatsAppMessage({
+      topicLabel: activeTopic?.label || 'General Inquiry',
+      message: userMsg.trim(),
+      user: user ? {
+        name: user.name,
+        phone: user.phone,
+        email: user.email,
+      } : undefined,
     });
+    window.open(`https://wa.me/${cleanNumber}?text=${encodeURIComponent(text)}`, '_blank');
+    setIsOpen(false);
   };
 
   const handleToggleOpen = () => {
@@ -506,6 +499,7 @@ export const FloatingWhatsAppWidget: React.FC = () => {
           {/* Form Composer & WhatsApp CTA */}
           <form
             onSubmit={handleStartChat}
+            noValidate
             style={{
               padding: '14px 16px',
               background: '#FFFFFF',

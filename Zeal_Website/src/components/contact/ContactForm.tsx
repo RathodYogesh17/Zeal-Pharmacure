@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Send, User, Mail, Phone } from 'lucide-react';
 import { enquiryService } from '../../api/enquiryService';
 import { useAuth } from '../../context/AuthContext';
-import { useEnquiryAuth } from '../../context/EnquiryAuthContext';
 import { FormInput, FormTextarea, Button, FormAlert, ThemedSelect } from '../common';
 import { VerifiedUserBadge } from '../common/VerifiedUserBadge';
 
@@ -15,7 +14,6 @@ const INQUIRY_SUBJECT_OPTIONS = [
 
 export const ContactForm: React.FC = () => {
   const { user } = useAuth();
-  const { requireAuth } = useEnquiryAuth();
 
   const [formData, setFormData] = useState({
     fullName: user?.name || '',
@@ -93,36 +91,31 @@ export const ContactForm: React.FC = () => {
       return;
     }
 
-    requireAuth(async () => {
-      setSubmitting(true);
-      setErrorMsg('');
-      setSuccessMsg('');
+    setSubmitting(true);
+    setErrorMsg('');
+    setSuccessMsg('');
 
-      try {
-        await enquiryService.submitContactEnquiry({
-          ...formData,
-          fullName: effectiveName,
-          email: effectiveEmail,
-          phone: cleanPhone,
-        });
-        setSuccessMsg('Thank you for reaching out to Zeal Pharmacure. Our regional business executive will contact you shortly.');
-        setFormData({
-          fullName: user?.name || '',
-          email: user?.email || '',
-          phone: user?.phone || '',
-          subject: 'Stockist Distribution Network Monopoly',
-          message: '',
-        });
-        setFieldErrors({});
-      } catch (err: any) {
-        setErrorMsg(err.message || 'Failed to submit enquiry. Please verify your details and try again.');
-      } finally {
-        setSubmitting(false);
-      }
-    }, {
-      title: 'Contact Enquiry Sign In',
-      subtitle: 'Please sign in or register so your inquiry is verified with the Zeal Pharma sales team.',
-    });
+    try {
+      await enquiryService.submitContactEnquiry({
+        ...formData,
+        fullName: effectiveName,
+        email: effectiveEmail,
+        phone: cleanPhone,
+      });
+      setSuccessMsg('Thank you for reaching out to Zeal Pharmacure. Our regional business executive will contact you shortly.');
+      setFormData({
+        fullName: user?.name || '',
+        email: user?.email || '',
+        phone: user?.phone || '',
+        subject: 'Stockist Distribution Network Monopoly',
+        message: '',
+      });
+      setFieldErrors({});
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Failed to submit enquiry. Please verify your details and try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -155,7 +148,7 @@ export const ContactForm: React.FC = () => {
         style={{ marginBottom: '18px' }}
       />
 
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <FormInput
           label="Full Name *"
           name="fullName"

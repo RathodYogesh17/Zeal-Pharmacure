@@ -240,7 +240,7 @@ export const ForgotPasswordPage: React.FC = () => {
     >
       {/* Step 1: Request OTP */}
       {step === 1 && (
-        <form onSubmit={handleRequestOtp} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+        <form onSubmit={handleRequestOtp} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
           <AuthInputField
             label="Registered Email Address"
             type="email"
@@ -263,7 +263,7 @@ export const ForgotPasswordPage: React.FC = () => {
 
       {/* Step 2: Verify OTP */}
       {step === 2 && (
-        <form onSubmit={handleVerifyOtp} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+        <form onSubmit={handleVerifyOtp} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
           {/* Countdown Timer Banner */}
           <div
             style={{
@@ -402,7 +402,7 @@ export const ForgotPasswordPage: React.FC = () => {
 
       {/* Step 3: New Password */}
       {step === 3 && (
-        <form onSubmit={handleResetPassword} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <form onSubmit={handleResetPassword} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <AuthInputField
             label="New Password (min 6 chars)"
             type="password"

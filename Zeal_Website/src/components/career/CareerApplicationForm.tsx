@@ -7,7 +7,6 @@ import { VerifiedUserBadge } from '../common/VerifiedUserBadge';
 import { buildCareerWhatsAppMessage } from '../../utils/whatsappMessageBuilder';
 import { useSiteSettings } from '../../context/SiteSettingsContext';
 import { useAuth } from '../../context/AuthContext';
-import { useEnquiryAuth } from '../../context/EnquiryAuthContext';
 
 export interface CareerApplicationFormProps {
   jobs?: IJobOpening[];
@@ -35,7 +34,6 @@ export const CareerApplicationForm: React.FC<CareerApplicationFormProps> = ({
 }) => {
   const { settings } = useSiteSettings();
   const { user } = useAuth();
-  const { requireAuth } = useEnquiryAuth();
   const allPositions = jobs && jobs.length > 0 ? jobs : DEFAULT_POSITIONS;
   const hrWhatsAppNumber = (settings?.whatsappNumber || settings?.hrHelpline || '919316227576').replace(/[^0-9]/g, '');
 
@@ -97,10 +95,19 @@ export const CareerApplicationForm: React.FC<CareerApplicationFormProps> = ({
   const [submitting, setSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState('');
   const [submitError, setSubmitError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<{
+    fullName?: string;
+    email?: string;
+    phone?: string;
+    resumeFile?: string;
+  }>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+    if (fieldErrors[name as keyof typeof fieldErrors]) {
+      setFieldErrors((prev) => ({ ...prev, [name]: undefined }));
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,6 +119,7 @@ export const CareerApplicationForm: React.FC<CareerApplicationFormProps> = ({
       }
       setResumeFile(file);
       setSubmitError('');
+      setFieldErrors((prev) => ({ ...prev, resumeFile: undefined }));
     }
   };
 
@@ -121,118 +129,138 @@ export const CareerApplicationForm: React.FC<CareerApplicationFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError('');
+    setSubmitSuccess('');
+
+    const errs: typeof fieldErrors = {};
+    const effName = form.fullName.trim() || user?.name || '';
+    if (!effName) {
+      errs.fullName = 'Full legal name is required';
+    } else if (effName.length < 2) {
+      errs.fullName = 'Name must be at least 2 characters';
+    }
+
+    const effEmail = form.email.trim() || user?.email || '';
+    if (!effEmail) {
+      errs.email = 'Email address is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(effEmail)) {
+      errs.email = 'Please enter a valid email address';
+    }
+
+    const effPhone = form.phone.trim() || user?.phone || '';
+    const rawDigits = effPhone.replace(/[\s\-\(\)\+]/g, '');
+    const cleanPhone = rawDigits.length > 10 && rawDigits.startsWith('91') ? rawDigits.slice(2) : rawDigits;
+    if (!rawDigits) {
+      errs.phone = 'Mobile number is required';
+    } else if (!/^[0-9]{10}$/.test(cleanPhone)) {
+      errs.phone = 'Please enter a valid 10-digit mobile number';
+    }
+
     if (!resumeFile) {
-      setSubmitError('Please attach your PDF or DOCX resume.');
+      errs.resumeFile = 'Please attach your PDF or DOCX resume';
+    }
+
+    if (Object.keys(errs).length > 0) {
+      setFieldErrors(errs);
       return;
     }
 
-    requireAuth(async () => {
-      setSubmitting(true);
-      setSubmitError('');
-      setSubmitSuccess('');
+    setSubmitting(true);
 
-      try {
-        const effectiveJobId = targetJob?._id || selectedJobId;
-        const effectiveJobTitle = targetJob?.title || selectedJobTitle || 'General Application';
-        const effectiveDept = targetJob?.department || 'Distribution & Operations';
+    try {
+      const effectiveJobId = targetJob?._id || selectedJobId;
+      const effectiveJobTitle = targetJob?.title || selectedJobTitle || 'General Application';
+      const effectiveDept = targetJob?.department || 'Distribution & Operations';
 
-        const formData = new FormData();
-        formData.append('fullName', form.fullName.trim() || user?.name || '');
-        formData.append('email', form.email.trim() || user?.email || '');
-        formData.append('phone', form.phone.trim() || user?.phone || '');
-        if (form.whatsappNumber.trim()) {
-          formData.append('whatsappNumber', form.whatsappNumber.trim());
-        }
-        formData.append('currentCity', form.currentCity.trim() || 'Surat');
-        formData.append('currentState', form.currentState.trim() || 'Gujarat');
-        formData.append('qualification', form.qualification.trim() || 'Graduate / Pharma');
-        formData.append('positionAppliedFor', effectiveJobTitle);
-        formData.append('jobTitle', effectiveJobTitle);
-        formData.append('department', effectiveDept);
-
-        if (effectiveJobId) {
-          formData.append('jobOpeningId', effectiveJobId);
-          formData.append('jobId', effectiveJobId);
-        }
-
-        formData.append('totalExperience', form.totalExperience);
-        formData.append('totalExperienceYears', String(parseInt(form.totalExperience, 10) || 0));
-
-        if (form.currentCompany.trim()) formData.append('currentCompany', form.currentCompany.trim());
-        if (form.currentDesignation.trim()) formData.append('currentDesignation', form.currentDesignation.trim());
-        if (form.currentCtc.trim()) formData.append('currentCtc', form.currentCtc.trim());
-        if (form.expectedCtc.trim()) formData.append('expectedCtc', form.expectedCtc.trim());
-        if (form.noticePeriod.trim()) formData.append('noticePeriod', form.noticePeriod.trim());
-        if (form.coverNote.trim()) formData.append('coverNote', form.coverNote.trim());
-
-        formData.append('resume', resumeFile);
-        formData.append('consentGiven', 'true');
-        formData.append('source', 'WEBSITE_CAREERS');
-
-        await careerService.applyForJob(formData);
-
-        setSubmitSuccess(
-          `Your application for "${effectiveJobTitle}" has been received! Our Talent Acquisition team will review your profile against the criteria within 48 business hours.`
-        );
-
-        setForm({
-          fullName: user?.name || '',
-          email: user?.email || '',
-          phone: user?.phone || '',
-          whatsappNumber: user?.phone || '',
-          currentCity: '',
-          currentState: '',
-          qualification: '',
-          totalExperience: '1-3 Years',
-          currentCompany: '',
-          currentDesignation: '',
-          currentCtc: '',
-          expectedCtc: '',
-          noticePeriod: '',
-          coverNote: '',
-        });
-        setResumeFile(null);
-      } catch (err: any) {
-        setSubmitError(
-          err.message || 'Failed to submit application. Please verify details and try again.'
-        );
-      } finally {
-        setSubmitting(false);
+      const formData = new FormData();
+      formData.append('fullName', effName);
+      formData.append('email', effEmail);
+      formData.append('phone', cleanPhone);
+      if (form.whatsappNumber.trim()) {
+        formData.append('whatsappNumber', form.whatsappNumber.trim());
       }
-    }, {
-      title: 'Career Application Sign In',
-      subtitle: 'Please sign in or register to submit your job application to Zeal Pharmacure HR.',
-    });
+      formData.append('currentCity', form.currentCity.trim() || 'Surat');
+      formData.append('currentState', form.currentState.trim() || 'Gujarat');
+      formData.append('qualification', form.qualification.trim() || 'Graduate / Pharma');
+      formData.append('positionAppliedFor', effectiveJobTitle);
+      formData.append('jobTitle', effectiveJobTitle);
+      formData.append('department', effectiveDept);
+
+      if (effectiveJobId) {
+        formData.append('jobOpeningId', effectiveJobId);
+        formData.append('jobId', effectiveJobId);
+      }
+
+      formData.append('totalExperience', form.totalExperience);
+      formData.append('totalExperienceYears', String(parseInt(form.totalExperience, 10) || 0));
+
+      if (form.currentCompany.trim()) formData.append('currentCompany', form.currentCompany.trim());
+      if (form.currentDesignation.trim()) formData.append('currentDesignation', form.currentDesignation.trim());
+      if (form.currentCtc.trim()) formData.append('currentCtc', form.currentCtc.trim());
+      if (form.expectedCtc.trim()) formData.append('expectedCtc', form.expectedCtc.trim());
+      if (form.noticePeriod.trim()) formData.append('noticePeriod', form.noticePeriod.trim());
+      if (form.coverNote.trim()) formData.append('coverNote', form.coverNote.trim());
+
+      formData.append('resume', resumeFile!);
+      formData.append('consentGiven', 'true');
+      formData.append('source', 'WEBSITE_CAREERS');
+
+      await careerService.applyForJob(formData);
+
+      setSubmitSuccess(
+        `Your application for "${effectiveJobTitle}" has been received! Our Talent Acquisition team will review your profile against the criteria within 48 business hours.`
+      );
+
+      setForm({
+        fullName: user?.name || '',
+        email: user?.email || '',
+        phone: user?.phone || '',
+        whatsappNumber: user?.phone || '',
+        currentCity: '',
+        currentState: '',
+        qualification: '',
+        totalExperience: '1-3 Years',
+        currentCompany: '',
+        currentDesignation: '',
+        currentCtc: '',
+        expectedCtc: '',
+        noticePeriod: '',
+        coverNote: '',
+      });
+      setResumeFile(null);
+      setFieldErrors({});
+    } catch (err: any) {
+      setSubmitError(
+        err.message || 'Failed to submit application. Please verify details and try again.'
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleWhatsAppApply = () => {
-    requireAuth(() => {
-      const waText = buildCareerWhatsAppMessage({
-        jobTitle: targetJob?.title || selectedJobTitle || 'General Application',
-        department: targetJob?.department || 'Operations & Distribution',
-        fullName: form.fullName.trim() || user?.name || '',
-        phone: form.phone.trim() || user?.phone || '',
-        email: form.email.trim() || user?.email || '',
-        currentCity: form.currentCity.trim(),
-        currentState: form.currentState.trim(),
-        qualification: form.qualification.trim(),
-        totalExperience: form.totalExperience,
-        currentCompany: form.currentCompany.trim(),
-        currentDesignation: form.currentDesignation.trim(),
-        expectedCtc: form.expectedCtc.trim(),
-        noticePeriod: form.noticePeriod.trim(),
-        coverNote: form.coverNote.trim(),
-        authUser: user ? {
-          name: user.name,
-          phone: user.phone,
-          email: user.email,
-        } : undefined,
-      });
-      window.open(`https://wa.me/${hrWhatsAppNumber || '919316227576'}?text=${encodeURIComponent(waText)}`, '_blank');
-    }, {
-      title: 'WhatsApp Career Connect',
-      subtitle: 'Please sign in or register so your name and contact are verified for HR direct chat.',
+    const waText = buildCareerWhatsAppMessage({
+      jobTitle: targetJob?.title || selectedJobTitle || 'General Application',
+      department: targetJob?.department || 'Operations & Distribution',
+      fullName: form.fullName.trim() || user?.name || 'Candidate',
+      phone: form.phone.trim() || user?.phone || '',
+      email: form.email.trim() || user?.email || '',
+      currentCity: form.currentCity.trim(),
+      currentState: form.currentState.trim(),
+      qualification: form.qualification.trim(),
+      totalExperience: form.totalExperience,
+      currentCompany: form.currentCompany.trim(),
+      currentDesignation: form.currentDesignation.trim(),
+      expectedCtc: form.expectedCtc.trim(),
+      noticePeriod: form.noticePeriod.trim(),
+      coverNote: form.coverNote.trim(),
+      authUser: user ? {
+        name: user.name,
+        phone: user.phone,
+        email: user.email,
+      } : undefined,
     });
+    window.open(`https://wa.me/${hrWhatsAppNumber || '919316227576'}?text=${encodeURIComponent(waText)}`, '_blank');
   };
 
   return (
@@ -326,7 +354,7 @@ export const CareerApplicationForm: React.FC<CareerApplicationFormProps> = ({
           </div>
         )}
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+        <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
           {/* Full Name */}
           <div>
             <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#334155', marginBottom: '4px' }}>
@@ -335,13 +363,27 @@ export const CareerApplicationForm: React.FC<CareerApplicationFormProps> = ({
             <input
               type="text"
               name="fullName"
-              required
               placeholder="e.g. Rahul Patel"
               value={form.fullName}
               onChange={handleChange}
               className="zp-form-input"
-              style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1.5px solid #CBD5E1', fontSize: '13.5px', outline: 'none', boxSizing: 'border-box' }}
+              style={{
+                width: '100%',
+                padding: '9px 12px',
+                borderRadius: '8px',
+                border: fieldErrors.fullName ? '1.5px solid #EF4444' : '1.5px solid #CBD5E1',
+                boxShadow: fieldErrors.fullName ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none',
+                fontSize: '13.5px',
+                outline: 'none',
+                boxSizing: 'border-box',
+                transition: 'border-color 0.2s, box-shadow 0.2s',
+              }}
             />
+            {fieldErrors.fullName && (
+              <span style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, lineHeight: 1.35, marginTop: '4px', display: 'block' }}>
+                {fieldErrors.fullName}
+              </span>
+            )}
           </div>
 
           {/* Email & Phone Grid */}
@@ -353,13 +395,27 @@ export const CareerApplicationForm: React.FC<CareerApplicationFormProps> = ({
               <input
                 type="email"
                 name="email"
-                required
                 placeholder="name@email.com"
                 value={form.email}
                 onChange={handleChange}
                 className="zp-form-input"
-                style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1.5px solid #CBD5E1', fontSize: '13.5px', outline: 'none', boxSizing: 'border-box' }}
+                style={{
+                  width: '100%',
+                  padding: '9px 12px',
+                  borderRadius: '8px',
+                  border: fieldErrors.email ? '1.5px solid #EF4444' : '1.5px solid #CBD5E1',
+                  boxShadow: fieldErrors.email ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none',
+                  fontSize: '13.5px',
+                  outline: 'none',
+                  boxSizing: 'border-box',
+                  transition: 'border-color 0.2s, box-shadow 0.2s',
+                }}
               />
+              {fieldErrors.email && (
+                <span style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, lineHeight: 1.35, marginTop: '4px', display: 'block' }}>
+                  {fieldErrors.email}
+                </span>
+              )}
             </div>
 
             <div>
@@ -369,13 +425,27 @@ export const CareerApplicationForm: React.FC<CareerApplicationFormProps> = ({
               <input
                 type="tel"
                 name="phone"
-                required
                 placeholder="98765 43210"
                 value={form.phone}
                 onChange={handleChange}
                 className="zp-form-input"
-                style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1.5px solid #CBD5E1', fontSize: '13.5px', outline: 'none', boxSizing: 'border-box' }}
+                style={{
+                  width: '100%',
+                  padding: '9px 12px',
+                  borderRadius: '8px',
+                  border: fieldErrors.phone ? '1.5px solid #EF4444' : '1.5px solid #CBD5E1',
+                  boxShadow: fieldErrors.phone ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none',
+                  fontSize: '13.5px',
+                  outline: 'none',
+                  boxSizing: 'border-box',
+                  transition: 'border-color 0.2s, box-shadow 0.2s',
+                }}
               />
+              {fieldErrors.phone && (
+                <span style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, lineHeight: 1.35, marginTop: '4px', display: 'block' }}>
+                  {fieldErrors.phone}
+                </span>
+              )}
             </div>
           </div>
 
@@ -531,30 +601,50 @@ export const CareerApplicationForm: React.FC<CareerApplicationFormProps> = ({
             </label>
 
             {!resumeFile ? (
-              <label
-                style={{ border: '2px dashed #CBD5E1', borderRadius: '12px', padding: '20px 14px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', background: '#F8FAFC', transition: 'all 0.2s ease' }}
-                onDragOver={(e) => e.preventDefault()}
-                onDrop={(e) => {
-                  e.preventDefault();
-                  if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-                    setResumeFile(e.dataTransfer.files[0]);
-                  }
-                }}
-              >
-                <UploadCloud size={30} color="#6828DC" style={{ marginBottom: '6px' }} />
-                <span style={{ fontSize: '13px', fontWeight: 700, color: '#1E1B4B' }}>
-                  Click to Browse or Drag &amp; Drop CV
-                </span>
-                <span style={{ fontSize: '11px', color: '#64748B', marginTop: '2px' }}>
-                  PDF, DOC, DOCX up to 10MB
-                </span>
-                <input
-                  type="file"
-                  accept=".pdf,.doc,.docx"
-                  onChange={handleFileChange}
-                  style={{ display: 'none' }}
-                />
-              </label>
+              <>
+                <label
+                  style={{
+                    border: fieldErrors.resumeFile ? '2px dashed #EF4444' : '2px dashed #CBD5E1',
+                    boxShadow: fieldErrors.resumeFile ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none',
+                    borderRadius: '12px',
+                    padding: '20px 14px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    background: '#F8FAFC',
+                    transition: 'all 0.2s ease',
+                  }}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                      setResumeFile(e.dataTransfer.files[0]);
+                      setFieldErrors((prev) => ({ ...prev, resumeFile: undefined }));
+                    }
+                  }}
+                >
+                  <UploadCloud size={30} color={fieldErrors.resumeFile ? '#EF4444' : '#6828DC'} style={{ marginBottom: '6px' }} />
+                  <span style={{ fontSize: '13px', fontWeight: 700, color: '#1E1B4B' }}>
+                    Click to Browse or Drag &amp; Drop CV
+                  </span>
+                  <span style={{ fontSize: '11px', color: '#64748B', marginTop: '2px' }}>
+                    PDF, DOC, DOCX up to 10MB
+                  </span>
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx"
+                    onChange={handleFileChange}
+                    style={{ display: 'none' }}
+                  />
+                </label>
+                {fieldErrors.resumeFile && (
+                  <span style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, lineHeight: 1.35, marginTop: '4px', display: 'block' }}>
+                    {fieldErrors.resumeFile}
+                  </span>
+                )}
+              </>
             ) : (
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: '#EFF6FF', border: '1.5px solid #BFDBFE', borderRadius: '10px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden' }}>

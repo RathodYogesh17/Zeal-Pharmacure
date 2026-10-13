@@ -148,7 +148,7 @@ export const LoginPage: React.FC = () => {
       }
     >
       {!otpRequired ? (
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+        <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
           <AuthInputField
             label="Email Address"
             type="email"
@@ -192,7 +192,7 @@ export const LoginPage: React.FC = () => {
           <AuthSubmitButton label="Sign In" loading={isLoading} style={{ marginTop: '6px' }} />
         </form>
       ) : (
-        <form onSubmit={handleVerifyOtp} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+        <form onSubmit={handleVerifyOtp} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
           <div>
             <label
               style={{

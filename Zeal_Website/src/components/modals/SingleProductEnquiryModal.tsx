@@ -9,7 +9,6 @@ import {
 } from 'lucide-react';
 import type { IProduct } from '../../types';
 import { useAuth } from '../../context/AuthContext';
-import { useEnquiryAuth } from '../../context/EnquiryAuthContext';
 import { enquiryService } from '../../api/enquiryService';
 import { FormAlert, SuccessStateView, ThemedSelect } from '../common';
 import { VerifiedUserBadge } from '../common/VerifiedUserBadge';
@@ -56,7 +55,6 @@ export const SingleProductEnquiryModal: React.FC<SingleProductEnquiryModalProps>
   }, [user]);
 
   const [loading, setLoading] = useState(false);
-  const { requireAuth } = useEnquiryAuth();
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [fieldErrors, setFieldErrors] = useState<{
@@ -104,75 +102,65 @@ export const SingleProductEnquiryModal: React.FC<SingleProductEnquiryModalProps>
       return;
     }
 
-    requireAuth(async () => {
-      setLoading(true);
-      setErrorMsg('');
-      try {
-        await enquiryService.submitProductEnquiry({
-          enquiryType: 'SINGLE_PRODUCT',
-          productId: product._id,
-          product: product._id,
-          productSlug: product.slug,
-          name: effectiveName,
-          fullName: effectiveName,
-          phone: cleanPhone,
-          email: effectiveEmail,
-          companyName: formData.companyName.trim() || undefined,
-          city: formData.city.trim(),
-          state: formData.state.trim(),
-          quantity: formData.quantity,
-          drugLicenseNumber: formData.drugLicenseNumber.trim() || undefined,
-          gstNumber: formData.gstNumber.trim() || undefined,
-          message:
-            formData.message.trim() ||
-            `Wholesale B2B enquiry for ${product.name} (${product.genericName || ''}) - Pack: ${product.packaging || 'Standard Pack'}`,
-          source: 'PRODUCT_PAGE',
-        });
+    setLoading(true);
+    setErrorMsg('');
+    try {
+      await enquiryService.submitProductEnquiry({
+        enquiryType: 'SINGLE_PRODUCT',
+        productId: product._id,
+        product: product._id,
+        productSlug: product.slug,
+        name: effectiveName,
+        fullName: effectiveName,
+        phone: cleanPhone,
+        email: effectiveEmail,
+        companyName: formData.companyName.trim() || undefined,
+        city: formData.city.trim(),
+        state: formData.state.trim(),
+        quantity: formData.quantity,
+        drugLicenseNumber: formData.drugLicenseNumber.trim() || undefined,
+        gstNumber: formData.gstNumber.trim() || undefined,
+        message:
+          formData.message.trim() ||
+          `Wholesale B2B enquiry for ${product.name} (${product.genericName || ''}) - Pack: ${product.packaging || 'Standard Pack'}`,
+        source: 'PRODUCT_PAGE',
+      });
 
-        setSuccessMsg(
-          `Thank you! Your inquiry for ${product.name} has been registered. Our Area Sales Manager will connect with you via Phone & WhatsApp with distributor net rates.`
-        );
+      setSuccessMsg(
+        `Thank you! Your inquiry for ${product.name} has been registered. Our Area Sales Manager will connect with you via Phone & WhatsApp with distributor net rates.`
+      );
 
-        setTimeout(() => {
-          onClose();
-          setSuccessMsg('');
-        }, 3500);
-      } catch (err: any) {
-        setErrorMsg(err.message || 'Failed to submit enquiry. Please check your contact information and try again.');
-      } finally {
-        setLoading(false);
-      }
-    }, {
-      title: `Submit Inquiry for ${product.name}`,
-      subtitle: 'Please sign in or register so your inquiry is verified with the sales manager.',
-    });
+      setTimeout(() => {
+        onClose();
+        setSuccessMsg('');
+      }, 3500);
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Failed to submit enquiry. Please check your contact information and try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleWhatsAppClick = () => {
-    requireAuth(() => {
-      const waText = buildProductWhatsAppMessage({
-        productName: product.name,
-        genericName: product.genericName,
-        dosageForm: product.dosageForm,
-        packaging: product.packaging,
-        mrp: product.mrp,
-        fullName: formData.name || user?.name || '',
-        phone: formData.phone || user?.phone || '',
-        email: formData.email || user?.email || '',
-        companyName: formData.companyName,
-        city: formData.city,
-        state: formData.state,
-        quantity: formData.quantity,
-        drugLicenseNumber: formData.drugLicenseNumber,
-        gstNumber: formData.gstNumber,
-        message: formData.message,
-        authUser: user ? { name: user.name, phone: user.phone || formData.phone, email: user.email } : undefined,
-      });
-      window.open(`https://wa.me/919316227576?text=${encodeURIComponent(waText)}`, '_blank');
-    }, {
-      title: `WhatsApp Inquiry for ${product.name}`,
-      subtitle: 'Please sign in or register so your verified contact details are sent to our sales manager.',
+    const waText = buildProductWhatsAppMessage({
+      productName: product.name,
+      genericName: product.genericName,
+      dosageForm: product.dosageForm,
+      packaging: product.packaging,
+      mrp: product.mrp,
+      fullName: formData.name || user?.name || '',
+      phone: formData.phone || user?.phone || '',
+      email: formData.email || user?.email || '',
+      companyName: formData.companyName,
+      city: formData.city,
+      state: formData.state,
+      quantity: formData.quantity,
+      drugLicenseNumber: formData.drugLicenseNumber,
+      gstNumber: formData.gstNumber,
+      message: formData.message,
+      authUser: user ? { name: user.name, phone: user.phone || formData.phone, email: user.email } : undefined,
     });
+    window.open(`https://wa.me/919316227576?text=${encodeURIComponent(waText)}`, '_blank');
   };
 
   return (
@@ -310,7 +298,7 @@ export const SingleProductEnquiryModal: React.FC<SingleProductEnquiryModalProps>
             onAction={onClose}
           />
         ) : (
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <FormAlert type="error" message={errorMsg} onClose={() => setErrorMsg('')} />
 
             {/* Quantity & Unit Selector */}

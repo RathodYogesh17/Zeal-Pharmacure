@@ -5,7 +5,6 @@ import { productService } from '../api/productService';
 import { enquiryService } from '../api/enquiryService';
 import { useSiteSettings } from '../context/SiteSettingsContext';
 import { useAuth } from '../context/AuthContext';
-import { useEnquiryAuth } from '../context/EnquiryAuthContext';
 import type { IProduct } from '../types';
 import {
   ProductDetailGallery,
@@ -25,7 +24,6 @@ export const ProductDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const { openFranchiseModal } = useSiteSettings();
   const { user } = useAuth();
-  const { requireAuth } = useEnquiryAuth();
 
   const [product, setProduct] = useState<IProduct | null>(null);
   const [loading, setLoading] = useState(true);
@@ -139,60 +137,45 @@ export const ProductDetailPage: React.FC = () => {
 
   const handleOpenSingleEnquiry = () => {
     if (!product) return;
-    requireAuth(() => {
-      setEnquiryProduct(product);
-    }, {
-      title: `Inquiry for ${product.name}`,
-      subtitle: 'Please sign in or register so your inquiry is verified with the sales manager.',
-    });
+    setEnquiryProduct(product);
   };
 
   const handleOpenBulkModal = () => {
-    requireAuth(() => {
-      setIsBulkModalOpen(true);
-    }, {
-      title: 'Bulk Order Wholesale Enquiry',
-      subtitle: 'Please sign in or register to submit your wholesale bulk requisition.',
-    });
+    setIsBulkModalOpen(true);
   };
 
   const handleLeadSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!product) return;
 
-    requireAuth(async () => {
-      setSubmittingLead(true);
-      setLeadSuccess('');
-      setLeadError('');
+    setSubmittingLead(true);
+    setLeadSuccess('');
+    setLeadError('');
 
-      try {
-        await enquiryService.submitFranchiseEnquiry({
-          ...leadForm,
-          fullName: leadForm.fullName.trim() || user?.name || '',
-          phone: leadForm.phone.trim() || user?.phone || '',
-          email: leadForm.email.trim() || user?.email || '',
-          message: `Inquiry regarding ${product.name} (${product.genericName || ''}). ${leadForm.message}`.trim(),
-        });
-        setLeadSuccess('Your Stockists Distribution inquiry has been registered! Our Regional Business Manager will contact you shortly.');
-        setLeadForm({
-          fullName: user?.name || '',
-          phone: user?.phone || '',
-          email: user?.email || '',
-          city: '',
-          state: '',
-          drugLicenseNumber: '',
-          message: '',
-        });
-      } catch (err: any) {
-        console.error('Failed to submit lead:', err);
-        setLeadError(err?.message || 'Failed to submit inquiry. Please try again.');
-      } finally {
-        setSubmittingLead(false);
-      }
-    }, {
-      title: `Distribution Rights for ${product.name}`,
-      subtitle: 'Please sign in or register to submit your authorized stockist monopoly inquiry.',
-    });
+    try {
+      await enquiryService.submitFranchiseEnquiry({
+        ...leadForm,
+        fullName: leadForm.fullName.trim() || user?.name || '',
+        phone: leadForm.phone.trim() || user?.phone || '',
+        email: leadForm.email.trim() || user?.email || '',
+        message: `Inquiry regarding ${product.name} (${product.genericName || ''}). ${leadForm.message}`.trim(),
+      });
+      setLeadSuccess('Your Stockists Distribution inquiry has been registered! Our Regional Business Manager will contact you shortly.');
+      setLeadForm({
+        fullName: user?.name || '',
+        phone: user?.phone || '',
+        email: user?.email || '',
+        city: '',
+        state: '',
+        drugLicenseNumber: '',
+        message: '',
+      });
+    } catch (err: any) {
+      console.error('Failed to submit lead:', err);
+      setLeadError(err?.message || 'Failed to submit inquiry. Please try again.');
+    } finally {
+      setSubmittingLead(false);
+    }
   };
 
   const handleReviewSubmit = async (e: React.FormEvent) => {

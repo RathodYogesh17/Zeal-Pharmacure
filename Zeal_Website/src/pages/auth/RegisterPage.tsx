@@ -134,7 +134,7 @@ export const RegisterPage: React.FC = () => {
         </div>
       }
     >
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <AuthInputField
           label="Full Name"
           type="text"

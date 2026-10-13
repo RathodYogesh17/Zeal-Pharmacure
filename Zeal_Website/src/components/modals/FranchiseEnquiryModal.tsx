@@ -18,7 +18,6 @@ import {
 } from 'lucide-react';
 import { useSiteSettings } from '../../context/SiteSettingsContext';
 import { useAuth } from '../../context/AuthContext';
-import { useEnquiryAuth } from '../../context/EnquiryAuthContext';
 import { enquiryService } from '../../api/enquiryService';
 import { ThemedSelect } from '../common/ThemedSelect';
 import { VerifiedUserBadge } from '../common/VerifiedUserBadge';
@@ -202,7 +201,6 @@ const FormFieldInput: React.FC<{
 export const FranchiseEnquiryModal: React.FC = () => {
   const { isFranchiseModalOpen, closeFranchiseModal, settings } = useSiteSettings();
   const { user } = useAuth();
-  const { requireAuth } = useEnquiryAuth();
 
   const [formData, setFormData] = useState({
     fullName: user?.name || '',
@@ -341,94 +339,84 @@ export const FranchiseEnquiryModal: React.FC = () => {
       return;
     }
 
-    requireAuth(async () => {
-      setLoading(true);
-      setErrorMsg('');
-      setSuccessMsg('');
+    setLoading(true);
+    setErrorMsg('');
+    setSuccessMsg('');
 
-      try {
-        const payload = {
-          name: effectiveName,
-          fullName: effectiveName,
-          phone: cleanPhone,
-          whatsappNumber: formData.sameAsPhone
-            ? cleanPhone
-            : formData.whatsappNumber.trim() || cleanPhone,
-          email: effectiveEmail,
-          companyName: formData.companyName.trim(),
-          businessType: formData.businessType,
-          city: formData.city.trim(),
-          district: formData.district.trim() || formData.city.trim(),
-          preferredTerritory: formData.district.trim() || formData.city.trim(),
-          state: formData.state.trim(),
-          pincode: formData.pincode.trim(),
-          address: formData.address.trim(),
-          investmentBudget: formData.investmentBudget,
-          experienceYears: formData.experienceYears,
-          pharmaExperience: formData.pharmaExperience,
-          currentBusiness: formData.currentBusiness.trim(),
-          interestedDivisions: formData.interestedDivisions,
-          hasDrugLicense: formData.hasDrugLicense,
-          drugLicenseNumber: formData.hasDrugLicense ? formData.drugLicenseNumber.trim() : '',
-          hasGst: formData.hasGst,
-          gstNumber: formData.hasGst ? formData.gstNumber.trim() : '',
-          hasGodownFacility: formData.hasGodownFacility,
-          hasTransportFacility: formData.hasTransportFacility,
-          message: formData.message.trim(),
-          source: 'WEBSITE',
-          isConfirmed: true,
-        };
+    try {
+      const payload = {
+        name: effectiveName,
+        fullName: effectiveName,
+        phone: cleanPhone,
+        whatsappNumber: formData.sameAsPhone
+          ? cleanPhone
+          : formData.whatsappNumber.trim() || cleanPhone,
+        email: effectiveEmail,
+        companyName: formData.companyName.trim(),
+        businessType: formData.businessType,
+        city: formData.city.trim(),
+        district: formData.district.trim() || formData.city.trim(),
+        preferredTerritory: formData.district.trim() || formData.city.trim(),
+        state: formData.state.trim(),
+        pincode: formData.pincode.trim(),
+        address: formData.address.trim(),
+        investmentBudget: formData.investmentBudget,
+        experienceYears: formData.experienceYears,
+        pharmaExperience: formData.pharmaExperience,
+        currentBusiness: formData.currentBusiness.trim(),
+        interestedDivisions: formData.interestedDivisions,
+        hasDrugLicense: formData.hasDrugLicense,
+        drugLicenseNumber: formData.hasDrugLicense ? formData.drugLicenseNumber.trim() : '',
+        hasGst: formData.hasGst,
+        gstNumber: formData.hasGst ? formData.gstNumber.trim() : '',
+        hasGodownFacility: formData.hasGodownFacility,
+        hasTransportFacility: formData.hasTransportFacility,
+        message: formData.message.trim(),
+        source: 'WEBSITE',
+        isConfirmed: true,
+      };
 
-        await enquiryService.submitFranchiseEnquiry(payload);
-        setSuccessMsg(
-          'Your Stockists Distribution application has been submitted successfully! Our Area Business Manager has been alerted and will contact you within 24 hours.'
-        );
-        setTimeout(() => {
-          closeFranchiseModal();
-          setSuccessMsg('');
-        }, 3500);
-      } catch (err: any) {
-        setErrorMsg(
-          err.message || 'Failed to submit application. Please verify your contact details and try again.'
-        );
-      } finally {
-        setLoading(false);
-      }
-    }, {
-      title: 'Stockist Franchise Sign In',
-      subtitle: 'Please sign in or register to submit your authorized stockist monopoly application.',
-    });
+      await enquiryService.submitFranchiseEnquiry(payload);
+      setSuccessMsg(
+        'Your Stockists Distribution application has been submitted successfully! Our Area Business Manager has been alerted and will contact you within 24 hours.'
+      );
+      setTimeout(() => {
+        closeFranchiseModal();
+        setSuccessMsg('');
+      }, 3500);
+    } catch (err: any) {
+      setErrorMsg(
+        err.message || 'Failed to submit application. Please verify your contact details and try again.'
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleOpenWhatsAppChat = () => {
-    requireAuth(() => {
-      const waText = buildFranchiseWhatsAppMessage({
-        fullName: formData.fullName || user?.name || 'Prospective Stockist',
-        phone: formData.phone || user?.phone || '',
-        email: formData.email || user?.email || '',
-        state: formData.state,
-        district: formData.district || formData.city,
-        city: formData.city,
-        pincode: formData.pincode,
-        companyName: formData.companyName,
-        businessType: formData.businessType,
-        investmentBudget: formData.investmentBudget,
-        pharmaExperience: formData.pharmaExperience,
-        drugLicenseNumber: formData.hasDrugLicense ? formData.drugLicenseNumber : undefined,
-        gstNumber: formData.hasGst ? formData.gstNumber : undefined,
-        interestedDivisions: formData.interestedDivisions,
-        message: formData.message,
-        authUser: user ? { name: user.name, phone: user.phone || formData.phone, email: user.email } : undefined,
-      });
-      const targetNumber = (settings.whatsappNumber || settings.salesHelpline || '919876543210').replace(
-        /[^0-9]/g,
-        ''
-      );
-      window.open(`https://wa.me/${targetNumber}?text=${encodeURIComponent(waText)}`, '_blank');
-    }, {
-      title: 'Stockist Franchise WhatsApp Chat',
-      subtitle: 'Please sign in or register so your verified credentials are transmitted to our Sales Director.',
+    const waText = buildFranchiseWhatsAppMessage({
+      fullName: formData.fullName || user?.name || 'Prospective Stockist',
+      phone: formData.phone || user?.phone || '',
+      email: formData.email || user?.email || '',
+      state: formData.state,
+      district: formData.district || formData.city,
+      city: formData.city,
+      pincode: formData.pincode,
+      companyName: formData.companyName,
+      businessType: formData.businessType,
+      investmentBudget: formData.investmentBudget,
+      pharmaExperience: formData.pharmaExperience,
+      drugLicenseNumber: formData.hasDrugLicense ? formData.drugLicenseNumber : undefined,
+      gstNumber: formData.hasGst ? formData.gstNumber : undefined,
+      interestedDivisions: formData.interestedDivisions,
+      message: formData.message,
+      authUser: user ? { name: user.name, phone: user.phone || formData.phone, email: user.email } : undefined,
     });
+    const targetNumber = (settings.whatsappNumber || settings.salesHelpline || '919876543210').replace(
+      /[^0-9]/g,
+      ''
+    );
+    window.open(`https://wa.me/${targetNumber}?text=${encodeURIComponent(waText)}`, '_blank');
   };
 
   return (
@@ -674,7 +662,7 @@ export const FranchiseEnquiryModal: React.FC = () => {
           )}
 
           {!successMsg && (
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               {/* =========================================================================
                   SECTION 1: APPLICANT & FIRM IDENTITY
               ========================================================================= */}
