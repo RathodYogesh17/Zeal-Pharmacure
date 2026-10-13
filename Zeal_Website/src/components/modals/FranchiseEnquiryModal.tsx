@@ -149,7 +149,8 @@ const FormFieldInput: React.FC<{
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   maxLength?: number;
   disabled?: boolean;
-}> = ({ label, name, type = 'text', required = false, placeholder, value, onChange, maxLength, disabled = false }) => (
+  error?: string;
+}> = ({ label, name, type = 'text', required = false, placeholder, value, onChange, maxLength, disabled = false, error }) => (
   <div>
     <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: '#334155', marginBottom: '5px' }}>
       {label} {required && '*'}
@@ -167,15 +168,34 @@ const FormFieldInput: React.FC<{
         width: '100%',
         padding: '10px 14px',
         borderRadius: '10px',
-        border: '1.5px solid #CBD5E1',
+        border: error ? '1.5px solid #EF4444' : '1.5px solid #CBD5E1',
+        boxShadow: error ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none',
         fontSize: '13.5px',
         fontWeight: 600,
         color: '#0F172A',
         outline: 'none',
         background: disabled ? '#F1F5F9' : '#FFFFFF',
         boxSizing: 'border-box',
+        transition: 'border-color 0.2s, box-shadow 0.2s',
+      }}
+      onFocus={(e) => {
+        if (!error) {
+          e.currentTarget.style.borderColor = '#6828DC';
+          e.currentTarget.style.boxShadow = '0 0 0 3px rgba(104, 40, 220, 0.12)';
+        }
+      }}
+      onBlur={(e) => {
+        if (!error) {
+          e.currentTarget.style.borderColor = '#CBD5E1';
+          e.currentTarget.style.boxShadow = 'none';
+        }
       }}
     />
+    {error && (
+      <span style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, lineHeight: 1.35, marginTop: '3px', display: 'block' }}>
+        {error}
+      </span>
+    )}
   </div>
 );
 
@@ -226,6 +246,14 @@ export const FranchiseEnquiryModal: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<{
+    fullName?: string;
+    phone?: string;
+    email?: string;
+    district?: string;
+    city?: string;
+    pincode?: string;
+  }>({});
 
   if (!isFranchiseModalOpen) return null;
 
@@ -233,6 +261,9 @@ export const FranchiseEnquiryModal: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { name, value, type } = e.target;
+    if (fieldErrors[name as keyof typeof fieldErrors]) {
+      setFieldErrors(prev => ({ ...prev, [name]: undefined }));
+    }
     if (type === 'checkbox') {
       const checked = (e.target as HTMLInputElement).checked;
       if (name === 'sameAsPhone') {
@@ -277,6 +308,39 @@ export const FranchiseEnquiryModal: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const errs: typeof fieldErrors = {};
+    const effectiveName = formData.fullName.trim() || user?.name || '';
+    if (!effectiveName) {
+      errs.fullName = 'Full name is required';
+    } else if (effectiveName.length < 2) {
+      errs.fullName = 'Name must be at least 2 characters';
+    }
+
+    const effectivePhone = formData.phone.trim() || user?.phone || '';
+    const rawDigits = effectivePhone.replace(/[\s\-\(\)\+]/g, '');
+    const cleanPhone = rawDigits.length > 10 && rawDigits.startsWith('91') ? rawDigits.slice(2) : rawDigits;
+    if (!rawDigits) {
+      errs.phone = 'Mobile number is required';
+    } else if (!/^[0-9]{10}$/.test(cleanPhone)) {
+      errs.phone = 'Please enter a valid 10-digit mobile number';
+    }
+
+    const effectiveEmail = formData.email.trim() || user?.email || '';
+    if (!effectiveEmail) {
+      errs.email = 'Email address is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(effectiveEmail)) {
+      errs.email = 'Please enter a valid email address';
+    }
+
+    if (!formData.district.trim()) errs.district = 'Preferred District is required';
+    if (!formData.city.trim()) errs.city = 'City / Headquarters is required';
+
+    if (Object.keys(errs).length > 0) {
+      setFieldErrors(errs);
+      return;
+    }
+
     requireAuth(async () => {
       setLoading(true);
       setErrorMsg('');
@@ -284,13 +348,13 @@ export const FranchiseEnquiryModal: React.FC = () => {
 
       try {
         const payload = {
-          name: formData.fullName.trim() || user?.name || '',
-          fullName: formData.fullName.trim() || user?.name || '',
-          phone: formData.phone.trim() || user?.phone || '',
+          name: effectiveName,
+          fullName: effectiveName,
+          phone: cleanPhone,
           whatsappNumber: formData.sameAsPhone
-            ? (formData.phone.trim() || user?.phone || '')
-            : formData.whatsappNumber.trim() || formData.phone.trim() || user?.phone || '',
-          email: formData.email.trim() || user?.email || '',
+            ? cleanPhone
+            : formData.whatsappNumber.trim() || cleanPhone,
+          email: effectiveEmail,
           companyName: formData.companyName.trim(),
           businessType: formData.businessType,
           city: formData.city.trim(),
@@ -623,6 +687,7 @@ export const FranchiseEnquiryModal: React.FC = () => {
                     placeholder="e.g. Rajesh Kumar Sharma"
                     value={formData.fullName}
                     onChange={handleChange}
+                    error={fieldErrors.fullName}
                   />
 
                   <FormFieldInput
@@ -633,6 +698,7 @@ export const FranchiseEnquiryModal: React.FC = () => {
                     placeholder="10-digit mobile number"
                     value={formData.phone}
                     onChange={handleChange}
+                    error={fieldErrors.phone}
                   />
 
                   {/* WhatsApp Number with toggle */}
@@ -682,6 +748,7 @@ export const FranchiseEnquiryModal: React.FC = () => {
                     placeholder="name@pharmaagency.com"
                     value={formData.email}
                     onChange={handleChange}
+                    error={fieldErrors.email}
                   />
 
                   <FormFieldInput
@@ -731,6 +798,7 @@ export const FranchiseEnquiryModal: React.FC = () => {
                     placeholder="e.g. Surat, Rajkot, Jaipur, Pune"
                     value={formData.district}
                     onChange={handleChange}
+                    error={fieldErrors.district}
                   />
 
                   <FormFieldInput
@@ -740,6 +808,7 @@ export const FranchiseEnquiryModal: React.FC = () => {
                     placeholder="e.g. Vadodara, Ahmedabad"
                     value={formData.city}
                     onChange={handleChange}
+                    error={fieldErrors.city}
                   />
 
                   <FormFieldInput
@@ -749,6 +818,7 @@ export const FranchiseEnquiryModal: React.FC = () => {
                     placeholder="e.g. 390001"
                     value={formData.pincode}
                     onChange={handleChange}
+                    error={fieldErrors.pincode}
                   />
                 </div>
               </SectionWrapper>

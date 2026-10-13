@@ -39,13 +39,60 @@ export const ContactForm: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<{
+    fullName?: string;
+    email?: string;
+    phone?: string;
+    message?: string;
+  }>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (fieldErrors[name as keyof typeof fieldErrors]) {
+      setFieldErrors(prev => ({ ...prev, [name]: undefined }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMsg('');
+    setSuccessMsg('');
+
+    const errs: { fullName?: string; email?: string; phone?: string; message?: string } = {};
+
+    const effectiveName = formData.fullName.trim() || user?.name || '';
+    if (!effectiveName) {
+      errs.fullName = 'Full name is required';
+    } else if (effectiveName.length < 2) {
+      errs.fullName = 'Name must be at least 2 characters';
+    }
+
+    const effectiveEmail = formData.email.trim() || user?.email || '';
+    if (!effectiveEmail) {
+      errs.email = 'Email address is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(effectiveEmail)) {
+      errs.email = 'Please enter a valid email address';
+    }
+
+    const rawDigits = (formData.phone.trim() || user?.phone || '').replace(/[\s\-\(\)\+]/g, '');
+    const cleanPhone = rawDigits.length > 10 && rawDigits.startsWith('91') ? rawDigits.slice(2) : rawDigits;
+
+    if (!rawDigits) {
+      errs.phone = 'Mobile number is required';
+    } else if (!/^[0-9]{10}$/.test(cleanPhone)) {
+      errs.phone = 'Please enter a valid 10-digit mobile number';
+    }
+
+    if (!formData.message.trim()) {
+      errs.message = 'Please describe your inquiry or requirements';
+    }
+
+    if (Object.keys(errs).length > 0) {
+      setFieldErrors(errs);
+      return;
+    }
+
     requireAuth(async () => {
       setSubmitting(true);
       setErrorMsg('');
@@ -54,9 +101,9 @@ export const ContactForm: React.FC = () => {
       try {
         await enquiryService.submitContactEnquiry({
           ...formData,
-          fullName: formData.fullName.trim() || user?.name || '',
-          email: formData.email.trim() || user?.email || '',
-          phone: formData.phone.trim() || user?.phone || '',
+          fullName: effectiveName,
+          email: effectiveEmail,
+          phone: cleanPhone,
         });
         setSuccessMsg('Thank you for reaching out to Zeal Pharmacure. Our regional business executive will contact you shortly.');
         setFormData({
@@ -66,6 +113,7 @@ export const ContactForm: React.FC = () => {
           subject: 'Stockist Distribution Network Monopoly',
           message: '',
         });
+        setFieldErrors({});
       } catch (err: any) {
         setErrorMsg(err.message || 'Failed to submit enquiry. Please verify your details and try again.');
       } finally {
@@ -115,6 +163,7 @@ export const ContactForm: React.FC = () => {
           placeholder="e.g. Dr. Amit Sharma / Sharma Medicals"
           value={formData.fullName}
           onChange={handleChange}
+          error={fieldErrors.fullName}
           leftIcon={<User size={16} />}
         />
 
@@ -127,6 +176,7 @@ export const ContactForm: React.FC = () => {
             placeholder="amit@example.com"
             value={formData.email}
             onChange={handleChange}
+            error={fieldErrors.email}
             leftIcon={<Mail size={16} />}
           />
 
@@ -138,6 +188,7 @@ export const ContactForm: React.FC = () => {
             placeholder="10-digit mobile number"
             value={formData.phone}
             onChange={handleChange}
+            error={fieldErrors.phone}
             leftIcon={<Phone size={16} />}
           />
         </div>
@@ -164,6 +215,7 @@ export const ContactForm: React.FC = () => {
           placeholder="Please mention your preferred territory/district, expected monthly volume, or specific therapeutic formulations..."
           value={formData.message}
           onChange={handleChange}
+          error={fieldErrors.message}
         />
 
         <Button

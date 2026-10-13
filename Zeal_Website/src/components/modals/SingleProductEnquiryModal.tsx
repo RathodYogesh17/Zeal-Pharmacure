@@ -59,11 +59,51 @@ export const SingleProductEnquiryModal: React.FC<SingleProductEnquiryModalProps>
   const { requireAuth } = useEnquiryAuth();
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<{
+    fullName?: string;
+    phone?: string;
+    email?: string;
+    city?: string;
+    state?: string;
+  }>({});
 
   if (!product) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const errs: typeof fieldErrors = {};
+    const effectiveName = formData.name.trim() || user?.name || '';
+    if (!effectiveName) {
+      errs.fullName = 'Full name is required';
+    } else if (effectiveName.length < 2) {
+      errs.fullName = 'Name must be at least 2 characters';
+    }
+
+    const effectivePhone = formData.phone.trim() || user?.phone || '';
+    const rawDigits = effectivePhone.replace(/[\s\-\(\)\+]/g, '');
+    const cleanPhone = rawDigits.length > 10 && rawDigits.startsWith('91') ? rawDigits.slice(2) : rawDigits;
+    if (!rawDigits) {
+      errs.phone = 'Mobile number is required';
+    } else if (!/^[0-9]{10}$/.test(cleanPhone)) {
+      errs.phone = 'Please enter a valid 10-digit mobile number';
+    }
+
+    const effectiveEmail = formData.email.trim() || user?.email || '';
+    if (!effectiveEmail) {
+      errs.email = 'Email address is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(effectiveEmail)) {
+      errs.email = 'Please enter a valid email address';
+    }
+
+    if (!formData.city.trim()) errs.city = 'City / Headquarters is required';
+    if (!formData.state.trim()) errs.state = 'State is required';
+
+    if (Object.keys(errs).length > 0) {
+      setFieldErrors(errs);
+      return;
+    }
+
     requireAuth(async () => {
       setLoading(true);
       setErrorMsg('');
@@ -73,10 +113,10 @@ export const SingleProductEnquiryModal: React.FC<SingleProductEnquiryModalProps>
           productId: product._id,
           product: product._id,
           productSlug: product.slug,
-          name: formData.name.trim() || user?.name || '',
-          fullName: formData.name.trim() || user?.name || '',
-          phone: formData.phone.trim() || user?.phone || '',
-          email: formData.email.trim() || user?.email || '',
+          name: effectiveName,
+          fullName: effectiveName,
+          phone: cleanPhone,
+          email: effectiveEmail,
           companyName: formData.companyName.trim() || undefined,
           city: formData.city.trim(),
           state: formData.state.trim(),
@@ -367,7 +407,11 @@ export const SingleProductEnquiryModal: React.FC<SingleProductEnquiryModalProps>
               onChange={(field, val) => {
                 const key = field === 'fullName' ? 'name' : field;
                 setFormData((prev) => ({ ...prev, [key]: val }));
+                if (fieldErrors[field as keyof typeof fieldErrors]) {
+                  setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
+                }
               }}
+              errors={fieldErrors}
               showCompany={true}
               showDrugLicense={true}
               showGst={true}

@@ -16,6 +16,7 @@ export interface B2BCustomerData {
 export interface B2BCustomerFieldsProps {
   formData: B2BCustomerData;
   onChange: (field: keyof B2BCustomerData, value: string) => void;
+  errors?: Partial<Record<keyof B2BCustomerData, string>>;
   showCompany?: boolean;
   showDrugLicense?: boolean;
   showGst?: boolean;
@@ -31,6 +32,7 @@ export interface B2BCustomerFieldsProps {
 export const B2BCustomerFields: React.FC<B2BCustomerFieldsProps> = ({
   formData,
   onChange,
+  errors,
   showCompany = true,
   showDrugLicense = true,
   showGst = true,
@@ -42,11 +44,12 @@ export const B2BCustomerFields: React.FC<B2BCustomerFieldsProps> = ({
   compact = false,
   disabled = false,
 }) => {
-  const inputStyle: React.CSSProperties = {
+  const getInputStyle = (fieldName: keyof B2BCustomerData): React.CSSProperties => ({
     width: '100%',
     padding: compact ? '9px 12px' : '10px 14px',
     borderRadius: '10px',
-    border: '1.5px solid #CBD5E1',
+    border: errors?.[fieldName] ? '1.5px solid #EF4444' : '1.5px solid #CBD5E1',
+    boxShadow: errors?.[fieldName] ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none',
     fontSize: compact ? '13px' : '13.5px',
     fontWeight: 600,
     color: '#0F172A',
@@ -54,6 +57,24 @@ export const B2BCustomerFields: React.FC<B2BCustomerFieldsProps> = ({
     background: '#FFFFFF',
     boxSizing: 'border-box',
     transition: 'border-color 0.2s, box-shadow 0.2s',
+  });
+
+  const renderError = (fieldName: keyof B2BCustomerData) => {
+    if (!errors?.[fieldName]) return null;
+    return (
+      <span
+        style={{
+          fontSize: '12px',
+          color: '#DC2626',
+          fontWeight: 500,
+          lineHeight: 1.35,
+          marginTop: '3px',
+          display: 'block',
+        }}
+      >
+        {errors[fieldName]}
+      </span>
+    );
   };
 
   const labelStyle: React.CSSProperties = {
@@ -68,14 +89,18 @@ export const B2BCustomerFields: React.FC<B2BCustomerFieldsProps> = ({
     marginBottom: '5px',
   };
 
-  const handleFocus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    e.target.style.borderColor = '#6828DC';
-    e.target.style.boxShadow = '0 0 0 3px rgba(104, 40, 220, 0.1)';
+  const handleFocus = (fieldName: keyof B2BCustomerData) => (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (!errors?.[fieldName]) {
+      e.target.style.borderColor = '#6828DC';
+      e.target.style.boxShadow = '0 0 0 3px rgba(104, 40, 220, 0.1)';
+    }
   };
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    e.target.style.borderColor = '#CBD5E1';
-    e.target.style.boxShadow = 'none';
+  const handleBlur = (fieldName: keyof B2BCustomerData) => (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (!errors?.[fieldName]) {
+      e.target.style.borderColor = '#CBD5E1';
+      e.target.style.boxShadow = 'none';
+    }
   };
 
   return (
@@ -94,10 +119,11 @@ export const B2BCustomerFields: React.FC<B2BCustomerFieldsProps> = ({
             placeholder="e.g. Ramesh Patel / Patel Medicos"
             value={formData.fullName}
             onChange={(e) => onChange('fullName', e.target.value)}
-            style={inputStyle}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
+            style={getInputStyle('fullName')}
+            onFocus={handleFocus('fullName')}
+            onBlur={handleBlur('fullName')}
           />
+          {renderError('fullName')}
         </div>
 
         <div>
@@ -109,13 +135,14 @@ export const B2BCustomerFields: React.FC<B2BCustomerFieldsProps> = ({
             type="tel"
             required
             disabled={disabled}
-            placeholder="e.g. +91 98765 43210"
+            placeholder="e.g. 9876543210 (10 digits)"
             value={formData.phone}
             onChange={(e) => onChange('phone', e.target.value)}
-            style={inputStyle}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
+            style={getInputStyle('phone')}
+            onFocus={handleFocus('phone')}
+            onBlur={handleBlur('phone')}
           />
+          {renderError('phone')}
         </div>
       </div>
 
@@ -133,10 +160,11 @@ export const B2BCustomerFields: React.FC<B2BCustomerFieldsProps> = ({
             placeholder="e.g. pharma@distributor.com"
             value={formData.email}
             onChange={(e) => onChange('email', e.target.value)}
-            style={inputStyle}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
+            style={getInputStyle('email')}
+            onFocus={handleFocus('email')}
+            onBlur={handleBlur('email')}
           />
+          {renderError('email')}
         </div>
 
         {showCompany && (
@@ -151,10 +179,11 @@ export const B2BCustomerFields: React.FC<B2BCustomerFieldsProps> = ({
               placeholder="e.g. Patel Healthcare Agency"
               value={formData.companyName || ''}
               onChange={(e) => onChange('companyName', e.target.value)}
-              style={inputStyle}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
+              style={getInputStyle('companyName')}
+              onFocus={handleFocus('companyName')}
+              onBlur={handleBlur('companyName')}
             />
+            {renderError('companyName')}
           </div>
         )}
       </div>
@@ -173,10 +202,11 @@ export const B2BCustomerFields: React.FC<B2BCustomerFieldsProps> = ({
             placeholder="e.g. Surat, Indore, Varanasi"
             value={formData.city}
             onChange={(e) => onChange('city', e.target.value)}
-            style={inputStyle}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
+            style={getInputStyle('city')}
+            onFocus={handleFocus('city')}
+            onBlur={handleBlur('city')}
           />
+          {renderError('city')}
         </div>
 
         <div>
@@ -191,10 +221,11 @@ export const B2BCustomerFields: React.FC<B2BCustomerFieldsProps> = ({
             placeholder="e.g. Gujarat, Madhya Pradesh"
             value={formData.state}
             onChange={(e) => onChange('state', e.target.value)}
-            style={inputStyle}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
+            style={getInputStyle('state')}
+            onFocus={handleFocus('state')}
+            onBlur={handleBlur('state')}
           />
+          {renderError('state')}
         </div>
       </div>
 
@@ -213,9 +244,9 @@ export const B2BCustomerFields: React.FC<B2BCustomerFieldsProps> = ({
                 placeholder="e.g. 20B/21B-XXXXX"
                 value={formData.drugLicenseNumber || ''}
                 onChange={(e) => onChange('drugLicenseNumber', e.target.value)}
-                style={inputStyle}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
+                style={getInputStyle('drugLicenseNumber')}
+                onFocus={handleFocus('drugLicenseNumber')}
+                onBlur={handleBlur('drugLicenseNumber')}
               />
             </div>
           )}
@@ -232,9 +263,9 @@ export const B2BCustomerFields: React.FC<B2BCustomerFieldsProps> = ({
                 placeholder="e.g. 24AAAAA0000A1Z5"
                 value={formData.gstNumber || ''}
                 onChange={(e) => onChange('gstNumber', e.target.value)}
-                style={inputStyle}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
+                style={getInputStyle('gstNumber')}
+                onFocus={handleFocus('gstNumber')}
+                onBlur={handleBlur('gstNumber')}
               />
             </div>
           )}
@@ -255,14 +286,15 @@ export const B2BCustomerFields: React.FC<B2BCustomerFieldsProps> = ({
             value={formData.message || ''}
             onChange={(e) => onChange('message', e.target.value)}
             style={{
-              ...inputStyle,
+              ...getInputStyle('message'),
               height: 'auto',
               minHeight: '64px',
               resize: 'vertical',
             }}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
+            onFocus={handleFocus('message')}
+            onBlur={handleBlur('message')}
           />
+          {renderError('message')}
         </div>
       )}
     </div>
