@@ -106,12 +106,15 @@ export const authService = {
    * User Registration
    */
   async register(payload: IRegisterPayload): Promise<{ user: IUser; message: string }> {
+    const rawDigits = payload.phone.replace(/[\s\-\(\)\+]/g, '');
+    const cleanPhone = rawDigits.length > 10 && rawDigits.startsWith('91') ? rawDigits.slice(2) : rawDigits;
+
     const res = await request<any>('/auth/register', {
       method: 'POST',
       body: JSON.stringify({
         name: payload.name.trim(),
         email: payload.email.trim().toLowerCase(),
-        phone: payload.phone.trim(),
+        phone: cleanPhone || payload.phone.trim(),
         password: payload.password,
         confirmPassword: payload.confirmPassword || payload.password,
         profileImage: payload.profileImage || null,

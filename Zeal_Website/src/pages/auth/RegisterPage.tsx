@@ -36,6 +36,15 @@ export const RegisterPage: React.FC = () => {
       return;
     }
 
+    // Normalize phone number (strip +91, spaces, dashes)
+    const rawDigits = phone.replace(/[\s\-\(\)\+]/g, '');
+    const cleanPhone = rawDigits.length > 10 && rawDigits.startsWith('91') ? rawDigits.slice(2) : rawDigits;
+
+    if (!/^[0-9]{10}$/.test(cleanPhone)) {
+      setErrorMessage('Please enter a valid 10-digit mobile number (e.g. 9876543210).');
+      return;
+    }
+
     if (password.length < 6) {
       setErrorMessage('Password must be at least 6 characters long.');
       return;
@@ -51,7 +60,7 @@ export const RegisterPage: React.FC = () => {
       const res = await register({
         name: name.trim(),
         email: email.trim().toLowerCase(),
-        phone: phone.trim(),
+        phone: cleanPhone,
         password,
         confirmPassword,
       });
@@ -120,7 +129,7 @@ export const RegisterPage: React.FC = () => {
           required
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          placeholder="+91 98765 43210"
+          placeholder="e.g. 9876543210 (10 digits)"
           icon={Phone}
         />
 

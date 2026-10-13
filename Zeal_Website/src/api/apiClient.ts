@@ -24,7 +24,10 @@ export async function request<T = any>( endpoint: string, options: RequestInit =
     const data = await response.json().catch(() => null);
 
     if (!response.ok) {
-      const errorMsg = data?.message || `Request failed with status ${response.status}`;
+      let errorMsg = data?.message || `Request failed with status ${response.status}`;
+      if (Array.isArray(data?.errors) && data.errors.length > 0) {
+        errorMsg = data.errors.map((e: any) => typeof e === 'string' ? e.replace(/['"]/g, '') : JSON.stringify(e)).join('. ');
+      }
       if (response.status === 401) {
         localStorage.removeItem('zeal_token');
         localStorage.removeItem('zeal_user');
