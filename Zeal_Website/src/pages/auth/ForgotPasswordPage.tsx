@@ -19,6 +19,18 @@ export const ForgotPasswordPage: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [devOtp, setDevOtp] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<{
+    email?: string;
+    otp?: string;
+    newPassword?: string;
+    confirmPassword?: string;
+  }>({});
+
+  const clearFieldError = (field: 'email' | 'otp' | 'newPassword' | 'confirmPassword') => {
+    if (fieldErrors[field]) {
+      setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
+    }
+  };
 
   // OTP Countdown Timer (1 minute = 60 seconds)
   const [otpCountdown, setOtpCountdown] = useState(0);
@@ -52,7 +64,10 @@ export const ForgotPasswordPage: React.FC = () => {
     setSuccessMessage(null);
 
     if (!email.trim()) {
-      setErrorMessage('Please enter your registered email address.');
+      setFieldErrors({ email: 'Registered email address is required' });
+      return;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setFieldErrors({ email: 'Please enter a valid email address' });
       return;
     }
 
@@ -95,8 +110,11 @@ export const ForgotPasswordPage: React.FC = () => {
     setErrorMessage(null);
     setSuccessMessage(null);
 
-    if (!otp.trim() || otp.trim().length !== 6) {
-      setErrorMessage('Please enter the 6-digit verification code.');
+    if (!otp.trim()) {
+      setFieldErrors({ otp: 'Verification code is required' });
+      return;
+    } else if (otp.trim().length !== 6) {
+      setFieldErrors({ otp: 'Please enter the 6-digit verification code' });
       return;
     }
 
@@ -120,13 +138,22 @@ export const ForgotPasswordPage: React.FC = () => {
     setErrorMessage(null);
     setSuccessMessage(null);
 
-    if (newPassword.length < 6) {
-      setErrorMessage('Password must be at least 6 characters long.');
-      return;
+    const errs: { newPassword?: string; confirmPassword?: string } = {};
+
+    if (!newPassword) {
+      errs.newPassword = 'New password is required';
+    } else if (newPassword.length < 6) {
+      errs.newPassword = 'Password must be at least 6 characters long';
     }
 
-    if (newPassword !== confirmPassword) {
-      setErrorMessage('Passwords do not match. Please verify.');
+    if (!confirmPassword) {
+      errs.confirmPassword = 'Confirm password is required';
+    } else if (newPassword !== confirmPassword) {
+      errs.confirmPassword = 'Passwords do not match';
+    }
+
+    if (Object.keys(errs).length > 0) {
+      setFieldErrors(errs);
       return;
     }
 
@@ -222,7 +249,11 @@ export const ForgotPasswordPage: React.FC = () => {
             required
             autoFocus
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              clearFieldError('email');
+            }}
+            error={fieldErrors.email}
             placeholder="name@example.com"
             icon={Mail}
           />
@@ -379,7 +410,11 @@ export const ForgotPasswordPage: React.FC = () => {
             autoComplete="new-password"
             required
             value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
+            onChange={(e) => {
+              setNewPassword(e.target.value);
+              clearFieldError('newPassword');
+            }}
+            error={fieldErrors.newPassword}
             placeholder="••••••••"
             icon={Lock}
           />
@@ -391,7 +426,11 @@ export const ForgotPasswordPage: React.FC = () => {
             autoComplete="new-password"
             required
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={(e) => {
+              setConfirmPassword(e.target.value);
+              clearFieldError('confirmPassword');
+            }}
+            error={fieldErrors.confirmPassword}
             placeholder="••••••••"
             icon={Lock}
           />

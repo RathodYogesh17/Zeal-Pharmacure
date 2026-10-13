@@ -113,7 +113,11 @@ export const AuthInputField: React.FC<AuthInputFieldProps> = ({
             color: '#0F172A',
             outline: 'none',
             boxSizing: 'border-box',
-            boxShadow: isFocused ? '0 0 0 3px rgba(104, 40, 220, 0.12)' : 'none',
+            boxShadow: error
+              ? '0 0 0 3px rgba(239, 68, 68, 0.12)'
+              : isFocused
+                ? '0 0 0 3px rgba(104, 40, 220, 0.12)'
+                : 'none',
             transition: 'all 0.2s ease',
             fontFamily: 'inherit',
           }}
@@ -148,7 +152,15 @@ export const AuthInputField: React.FC<AuthInputFieldProps> = ({
       </div>
 
       {error && (
-        <span style={{ fontSize: '12px', color: '#EF4444', fontWeight: 600 }}>
+        <span
+          style={{
+            fontSize: '12px',
+            color: '#DC2626',
+            fontWeight: 500,
+            lineHeight: 1.35,
+            marginTop: '2px',
+          }}
+        >
           {error}
         </span>
       )}

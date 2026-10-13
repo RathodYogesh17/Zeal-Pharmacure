@@ -22,6 +22,14 @@ export const LoginPage: React.FC = () => {
   const [otp, setOtp] = useState('');
   const [devOtpHint, setDevOtpHint] = useState<string | null>(null);
 
+  const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({});
+
+  const clearFieldError = (field: 'email' | 'password') => {
+    if (fieldErrors[field]) {
+      setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
+    }
+  };
+
   // Redirect if already logged in
   React.useEffect(() => {
     if (isAuthenticated) {
@@ -35,8 +43,20 @@ export const LoginPage: React.FC = () => {
     setErrorMessage(null);
     setSuccessMessage(null);
 
-    if (!email.trim() || !password) {
-      setErrorMessage('Please enter both your email address and password.');
+    const errs: { email?: string; password?: string } = {};
+
+    if (!email.trim()) {
+      errs.email = 'Email address is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      errs.email = 'Please enter a valid email address';
+    }
+
+    if (!password) {
+      errs.password = 'Password is required';
+    }
+
+    if (Object.keys(errs).length > 0) {
+      setFieldErrors(errs);
       return;
     }
 
@@ -135,7 +155,11 @@ export const LoginPage: React.FC = () => {
             required
             autoComplete="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              clearFieldError('email');
+            }}
+            error={fieldErrors.email}
             placeholder="name@example.com"
             icon={Mail}
           />
@@ -155,7 +179,11 @@ export const LoginPage: React.FC = () => {
               required
               autoComplete="current-password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                clearFieldError('password');
+              }}
+              error={fieldErrors.password}
               placeholder="••••••••"
               icon={Lock}
             />
