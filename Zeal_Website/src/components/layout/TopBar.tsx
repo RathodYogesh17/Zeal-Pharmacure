@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone, Mail, Clock, ShieldCheck } from 'lucide-react';
+import { Phone, Mail, ShieldCheck } from 'lucide-react';
 import { useSiteSettings } from '../../context/SiteSettingsContext';
 
 export const TopBar: React.FC = () => {
@@ -38,11 +38,6 @@ export const TopBar: React.FC = () => {
             <Mail size={13} style={{ color: '#A78BFA' }} />
             <span>{settings.email}</span>
           </a>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#CBD5E1' }} className="hide-mobile">
-            <Clock size={13} style={{ color: '#A78BFA' }} />
-            <span>{settings.workingHours || 'Monday - Saturday: 9:30 AM - 6:30 PM'}</span>
-          </div>
         </div>
 
         {/* Right: Accreditations */}

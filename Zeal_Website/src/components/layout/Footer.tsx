@@ -459,28 +459,30 @@ export const Footer: React.FC = () => {
                 </a>
               </div>
 
-              {/* Working Hours */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div
-                  style={{
-                    width: '30px',
-                    height: '30px',
-                    borderRadius: '8px',
-                    background: 'rgba(245, 158, 11, 0.15)',
-                    border: '1px solid rgba(245, 158, 11, 0.3)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                    color: '#FBBF24',
-                  }}
-                >
-                  <Clock size={15} />
+              {/* Working Hours (only if explicitly configured in CMS) */}
+              {settings.workingHours ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div
+                    style={{
+                      width: '30px',
+                      height: '30px',
+                      borderRadius: '8px',
+                      background: 'rgba(245, 158, 11, 0.15)',
+                      border: '1px solid rgba(245, 158, 11, 0.3)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                      color: '#FBBF24',
+                    }}
+                  >
+                    <Clock size={15} />
+                  </div>
+                  <span style={{ color: '#94A3B8', fontSize: '12.5px' }}>
+                    {settings.workingHours}
+                  </span>
                 </div>
-                <span style={{ color: '#94A3B8', fontSize: '12.5px' }}>
-                  {settings.workingHours || 'Monday – Saturday: 9:30 AM – 6:30 PM'}
-                </span>
-              </div>
+              ) : null}
 
               {/* Compact GST verification badge */}
               <div

@@ -213,17 +213,19 @@ export const ContactBranchesMap: React.FC<ContactBranchesMapProps> = ({ settings
               </div>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ width: '30px', height: '30px', borderRadius: '8px', background: '#FEF3C7', color: '#B45309', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <Clock size={14} />
-              </div>
-              <div>
-                <div style={{ fontSize: '11px', color: '#64748B', fontWeight: 600 }}>Working Hours</div>
-                <div style={{ fontSize: '12.5px', fontWeight: 700, color: '#0F172A' }}>
-                  Mon – Sat: 9:30 AM – 6:30 PM
+            {settings.workingHours ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{ width: '30px', height: '30px', borderRadius: '8px', background: '#FEF3C7', color: '#B45309', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Clock size={14} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '11px', color: '#64748B', fontWeight: 600 }}>Working Hours</div>
+                  <div style={{ fontSize: '12.5px', fontWeight: 700, color: '#0F172A' }}>
+                    {settings.workingHours}
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : null}
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <div style={{ width: '30px', height: '30px', borderRadius: '8px', background: '#F5F3FF', color: 'var(--zp-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>

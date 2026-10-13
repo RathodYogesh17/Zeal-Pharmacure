@@ -1012,10 +1012,12 @@ export const AdminCmsPage: React.FC = () => {
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#CBD5E1' }}>
-                  <Clock size={13} style={{ color: '#A78BFA' }} />
-                  {formSettings.workingHours || 'Mon-Sat: 9:30 AM - 6:30 PM'}
-                </span>
+                {formSettings.workingHours ? (
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#CBD5E1' }}>
+                    <Clock size={13} style={{ color: '#A78BFA' }} />
+                    {formSettings.workingHours}
+                  </span>
+                ) : null}
                 <span style={{ background: '#10B981', color: '#FFFFFF', padding: '2px 8px', borderRadius: '4px', fontSize: '10.5px', fontWeight: 800 }}>
                   GST: {formSettings.gstNumber || '24AAACZ1234F1Z5'}
                 </span>

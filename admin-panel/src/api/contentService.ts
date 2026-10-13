@@ -13,7 +13,7 @@ export const fallbackContactInfo: ISiteSettings = {
   whatsappNumber: '+91 9909160190',
   headOfficeAddress: '7015, BTM (Bellagio Textile Market), Sita Nagar, Parvat Patiya, Puna Gam, Surat, Gujarat – 395010, India',
   plantAddress: '7015, BTM (Bellagio Textile Market), Central Logistics Depot, Surat, Gujarat – 395010, India',
-  workingHours: 'Monday - Saturday: 9:30 AM - 6:30 PM',
+  workingHours: '',
   gstNumber: '24AAACZ1234F1Z5',
   drugLicenseNumber: '20B-123456 / 21B-123456',
   primaryCtaText: 'Enquire Now',

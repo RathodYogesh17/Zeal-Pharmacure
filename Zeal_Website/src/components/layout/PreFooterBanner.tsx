@@ -290,32 +290,6 @@ export const PreFooterBanner: React.FC = () => {
               <span>{helplineNumber}</span>
             </a>
           </div>
-
-          {/* Live Support Indicator */}
-          <div
-            style={{
-              marginTop: '16px',
-              paddingTop: '14px',
-              borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '7px',
-              fontSize: '12px',
-              color: '#CBD5E1',
-            }}
-          >
-            <span
-              style={{
-                width: '7px',
-                height: '7px',
-                borderRadius: '50%',
-                background: '#34D399',
-                boxShadow: '0 0 8px #34D399',
-              }}
-            />
-            <span>Active Helpline: Mon – Sat (9:30 AM – 6:30 PM)</span>
-          </div>
         </div>
       </div>
     </section>
