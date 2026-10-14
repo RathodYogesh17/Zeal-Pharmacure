@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Category from "../models/category.model";
+import Product from "../models/product.model";
 import "../models/user.model";
 import "../models/media.model";
 import { createSlug, generateUniqueSlug } from "../utils/slug";
@@ -108,6 +109,22 @@ const createCategory = async (body: ICreateCategoryRequest, user?: IAuthenticate
 const getAllCategories = async (query: ICategoryQuery = {}, isPublic: boolean = false) => {
   const filter: Record<string, unknown> = { isDeleted: false };
 
+  // Calculate dynamic product counts from database
+  const productFilter: Record<string, unknown> = { isDeleted: false };
+  if (isPublic) {
+    productFilter.isActive = true;
+  }
+  const productCounts = await Product.aggregate([
+    { $match: productFilter },
+    { $group: { _id: "$category", count: { $sum: 1 } } },
+  ]);
+  const countMap = new Map<string, number>();
+  for (const pc of productCounts) {
+    if (pc._id) {
+      countMap.set(String(pc._id), pc.count);
+    }
+  }
+
   if (isPublic) {
     filter.isActive = true;
     if (query.isFeatured !== undefined) {
@@ -123,7 +140,11 @@ const getAllCategories = async (query: ICategoryQuery = {}, isPublic: boolean = 
     const categories = await Category.find(filter)
       .sort({ sortOrder: 1, name: 1 })
       .lean();
-    return { categories, total: categories.length };
+    const categoriesWithCount = categories.map((cat: any) => ({
+      ...cat,
+      productCount: countMap.get(String(cat._id)) || 0,
+    }));
+    return { categories: categoriesWithCount, total: categoriesWithCount.length };
   }
 
   const { page, limit, skip } = buildPagination(Number(query.page ?? 1), Number(query.limit ?? 20));
@@ -165,8 +186,13 @@ const getAllCategories = async (query: ICategoryQuery = {}, isPublic: boolean = 
     Category.countDocuments(filter),
   ]);
 
+  const categoriesWithCount = categories.map((cat: any) => ({
+    ...cat,
+    productCount: countMap.get(String(cat._id)) || 0,
+  }));
+
   const totalPages = Math.ceil(total / limit);
-  return { categories, total, page, limit, totalPages };
+  return { categories: categoriesWithCount, total, page, limit, totalPages };
 };
 
 // =====================================================
@@ -197,7 +223,16 @@ const getCategoryBySlugOrId = async (slugOrId: string, isPublic: boolean = false
     throw new AppError(MESSAGES.CATEGORY_NOT_FOUND, HTTP_STATUS.NOT_FOUND);
   }
 
-  return category;
+  const productFilter: Record<string, unknown> = {
+    category: category._id,
+    isDeleted: false,
+  };
+  if (isPublic) {
+    productFilter.isActive = true;
+  }
+  const productCount = await Product.countDocuments(productFilter);
+
+  return { ...category, productCount };
 };
 
 // =====================================================

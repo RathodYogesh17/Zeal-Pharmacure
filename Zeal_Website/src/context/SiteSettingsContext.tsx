@@ -109,9 +109,9 @@ export const SiteSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ 
   const [productCount, setProductCount] = useState<number>(() => {
     try {
       const c = localStorage.getItem('zeal_product_count');
-      return c ? Number(c) : 18;
+      return c ? Number(c) : 130;
     } catch {
-      return 18;
+      return 130;
     }
   });
   const [isLoading, setIsLoading] = useState(false);

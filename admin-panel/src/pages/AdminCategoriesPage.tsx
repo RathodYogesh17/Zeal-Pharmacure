@@ -819,6 +819,17 @@ export const AdminCategoriesPage: React.FC = () => {
                           <div>
                             <div style={{ fontWeight: 700, color: '#0F172A', fontSize: '13.5px' }}>{c.name}</div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '3px' }}>
+                              <span style={{
+                                fontSize: '11px',
+                                background: '#F5F3FF',
+                                color: '#6828DC',
+                                padding: '1px 7px',
+                                borderRadius: '4px',
+                                fontWeight: 700,
+                                letterSpacing: '0.2px',
+                              }}>
+                                {c.productCount ?? 0} Formulations
+                              </span>
                               {c.code && (
                                 <span style={{
                                   fontSize: '11px',
