@@ -8,6 +8,7 @@ export interface ICategory {
   icon?: string | null;
   sortOrder?: number;
   isFeatured?: boolean;
+  isActive?: boolean;
   productCount?: number;
 }
 

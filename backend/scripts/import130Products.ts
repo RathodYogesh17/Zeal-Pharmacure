@@ -65,7 +65,7 @@ const import130Products = async (): Promise<void> => {
     console.log("\n--- Checking Dosage Forms ---");
     for (const dfName of distinctDosageForms) {
       const dfSlug = createSlug(dfName);
-      const existing = await DosageForm.findOne({
+      const existing = await (DosageForm as any).findOne({
         $or: [{ slug: dfSlug }, { name: { $regex: new RegExp(`^${dfName}$`, "i") } }],
       });
       if (!existing) {

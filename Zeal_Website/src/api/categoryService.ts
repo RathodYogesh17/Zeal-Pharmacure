@@ -1,14 +1,33 @@
 import { request } from './apiClient';
 import type { ICategory, ISubCategory } from '../types';
 
+export const PRIMARY_12_CATEGORIES: ICategory[] = [
+  { _id: 'cat-cardio', name: 'Cardiology & Blood Pressure', slug: 'cardiology-and-blood-pressure', productCount: 37, isActive: true },
+  { _id: 'cat-diabet', name: 'Diabetes & Blood Sugar', slug: 'diabetes-and-blood-sugar', productCount: 27, isActive: true },
+  { _id: 'cat-vitamins', name: 'Vitamins, Minerals & Supplements', slug: 'vitamins-minerals-and-supplements', productCount: 15, isActive: true },
+  { _id: 'cat-gastro', name: 'Gastroenterology & Digestive Health', slug: 'gastroenterology-and-digestive-health', productCount: 13, isActive: true },
+  { _id: 'cat-ortho-pain', name: 'Orthopedics & Pain Management', slug: 'orthopedics-and-pain-management', productCount: 5, isActive: true },
+  { _id: 'cat-derma', name: 'Dermatology & Skin Care', slug: 'dermatology-and-skin-care', productCount: 4, isActive: true },
+  { _id: 'cat-thyroid', name: 'Endocrinology & Thyroid Care', slug: 'endocrinology-and-thyroid-care', productCount: 4, isActive: true },
+  { _id: 'cat-neuro-nerve', name: 'Neurology & Nerve Pain', slug: 'neurology-and-nerve-pain', productCount: 4, isActive: true },
+  { _id: 'cat-neuro-brain', name: 'Neurology & Brain Health', slug: 'neurology-and-brain-health', productCount: 3, isActive: true },
+  { _id: 'cat-anti-infect', name: 'Anti-infectives', slug: 'anti-infectives', productCount: 3, isActive: true },
+  { _id: 'cat-uro', name: 'Urology & Prostate Health', slug: 'urology-and-prostate-health', productCount: 3, isActive: true },
+  { _id: 'cat-resp', name: 'Respiratory & ENT Care', slug: 'respiratory-and-ent-care', productCount: 2, isActive: true },
+];
+
 export const categoryService = {
   // Categories
   async getCategories(): Promise<ICategory[]> {
     try {
-      const res = await request<{ categories: ICategory[] }>('/categories');
-      return res.data?.categories || [];
+      const res = await request<any>('/categories');
+      const list = res.data?.categories || (Array.isArray(res.data) ? res.data : []);
+      if (Array.isArray(list) && list.length > 0) {
+        return list;
+      }
+      return PRIMARY_12_CATEGORIES;
     } catch {
-      return [];
+      return PRIMARY_12_CATEGORIES;
     }
   },
 

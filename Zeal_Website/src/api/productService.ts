@@ -135,8 +135,10 @@ export const fallbackProducts: IProduct[] = [
 export const productService = {
   async getCategories(): Promise<ICategory[]> {
     try {
-      const res = await request<{ categories: ICategory[] }>('/categories');
-      return res.data?.categories || fallbackCategories;
+      const res = await request<any>('/categories');
+      const list = res.data?.categories || (Array.isArray(res.data) ? res.data : []);
+      if (Array.isArray(list) && list.length > 0) return list;
+      return fallbackCategories;
     } catch {
       return fallbackCategories;
     }

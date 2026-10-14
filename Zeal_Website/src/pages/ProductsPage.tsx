@@ -198,12 +198,18 @@ export const ProductsPage: React.FC = () => {
 
     // 3. Category Filter
     if (selectedCategory !== 'ALL') {
+      const target = selectedCategory.toLowerCase();
       result = result.filter(p => {
         if (!p.category) return false;
-        if (typeof p.category === 'object' && 'slug' in p.category) {
-          return p.category.slug === selectedCategory;
+        if (typeof p.category === 'object') {
+          const cat = p.category as any;
+          return (
+            (cat.slug && cat.slug.toLowerCase() === target) ||
+            (cat.name && cat.name.toLowerCase() === target) ||
+            (cat._id && String(cat._id) === selectedCategory)
+          );
         }
-        return p.category === selectedCategory;
+        return String(p.category).toLowerCase() === target;
       });
     }
 

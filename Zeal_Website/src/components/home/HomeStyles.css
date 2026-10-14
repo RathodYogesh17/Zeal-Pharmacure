@@ -422,9 +422,27 @@
    -------------------------------------------------------------------------- */
 .zp-home-categories-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 175px), 1fr));
+  grid-template-columns: repeat(6, 1fr);
   gap: 16px;
   margin-top: 32px;
+}
+
+@media (max-width: 1200px) {
+  .zp-home-categories-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .zp-home-categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .zp-home-categories-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .zp-home-cat-card {
@@ -432,21 +450,21 @@
   background: #FFFFFF;
   border-radius: 20px;
   border: 1.5px solid #E2E8F0;
-  padding: 24px 16px 20px;
+  padding: 22px 14px 18px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   text-align: center;
   text-decoration: none;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
-  min-height: 136px;
+  min-height: 168px;
 }
 
 .zp-home-cat-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 14px 28px -6px rgba(15, 23, 42, 0.1);
   border-color: #CBD5E1;
 }
 
@@ -459,23 +477,48 @@
   justify-content: center;
   margin-bottom: 12px;
   transition: transform 0.25s ease;
+  flex-shrink: 0;
 }
 
 .zp-home-cat-card:hover .zp-home-cat-icon-wrap {
-  transform: scale(1.08);
+  transform: scale(1.1);
 }
 
 .zp-home-cat-title {
   font-family: var(--font-heading, 'Outfit', sans-serif);
-  font-size: 14.5px;
+  font-size: 14px;
   font-weight: 800;
   color: #0F172A;
   line-height: 1.25;
   transition: color 0.2s ease;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .zp-home-cat-card:hover .zp-home-cat-title {
   color: var(--zp-primary, #6828DC);
+}
+
+.zp-home-cat-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  margin-top: 8px;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+
+.zp-home-cat-count {
+  font-size: 11px;
+  color: #64748B;
+  font-weight: 600;
+  margin-top: 4px;
 }
 
 

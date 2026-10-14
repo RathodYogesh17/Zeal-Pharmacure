@@ -271,7 +271,10 @@ const getAllProducts = async (query: IProductQuery = {}, isPublic: boolean = fal
       filter.category = new mongoose.Types.ObjectId(catQuery);
     } else {
       const foundCategory = await Category.findOne({
-        slug: catQuery.toLowerCase(),
+        $or: [
+          { slug: catQuery.toLowerCase() },
+          { name: { $regex: new RegExp(`^${catQuery.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i") } },
+        ],
         isDeleted: false,
       });
       if (foundCategory) {
