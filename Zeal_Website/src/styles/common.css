@@ -248,6 +248,33 @@
   min-width: 0;
 }
 
+/* === Product Card Plain Black MRP Text (No box, no green) === */
+.zp-product-mrp-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  min-height: 22px;
+  margin-bottom: 8px;
+}
+
+.zp-product-mrp-text {
+  font-family: var(--font-heading, 'Outfit', sans-serif);
+  font-size: 15px;
+  font-weight: 800;
+  color: #000000;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.zp-product-mrp-label {
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 12px;
+  font-weight: 700;
+  color: #000000;
+  letter-spacing: 0.02em;
+  margin-right: 2px;
+}
+
 .zp-card-title-mrp {
   display: inline-flex;
   align-items: baseline;

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Pill, FileText, Send, CheckSquare, Square } from 'lucide-react';
 import type { IProduct } from '../../types';
-import { RatingStars } from '../common/RatingStars';
 import { getMediaUrl } from '../../utils/mediaUtils';
 
 export interface ProductCardProps {
@@ -96,23 +95,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           )}
         </div>
 
-        {/* Product Brand Name & MRP Row */}
-        <div className="zp-product-title-row">
-          <h4
-            onClick={() => onViewDossier(product)}
-            className="zp-product-title"
-            title={product.name}
-          >
-            {product.name}
-          </h4>
-
-          {product.mrp !== undefined && product.mrp !== null && (
-            <div className="zp-card-title-mrp" title={`MRP: ₹${product.mrp.toLocaleString('en-IN')}`}>
-              <span className="zp-card-title-mrp-label">MRP</span>
-              <span className="zp-card-title-mrp-val">₹{product.mrp.toLocaleString('en-IN')}</span>
-            </div>
-          )}
-        </div>
+        {/* Product Brand Name */}
+        <h4
+          onClick={() => onViewDossier(product)}
+          className="zp-product-title"
+          title={product.name}
+        >
+          {product.name}
+        </h4>
 
         {/* Generic Molecule / Salt */}
         <p className="zp-product-generic">
@@ -124,9 +114,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           {product.composition || 'Active Pharmaceutical Formulation'}
         </p>
 
-        {/* Rating Stars & Doctor Reviews (Authentic with Quality Fallback) */}
-        <div style={{ marginBottom: '8px' }}>
-          <RatingStars rating={product.averageRating} totalReviews={product.totalReviews} fallbackText="WHO-GMP Quality" />
+        {/* Product MRP in Plain Black Text (No box, no green) */}
+        <div className="zp-product-mrp-row">
+          <span className="zp-product-mrp-text">
+            <span className="zp-product-mrp-label">MRP:</span> ₹{product.mrp !== undefined && product.mrp !== null ? product.mrp.toLocaleString('en-IN') : '--'}
+          </span>
         </div>
 
         {/* Packaging Specification & Ready Stock row */}
