@@ -165,7 +165,7 @@ export const productService = {
       let filtered = [...fallbackProducts];
       if (params.search) {
         const q = params.search.toLowerCase();
-        filtered = filtered.filter(p => p.name.toLowerCase().includes(q) || p.genericName.toLowerCase().includes(q) || p.composition.toLowerCase().includes(q));
+        filtered = filtered.filter(p => p.name.toLowerCase().includes(q) || (p.genericName ? p.genericName.toLowerCase().includes(q) : false) || p.composition.toLowerCase().includes(q));
       }
       if (params.dosageForm) {
         filtered = filtered.filter(p => p.dosageForm.toLowerCase() === params.dosageForm?.toLowerCase());

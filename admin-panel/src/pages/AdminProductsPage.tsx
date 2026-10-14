@@ -144,7 +144,7 @@ export const AdminProductsPage: React.FC = () => {
       const q = search.toLowerCase();
       const match =
         p.name.toLowerCase().includes(q) ||
-        p.genericName.toLowerCase().includes(q) ||
+        (p.genericName ? p.genericName.toLowerCase().includes(q) : false) ||
         p.dosageForm.toLowerCase().includes(q) ||
         p.composition.toLowerCase().includes(q) ||
         (p.productCode ? p.productCode.toLowerCase().includes(q) : false) ||
@@ -169,7 +169,7 @@ export const AdminProductsPage: React.FC = () => {
   // Sort
   filteredProducts.sort((a, b) => {
     if (sortBy === 'name') return a.name.localeCompare(b.name);
-    if (sortBy === 'genericName') return a.genericName.localeCompare(b.genericName);
+    if (sortBy === 'genericName') return (a.genericName || '').localeCompare(b.genericName || '');
     if (sortBy === 'dosageForm') return a.dosageForm.localeCompare(b.dosageForm);
     return 0;
   });

@@ -82,7 +82,7 @@ export interface IProduct {
   slug: string;
   productCode?: string | null;
   brandName?: string;
-  genericName: string;
+  genericName?: string;
   manufacturer?: string;
   composition: string;
   strength?: string;

@@ -42,9 +42,7 @@ const createProductSchema = Joi.object({
     }),
   productCode: Joi.string().trim().uppercase().max(50).allow(null, "").optional(),
   brandName: Joi.string().trim().max(200).allow(null, "").optional(),
-  genericName: Joi.string().trim().min(2).max(200).required().messages({
-    "string.empty": "Generic name is required",
-  }),
+  genericName: Joi.string().trim().max(200).allow(null, "").optional(),
   manufacturer: Joi.string().trim().max(200).allow(null, "").optional(),
   composition: Joi.string().trim().min(2).max(1000).required().messages({
     "string.empty": "Composition / formulation is required",
@@ -128,7 +126,7 @@ const updateProductSchema = Joi.object({
     }),
   productCode: Joi.string().trim().uppercase().max(50).allow(null, "").optional(),
   brandName: Joi.string().trim().max(200).allow(null, "").optional(),
-  genericName: Joi.string().trim().min(2).max(200).optional(),
+  genericName: Joi.string().trim().max(200).allow(null, "").optional(),
   manufacturer: Joi.string().trim().max(200).allow(null, "").optional(),
   composition: Joi.string().trim().min(2).max(1000).optional(),
   strength: Joi.string().trim().max(100).allow(null, "").optional(),

@@ -371,9 +371,6 @@ export const AdminAddProductPage: React.FC = () => {
     if (!formData.name.trim()) {
       errs.name = 'Product / Brand Name is required.';
     }
-    if (!formData.genericName.trim()) {
-      errs.genericName = 'Generic / Scientific Name is required.';
-    }
     if (!formData.composition.trim()) {
       errs.composition = 'Active Pharmaceutical Composition is required.';
     }
@@ -404,7 +401,7 @@ export const AdminAddProductPage: React.FC = () => {
       const payload: any = {
         name: formData.name.trim(),
         brandName: formData.brandName.trim() || formData.name.trim(),
-        genericName: formData.genericName.trim(),
+        genericName: formData.genericName.trim() || undefined,
         composition: formData.composition.trim(),
         strength: formData.strength.trim() || undefined,
         productCode: formData.productCode.trim() || undefined,
@@ -738,7 +735,7 @@ export const AdminAddProductPage: React.FC = () => {
               {/* Generic / Scientific Name */}
               <div className="field-group">
                 <label className="field-label">
-                  Generic / Scientific Name <span className="required-dot">*</span>
+                  Generic / Scientific Name
                 </label>
                 <input
                   type="text"

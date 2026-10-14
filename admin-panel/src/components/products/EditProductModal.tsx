@@ -142,7 +142,6 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onCl
 
     const errs: Record<string, string> = {};
     if (!formData.name.trim()) errs.name = 'Product Name is required.';
-    if (!formData.genericName.trim()) errs.genericName = 'Generic Clinical Name is required.';
     if (!formData.composition.trim()) errs.composition = 'Composition / Formulation is required.';
     const catId = formData.category || categories[0]?._id;
     if (!catId) errs.category = 'Please select a valid product category.';
@@ -170,7 +169,7 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onCl
 
       const payload = {
         name: formData.name.trim(),
-        genericName: formData.genericName.trim(),
+        genericName: formData.genericName.trim() || undefined,
         composition: formData.composition.trim(),
         dosageForm: formData.dosageForm.trim(),
         packaging: formData.packaging?.trim() || '10 x 10 Tablets',
@@ -255,7 +254,7 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onCl
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 600, color: '#334155', marginBottom: '4px' }}> Generic Clinical Name * </label>
+                  <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 600, color: '#334155', marginBottom: '4px' }}> Generic / Scientific Name </label>
                   <input
                     type="text"
                     name="genericName"

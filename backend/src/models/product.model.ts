@@ -22,7 +22,7 @@ const productSchema = new Schema(
     slug: { type: String, required: true, unique: true, lowercase: true, trim: true,index: true, },
     productCode: { type: String, unique: true,  sparse: true, uppercase: true, trim: true, index: true,},
     brandName: { type: String, default: "", trim: true, index: true,},
-    genericName: { type: String,  required: true, trim: true, index: true,},
+    genericName: { type: String, default: "", trim: true, index: true },
     manufacturer: { type: String, default: "", trim: true,},
     composition: { type: String, required: true, trim: true,},
     strength: { type: String, default: "", trim: true,},

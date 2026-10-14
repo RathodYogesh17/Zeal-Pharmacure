@@ -441,7 +441,7 @@ export const AdminProductDetailPage: React.FC = () => {
                 </div>
                 <button
                   type="button"
-                  onClick={() => copyToClipboard(p.genericName, 'api')}
+                  onClick={() => copyToClipboard(p.genericName || '', 'api')}
                   className="p-1.5 rounded-lg bg-white border border-purple-200 text-brand-purple hover:bg-purple-50 transition-colors cursor-pointer shrink-0"
                   title="Copy API name"
                 >

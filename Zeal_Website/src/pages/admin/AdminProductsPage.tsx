@@ -193,7 +193,7 @@ export const AdminProductsPage: React.FC = () => {
       const q = search.toLowerCase();
       const match =
         p.name.toLowerCase().includes(q) ||
-        p.genericName.toLowerCase().includes(q) ||
+        (p.genericName ? p.genericName.toLowerCase().includes(q) : false) ||
         p.composition.toLowerCase().includes(q);
       if (!match) return false;
     }

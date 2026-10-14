@@ -64,8 +64,8 @@ export const AdminAddProductPage: React.FC = () => {
   };
 
   const handleSubmit = async (isDraft = false) => {
-    if (!formData.name || !formData.genericName || !formData.composition) {
-      setErrorMsg('Please fill in Product Name, Generic Name, and Active Composition.');
+    if (!formData.name || !formData.composition) {
+      setErrorMsg('Please fill in Product Name and Active Composition.');
       return;
     }
 
@@ -233,12 +233,11 @@ export const AdminAddProductPage: React.FC = () => {
 
             <div>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#334155', marginBottom: '6px' }}>
-                Generic Name *
+                Generic Name
               </label>
               <input
                 type="text"
                 name="genericName"
-                required
                 placeholder="Enter generic name (e.g. Cefixime)"
                 value={formData.genericName}
                 onChange={handleChange}

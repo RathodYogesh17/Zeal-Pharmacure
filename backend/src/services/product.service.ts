@@ -182,7 +182,7 @@ const createProduct = async (body: ICreateProductRequest, user?: IAuthenticatedU
     slug: uniqueSlug,
     productCode: productCodeValue,
     brandName: body.brandName?.trim() || "",
-    genericName: body.genericName.trim(),
+    genericName: body.genericName?.trim() || "",
     manufacturer: body.manufacturer?.trim() || "",
     composition: body.composition.trim(),
     strength: body.strength?.trim() || "",
@@ -533,7 +533,7 @@ const updateProduct = async (
   }
 
   // Simple string fields
-  if (body.genericName !== undefined) updatePayload.genericName = body.genericName.trim();
+  if (body.genericName !== undefined) updatePayload.genericName = body.genericName?.trim() || "";
   if (body.composition !== undefined) updatePayload.composition = body.composition.trim();
   if (body.dosageForm !== undefined) updatePayload.dosageForm = body.dosageForm.trim();
   if (body.subCategory !== undefined) {

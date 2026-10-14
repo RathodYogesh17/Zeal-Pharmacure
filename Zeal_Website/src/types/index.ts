@@ -25,7 +25,7 @@ export interface IProduct {
   name: string;
   slug: string;
   productCode?: string;
-  genericName: string;
+  genericName?: string;
   composition: string;
   strength?: string;
   manufacturer?: string;
