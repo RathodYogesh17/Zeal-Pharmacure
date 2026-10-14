@@ -254,7 +254,9 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onCl
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 600, color: '#334155', marginBottom: '4px' }}> Generic / Scientific Name </label>
+                  <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 600, color: '#334155', marginBottom: '4px' }}>
+                    Generic / Scientific Name <span style={{ fontSize: '11px', color: '#64748B', fontWeight: 400 }}>(Optional)</span>
+                  </label>
                   <input
                     type="text"
                     name="genericName"
@@ -264,16 +266,10 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onCl
                       width: '100%',
                       padding: '8px 12px',
                       borderRadius: '6px',
-                      border: fieldErrors.genericName ? '1.5px solid #EF4444' : '1px solid #CBD5E1',
-                      boxShadow: fieldErrors.genericName ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none',
+                      border: '1px solid #CBD5E1',
                       outline: 'none',
                     }}
                   />
-                  {fieldErrors.genericName && (
-                    <p style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, margin: '4px 0 0 0', lineHeight: 1.4 }}>
-                      {fieldErrors.genericName}
-                    </p>
-                  )}
                 </div>
               </div>
 

@@ -233,7 +233,7 @@ export const AdminAddProductPage: React.FC = () => {
 
             <div>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#334155', marginBottom: '6px' }}>
-                Generic Name
+                Generic Name <span style={{ fontSize: '12px', color: '#64748B', fontWeight: 400 }}>(Optional)</span>
               </label>
               <input
                 type="text"

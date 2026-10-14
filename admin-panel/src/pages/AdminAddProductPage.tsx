@@ -735,7 +735,7 @@ export const AdminAddProductPage: React.FC = () => {
               {/* Generic / Scientific Name */}
               <div className="field-group">
                 <label className="field-label">
-                  Generic / Scientific Name
+                  Generic / Scientific Name <span style={{ fontSize: '12px', color: '#64748B', fontWeight: 400 }}>(Optional)</span>
                 </label>
                 <input
                   type="text"
@@ -744,16 +744,7 @@ export const AdminAddProductPage: React.FC = () => {
                   value={formData.genericName}
                   onChange={handleChange}
                   className="input-base"
-                  style={{
-                    borderColor: fieldErrors.genericName ? '#EF4444' : undefined,
-                    boxShadow: fieldErrors.genericName ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : undefined,
-                  }}
                 />
-                {fieldErrors.genericName && (
-                  <p style={{ fontSize: '12px', color: '#DC2626', fontWeight: 500, margin: '5px 0 0 0', lineHeight: 1.4 }}>
-                    {fieldErrors.genericName}
-                  </p>
-                )}
               </div>
             </div>
 
