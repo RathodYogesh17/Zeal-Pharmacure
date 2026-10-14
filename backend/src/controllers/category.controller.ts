@@ -29,8 +29,9 @@ const createCategory = async (req: ICategoryRequest, res: Response): Promise<voi
   sendSuccess(res, HTTP_STATUS.CREATED, MESSAGES.CATEGORY_CREATED, result);
 };
 
-const getPublicCategories = async (_req: Request, res: Response): Promise<void> => {
-  const result = await categoryService.getAllCategories({}, true);
+const getPublicCategories = async (req: Request, res: Response): Promise<void> => {
+  const query: ICategoryQuery = (req.query as ICategoryQuery) || {};
+  const result = await categoryService.getAllCategories(query, true);
   sendSuccess(res, HTTP_STATUS.OK, MESSAGES.CATEGORIES_FETCHED, result);
 };
 
