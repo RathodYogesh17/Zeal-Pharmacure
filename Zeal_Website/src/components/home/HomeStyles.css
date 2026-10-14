@@ -449,7 +449,7 @@
   position: relative;
   background: #FFFFFF;
   border-radius: 20px;
-  border: 1.5px solid #E2E8F0;
+  border: 1.5px solid #EDE9FE;
   padding: 22px 14px 18px;
   display: flex;
   flex-direction: column;
@@ -457,15 +457,33 @@
   justify-content: flex-start;
   text-align: center;
   text-decoration: none;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
-  min-height: 168px;
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 16px -4px rgba(104, 40, 220, 0.06);
+  min-height: 172px;
+  overflow: hidden;
+}
+
+.zp-home-cat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #7C3AED, #6828DC);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.zp-home-cat-card:hover::before {
+  opacity: 1;
 }
 
 .zp-home-cat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 14px 28px -6px rgba(15, 23, 42, 0.1);
-  border-color: #CBD5E1;
+  transform: translateY(-5px);
+  box-shadow: 0 16px 32px -8px rgba(104, 40, 220, 0.2);
+  border-color: #8B5CF6;
+  background: #FAF8FF;
 }
 
 .zp-home-cat-icon-wrap {
@@ -476,12 +494,28 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 12px;
-  transition: transform 0.25s ease;
+  background: linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%);
+  border: 1.5px solid #DDD6FE;
+  color: #6828DC;
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
   flex-shrink: 0;
 }
 
+.zp-home-cat-icon-wrap svg {
+  transition: all 0.28s ease;
+  stroke: #6828DC;
+}
+
 .zp-home-cat-card:hover .zp-home-cat-icon-wrap {
-  transform: scale(1.1);
+  transform: scale(1.08);
+  background: linear-gradient(135deg, #7C3AED 0%, #6828DC 100%);
+  border-color: #6828DC;
+  color: #FFFFFF;
+  box-shadow: 0 8px 20px -2px rgba(104, 40, 220, 0.35);
+}
+
+.zp-home-cat-card:hover .zp-home-cat-icon-wrap svg {
+  stroke: #FFFFFF !important;
 }
 
 .zp-home-cat-title {
@@ -507,18 +541,34 @@
   gap: 4px;
   font-size: 11px;
   font-weight: 700;
-  padding: 3px 9px;
+  padding: 3px 10px;
   border-radius: 999px;
   margin-top: 8px;
   letter-spacing: 0.01em;
   line-height: 1.2;
+  background: #F5F3FF;
+  color: #6828DC;
+  border: 1px solid #DDD6FE;
+  transition: all 0.25s ease;
+}
+
+.zp-home-cat-card:hover .zp-home-cat-badge {
+  background: #EDE9FE;
+  border-color: #C4B5FD;
+  color: #581C87;
 }
 
 .zp-home-cat-count {
   font-size: 11px;
   color: #64748B;
   font-weight: 600;
-  margin-top: 4px;
+  margin-top: 6px;
+  transition: color 0.2s ease;
+}
+
+.zp-home-cat-card:hover .zp-home-cat-count {
+  color: #6828DC;
+  font-weight: 700;
 }
 
 
