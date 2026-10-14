@@ -10,6 +10,10 @@ export interface IProductFilterParams {
   page?: number;
   limit?: number;
   sort?: string;
+  sortBy?: string;
+  sortOrder?: string;
+  startDate?: string;
+  endDate?: string;
 }
 
 export const fallbackCategories: ICategory[] = [];
@@ -36,6 +40,10 @@ export const productService = {
       if (params.page) query.append('page', String(params.page));
       if (params.limit) query.append('limit', String(params.limit));
       if (params.sort) query.append('sort', params.sort);
+      if (params.sortBy) query.append('sortBy', params.sortBy);
+      if (params.sortOrder) query.append('sortOrder', params.sortOrder);
+      if (params.startDate) query.append('startDate', params.startDate);
+      if (params.endDate) query.append('endDate', params.endDate);
 
       const qs = query.toString();
       const res = await request<IProductsResponse>(`/products/admin/all${qs ? `?${qs}` : ''}`).catch(async () => {

@@ -77,7 +77,7 @@ export const AdminProductsPage: React.FC = () => {
     setErrorMsg('');
     try {
       const [prodRes, catList] = await Promise.all([
-        productService.getProducts({ limit: 100 }),
+        productService.getProducts({ limit: 1000, sortBy: 'name', sortOrder: 'asc' }),
         productService.getCategories(),
       ]);
       setProducts(prodRes?.products || []);

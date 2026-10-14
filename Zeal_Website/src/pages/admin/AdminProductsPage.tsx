@@ -140,7 +140,7 @@ export const AdminProductsPage: React.FC = () => {
     setLoading(true);
     try {
       const [prodRes, catList] = await Promise.all([
-        productService.getProducts({ limit: 100 }),
+        productService.getProducts({ limit: 1000 }),
         productService.getCategories(),
       ]);
       if (prodRes.products && prodRes.products.length > 0) {
