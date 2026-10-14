@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Search, ShoppingBag, Send } from 'lucide-react';
 import { productService } from '../api/productService';
+import { categoryService } from '../api/categoryService';
 import type { IProduct, ICategory } from '../types';
 import { useSiteSettings } from '../context/SiteSettingsContext';
 import { useEnquiryAuth } from '../context/EnquiryAuthContext';
@@ -19,7 +20,6 @@ import {
 
 const PRODUCTS_PER_PAGE = 12;
 const ALPHABET = ['ALL', ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')];
-const DOSAGE_FORMS = ['ALL', 'Tablets', 'Capsules', 'Syrup', 'Injection', 'Softgel', 'Dry Syrup', 'Ointment', 'Oil'];
 
 export const ProductsPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -75,12 +75,9 @@ export const ProductsPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    productService.getCategories().then(setCategories);
-  }, []);
-
-  useEffect(() => {
+    categoryService.getCategories().then(setCategories);
     fetchProducts();
-  }, [selectedCategory, selectedLetter, selectedDosage, startDate, endDate]);
+  }, []);
 
   // Reset to page 1 whenever any filter changes
   useEffect(() => {
@@ -91,14 +88,10 @@ export const ProductsPage: React.FC = () => {
     setLoading(true);
     try {
       const res = await productService.getProducts({
-        category: selectedCategory !== 'ALL' ? selectedCategory : undefined,
-        letter: selectedLetter !== 'ALL' ? selectedLetter : undefined,
-        dosageForm: selectedDosage !== 'ALL' ? selectedDosage : undefined,
-        startDate: startDate || undefined,
-        endDate: endDate || undefined,
-        limit: 250,
+        limit: 1000,
+        sort: 'name',
       });
-      setProducts(res.products);
+      setProducts(res.products || []);
     } catch (err) {
       console.warn('Failed to fetch products', err);
     } finally {
@@ -198,24 +191,40 @@ export const ProductsPage: React.FC = () => {
 
     // 3. Category Filter
     if (selectedCategory !== 'ALL') {
-      const target = selectedCategory.toLowerCase();
+      const target = selectedCategory.toLowerCase().trim();
       result = result.filter(p => {
         if (!p.category) return false;
         if (typeof p.category === 'object') {
           const cat = p.category as any;
           return (
-            (cat.slug && cat.slug.toLowerCase() === target) ||
-            (cat.name && cat.name.toLowerCase() === target) ||
+            (cat.slug && cat.slug.toLowerCase().trim() === target) ||
+            (cat.name && cat.name.toLowerCase().trim() === target) ||
             (cat._id && String(cat._id) === selectedCategory)
           );
         }
-        return String(p.category).toLowerCase() === target;
+        const pCatStr = String(p.category).toLowerCase().trim();
+        if (pCatStr === target) return true;
+        const matchingCat = categories.find(
+          c => String(c._id) === pCatStr || c.slug.toLowerCase() === target || c.name.toLowerCase() === target
+        );
+        if (matchingCat) {
+          return (
+            matchingCat.slug.toLowerCase() === target ||
+            matchingCat.name.toLowerCase() === target ||
+            String(matchingCat._id) === selectedCategory
+          );
+        }
+        return false;
       });
     }
 
-    // 4. Dosage form filter
+    // 4. Dosage form filter (matches both singular and plural forms e.g. "Tablets" matches "Tablet")
     if (selectedDosage !== 'ALL') {
-      result = result.filter(p => (p.dosageForm || '').toLowerCase() === selectedDosage.toLowerCase());
+      const target = selectedDosage.toLowerCase().trim().replace(/s$/, '');
+      result = result.filter(p => {
+        const pForm = (p.dosageForm || '').toLowerCase().trim().replace(/s$/, '');
+        return pForm === target;
+      });
     }
 
     // 5. Prescription filter
@@ -247,7 +256,7 @@ export const ProductsPage: React.FC = () => {
     }
 
     return result;
-  }, [products, selectedLetter, searchQuery, selectedCategory, selectedDosage, selectedPrescription, startDate, endDate, sortBy]);
+  }, [products, selectedLetter, searchQuery, selectedCategory, selectedDosage, selectedPrescription, startDate, endDate, sortBy, categories]);
 
   // Best selling formulations (top 4)
   const bestSellingProducts = useMemo(() => products.slice(0, 4), [products]);
@@ -273,15 +282,73 @@ export const ProductsPage: React.FC = () => {
     { value: 'rating-desc', label: 'Highest Rated' },
   ];
 
-  const categoryOptions = [
-    { value: 'ALL', label: 'All Therapeutic Divisions', count: products.length },
-    ...categories.map(c => ({ value: c.slug, label: c.name, count: c.productCount || undefined })),
-  ];
+  // Dynamic Category Live Counts
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const p of products) {
+      if (!p.category) continue;
+      if (typeof p.category === 'object') {
+        const cat = p.category as any;
+        if (cat.slug) counts[cat.slug.toLowerCase().trim()] = (counts[cat.slug.toLowerCase().trim()] || 0) + 1;
+        if (cat.name) counts[cat.name.toLowerCase().trim()] = (counts[cat.name.toLowerCase().trim()] || 0) + 1;
+        if (cat._id) counts[String(cat._id)] = (counts[String(cat._id)] || 0) + 1;
+      } else {
+        counts[String(p.category).toLowerCase().trim()] = (counts[String(p.category).toLowerCase().trim()] || 0) + 1;
+      }
+    }
+    return counts;
+  }, [products]);
 
-  const dosageOptions = [
-    { value: 'ALL', label: 'All Dosage Forms' },
-    ...DOSAGE_FORMS.filter(d => d !== 'ALL').map(d => ({ value: d, label: d })),
-  ];
+  const categoryOptions = useMemo(() => {
+    return [
+      { value: 'ALL', label: 'All Therapeutic Divisions', count: products.length },
+      ...categories.map(c => {
+        const liveCount =
+          categoryCounts[c.slug.toLowerCase().trim()] ||
+          categoryCounts[c.name.toLowerCase().trim()] ||
+          categoryCounts[String(c._id)] ||
+          c.productCount ||
+          0;
+        return {
+          value: c.slug,
+          label: c.name,
+          count: liveCount,
+        };
+      }),
+    ];
+  }, [categories, products.length, categoryCounts]);
+
+  // Dynamic Dosage Live Counts & Options
+  const dosageCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const p of products) {
+      if (p.dosageForm) {
+        const norm = p.dosageForm.trim();
+        counts[norm] = (counts[norm] || 0) + 1;
+      }
+    }
+    return counts;
+  }, [products]);
+
+  const dosageOptions = useMemo(() => {
+    const formsInCatalog = Array.from(new Set(products.map(p => p.dosageForm?.trim()).filter(Boolean) as string[]));
+    const allKnown = Array.from(new Set([...formsInCatalog, 'Tablet', 'Capsule', 'Cream', 'Gel', 'Sachet', 'Lotion', 'Syrup', 'Injection', 'Ointment', 'Oil']));
+
+    return [
+      { value: 'ALL', label: 'All Dosage Forms', count: products.length },
+      ...allKnown
+        .map(d => {
+          const label = d.endsWith('s') ? d : `${d}s`;
+          const count = dosageCounts[d] || 0;
+          return {
+            value: d,
+            label,
+            count,
+          };
+        })
+        .filter(opt => opt.count > 0 || ['Tablet', 'Capsule', 'Cream', 'Syrup', 'Injection'].includes(opt.value)),
+    ];
+  }, [products, dosageCounts]);
 
   const prescriptionOptions = [
     { value: 'ALL', label: 'All Prescription Types' },

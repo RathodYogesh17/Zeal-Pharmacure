@@ -14,18 +14,9 @@ export interface IProductFilterParams {
   endDate?: string;
 }
 
-export const fallbackCategories: ICategory[] = [
-  { _id: 'cat-1', name: 'Tablets', slug: 'tablets', description: 'Oral solid formulations', isFeatured: true, productCount: 45 },
-  { _id: 'cat-2', name: 'Capsules', slug: 'capsules', description: 'Hard & soft gelatin capsules', isFeatured: true, productCount: 32 },
-  { _id: 'cat-3', name: 'Syrups & Suspensions', slug: 'syrups-suspensions', description: 'Liquid oral formulations', isFeatured: true, productCount: 28 },
-  { _id: 'cat-4', name: 'Injectables', slug: 'injectables', description: 'Sterile IV & IM injectables', isFeatured: true, productCount: 19 },
-  { _id: 'cat-5', name: 'Ointments & Creams', slug: 'ointments-creams', description: 'Dermatological and pain relief topicals', isFeatured: true, productCount: 15 },
-  { _id: 'cat-6', name: 'Ayurvedic & Herbal', slug: 'ayurvedic-herbal', description: 'Natural wellness extracts', isFeatured: true, productCount: 24 },
-  { _id: 'cat-7', name: 'Pediatric Care', slug: 'pediatric-care', description: 'Gentle pediatric drops & syrups', isFeatured: false, productCount: 12 },
-  { _id: 'cat-8', name: 'Derma Care', slug: 'derma-care', description: 'Specialty skin treatments', isFeatured: false, productCount: 14 },
-  { _id: 'cat-9', name: 'Cardiac & Diabetic', slug: 'cardiac-diabetic', description: 'Chronic care formulations', isFeatured: false, productCount: 21 },
-  { _id: 'cat-10', name: 'Ortho Care', slug: 'ortho-care', description: 'Joint mobility & pain relief', isFeatured: false, productCount: 18 },
-];
+import { ALL_19_CATEGORIES, categoryService } from './categoryService';
+
+export const fallbackCategories: ICategory[] = ALL_19_CATEGORIES;
 
 export const fallbackProducts: IProduct[] = [
   {
@@ -134,14 +125,7 @@ export const fallbackProducts: IProduct[] = [
 
 export const productService = {
   async getCategories(): Promise<ICategory[]> {
-    try {
-      const res = await request<any>('/categories');
-      const list = res.data?.categories || (Array.isArray(res.data) ? res.data : []);
-      if (Array.isArray(list) && list.length > 0) return list;
-      return fallbackCategories;
-    } catch {
-      return fallbackCategories;
-    }
+    return categoryService.getCategories();
   },
 
   async getProducts(params: IProductFilterParams = {}): Promise<IProductsResponse> {

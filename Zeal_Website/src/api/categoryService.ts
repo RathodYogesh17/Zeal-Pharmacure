@@ -1,7 +1,7 @@
 import { request } from './apiClient';
 import type { ICategory, ISubCategory } from '../types';
 
-export const PRIMARY_12_CATEGORIES: ICategory[] = [
+export const ALL_19_CATEGORIES: ICategory[] = [
   { _id: 'cat-cardio', name: 'Cardiology & Blood Pressure', slug: 'cardiology-and-blood-pressure', productCount: 37, isActive: true },
   { _id: 'cat-diabet', name: 'Diabetes & Blood Sugar', slug: 'diabetes-and-blood-sugar', productCount: 27, isActive: true },
   { _id: 'cat-vitamins', name: 'Vitamins, Minerals & Supplements', slug: 'vitamins-minerals-and-supplements', productCount: 15, isActive: true },
@@ -10,11 +10,20 @@ export const PRIMARY_12_CATEGORIES: ICategory[] = [
   { _id: 'cat-derma', name: 'Dermatology & Skin Care', slug: 'dermatology-and-skin-care', productCount: 4, isActive: true },
   { _id: 'cat-thyroid', name: 'Endocrinology & Thyroid Care', slug: 'endocrinology-and-thyroid-care', productCount: 4, isActive: true },
   { _id: 'cat-neuro-nerve', name: 'Neurology & Nerve Pain', slug: 'neurology-and-nerve-pain', productCount: 4, isActive: true },
-  { _id: 'cat-neuro-brain', name: 'Neurology & Brain Health', slug: 'neurology-and-brain-health', productCount: 3, isActive: true },
   { _id: 'cat-anti-infect', name: 'Anti-infectives', slug: 'anti-infectives', productCount: 3, isActive: true },
+  { _id: 'cat-neuro-brain', name: 'Neurology & Brain Health', slug: 'neurology-and-brain-health', productCount: 3, isActive: true },
   { _id: 'cat-uro', name: 'Urology & Prostate Health', slug: 'urology-and-prostate-health', productCount: 3, isActive: true },
+  { _id: 'cat-allergy', name: 'Allergy & Sinus Care', slug: 'allergy-and-sinus-care', productCount: 2, isActive: true },
+  { _id: 'cat-ortho-joint', name: 'Orthopedics & Joint Care', slug: 'orthopedics-and-joint-care', productCount: 2, isActive: true },
   { _id: 'cat-resp', name: 'Respiratory & ENT Care', slug: 'respiratory-and-ent-care', productCount: 2, isActive: true },
+  { _id: 'cat-rheuma', name: 'Rheumatology & Immunology', slug: 'rheumatology-and-immunology', productCount: 2, isActive: true },
+  { _id: 'cat-derma-ano', name: 'Dermatology & Anorectal Care', slug: 'dermatology-and-anorectal-care', productCount: 1, isActive: true },
+  { _id: 'cat-gut', name: 'Digestive & Gut Health', slug: 'digestive-and-gut-health', productCount: 1, isActive: true },
+  { _id: 'cat-gout', name: 'Gout & Uric Acid Management', slug: 'gout-and-uric-acid-management', productCount: 1, isActive: true },
+  { _id: 'cat-mental', name: 'Mental Health', slug: 'mental-health', productCount: 1, isActive: true },
 ];
+
+export const PRIMARY_12_CATEGORIES = ALL_19_CATEGORIES.slice(0, 12);
 
 export const categoryService = {
   // Categories
@@ -25,9 +34,9 @@ export const categoryService = {
       if (Array.isArray(list) && list.length > 0) {
         return list;
       }
-      return PRIMARY_12_CATEGORIES;
+      return ALL_19_CATEGORIES;
     } catch {
-      return PRIMARY_12_CATEGORIES;
+      return ALL_19_CATEGORIES;
     }
   },
 

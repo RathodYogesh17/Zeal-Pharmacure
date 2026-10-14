@@ -314,9 +314,11 @@ const getAllProducts = async (query: IProductQuery = {}, isPublic: boolean = fal
     }
   }
 
-  // Dosage Form filter (e.g. Tablet, Syrup, Gel, Oil)
+  // Dosage Form filter (e.g. Tablet, Tablets, Capsule, Capsules, Syrup, Cream, etc.)
   if (query.dosageForm && query.dosageForm.trim()) {
-    filter.dosageForm = { $regex: new RegExp(query.dosageForm.trim(), "i") };
+    const rawDosage = query.dosageForm.trim();
+    const baseDosage = rawDosage.replace(/s$/i, "");
+    filter.dosageForm = { $regex: new RegExp(`^${baseDosage}s?$`, "i") };
   }
 
   // Prescription Type filter (Rx, OTC, Schedule H)

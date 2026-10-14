@@ -54,6 +54,7 @@ export const AdminProductsPage: React.FC = () => {
   // Filters & View State
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
+  const [selectedDosage, setSelectedDosage] = useState('ALL');
   const [selectedStatus, setSelectedStatus] = useState('ALL');
   const [dateFilter, setDateFilter] = useState<DateFilterType>('ALL');
   const [sortBy, setSortBy] = useState('name');
@@ -130,9 +131,33 @@ export const AdminProductsPage: React.FC = () => {
     }
   };
 
+  const dosageCounts = React.useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const p of products) {
+      if (p.dosageForm) {
+        const norm = p.dosageForm.trim();
+        counts[norm] = (counts[norm] || 0) + 1;
+      }
+    }
+    return counts;
+  }, [products]);
+
+  const dosageOptions = React.useMemo(() => {
+    const dynamicForms = Array.from(new Set(products.map((p) => p.dosageForm?.trim()).filter(Boolean) as string[]));
+    const allKnown = Array.from(new Set([...dynamicForms, 'Tablet', 'Capsule', 'Cream', 'Gel', 'Sachet', 'Lotion', 'Syrup', 'Injection']));
+    return allKnown
+      .map((d) => ({
+        value: d,
+        label: d.endsWith('s') ? d : `${d}s`,
+        count: dosageCounts[d] || 0,
+      }))
+      .filter((opt) => opt.count > 0 || ['Tablet', 'Capsule', 'Cream'].includes(opt.value));
+  }, [products, dosageCounts]);
+
   const resetFilters = () => {
     setSearch('');
     setSelectedCategory('ALL');
+    setSelectedDosage('ALL');
     setSelectedStatus('ALL');
     setDateFilter('ALL');
     setSortBy('name');
@@ -153,8 +178,18 @@ export const AdminProductsPage: React.FC = () => {
       if (!match) return false;
     }
     if (selectedCategory !== 'ALL') {
-      const catName = typeof p.category === 'object' ? p.category?.name : p.category;
-      if (catName?.toLowerCase() !== selectedCategory.toLowerCase()) return false;
+      const catObj = typeof p.category === 'object' ? p.category : null;
+      const catName = (catObj?.name || String(p.category || '')).toLowerCase().trim();
+      const catSlug = (catObj?.slug || '').toLowerCase().trim();
+      const catId = String(catObj?._id || p.category || '');
+      const target = selectedCategory.toLowerCase().trim();
+      const match = catName === target || catSlug === target || catId === selectedCategory;
+      if (!match) return false;
+    }
+    if (selectedDosage !== 'ALL') {
+      const pDosage = (p.dosageForm || '').toLowerCase().trim().replace(/s$/, '');
+      const target = selectedDosage.toLowerCase().trim().replace(/s$/, '');
+      if (pDosage !== target) return false;
     }
     if (selectedStatus !== 'ALL') {
       const active = selectedStatus === 'active';
@@ -311,6 +346,20 @@ export const AdminProductsPage: React.FC = () => {
             {categories.map((c) => (
               <option key={c._id} value={c.name}>
                 {c.name}
+              </option>
+            ))}
+          </ThemeSelect>
+
+          {/* Dosage Form Filter */}
+          <ThemeSelect
+            value={selectedDosage}
+            onChange={(e) => { setSelectedDosage(e.target.value); setCurrentPage(1); }}
+            style={{ minWidth: '160px' }}
+          >
+            <option value="ALL">All Dosage Forms</option>
+            {dosageOptions.map((d) => (
+              <option key={d.value} value={d.value}>
+                {d.label} {d.count > 0 ? `(${d.count})` : ''}
               </option>
             ))}
           </ThemeSelect>
