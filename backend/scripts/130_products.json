@@ -1,0 +1,1878 @@
+{
+  "categories": [
+    {
+      "name": "Allergy & Sinus Care",
+      "slug": "allergy-and-sinus-care"
+    },
+    {
+      "name": "Anti-infectives",
+      "slug": "anti-infectives"
+    },
+    {
+      "name": "Cardiology & Blood Pressure",
+      "slug": "cardiology-and-blood-pressure"
+    },
+    {
+      "name": "Dermatology & Anorectal Care",
+      "slug": "dermatology-and-anorectal-care"
+    },
+    {
+      "name": "Dermatology & Skin Care",
+      "slug": "dermatology-and-skin-care"
+    },
+    {
+      "name": "Diabetes & Blood Sugar",
+      "slug": "diabetes-and-blood-sugar"
+    },
+    {
+      "name": "Digestive & Gut Health",
+      "slug": "digestive-and-gut-health"
+    },
+    {
+      "name": "Endocrinology & Thyroid Care",
+      "slug": "endocrinology-and-thyroid-care"
+    },
+    {
+      "name": "Gastroenterology & Digestive Health",
+      "slug": "gastroenterology-and-digestive-health"
+    },
+    {
+      "name": "Gout & Uric Acid Management",
+      "slug": "gout-and-uric-acid-management"
+    },
+    {
+      "name": "Mental Health",
+      "slug": "mental-health"
+    },
+    {
+      "name": "Neurology & Brain Health",
+      "slug": "neurology-and-brain-health"
+    },
+    {
+      "name": "Neurology & Nerve Pain",
+      "slug": "neurology-and-nerve-pain"
+    },
+    {
+      "name": "Orthopedics & Joint Care",
+      "slug": "orthopedics-and-joint-care"
+    },
+    {
+      "name": "Orthopedics & Pain Management",
+      "slug": "orthopedics-and-pain-management"
+    },
+    {
+      "name": "Respiratory & ENT Care",
+      "slug": "respiratory-and-ent-care"
+    },
+    {
+      "name": "Rheumatology & Immunology",
+      "slug": "rheumatology-and-immunology"
+    },
+    {
+      "name": "Urology & Prostate Health",
+      "slug": "urology-and-prostate-health"
+    },
+    {
+      "name": "Vitamins, Minerals & Supplements",
+      "slug": "vitamins-minerals-and-supplements"
+    }
+  ],
+  "subcategories": [
+    {
+      "categoryName": "Allergy & Sinus Care",
+      "categorySlug": "allergy-and-sinus-care",
+      "name": "Allergic Rhinitis & Allergy Combinations",
+      "slug": "allergic-rhinitis-and-allergy-combinations"
+    },
+    {
+      "categoryName": "Anti-infectives",
+      "categorySlug": "anti-infectives",
+      "name": "Antibiotics",
+      "slug": "antibiotics"
+    },
+    {
+      "categoryName": "Anti-infectives",
+      "categorySlug": "anti-infectives",
+      "name": "Oral Antifungal Medicines",
+      "slug": "oral-antifungal-medicines"
+    },
+    {
+      "categoryName": "Cardiology & Blood Pressure",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "name": "Angina & Chest Pain Medicines",
+      "slug": "angina-and-chest-pain-medicines"
+    },
+    {
+      "categoryName": "Cardiology & Blood Pressure",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "name": "Blood Clot Prevention (Antiplatelets)",
+      "slug": "blood-clot-prevention-antiplatelets"
+    },
+    {
+      "categoryName": "Cardiology & Blood Pressure",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "name": "Cholesterol & Heart Protection",
+      "slug": "cholesterol-and-heart-protection"
+    },
+    {
+      "categoryName": "Cardiology & Blood Pressure",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "name": "Heart Failure Medicines",
+      "slug": "heart-failure-medicines"
+    },
+    {
+      "categoryName": "Cardiology & Blood Pressure",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "name": "High Blood Pressure (Hypertension)",
+      "slug": "high-blood-pressure-hypertension"
+    },
+    {
+      "categoryName": "Dermatology & Anorectal Care",
+      "categorySlug": "dermatology-and-anorectal-care",
+      "name": "Piles & Hemorrhoid Creams",
+      "slug": "piles-and-hemorrhoid-creams"
+    },
+    {
+      "categoryName": "Dermatology & Skin Care",
+      "categorySlug": "dermatology-and-skin-care",
+      "name": "Dry, Rough & Cracked Foot Care",
+      "slug": "dry-rough-and-cracked-foot-care"
+    },
+    {
+      "categoryName": "Dermatology & Skin Care",
+      "categorySlug": "dermatology-and-skin-care",
+      "name": "Moisturizers & Skin Barrier Care",
+      "slug": "moisturizers-and-skin-barrier-care"
+    },
+    {
+      "categoryName": "Dermatology & Skin Care",
+      "categorySlug": "dermatology-and-skin-care",
+      "name": "Topical Antifungal Creams",
+      "slug": "topical-antifungal-creams"
+    },
+    {
+      "categoryName": "Diabetes & Blood Sugar",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "name": "Oral Diabetes Medicines & Combinations",
+      "slug": "oral-diabetes-medicines-and-combinations"
+    },
+    {
+      "categoryName": "Diabetes & Blood Sugar",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "name": "SGLT2 Inhibitors & Combinations",
+      "slug": "sglt2-inhibitors-and-combinations"
+    },
+    {
+      "categoryName": "Digestive & Gut Health",
+      "categorySlug": "digestive-and-gut-health",
+      "name": "Prebiotics & Probiotics",
+      "slug": "prebiotics-and-probiotics"
+    },
+    {
+      "categoryName": "Endocrinology & Thyroid Care",
+      "categorySlug": "endocrinology-and-thyroid-care",
+      "name": "Thyroid Hormone Replacement",
+      "slug": "thyroid-hormone-replacement"
+    },
+    {
+      "categoryName": "Gastroenterology & Digestive Health",
+      "categorySlug": "gastroenterology-and-digestive-health",
+      "name": "Acidity, GERD & Acid Reflux",
+      "slug": "acidity-gerd-and-acid-reflux"
+    },
+    {
+      "categoryName": "Gastroenterology & Digestive Health",
+      "categorySlug": "gastroenterology-and-digestive-health",
+      "name": "Antacid & Alkalinizing Medicines",
+      "slug": "antacid-and-alkalinizing-medicines"
+    },
+    {
+      "categoryName": "Gastroenterology & Digestive Health",
+      "categorySlug": "gastroenterology-and-digestive-health",
+      "name": "Liver & Biliary Conditions",
+      "slug": "liver-and-biliary-conditions"
+    },
+    {
+      "categoryName": "Gout & Uric Acid Management",
+      "categorySlug": "gout-and-uric-acid-management",
+      "name": "Uric Acid Lowering Medicines",
+      "slug": "uric-acid-lowering-medicines"
+    },
+    {
+      "categoryName": "Mental Health",
+      "categorySlug": "mental-health",
+      "name": "Mood & Anxiety Medicines",
+      "slug": "mood-and-anxiety-medicines"
+    },
+    {
+      "categoryName": "Neurology & Brain Health",
+      "categorySlug": "neurology-and-brain-health",
+      "name": "Cognitive & Neuro-support Medicines",
+      "slug": "cognitive-and-neuro-support-medicines"
+    },
+    {
+      "categoryName": "Neurology & Brain Health",
+      "categorySlug": "neurology-and-brain-health",
+      "name": "Epilepsy & Seizure Medicines",
+      "slug": "epilepsy-and-seizure-medicines"
+    },
+    {
+      "categoryName": "Neurology & Brain Health",
+      "categorySlug": "neurology-and-brain-health",
+      "name": "Migraine & Headache Relief",
+      "slug": "migraine-and-headache-relief"
+    },
+    {
+      "categoryName": "Neurology & Nerve Pain",
+      "categorySlug": "neurology-and-nerve-pain",
+      "name": "Neuropathic Pain Medicines",
+      "slug": "neuropathic-pain-medicines"
+    },
+    {
+      "categoryName": "Orthopedics & Joint Care",
+      "categorySlug": "orthopedics-and-joint-care",
+      "name": "Joint Pain & Cartilage Support",
+      "slug": "joint-pain-and-cartilage-support"
+    },
+    {
+      "categoryName": "Orthopedics & Pain Management",
+      "categorySlug": "orthopedics-and-pain-management",
+      "name": "Pain Relief & Anti-inflammatory Medicines",
+      "slug": "pain-relief-and-anti-inflammatory-medicines"
+    },
+    {
+      "categoryName": "Respiratory & ENT Care",
+      "categorySlug": "respiratory-and-ent-care",
+      "name": "Bronchitis, Mucus & Airway Clearance",
+      "slug": "bronchitis-mucus-and-airway-clearance"
+    },
+    {
+      "categoryName": "Respiratory & ENT Care",
+      "categorySlug": "respiratory-and-ent-care",
+      "name": "Cold, Flu & Nasal Symptom Relief",
+      "slug": "cold-flu-and-nasal-symptom-relief"
+    },
+    {
+      "categoryName": "Rheumatology & Immunology",
+      "categorySlug": "rheumatology-and-immunology",
+      "name": "Corticosteroids & Inflammation",
+      "slug": "corticosteroids-and-inflammation"
+    },
+    {
+      "categoryName": "Rheumatology & Immunology",
+      "categorySlug": "rheumatology-and-immunology",
+      "name": "JAK Inhibitors & Immune-Mediated Conditions",
+      "slug": "jak-inhibitors-and-immune-mediated-conditions"
+    },
+    {
+      "categoryName": "Urology & Prostate Health",
+      "categorySlug": "urology-and-prostate-health",
+      "name": "Prostate Enlargement & Urinary Flow",
+      "slug": "prostate-enlargement-and-urinary-flow"
+    },
+    {
+      "categoryName": "Vitamins, Minerals & Supplements",
+      "categorySlug": "vitamins-minerals-and-supplements",
+      "name": "Calcium & Bone Health",
+      "slug": "calcium-and-bone-health"
+    },
+    {
+      "categoryName": "Vitamins, Minerals & Supplements",
+      "categorySlug": "vitamins-minerals-and-supplements",
+      "name": "Calcium, Vitamin D & Bone Health",
+      "slug": "calcium-vitamin-d-and-bone-health"
+    },
+    {
+      "categoryName": "Vitamins, Minerals & Supplements",
+      "categorySlug": "vitamins-minerals-and-supplements",
+      "name": "Hair Health Supplements",
+      "slug": "hair-health-supplements"
+    },
+    {
+      "categoryName": "Vitamins, Minerals & Supplements",
+      "categorySlug": "vitamins-minerals-and-supplements",
+      "name": "Iron & Folic Acid Supplements",
+      "slug": "iron-and-folic-acid-supplements"
+    },
+    {
+      "categoryName": "Vitamins, Minerals & Supplements",
+      "categorySlug": "vitamins-minerals-and-supplements",
+      "name": "Liver & Antioxidant Supplements",
+      "slug": "liver-and-antioxidant-supplements"
+    },
+    {
+      "categoryName": "Vitamins, Minerals & Supplements",
+      "categorySlug": "vitamins-minerals-and-supplements",
+      "name": "Multivitamins, Minerals & Antioxidants",
+      "slug": "multivitamins-minerals-and-antioxidants"
+    },
+    {
+      "categoryName": "Vitamins, Minerals & Supplements",
+      "categorySlug": "vitamins-minerals-and-supplements",
+      "name": "Nerve Health & Vitamin Supplements",
+      "slug": "nerve-health-and-vitamin-supplements"
+    }
+  ],
+  "products": [
+    {
+      "srNo": 1,
+      "name": "ACEBROZ-AC TAB",
+      "composition": "N-acetylcysteine 600 mg + acebrophylline 100 mg Tablet",
+      "mrp": 200.0,
+      "category": "Respiratory & ENT Care",
+      "subcategory": "Bronchitis, Mucus & Airway Clearance",
+      "dosageForm": "Tablet",
+      "packaging": "10*1*10 TAB",
+      "categorySlug": "respiratory-and-ent-care",
+      "subcategorySlug": "bronchitis-mucus-and-airway-clearance"
+    },
+    {
+      "srNo": 2,
+      "name": "ACLOZ-MR TAB",
+      "composition": "Aceclofenac 100 mg + Paracetamol 325 Mg + Chlorzoxazone 15 Mg Tablet",
+      "mrp": 100.0,
+      "category": "Orthopedics & Pain Management",
+      "subcategory": "Pain Relief & Anti-inflammatory Medicines",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "orthopedics-and-pain-management",
+      "subcategorySlug": "pain-relief-and-anti-inflammatory-medicines"
+    },
+    {
+      "srNo": 3,
+      "name": "ACLOZ-SP TAB",
+      "composition": "Aceclofenac 100 mg + Paracetamol 325 Mg + Serratiopeptidase 15 Mg Tablet",
+      "mrp": 110.0,
+      "category": "Orthopedics & Pain Management",
+      "subcategory": "Pain Relief & Anti-inflammatory Medicines",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "orthopedics-and-pain-management",
+      "subcategorySlug": "pain-relief-and-anti-inflammatory-medicines"
+    },
+    {
+      "srNo": 4,
+      "name": "AMLOAL-AT TAB",
+      "composition": "Amlodipine 5 Mg + Atenolol 50 Mg Tablet",
+      "mrp": 50.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "High Blood Pressure (Hypertension)",
+      "dosageForm": "Tablet",
+      "packaging": "20*10 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "high-blood-pressure-hypertension"
+    },
+    {
+      "srNo": 5,
+      "name": "AMLOAZ 5 TAB",
+      "composition": "Amlodipine 5 Mg Tablet",
+      "mrp": 28.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "High Blood Pressure (Hypertension)",
+      "dosageForm": "Tablet",
+      "packaging": "20*10 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "high-blood-pressure-hypertension"
+    },
+    {
+      "srNo": 6,
+      "name": "ATORIZ 10 TAB",
+      "composition": "Atorvastatin 10 Mg Tablet",
+      "mrp": 55.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "Cholesterol & Heart Protection",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "cholesterol-and-heart-protection"
+    },
+    {
+      "srNo": 7,
+      "name": "ATORIZ-A 10/75 CAP",
+      "composition": "Atorvastatin 10 mg + Aspirin 75 mg Capsule",
+      "mrp": 40.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "Cholesterol & Heart Protection",
+      "dosageForm": "Capsule",
+      "packaging": "10*10 CAP",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "cholesterol-and-heart-protection"
+    },
+    {
+      "srNo": 8,
+      "name": "ATORIZ-A 20/75 CAP",
+      "composition": "Atorvastatin 20 mg + Aspirin 75 mg Capsule",
+      "mrp": 43.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "Cholesterol & Heart Protection",
+      "dosageForm": "Capsule",
+      "packaging": "10*10 CAP",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "cholesterol-and-heart-protection"
+    },
+    {
+      "srNo": 9,
+      "name": "ATORIZ-GOLD 10 CAP",
+      "composition": "Atorvastatin 10 mg + Aspirin 75 mg + Clopidogrel 75 mg Capsule",
+      "mrp": 60.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "Cholesterol & Heart Protection",
+      "dosageForm": "Capsule",
+      "packaging": "10*10 CAP",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "cholesterol-and-heart-protection"
+    },
+    {
+      "srNo": 10,
+      "name": "ATORIZ-GOLD 20 CAP",
+      "composition": "Atorvastatin 20 mg + Aspirin 75 mg + Clopidogrel 75 mg Capsule",
+      "mrp": 85.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "Cholesterol & Heart Protection",
+      "dosageForm": "Capsule",
+      "packaging": "10*10 CAP",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "cholesterol-and-heart-protection"
+    },
+    {
+      "srNo": 11,
+      "name": "BECOZEAL-PLUS CAP",
+      "composition": "Vitamin B-Complex + Mineral + Trace Elements Capsule",
+      "mrp": 110.0,
+      "category": "Vitamins, Minerals & Supplements",
+      "subcategory": "Multivitamins, Minerals & Antioxidants",
+      "dosageForm": "Capsule",
+      "packaging": "10*10 CAP",
+      "categorySlug": "vitamins-minerals-and-supplements",
+      "subcategorySlug": "multivitamins-minerals-and-antioxidants"
+    },
+    {
+      "srNo": 12,
+      "name": "BILAZEAL-M TAB",
+      "composition": "Bilastine 20 mg + Montelukast 10 mg Tablet",
+      "mrp": 170.0,
+      "category": "Allergy & Sinus Care",
+      "subcategory": "Allergic Rhinitis & Allergy Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*1*10 TAB",
+      "categorySlug": "allergy-and-sinus-care",
+      "subcategorySlug": "allergic-rhinitis-and-allergy-combinations"
+    },
+    {
+      "srNo": 13,
+      "name": "CALCIZEAL-CT CAP",
+      "composition": "Calcium Carbonate 500 Mg + Calcitriol 0.25 Mcg + Zinc 7.5 Mg Capsule",
+      "mrp": 190.0,
+      "category": "Vitamins, Minerals & Supplements",
+      "subcategory": "Calcium, Vitamin D & Bone Health",
+      "dosageForm": "Capsule",
+      "packaging": "10*10 CAP",
+      "categorySlug": "vitamins-minerals-and-supplements",
+      "subcategorySlug": "calcium-vitamin-d-and-bone-health"
+    },
+    {
+      "srNo": 14,
+      "name": "CALCIZEAL-D3 60K CAP",
+      "composition": "Cholecalciferol (Vitamin D3) 60000 IU Capsule",
+      "mrp": 135.0,
+      "category": "Vitamins, Minerals & Supplements",
+      "subcategory": "Calcium, Vitamin D & Bone Health",
+      "dosageForm": "Capsule",
+      "packaging": "10*1*4 CAP",
+      "categorySlug": "vitamins-minerals-and-supplements",
+      "subcategorySlug": "calcium-vitamin-d-and-bone-health"
+    },
+    {
+      "srNo": 15,
+      "name": "CALCIZEAL-D3 60K SACHET",
+      "composition": "Cholecalciferol (Vitamin D3) 60000 IU Sachet",
+      "mrp": 38.0,
+      "category": "Vitamins, Minerals & Supplements",
+      "subcategory": "Calcium, Vitamin D & Bone Health",
+      "dosageForm": "Sachet",
+      "packaging": "10*1 GM",
+      "categorySlug": "vitamins-minerals-and-supplements",
+      "subcategorySlug": "calcium-vitamin-d-and-bone-health"
+    },
+    {
+      "srNo": 16,
+      "name": "CALCIZEAL-K2 7M TAB",
+      "composition": "Calcium Citrate 1000 Mg + Calcitriol 0.25Mcg + Vitamin K2-7 45 Mcg + Magnesium 50Mg + Zinc 7.5 Mg + Methylcobalamin 1000 Mg + L- Methylfolate Calcium Tablet",
+      "mrp": 160.0,
+      "category": "Vitamins, Minerals & Supplements",
+      "subcategory": "Calcium, Vitamin D & Bone Health",
+      "dosageForm": "Tablet",
+      "packaging": "10*1*10 TAB",
+      "categorySlug": "vitamins-minerals-and-supplements",
+      "subcategorySlug": "calcium-vitamin-d-and-bone-health"
+    },
+    {
+      "srNo": 17,
+      "name": "CALCIZEAL-ROSE TAB",
+      "composition": "Glucosamine Sulphate 500 Mg + Collagen Peptide Type-II 200 Mg + Chondroitin Sulphate Sodium 100 Mg + Rosehip Extract 10 Mg + Ginger Extract 10 Mg + Boswellia Extract 2 Mg + Vitamin D3 200 IU + Vitamin B12- 1 Mcg + Zinc 5 Mg + Copper 1 Mcg + Sodium Hyaluronate 30 Mg Tablet",
+      "mrp": 325.0,
+      "category": "Orthopedics & Joint Care",
+      "subcategory": "Joint Pain & Cartilage Support",
+      "dosageForm": "Tablet",
+      "packaging": "10*1*10 TAB",
+      "categorySlug": "orthopedics-and-joint-care",
+      "subcategorySlug": "joint-pain-and-cartilage-support"
+    },
+    {
+      "srNo": 18,
+      "name": "CALCIZEAL-SUPER TAB",
+      "composition": "Calcium Citrate 1000 Mg + Vitamin D3 200 Iu + Magnesium 100 Mg + Zinc 4 Mg Tablet",
+      "mrp": 170.0,
+      "category": "Vitamins, Minerals & Supplements",
+      "subcategory": "Calcium & Bone Health",
+      "dosageForm": "Tablet",
+      "packaging": "10*15 TAB",
+      "categorySlug": "vitamins-minerals-and-supplements",
+      "subcategorySlug": "calcium-and-bone-health"
+    },
+    {
+      "srNo": 19,
+      "name": "CILNIZ 20 TAB",
+      "composition": "Cilnidipine 20 mg Tablet",
+      "mrp": 140.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "High Blood Pressure (Hypertension)",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "high-blood-pressure-hypertension"
+    },
+    {
+      "srNo": 20,
+      "name": "CILNIZ-T 40 TAB",
+      "composition": "Telmisartan 40 Mg + Cilnidipine 10 Mg Tablet",
+      "mrp": 100.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "High Blood Pressure (Hypertension)",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "high-blood-pressure-hypertension"
+    },
+    {
+      "srNo": 21,
+      "name": "CITIZEAL-P 800 TAB",
+      "composition": "Citicoline 500 Mg + piracetam 800 Mg Tablet",
+      "mrp": 800.0,
+      "category": "Neurology & Brain Health",
+      "subcategory": "Cognitive & Neuro-support Medicines",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "neurology-and-brain-health",
+      "subcategorySlug": "cognitive-and-neuro-support-medicines"
+    },
+    {
+      "srNo": 22,
+      "name": "DAPAZEAL 10 TAB",
+      "composition": "Dapagliflozin 10 Mg Tablet",
+      "mrp": 220.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "SGLT2 Inhibitors & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "sglt2-inhibitors-and-combinations"
+    },
+    {
+      "srNo": 23,
+      "name": "DAPAZEAL-M 10/500 TAB",
+      "composition": "Dapagliflozin 10 Mg + Metformin 500 Mg Tablet",
+      "mrp": 240.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "SGLT2 Inhibitors & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "sglt2-inhibitors-and-combinations"
+    },
+    {
+      "srNo": 24,
+      "name": "DAPAZEAL-VG 10/100 TAB",
+      "composition": "Dapagliflozin 10 Mg + Vildagliptin 100 Mg Tablet",
+      "mrp": 240.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "SGLT2 Inhibitors & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "sglt2-inhibitors-and-combinations"
+    },
+    {
+      "srNo": 25,
+      "name": "DEFAZ 6 TAB",
+      "composition": "Deflazacort 6 Mg Tablet",
+      "mrp": 130.0,
+      "category": "Rheumatology & Immunology",
+      "subcategory": "Corticosteroids & Inflammation",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "rheumatology-and-immunology",
+      "subcategorySlug": "corticosteroids-and-inflammation"
+    },
+    {
+      "srNo": 26,
+      "name": "DICLOZEAL 50 MG GEL",
+      "composition": "Diclofenac 1.16 % + Linseed Oil 3 % + Methyl Salicylate 10% + Menthol 5% Gel",
+      "mrp": 170.0,
+      "category": "Orthopedics & Pain Management",
+      "subcategory": "Pain Relief & Anti-inflammatory Medicines",
+      "dosageForm": "Gel",
+      "packaging": "10*50 GM",
+      "categorySlug": "orthopedics-and-pain-management",
+      "subcategorySlug": "pain-relief-and-anti-inflammatory-medicines"
+    },
+    {
+      "srNo": 27,
+      "name": "E-VITAZ 400 CAP",
+      "composition": "Vitamin E 400 MG Capsule (SG)",
+      "mrp": 90.0,
+      "category": "Vitamins, Minerals & Supplements",
+      "subcategory": "Multivitamins, Minerals & Antioxidants",
+      "dosageForm": "Capsule",
+      "packaging": "10*3*10 CAP",
+      "categorySlug": "vitamins-minerals-and-supplements",
+      "subcategorySlug": "multivitamins-minerals-and-antioxidants"
+    },
+    {
+      "srNo": 28,
+      "name": "ESOZEAL 40 MG TAB",
+      "composition": "Esomeprazole 40 Mg (Gestro-Resistant) Tablet",
+      "mrp": 100.0,
+      "category": "Gastroenterology & Digestive Health",
+      "subcategory": "Acidity, GERD & Acid Reflux",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "gastroenterology-and-digestive-health",
+      "subcategorySlug": "acidity-gerd-and-acid-reflux"
+    },
+    {
+      "srNo": 29,
+      "name": "ESOZEAL-DSR CAP",
+      "composition": "Esomeprazole 40 Mg + Domperidone 30 Mg Capsule",
+      "mrp": 150.0,
+      "category": "Gastroenterology & Digestive Health",
+      "subcategory": "Acidity, GERD & Acid Reflux",
+      "dosageForm": "Capsule",
+      "packaging": "10*10 CAP",
+      "categorySlug": "gastroenterology-and-digestive-health",
+      "subcategorySlug": "acidity-gerd-and-acid-reflux"
+    },
+    {
+      "srNo": 30,
+      "name": "ETORIZ 90 TAB",
+      "composition": "Etoricoxib 90 Mg Tablet",
+      "mrp": 130.0,
+      "category": "Orthopedics & Pain Management",
+      "subcategory": "Pain Relief & Anti-inflammatory Medicines",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "orthopedics-and-pain-management",
+      "subcategorySlug": "pain-relief-and-anti-inflammatory-medicines"
+    },
+    {
+      "srNo": 31,
+      "name": "ETORIZ-TH4  TAB",
+      "composition": "Etoricoxib 60 mg + Thiocolchicoside 4 mg Tablet",
+      "mrp": 260.0,
+      "category": "Orthopedics & Pain Management",
+      "subcategory": "Pain Relief & Anti-inflammatory Medicines",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "orthopedics-and-pain-management",
+      "subcategorySlug": "pain-relief-and-anti-inflammatory-medicines"
+    },
+    {
+      "srNo": 32,
+      "name": "FEBUZEAL 40  TAB",
+      "composition": "Febuxostat 40 mg Tablet",
+      "mrp": 120.0,
+      "category": "Gout & Uric Acid Management",
+      "subcategory": "Uric Acid Lowering Medicines",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "gout-and-uric-acid-management",
+      "subcategorySlug": "uric-acid-lowering-medicines"
+    },
+    {
+      "srNo": 33,
+      "name": "FERZEAL-XT TAB",
+      "composition": "Ferrous Ascorbate 100 Mg + Folic 1.5 Mg Tablet",
+      "mrp": 140.0,
+      "category": "Vitamins, Minerals & Supplements",
+      "subcategory": "Iron & Folic Acid Supplements",
+      "dosageForm": "Tablet",
+      "packaging": "10*1*10 TAB",
+      "categorySlug": "vitamins-minerals-and-supplements",
+      "subcategorySlug": "iron-and-folic-acid-supplements"
+    },
+    {
+      "srNo": 34,
+      "name": "FLUPEZ-M 0.5/10 TAB",
+      "composition": "Flupentixol 0.5 mg + Melitracen 10 mg Tablet",
+      "mrp": 90.0,
+      "category": "Mental Health",
+      "subcategory": "Mood & Anxiety Medicines",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 Tab",
+      "categorySlug": "mental-health",
+      "subcategorySlug": "mood-and-anxiety-medicines"
+    },
+    {
+      "srNo": 35,
+      "name": "GABAZAC-M TAB",
+      "composition": "Gabapentin 300 mg + Methylcobalamin 500 mcg Tablet",
+      "mrp": 160.0,
+      "category": "Neurology & Nerve Pain",
+      "subcategory": "Neuropathic Pain Medicines",
+      "dosageForm": "Tablet",
+      "packaging": "10*1*10 TAB",
+      "categorySlug": "neurology-and-nerve-pain",
+      "subcategorySlug": "neuropathic-pain-medicines"
+    },
+    {
+      "srNo": 36,
+      "name": "GABAZAC-NT 400/10 TAB",
+      "composition": "Gabapentin 400 mg + Nortriptlyline hydrochloride 10 mg Tablet",
+      "mrp": 200.0,
+      "category": "Neurology & Nerve Pain",
+      "subcategory": "Neuropathic Pain Medicines",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "neurology-and-nerve-pain",
+      "subcategorySlug": "neuropathic-pain-medicines"
+    },
+    {
+      "srNo": 37,
+      "name": "GLICZEAL-M 80 TAB",
+      "composition": "Gliclazide 80 Mg + Metformin 500 Mg Tablet",
+      "mrp": 100.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "Oral Diabetes Medicines & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "oral-diabetes-medicines-and-combinations"
+    },
+    {
+      "srNo": 38,
+      "name": "GLIMIL-M 0.5 TAB",
+      "composition": "Glimepiride 0.5 mg + Metformin Hydrochloride 500 mg Tablet",
+      "mrp": 65.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "Oral Diabetes Medicines & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "oral-diabetes-medicines-and-combinations"
+    },
+    {
+      "srNo": 39,
+      "name": "GLIMIL-M 1 TAB",
+      "composition": "Glimepiride 1 Mg + Metformin 500 Mg (SR) Tablet",
+      "mrp": 90.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "Oral Diabetes Medicines & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*15 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "oral-diabetes-medicines-and-combinations"
+    },
+    {
+      "srNo": 40,
+      "name": "GLIMIL-M 2 TAB",
+      "composition": "Glimepiride 2 Mg + Metformin 500 Mg (SR) Tablet",
+      "mrp": 95.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "Oral Diabetes Medicines & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*15 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "oral-diabetes-medicines-and-combinations"
+    },
+    {
+      "srNo": 41,
+      "name": "GLIMIL-M 2 FORTE TAB",
+      "composition": "Glimepiride 2 Mg + Metformin 1000 Mg Tablet",
+      "mrp": 100.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "Oral Diabetes Medicines & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "oral-diabetes-medicines-and-combinations"
+    },
+    {
+      "srNo": 42,
+      "name": "GLIMIL-M 4 FORTE TAB",
+      "composition": "Glimepiride 4 mg + Metformin Hydrochloride 1000 mg Tablet",
+      "mrp": 110.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "Oral Diabetes Medicines & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "oral-diabetes-medicines-and-combinations"
+    },
+    {
+      "srNo": 43,
+      "name": "GLIMIL-MV1 TAB",
+      "composition": "Glimepiride 1 mg + Metformin Hydrochloride 500 mg + Voglibose 0.2 mg Tablet",
+      "mrp": 100.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "Oral Diabetes Medicines & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "oral-diabetes-medicines-and-combinations"
+    },
+    {
+      "srNo": 44,
+      "name": "GLIMIL-MV2 TAB",
+      "composition": "Glimepiride 2 mg + Metformin Hydrochloride 500 mg + Voglibose 0.2 mg Tablet",
+      "mrp": 110.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "Oral Diabetes Medicines & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "oral-diabetes-medicines-and-combinations"
+    },
+    {
+      "srNo": 45,
+      "name": "GLIMIL-PM1 TAB",
+      "composition": "Glimepiride 1 Mg + Pioglitazone 15 Mg + Metformin 500 Mg (SR) Tablet",
+      "mrp": 80.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "Oral Diabetes Medicines & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "oral-diabetes-medicines-and-combinations"
+    },
+    {
+      "srNo": 46,
+      "name": "GLIMIL-PM2 TAB",
+      "composition": "Glimepiride 2 Mg + Pioglitazone 15 Mg + Metformin 500 Mg (SR) Tablet",
+      "mrp": 90.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "Oral Diabetes Medicines & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "oral-diabetes-medicines-and-combinations"
+    },
+    {
+      "srNo": 47,
+      "name": "ITRAZOAL 100 CAP",
+      "composition": "Itraconazole 100 Mg Capsule",
+      "mrp": 180.0,
+      "category": "Anti-infectives",
+      "subcategory": "Oral Antifungal Medicines",
+      "dosageForm": "Capsule",
+      "packaging": "10*1*10 CAP",
+      "categorySlug": "anti-infectives",
+      "subcategorySlug": "oral-antifungal-medicines"
+    },
+    {
+      "srNo": 48,
+      "name": "ITRAZOAL 200 CAP",
+      "composition": "Itraconazole 200 Mg Capsule",
+      "mrp": 260.0,
+      "category": "Anti-infectives",
+      "subcategory": "Oral Antifungal Medicines",
+      "dosageForm": "Capsule",
+      "packaging": "10*1*10 CAP",
+      "categorySlug": "anti-infectives",
+      "subcategorySlug": "oral-antifungal-medicines"
+    },
+    {
+      "srNo": 49,
+      "name": "LEVERAL 500 TAB",
+      "composition": "Levetiracetam 500 Mg Tablet",
+      "mrp": 130.0,
+      "category": "Neurology & Brain Health",
+      "subcategory": "Epilepsy & Seizure Medicines",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "neurology-and-brain-health",
+      "subcategorySlug": "epilepsy-and-seizure-medicines"
+    },
+    {
+      "srNo": 50,
+      "name": "LINAZ 5 MG TAB",
+      "composition": "Linagliptin 5 Mg Tablet",
+      "mrp": 210.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "Oral Diabetes Medicines & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "oral-diabetes-medicines-and-combinations"
+    },
+    {
+      "srNo": 51,
+      "name": "LINEZOC 600 MG TAB",
+      "composition": "Linezolid 600 Mg Tablet",
+      "mrp": 380.0,
+      "category": "Anti-infectives",
+      "subcategory": "Antibiotics",
+      "dosageForm": "Tablet",
+      "packaging": "10*1*10 Tab",
+      "categorySlug": "anti-infectives",
+      "subcategorySlug": "antibiotics"
+    },
+    {
+      "srNo": 52,
+      "name": "LULIZEAL 30 GM CREAM",
+      "composition": "Luliconazole 1.0 % Cream",
+      "mrp": 210.0,
+      "category": "Dermatology & Skin Care",
+      "subcategory": "Topical Antifungal Creams",
+      "dosageForm": "Cream",
+      "packaging": "30*30 GM",
+      "categorySlug": "dermatology-and-skin-care",
+      "subcategorySlug": "topical-antifungal-creams"
+    },
+    {
+      "srNo": 53,
+      "name": "LULIZEAL 50 GM CREAM",
+      "composition": "Luliconazole 1.0 % Cream",
+      "mrp": 280.0,
+      "category": "Dermatology & Skin Care",
+      "subcategory": "Topical Antifungal Creams",
+      "dosageForm": "Cream",
+      "packaging": "10*50 GM",
+      "categorySlug": "dermatology-and-skin-care",
+      "subcategorySlug": "topical-antifungal-creams"
+    },
+    {
+      "srNo": 54,
+      "name": "METOZEAL-XL 25 TAB",
+      "composition": "Metoprolol Succinate 25 Mg Tablet",
+      "mrp": 45.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "High Blood Pressure (Hypertension)",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "high-blood-pressure-hypertension"
+    },
+    {
+      "srNo": 55,
+      "name": "METOZEAL-XL 50 TAB",
+      "composition": "Metoprolol Succinate 50 Mg Tablet",
+      "mrp": 60.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "High Blood Pressure (Hypertension)",
+      "dosageForm": "Tablet",
+      "packaging": "20*10 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "high-blood-pressure-hypertension"
+    },
+    {
+      "srNo": 56,
+      "name": "MONTEZEAL-L TAB",
+      "composition": "Levocetrizine 5 Mg + Montelukast 10 Mg Tablet",
+      "mrp": 150.0,
+      "category": "Allergy & Sinus Care",
+      "subcategory": "Allergic Rhinitis & Allergy Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*1*10 TAB",
+      "categorySlug": "allergy-and-sinus-care",
+      "subcategorySlug": "allergic-rhinitis-and-allergy-combinations"
+    },
+    {
+      "srNo": 57,
+      "name": "MULTIVTAZ HAIR GROW+ TAB",
+      "composition": "Essential Amino Acids + Vitamin C 40mg + Niacinamide 12mg + Vitamin E 5mg + Calcium Pantothenate 5mg + Folic Acid 100mcg + Biotin(vit.b7) 5mg + Minerals & Trace Elements + Soya Isoflavones 50mg + Grape Seed Extract 20mg Tablets",
+      "mrp": 38.0,
+      "category": "Vitamins, Minerals & Supplements",
+      "subcategory": "Hair Health Supplements",
+      "dosageForm": "Tablet",
+      "packaging": "10*1*10 TAB",
+      "categorySlug": "vitamins-minerals-and-supplements",
+      "subcategorySlug": "hair-health-supplements"
+    },
+    {
+      "srNo": 58,
+      "name": "MULTIVITAZ KNEE RELIEF TAB",
+      "composition": "Collagen Peptides Type-II + Glucosamine Sulphate, Rose Hip Ext. + Ginseng, Cissus Quadrangularis + Sodium Hyaluronate + Boswellia Ext. & Multivitamin Tablets",
+      "mrp": 310.0,
+      "category": "Orthopedics & Joint Care",
+      "subcategory": "Joint Pain & Cartilage Support",
+      "dosageForm": "Tablet",
+      "packaging": "10*1*10 TAB",
+      "categorySlug": "orthopedics-and-joint-care",
+      "subcategorySlug": "joint-pain-and-cartilage-support"
+    },
+    {
+      "srNo": 59,
+      "name": "MULTIVITAZ SOFTGEL CAP",
+      "composition": "Multivitamine + Multiminerals + Antioxidant Capsule (SG)",
+      "mrp": 130.0,
+      "category": "Vitamins, Minerals & Supplements",
+      "subcategory": "Multivitamins, Minerals & Antioxidants",
+      "dosageForm": "Gel",
+      "packaging": "10*1*10 CAP",
+      "categorySlug": "vitamins-minerals-and-supplements",
+      "subcategorySlug": "multivitamins-minerals-and-antioxidants"
+    },
+    {
+      "srNo": 60,
+      "name": "NAPRON-D 500 TAB",
+      "composition": "Naproxen 500 mg + Domperidone 10 mg Tablet",
+      "mrp": 95.0,
+      "category": "Neurology & Brain Health",
+      "subcategory": "Migraine & Headache Relief",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "neurology-and-brain-health",
+      "subcategorySlug": "migraine-and-headache-relief"
+    },
+    {
+      "srNo": 61,
+      "name": "NEUROZEAL D3 TAB",
+      "composition": "Alpha Lipoic Acid 100 Mg + Folic Acid 1.5 Mg + Methylcobalamin 1500 Mcg + Pyridoxine Hydrochloride 3 Mg + Vitamin D3 1000 Iu Tablet",
+      "mrp": 150.0,
+      "category": "Vitamins, Minerals & Supplements",
+      "subcategory": "Nerve Health & Vitamin Supplements",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "vitamins-minerals-and-supplements",
+      "subcategorySlug": "nerve-health-and-vitamin-supplements"
+    },
+    {
+      "srNo": 62,
+      "name": "NEUROZEAL-LC TAB",
+      "composition": "L-Carnitine L- Tartrate 500 Mg + Methylcobalamin 1500 Mcg + Folic Acid 1.5 Mg Tablet",
+      "mrp": 230.0,
+      "category": "Vitamins, Minerals & Supplements",
+      "subcategory": "Nerve Health & Vitamin Supplements",
+      "dosageForm": "Tablet",
+      "packaging": "10*1*10 TAB",
+      "categorySlug": "vitamins-minerals-and-supplements",
+      "subcategorySlug": "nerve-health-and-vitamin-supplements"
+    },
+    {
+      "srNo": 63,
+      "name": "NITROL 2.6 TAB",
+      "composition": "Nitroglycerin Controlled Release 2.6 Mg Tablet",
+      "mrp": 150.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "Angina & Chest Pain Medicines",
+      "dosageForm": "Tablet",
+      "packaging": "25*30 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "angina-and-chest-pain-medicines"
+    },
+    {
+      "srNo": 64,
+      "name": "OLMIZ 20 TAB",
+      "composition": "Olmesartan Medoxomil 20 Mg Tablet",
+      "mrp": 80.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "High Blood Pressure (Hypertension)",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "high-blood-pressure-hypertension"
+    },
+    {
+      "srNo": 65,
+      "name": "OLMIZ 40 TAB",
+      "composition": "Olmesartan Medoxomil 40 Mg Tablet",
+      "mrp": 120.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "High Blood Pressure (Hypertension)",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "high-blood-pressure-hypertension"
+    },
+    {
+      "srNo": 66,
+      "name": "OMEGLO 4G + MIX CAP",
+      "composition": "Omega-3 Fatty Acid + Green Tea Extract + Ginkgo Biloba + Ginseng + Grape Seed Extract + Antioxidants + Vitamins + minerals + Trace Elements Softgel Capsule",
+      "mrp": 245.0,
+      "category": "Vitamins, Minerals & Supplements",
+      "subcategory": "Multivitamins, Minerals & Antioxidants",
+      "dosageForm": "Capsule",
+      "packaging": "10*1*10 CAP",
+      "categorySlug": "vitamins-minerals-and-supplements",
+      "subcategorySlug": "multivitamins-minerals-and-antioxidants"
+    },
+    {
+      "srNo": 67,
+      "name": "OMEZEAL 20 CAP",
+      "composition": "Omeprazole 20 Mg Capsule",
+      "mrp": 32.0,
+      "category": "Gastroenterology & Digestive Health",
+      "subcategory": "Acidity, GERD & Acid Reflux",
+      "dosageForm": "Capsule",
+      "packaging": "10*10 CAP",
+      "categorySlug": "gastroenterology-and-digestive-health",
+      "subcategorySlug": "acidity-gerd-and-acid-reflux"
+    },
+    {
+      "srNo": 68,
+      "name": "OMEZEAL-D CAP",
+      "composition": "Omeprazole 20 Mg + Domeperidone 10 Mg Capsule",
+      "mrp": 65.0,
+      "category": "Gastroenterology & Digestive Health",
+      "subcategory": "Acidity, GERD & Acid Reflux",
+      "dosageForm": "Capsule",
+      "packaging": "10*10 CAP",
+      "categorySlug": "gastroenterology-and-digestive-health",
+      "subcategorySlug": "acidity-gerd-and-acid-reflux"
+    },
+    {
+      "srNo": 69,
+      "name": "PRAZOCURE-XL 5 TAB",
+      "composition": "Prazosin Hydrochloride 5 mg Tablet",
+      "mrp": 120.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "High Blood Pressure (Hypertension)",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "high-blood-pressure-hypertension"
+    },
+    {
+      "srNo": 70,
+      "name": "PREBOZ CAP",
+      "composition": "Pre-biotic & Pro-biotic Capsule",
+      "mrp": 160.0,
+      "category": "Digestive & Gut Health",
+      "subcategory": "Prebiotics & Probiotics",
+      "dosageForm": "Capsule",
+      "packaging": "10*10 CAP",
+      "categorySlug": "digestive-and-gut-health",
+      "subcategorySlug": "prebiotics-and-probiotics"
+    },
+    {
+      "srNo": 71,
+      "name": "PREGACURE-NT TAB",
+      "composition": "Nortriptyline Hydrochloride 10 Mg + Pregabalin Ip 75 Mg Tablet",
+      "mrp": 160.0,
+      "category": "Neurology & Nerve Pain",
+      "subcategory": "Neuropathic Pain Medicines",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "neurology-and-nerve-pain",
+      "subcategorySlug": "neuropathic-pain-medicines"
+    },
+    {
+      "srNo": 72,
+      "name": "PREGACURE-NTM TAB",
+      "composition": "Nortriptyline Hydrochloride 10 Mg + Pregabalin 75 Mg + Methylcobalamin 1500 Mcg Tablet",
+      "mrp": 190.0,
+      "category": "Neurology & Nerve Pain",
+      "subcategory": "Neuropathic Pain Medicines",
+      "dosageForm": "Tablet",
+      "packaging": "10*1*10 TAB",
+      "categorySlug": "neurology-and-nerve-pain",
+      "subcategorySlug": "neuropathic-pain-medicines"
+    },
+    {
+      "srNo": 73,
+      "name": "RABEZEAL-DSR CAP",
+      "composition": "Rabeprazole Sodium 20 Mg + Domeperidone 10 Mg Capsule",
+      "mrp": 130.0,
+      "category": "Gastroenterology & Digestive Health",
+      "subcategory": "Acidity, GERD & Acid Reflux",
+      "dosageForm": "Capsule",
+      "packaging": "10*10 CAP",
+      "categorySlug": "gastroenterology-and-digestive-health",
+      "subcategorySlug": "acidity-gerd-and-acid-reflux"
+    },
+    {
+      "srNo": 74,
+      "name": "RABEZEAL-LS CAP",
+      "composition": "Rabeprazole 20 Mg + Levosulpiride 75 Mg Capsule",
+      "mrp": 160.0,
+      "category": "Gastroenterology & Digestive Health",
+      "subcategory": "Acidity, GERD & Acid Reflux",
+      "dosageForm": "Capsule",
+      "packaging": "10*10 CAP",
+      "categorySlug": "gastroenterology-and-digestive-health",
+      "subcategorySlug": "acidity-gerd-and-acid-reflux"
+    },
+    {
+      "srNo": 75,
+      "name": "RAMEZ 5 TAB",
+      "composition": "Ramipril 5 mg Tablet",
+      "mrp": 90.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "High Blood Pressure (Hypertension)",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "high-blood-pressure-hypertension"
+    },
+    {
+      "srNo": 76,
+      "name": "RENOZAC 500 TAB",
+      "composition": "Ranolazine 500 mg Tablet",
+      "mrp": 120.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "Angina & Chest Pain Medicines",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "angina-and-chest-pain-medicines"
+    },
+    {
+      "srNo": 77,
+      "name": "ROSUCURE 10 TAB",
+      "composition": "Rosuvastatin 10 Mg Tablet",
+      "mrp": 100.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "Cholesterol & Heart Protection",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "cholesterol-and-heart-protection"
+    },
+    {
+      "srNo": 78,
+      "name": "ROSUCURE 20 TAB",
+      "composition": "Rosuvastatin 20 Mg Tablet",
+      "mrp": 150.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "Cholesterol & Heart Protection",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "cholesterol-and-heart-protection"
+    },
+    {
+      "srNo": 79,
+      "name": "ROSUCURE-A 10/75 CAP",
+      "composition": "Rosuvastatin 10 Mg + Aspirin 75 Mg Capsule",
+      "mrp": 65.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "Cholesterol & Heart Protection",
+      "dosageForm": "Capsule",
+      "packaging": "10*10 CAP",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "cholesterol-and-heart-protection"
+    },
+    {
+      "srNo": 80,
+      "name": "ROSUCURE-A 20/75 CAP",
+      "composition": "Rosuvastatin 20 Mg + Aspirin 75 Mg Capsule",
+      "mrp": 100.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "Cholesterol & Heart Protection",
+      "dosageForm": "Capsule",
+      "packaging": "10*10 CAP",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "cholesterol-and-heart-protection"
+    },
+    {
+      "srNo": 81,
+      "name": "ROSUCURE-F 10/160 TAB",
+      "composition": "Rosuvastatin 10 Mg + Fenofibrate 160 Mg Tab",
+      "mrp": 140.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "Cholesterol & Heart Protection",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "cholesterol-and-heart-protection"
+    },
+    {
+      "srNo": 82,
+      "name": "ROSUCURE-GOLD 10 CAP",
+      "composition": "Rosuvastatin 10 Mg + Clopidogrel 75 Mg + Aspirin 75 Mg capsule",
+      "mrp": 145.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "Cholesterol & Heart Protection",
+      "dosageForm": "Capsule",
+      "packaging": "10*10 CAP",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "cholesterol-and-heart-protection"
+    },
+    {
+      "srNo": 83,
+      "name": "ROSUCURE-GOLD 20 CAP",
+      "composition": "Rosuvastatin 20 Mg + Clopidogrel 75 Mg + Aspirin 75 Mg Capsule",
+      "mrp": 165.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "Cholesterol & Heart Protection",
+      "dosageForm": "Capsule",
+      "packaging": "10*10 CAP",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "cholesterol-and-heart-protection"
+    },
+    {
+      "srNo": 84,
+      "name": "SACVIL 50 TAB",
+      "composition": "Sacubitril 24 Mg + Valsatan 26 Mg Tablet",
+      "mrp": 410.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "Heart Failure Medicines",
+      "dosageForm": "Tablet",
+      "packaging": "10*14 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "heart-failure-medicines"
+    },
+    {
+      "srNo": 85,
+      "name": "SITAZ 100 TAB",
+      "composition": "Sitagliptin 100 Mg Tablet",
+      "mrp": 290.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "Oral Diabetes Medicines & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*7 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "oral-diabetes-medicines-and-combinations"
+    },
+    {
+      "srNo": 86,
+      "name": "SILORIDE 8 D CAP",
+      "composition": "Dutasteride 0.5 Mg + Silodosin 8 Mg Capsule",
+      "mrp": 300.0,
+      "category": "Urology & Prostate Health",
+      "subcategory": "Prostate Enlargement & Urinary Flow",
+      "dosageForm": "Capsule",
+      "packaging": "10*1*10 CAP",
+      "categorySlug": "urology-and-prostate-health",
+      "subcategorySlug": "prostate-enlargement-and-urinary-flow"
+    },
+    {
+      "srNo": 87,
+      "name": "SILYZYME-Q 10 TAB",
+      "composition": "Silymarin Extract, Vitamin C+ L-Carnitine L-Tartrate+Choline Bitartrate, Inositol+ N-Acetyl L-Cystine + L-Ornithine Hydrochloride+ L-Glutathione+ Vitamin E+ Calcium Pantothenate + Zinc + Vitamin B Complex + Iron + Co Enzyme Q10 + Folic Acid + Selenium + vitamin D3 Tablet",
+      "mrp": 315.0,
+      "category": "Vitamins, Minerals & Supplements",
+      "subcategory": "Liver & Antioxidant Supplements",
+      "dosageForm": "Tablet",
+      "packaging": "10*1*10 TAB",
+      "categorySlug": "vitamins-minerals-and-supplements",
+      "subcategorySlug": "liver-and-antioxidant-supplements"
+    },
+    {
+      "srNo": 88,
+      "name": "SITAZ-M 50/500 TAB",
+      "composition": "Sitagliptin 50 mg + Metformin Hydrochloride 500 mg Tablet",
+      "mrp": 310.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "Oral Diabetes Medicines & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*15 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "oral-diabetes-medicines-and-combinations"
+    },
+    {
+      "srNo": 89,
+      "name": "SODICURE 500 TAB",
+      "composition": "Sodium Bicarbonate 500 Mg Tablet",
+      "mrp": 35.0,
+      "category": "Gastroenterology & Digestive Health",
+      "subcategory": "Antacid & Alkalinizing Medicines",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "gastroenterology-and-digestive-health",
+      "subcategorySlug": "antacid-and-alkalinizing-medicines"
+    },
+    {
+      "srNo": 90,
+      "name": "TELTAZ 20 TAB",
+      "composition": "Telmisartan 20 Mg Tablet",
+      "mrp": 40.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "High Blood Pressure (Hypertension)",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "high-blood-pressure-hypertension"
+    },
+    {
+      "srNo": 91,
+      "name": "TELTAZ-H 40 TAB",
+      "composition": "Telmisartan 40 Mg + Hydrochlorthiazide 12.5 Mg Tablet",
+      "mrp": 90.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "High Blood Pressure (Hypertension)",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "high-blood-pressure-hypertension"
+    },
+    {
+      "srNo": 92,
+      "name": "TELTAZ 40 TAB",
+      "composition": "Telmisartan 40 Mg Tablet",
+      "mrp": 72.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "High Blood Pressure (Hypertension)",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "high-blood-pressure-hypertension"
+    },
+    {
+      "srNo": 93,
+      "name": "TELTAZ-TRIO 40 TAB",
+      "composition": "Telmisartan 40 Mg + Hydrochlorthiazide 12.5 Mg + Amlodipine 5 Mg Tablet",
+      "mrp": 110.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "High Blood Pressure (Hypertension)",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "high-blood-pressure-hypertension"
+    },
+    {
+      "srNo": 94,
+      "name": "TELTAZ-AM TAB",
+      "composition": "Telmisartan 40 mg + Amlodipine 5 mg Tablet",
+      "mrp": 110.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "High Blood Pressure (Hypertension)",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "high-blood-pressure-hypertension"
+    },
+    {
+      "srNo": 95,
+      "name": "TELTAZ-CT 40/12.5 TAB",
+      "composition": "Telmisartan 40 Mg + Chlorthalidone 12.5 Mg Tablet",
+      "mrp": 90.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "High Blood Pressure (Hypertension)",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "high-blood-pressure-hypertension"
+    },
+    {
+      "srNo": 96,
+      "name": "TELTAZ-CT 40/6.25 TAB",
+      "composition": "Telmisartan 40 Mg + Chlorthalidone 6.25 Mg Tablet",
+      "mrp": 80.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "High Blood Pressure (Hypertension)",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "high-blood-pressure-hypertension"
+    },
+    {
+      "srNo": 97,
+      "name": "TELTAZ-M 25 TAB",
+      "composition": "Telmisartan 40 Mg + Metoprolol 25 Mg Tablet",
+      "mrp": 110.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "High Blood Pressure (Hypertension)",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "high-blood-pressure-hypertension"
+    },
+    {
+      "srNo": 98,
+      "name": "TELTAZ-M 50 TAB",
+      "composition": "Telmisartan 40 Mg + Metoprolol 50 Mg Tablet",
+      "mrp": 125.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "High Blood Pressure (Hypertension)",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "high-blood-pressure-hypertension"
+    },
+    {
+      "srNo": 99,
+      "name": "TELTAZ-TRIO 40/12.5/10 TAB",
+      "composition": "Telmisartan 40 Mg + Chlorthalidone 12.5 Mg Cilnidipine 10 mg Tablet",
+      "mrp": 150.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "High Blood Pressure (Hypertension)",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "high-blood-pressure-hypertension"
+    },
+    {
+      "srNo": 100,
+      "name": "TENZEAL 20 TAB",
+      "composition": "Teneligliptin 20 Mg Tablet",
+      "mrp": 130.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "Oral Diabetes Medicines & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*14 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "oral-diabetes-medicines-and-combinations"
+    },
+    {
+      "srNo": 101,
+      "name": "TENZEAL-M 500 TAB",
+      "composition": "Teneligliptin 20 Mg + Metformin 500 Mg Tablet",
+      "mrp": 130.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "Oral Diabetes Medicines & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "oral-diabetes-medicines-and-combinations"
+    },
+    {
+      "srNo": 102,
+      "name": "THYROZEAL 100 MCG TAB",
+      "composition": "Thyroxine Sodium 100 mcg Tablet",
+      "mrp": 147.84,
+      "category": "Endocrinology & Thyroid Care",
+      "subcategory": "Thyroid Hormone Replacement",
+      "dosageForm": "Tablet",
+      "packaging": "1*25*100 TAB",
+      "categorySlug": "endocrinology-and-thyroid-care",
+      "subcategorySlug": "thyroid-hormone-replacement"
+    },
+    {
+      "srNo": 103,
+      "name": "THYROZEAL 25 MCG TAB",
+      "composition": "Thyroxine Sodium 25 mcg Tablet",
+      "mrp": 110.0,
+      "category": "Endocrinology & Thyroid Care",
+      "subcategory": "Thyroid Hormone Replacement",
+      "dosageForm": "Tablet",
+      "packaging": "1*25*100 TAB",
+      "categorySlug": "endocrinology-and-thyroid-care",
+      "subcategorySlug": "thyroid-hormone-replacement"
+    },
+    {
+      "srNo": 104,
+      "name": "THYROZEAL 50 MCG TAB",
+      "composition": "Thyroxine Sodium 50 mcg Tablet",
+      "mrp": 115.0,
+      "category": "Endocrinology & Thyroid Care",
+      "subcategory": "Thyroid Hormone Replacement",
+      "dosageForm": "Tablet",
+      "packaging": "1*25*100 TAB",
+      "categorySlug": "endocrinology-and-thyroid-care",
+      "subcategorySlug": "thyroid-hormone-replacement"
+    },
+    {
+      "srNo": 105,
+      "name": "THYROZEAL 75 MCG TAB",
+      "composition": "Thyroxine Sodium 75 mcg Tablet",
+      "mrp": 161.28,
+      "category": "Endocrinology & Thyroid Care",
+      "subcategory": "Thyroid Hormone Replacement",
+      "dosageForm": "Tablet",
+      "packaging": "1*25*100 TAB",
+      "categorySlug": "endocrinology-and-thyroid-care",
+      "subcategorySlug": "thyroid-hormone-replacement"
+    },
+    {
+      "srNo": 106,
+      "name": "TICAZEAL 90 TAB",
+      "composition": "Ticagrelor 90 mg Tablet",
+      "mrp": 360.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "Blood Clot Prevention (Antiplatelets)",
+      "dosageForm": "Tablet",
+      "packaging": "10*1*14 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "blood-clot-prevention-antiplatelets"
+    },
+    {
+      "srNo": 107,
+      "name": "TOFAZEAL 5 TAB",
+      "composition": "Tofacitinib citrate 5 mg Tablet",
+      "mrp": 400.0,
+      "category": "Rheumatology & Immunology",
+      "subcategory": "JAK Inhibitors & Immune-Mediated Conditions",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "rheumatology-and-immunology",
+      "subcategorySlug": "jak-inhibitors-and-immune-mediated-conditions"
+    },
+    {
+      "srNo": 108,
+      "name": "TRIMEZ 35 MR TAB",
+      "composition": "Trimetazidine Hydrochloride 35 Mg Tablet",
+      "mrp": 80.0,
+      "category": "Cardiology & Blood Pressure",
+      "subcategory": "Angina & Chest Pain Medicines",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "cardiology-and-blood-pressure",
+      "subcategorySlug": "angina-and-chest-pain-medicines"
+    },
+    {
+      "srNo": 109,
+      "name": "URIZEAL-D TAB",
+      "composition": "Tamsulosin Hcl 0.4 Mg + Dutasteride 0.5 Mg Tablet",
+      "mrp": 130.0,
+      "category": "Urology & Prostate Health",
+      "subcategory": "Prostate Enlargement & Urinary Flow",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "urology-and-prostate-health",
+      "subcategorySlug": "prostate-enlargement-and-urinary-flow"
+    },
+    {
+      "srNo": 110,
+      "name": "URIZEAL 0.4 TAB",
+      "composition": "Tamsulosin Hydrochloride 0.4 Mg Tablet",
+      "mrp": 90.0,
+      "category": "Urology & Prostate Health",
+      "subcategory": "Prostate Enlargement & Urinary Flow",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "urology-and-prostate-health",
+      "subcategorySlug": "prostate-enlargement-and-urinary-flow"
+    },
+    {
+      "srNo": 111,
+      "name": "URSOZEAL 300  TAB",
+      "composition": "Ursodeoxycholic Acid 300 mg Tablet",
+      "mrp": 370.0,
+      "category": "Gastroenterology & Digestive Health",
+      "subcategory": "Liver & Biliary Conditions",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "gastroenterology-and-digestive-health",
+      "subcategorySlug": "liver-and-biliary-conditions"
+    },
+    {
+      "srNo": 112,
+      "name": "VILDACURE 100  TAB",
+      "composition": "Vildagliptin 100 mg Tablet",
+      "mrp": 145.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "Oral Diabetes Medicines & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "oral-diabetes-medicines-and-combinations"
+    },
+    {
+      "srNo": 113,
+      "name": "VILDACURE 50 TAB",
+      "composition": "Vildagliptin 50 Mg Tablet",
+      "mrp": 105.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "Oral Diabetes Medicines & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "oral-diabetes-medicines-and-combinations"
+    },
+    {
+      "srNo": 114,
+      "name": "VILDACURE-FORTE 50/1000 TAB",
+      "composition": "Vildagliptin 50 mg + Metformin Hydrochloride 1000 mg Tablet",
+      "mrp": 140.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "Oral Diabetes Medicines & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "oral-diabetes-medicines-and-combinations"
+    },
+    {
+      "srNo": 115,
+      "name": "VILDACURE-M 50/500 TAB",
+      "composition": "Vildagliptin 50 mg + Metformin Hydrochloride 500 mg Tablet",
+      "mrp": 130.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "Oral Diabetes Medicines & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "oral-diabetes-medicines-and-combinations"
+    },
+    {
+      "srNo": 116,
+      "name": "VOGLITIC 0.3 TAB",
+      "composition": "Voglibose 0.3 Mg Tablet",
+      "mrp": 75.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "Oral Diabetes Medicines & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "oral-diabetes-medicines-and-combinations"
+    },
+    {
+      "srNo": 117,
+      "name": "VOGLITIC-GM 1/0.3 TAB",
+      "composition": "Glimepiride 1 Mg + Metformin Hydrochloride 500 Mg + Voglibose 0.3 Mg Tablet",
+      "mrp": 90.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "Oral Diabetes Medicines & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "oral-diabetes-medicines-and-combinations"
+    },
+    {
+      "srNo": 118,
+      "name": "VOGLITIC-GM 3/0.3 TAB",
+      "composition": "Glimepiride 3 Mg + Metformin Hydrochloride 500 Mg + Voglibose 0.3 Mg Tablet",
+      "mrp": 160.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "Oral Diabetes Medicines & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "oral-diabetes-medicines-and-combinations"
+    },
+    {
+      "srNo": 119,
+      "name": "VOGLITIC-M 0.3/500 TAB",
+      "composition": "Voglibose 0.3 Mg Tablet + Metformin Hydrochloride 500 mg Tablet",
+      "mrp": 100.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "Oral Diabetes Medicines & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "oral-diabetes-medicines-and-combinations"
+    },
+    {
+      "srNo": 120,
+      "name": "ZEACOLD-PLUS TAB",
+      "composition": "Paracetamol 500 Mg + Phenylephrine Hydrochloride 10 Mg + Chlorpheniramine Maleate 4 Mg + Caffeine 30 Mg Tablet",
+      "mrp": 60.0,
+      "category": "Respiratory & ENT Care",
+      "subcategory": "Cold, Flu & Nasal Symptom Relief",
+      "dosageForm": "Tablet",
+      "packaging": "20*10 TAB",
+      "categorySlug": "respiratory-and-ent-care",
+      "subcategorySlug": "cold-flu-and-nasal-symptom-relief"
+    },
+    {
+      "srNo": 121,
+      "name": "ZEALCOVIT TAB",
+      "composition": "Multivitamine + Multiminerals + Grape Seed + Antioxidants Tablet",
+      "mrp": 160.0,
+      "category": "Vitamins, Minerals & Supplements",
+      "subcategory": "Multivitamins, Minerals & Antioxidants",
+      "dosageForm": "Tablet",
+      "packaging": "5*2*15 TAB",
+      "categorySlug": "vitamins-minerals-and-supplements",
+      "subcategorySlug": "multivitamins-minerals-and-antioxidants"
+    },
+    {
+      "srNo": 122,
+      "name": "ZEALMOIST PLUS LOTION",
+      "composition": "Alovera + Honey + Vitamin E + Tea tree Oil Lotion",
+      "mrp": 135.0,
+      "category": "Dermatology & Skin Care",
+      "subcategory": "Moisturizers & Skin Barrier Care",
+      "dosageForm": "Lotion",
+      "packaging": "12*100 ML",
+      "categorySlug": "dermatology-and-skin-care",
+      "subcategorySlug": "moisturizers-and-skin-barrier-care"
+    },
+    {
+      "srNo": 123,
+      "name": "ZEMET 500 SR TAB",
+      "composition": "Metformin 500 Mg (SR) Tablet",
+      "mrp": 22.0,
+      "category": "Diabetes & Blood Sugar",
+      "subcategory": "Oral Diabetes Medicines & Combinations",
+      "dosageForm": "Tablet",
+      "packaging": "20*10 TAB",
+      "categorySlug": "diabetes-and-blood-sugar",
+      "subcategorySlug": "oral-diabetes-medicines-and-combinations"
+    },
+    {
+      "srNo": 124,
+      "name": "ZEPANTA-D TAB",
+      "composition": "Pantoprazole 40 Mg + Domperidone 10 Mg Tablet",
+      "mrp": 130.0,
+      "category": "Gastroenterology & Digestive Health",
+      "subcategory": "Acidity, GERD & Acid Reflux",
+      "dosageForm": "Tablet",
+      "packaging": "20*10 TAB",
+      "categorySlug": "gastroenterology-and-digestive-health",
+      "subcategorySlug": "acidity-gerd-and-acid-reflux"
+    },
+    {
+      "srNo": 125,
+      "name": "ZEPANTA-DSR CAP",
+      "composition": "Pantoprazole 40 mg + domperidone 30 mg Capsule",
+      "mrp": 130.0,
+      "category": "Gastroenterology & Digestive Health",
+      "subcategory": "Acidity, GERD & Acid Reflux",
+      "dosageForm": "Capsule",
+      "packaging": "10*10 CAP",
+      "categorySlug": "gastroenterology-and-digestive-health",
+      "subcategorySlug": "acidity-gerd-and-acid-reflux"
+    },
+    {
+      "srNo": 126,
+      "name": "ZEPANTA-IT CAP",
+      "composition": "Pantoprazole 40 mg + Itopride hydrochloride 150 mg Capsule",
+      "mrp": 180.0,
+      "category": "Gastroenterology & Digestive Health",
+      "subcategory": "Acidity, GERD & Acid Reflux",
+      "dosageForm": "Capsule",
+      "packaging": "10*10 CAP",
+      "categorySlug": "gastroenterology-and-digestive-health",
+      "subcategorySlug": "acidity-gerd-and-acid-reflux"
+    },
+    {
+      "srNo": 127,
+      "name": "ZEPANTA-LS CAP",
+      "composition": "Pantoprazole 40 mg + Levosulpiride 75 mg Capsule",
+      "mrp": 180.0,
+      "category": "Gastroenterology & Digestive Health",
+      "subcategory": "Acidity, GERD & Acid Reflux",
+      "dosageForm": "Capsule",
+      "packaging": "10*10 CAP",
+      "categorySlug": "gastroenterology-and-digestive-health",
+      "subcategorySlug": "acidity-gerd-and-acid-reflux"
+    },
+    {
+      "srNo": 128,
+      "name": "ZEPENTA 40 TAB",
+      "composition": "Pantoprazole 40 Mg Tablet",
+      "mrp": 110.0,
+      "category": "Gastroenterology & Digestive Health",
+      "subcategory": "Acidity, GERD & Acid Reflux",
+      "dosageForm": "Tablet",
+      "packaging": "10*10 TAB",
+      "categorySlug": "gastroenterology-and-digestive-health",
+      "subcategorySlug": "acidity-gerd-and-acid-reflux"
+    },
+    {
+      "srNo": 129,
+      "name": "ZEAL'S PILES CURE 30 GM CREAM",
+      "composition": "Calcium Dobesilate 0.25% w/w + Lignocaine Hydrochloride 3% w/w + Hydrocortisone Acetate 0.25% w/w + Zinc Oxide 5% w/w Cream",
+      "mrp": 100.0,
+      "category": "Dermatology & Anorectal Care",
+      "subcategory": "Piles & Hemorrhoid Creams",
+      "dosageForm": "Cream",
+      "packaging": "20*30 GM",
+      "categorySlug": "dermatology-and-anorectal-care",
+      "subcategorySlug": "piles-and-hemorrhoid-creams"
+    },
+    {
+      "srNo": 130,
+      "name": "ZEAL'S FOOT CURE 75 GM CREAM",
+      "composition": "Urea 10% w/w + Lactic Acid 10% w/w + Propylene Glycol 10% w/w + Light Liquid Paraffin 10% w/w Cream",
+      "mrp": 160.0,
+      "category": "Dermatology & Skin Care",
+      "subcategory": "Dry, Rough & Cracked Foot Care",
+      "dosageForm": "Cream",
+      "packaging": "8*75 GM",
+      "categorySlug": "dermatology-and-skin-care",
+      "subcategorySlug": "dry-rough-and-cracked-foot-care"
+    }
+  ]
+}
