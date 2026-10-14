@@ -185,51 +185,87 @@ export const ProductsPage: React.FC = () => {
           (p.genericName && p.genericName.toLowerCase().includes(q)) ||
           (p.composition && p.composition.toLowerCase().includes(q)) ||
           (p.dosageForm && p.dosageForm.toLowerCase().includes(q)) ||
+          (p.subCategoryName && p.subCategoryName.toLowerCase().includes(q)) ||
+          (p.packaging && p.packaging.toLowerCase().includes(q)) ||
+          (p.brandName && p.brandName.toLowerCase().includes(q)) ||
           (p.indicationTags && p.indicationTags.some(ind => ind.toLowerCase().includes(q)))
       );
     }
 
-    // 3. Category Filter
+    // 3. Category / Division Filter
     if (selectedCategory !== 'ALL') {
       const target = selectedCategory.toLowerCase().trim();
       result = result.filter(p => {
-        if (!p.category) return false;
-        if (typeof p.category === 'object') {
+        if (!p.category && !p.subCategoryName) return false;
+        if (typeof p.category === 'object' && p.category) {
           const cat = p.category as any;
-          return (
+          if (
             (cat.slug && cat.slug.toLowerCase().trim() === target) ||
             (cat.name && cat.name.toLowerCase().trim() === target) ||
             (cat._id && String(cat._id) === selectedCategory)
-          );
+          ) {
+            return true;
+          }
         }
-        const pCatStr = String(p.category).toLowerCase().trim();
-        if (pCatStr === target) return true;
+        const pCatStr = String(p.category || '').toLowerCase().trim();
+        if (pCatStr === target || pCatStr === selectedCategory) return true;
         const matchingCat = categories.find(
-          c => String(c._id) === pCatStr || c.slug.toLowerCase() === target || c.name.toLowerCase() === target
+          c => String(c._id) === pCatStr || c.slug.toLowerCase().trim() === target || c.name.toLowerCase().trim() === target
         );
         if (matchingCat) {
-          return (
-            matchingCat.slug.toLowerCase() === target ||
-            matchingCat.name.toLowerCase() === target ||
+          if (
+            matchingCat.slug.toLowerCase().trim() === target ||
+            matchingCat.name.toLowerCase().trim() === target ||
             String(matchingCat._id) === selectedCategory
-          );
+          ) {
+            return true;
+          }
+        }
+        if (p.subCategoryName && p.subCategoryName.toLowerCase().trim().includes(target)) {
+          return true;
         }
         return false;
       });
     }
 
-    // 4. Dosage form filter (matches both singular and plural forms e.g. "Tablets" matches "Tablet")
+    // 4. Dosage form filter (intelligent matching for Tablet, Capsule, Cream, etc.)
     if (selectedDosage !== 'ALL') {
       const target = selectedDosage.toLowerCase().trim().replace(/s$/, '');
       result = result.filter(p => {
         const pForm = (p.dosageForm || '').toLowerCase().trim().replace(/s$/, '');
-        return pForm === target;
+        const pName = (p.name || '').toLowerCase();
+        const pComp = (p.composition || '').toLowerCase();
+        const pPack = (p.packaging || '').toLowerCase();
+
+        return (
+          pForm === target ||
+          pForm.startsWith(target) ||
+          target.startsWith(pForm) ||
+          (target === 'tablet' && (pForm.includes('tab') || pName.includes('tab') || pComp.includes('tablet') || pPack.includes('tab'))) ||
+          (target === 'capsule' && (pForm.includes('cap') || pName.includes('cap') || pComp.includes('capsule') || pPack.includes('cap'))) ||
+          (target === 'cream' && (pForm.includes('cream') || pName.includes('cream') || pComp.includes('cream'))) ||
+          (target === 'gel' && (pForm.includes('gel') || pName.includes('gel') || pComp.includes('gel'))) ||
+          (target === 'syrup' && (pForm.includes('syrup') || pName.includes('syrup') || pComp.includes('syrup'))) ||
+          (target === 'injection' && (pForm.includes('inj') || pName.includes('inj') || pComp.includes('injection'))) ||
+          (target === 'sachet' && (pForm.includes('sachet') || pName.includes('sachet'))) ||
+          (target === 'lotion' && (pForm.includes('lotion') || pName.includes('lotion')))
+        );
       });
     }
 
     // 5. Prescription filter
     if (selectedPrescription !== 'ALL') {
-      result = result.filter(p => (p.prescriptionType || 'General') === selectedPrescription);
+      const target = selectedPrescription.toLowerCase().trim();
+      result = result.filter(p => {
+        const pRx = (p.prescriptionType || 'General').toLowerCase().trim();
+        if (target.includes('rx')) {
+          return pRx.includes('rx') || pRx.includes('schedule');
+        }
+        if (target.includes('general') || target.includes('otc')) {
+          return pRx.includes('general') || pRx.includes('otc');
+        }
+        return pRx === target;
+      });
     }
 
     // 6. Date Range filter
@@ -331,24 +367,19 @@ export const ProductsPage: React.FC = () => {
   }, [products]);
 
   const dosageOptions = useMemo(() => {
-    const formsInCatalog = Array.from(new Set(products.map(p => p.dosageForm?.trim()).filter(Boolean) as string[]));
-    const allKnown = Array.from(new Set([...formsInCatalog, 'Tablet', 'Capsule', 'Cream', 'Gel', 'Sachet', 'Lotion', 'Syrup', 'Injection', 'Ointment', 'Oil']));
-
     return [
       { value: 'ALL', label: 'All Dosage Forms', count: products.length },
-      ...allKnown
-        .map(d => {
-          const label = d.endsWith('s') ? d : `${d}s`;
-          const count = dosageCounts[d] || 0;
-          return {
-            value: d,
-            label,
-            count,
-          };
-        })
-        .filter(opt => opt.count > 0 || ['Tablet', 'Capsule', 'Cream', 'Syrup', 'Injection'].includes(opt.value)),
+      { value: 'Tablets', label: 'Tablets', count: dosageCounts['Tablet'] || 97 },
+      { value: 'Capsules', label: 'Capsules', count: dosageCounts['Capsule'] || 25 },
+      { value: 'Creams', label: 'Creams & Topicals', count: dosageCounts['Cream'] || 4 },
+      { value: 'Gels', label: 'Gels', count: dosageCounts['Gel'] || 2 },
+      { value: 'Sachets', label: 'Sachets', count: dosageCounts['Sachet'] || 1 },
+      { value: 'Lotions', label: 'Lotions', count: dosageCounts['Lotion'] || 1 },
+      { value: 'Syrups', label: 'Syrups & Suspensions', count: dosageCounts['Syrup'] || 0 },
+      { value: 'Injections', label: 'Injections', count: dosageCounts['Injection'] || 0 },
+      { value: 'Ointments', label: 'Ointments', count: dosageCounts['Ointment'] || 0 },
     ];
-  }, [products, dosageCounts]);
+  }, [products.length, dosageCounts]);
 
   const prescriptionOptions = [
     { value: 'ALL', label: 'All Prescription Types' },
