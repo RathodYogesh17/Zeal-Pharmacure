@@ -58,7 +58,7 @@ const createSubCategory = async (
   }
 
   // Code validation (if provided)
-  const codeValue = body.code ? body.code.trim().toUpperCase() : null;
+  const codeValue = body.code?.trim() ? body.code.trim().toUpperCase() : undefined;
   if (codeValue) {
     const existingCode = await SubCategory.findOne({
       code: codeValue,
@@ -78,9 +78,8 @@ const createSubCategory = async (
   const media = await resolveMediaReference(body.imageId, body.image);
   const bannerMedia = await resolveMediaReference(body.bannerImageId, body.bannerImage);
 
-  const subCategory = await SubCategory.create({
+  const subCategoryPayload: Record<string, unknown> = {
     name: trimmedName,
-    code: codeValue,
     slug: uniqueSlug,
     shortDescription: body.shortDescription?.trim() || "",
     description: body.description?.trim() || "",
@@ -105,7 +104,13 @@ const createSubCategory = async (
     createdBy: user?._id || null,
     updatedBy: null,
     deletedBy: null,
-  });
+  };
+
+  if (codeValue) {
+    subCategoryPayload.code = codeValue;
+  }
+
+  const subCategory = await SubCategory.create(subCategoryPayload);
 
   return SubCategory.findById(subCategory._id).populate(defaultPopulate).lean();
 };
@@ -249,8 +254,9 @@ const updateSubCategory = async (
     }
   }
 
+  let shouldUnsetCode = false;
   if (body.code !== undefined) {
-    const trimmedCode = body.code ? body.code.trim().toUpperCase() : null;
+    const trimmedCode = body.code?.trim() ? body.code.trim().toUpperCase() : undefined;
     if (trimmedCode) {
       const duplicateCode = await SubCategory.findOne({
         code: trimmedCode,
@@ -260,8 +266,10 @@ const updateSubCategory = async (
       if (duplicateCode) {
         throw new AppError("SubCategory code already in use", HTTP_STATUS.CONFLICT);
       }
+      updatePayload.code = trimmedCode;
+    } else {
+      shouldUnsetCode = true;
     }
-    updatePayload.code = trimmedCode;
   }
 
   if (body.slug) {
@@ -306,7 +314,12 @@ const updateSubCategory = async (
     updatePayload.bannerImageId = bannerMedia?.id ? new mongoose.Types.ObjectId(bannerMedia.id) : null;
   }
 
-  const updated = await SubCategory.findByIdAndUpdate(id, updatePayload, { new: true })
+  const updateQuery: Record<string, unknown> = { $set: updatePayload };
+  if (shouldUnsetCode) {
+    updateQuery.$unset = { code: 1 };
+  }
+
+  const updated = await SubCategory.findByIdAndUpdate(id, updateQuery, { new: true })
     .populate(defaultPopulate)
     .lean();
 

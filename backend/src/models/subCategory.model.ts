@@ -10,9 +10,9 @@ const subCategorySchema = new Schema(
     // ==========================================
     // BASIC INFORMATION
     // ==========================================
-    name: { type: String, required: true, trim: true, index: true, },
-    code: {  type: String, unique: true, sparse: true,uppercase: true, trim: true, index: true,}, 
-    slug: { type: String, required: true, lowercase: true, trim: true, index: true,},
+    name: { type: String, required: true, trim: true, index: true },
+    code: { type: String, uppercase: true, trim: true, default: undefined }, 
+    slug: { type: String, required: true, lowercase: true, trim: true, index: true },
     shortDescription: { type: String,  default: "", trim: true,},
     description: { type: String, default: "", trim: true,},
 
@@ -79,7 +79,11 @@ subCategorySchema.index({ category: 1, isActive: 1, isDeleted: 1, sortOrder: 1,}
 subCategorySchema.index({ slug: 1, isDeleted: 1,});
 subCategorySchema.index({ isFeatured: 1,isActive: 1,isDeleted: 1,});
 subCategorySchema.index({  showOnHome: 1,  isActive: 1, isDeleted: 1,});
-subCategorySchema.index({ showInMenu: 1, isActive: 1, isDeleted: 1});
+subCategorySchema.index({ showInMenu: 1, isActive: 1, isDeleted: 1 });
+subCategorySchema.index(
+  { code: 1 },
+  { unique: true, partialFilterExpression: { code: { $type: "string" } } }
+);
 
 
 // ==========================================

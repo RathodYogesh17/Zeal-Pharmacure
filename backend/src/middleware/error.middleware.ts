@@ -16,6 +16,10 @@ const errorMiddleware: ErrorRequestHandler = (error, _req, res, _next) => {
 	} else if (error?.name === "CastError") {
 		statusCode = HTTP_STATUS.BAD_REQUEST;
 		message = `Invalid value for field: ${error.path}`;
+	} else if (error?.code === 11000) {
+		statusCode = HTTP_STATUS.CONFLICT;
+		const field = Object.keys(error.keyPattern || {})[0] || "field";
+		message = `A record with this ${field} already exists.`;
 	}
 
 	if (!isAppError && statusCode === HTTP_STATUS.INTERNAL_SERVER_ERROR) {

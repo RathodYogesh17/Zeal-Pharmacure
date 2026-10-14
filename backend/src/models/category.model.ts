@@ -10,9 +10,9 @@ const categorySchema = new Schema(
     // BASIC INFORMATION
     // ==========================================
 
-    name: { type: String, required: true, trim: true,},
-    code: { type: String, unique: true, sparse: true, uppercase: true, trim: true, index: true,},
-    slug: { type: String, required: true, unique: true, lowercase: true, trim: true, index: true,},
+    name: { type: String, required: true, trim: true },
+    code: { type: String, uppercase: true, trim: true, default: undefined },
+    slug: { type: String, required: true, unique: true, lowercase: true, trim: true, index: true },
     shortDescription: { type: String, default: "", trim: true,},
     description: { type: String, default: "", trim: true,},
 
@@ -76,7 +76,11 @@ categorySchema.index({ sortOrder: 1, name: 1,});
 categorySchema.index({ isActive: 1, isDeleted: 1});
 categorySchema.index({ isFeatured: 1, isActive: 1,isDeleted: 1,});
 categorySchema.index({ showOnHome: 1, isActive: 1, isDeleted: 1});
-categorySchema.index({showInMenu: 1,isActive: 1,isDeleted: 1});
+categorySchema.index({ showInMenu: 1, isActive: 1, isDeleted: 1 });
+categorySchema.index(
+  { code: 1 },
+  { unique: true, partialFilterExpression: { code: { $type: "string" } } }
+);
 
 const Category = mongoose.model("Category", categorySchema);
 

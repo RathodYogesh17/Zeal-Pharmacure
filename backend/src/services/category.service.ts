@@ -45,7 +45,7 @@ const createCategory = async (body: ICreateCategoryRequest, user?: IAuthenticate
   }
 
   // Code validation (if provided)
-  const codeValue = body.code ? body.code.trim().toUpperCase() : null;
+  const codeValue = body.code?.trim() ? body.code.trim().toUpperCase() : undefined;
   if (codeValue) {
     const existingCode = await Category.findOne({
       code: codeValue,
@@ -65,9 +65,8 @@ const createCategory = async (body: ICreateCategoryRequest, user?: IAuthenticate
   const media = await resolveMediaReference(body.imageId, body.image);
   const bannerMedia = await resolveMediaReference(body.bannerImageId, body.bannerImage);
 
-  const category = await Category.create({
+  const categoryPayload: Record<string, unknown> = {
     name: trimmedName,
-    code: codeValue,
     slug: uniqueSlug,
     shortDescription: body.shortDescription?.trim() || "",
     description: body.description?.trim() || "",
@@ -92,7 +91,13 @@ const createCategory = async (body: ICreateCategoryRequest, user?: IAuthenticate
     createdBy: user?._id || null,
     updatedBy: null,
     deletedBy: null,
-  });
+  };
+
+  if (codeValue) {
+    categoryPayload.code = codeValue;
+  }
+
+  const category = await Category.create(categoryPayload);
 
   return Category.findById(category._id).populate(auditPopulate).lean();
 };
@@ -241,8 +246,9 @@ const updateCategory = async (
     }
   }
 
+  let shouldUnsetCode = false;
   if (body.code !== undefined) {
-    const trimmedCode = body.code ? body.code.trim().toUpperCase() : null;
+    const trimmedCode = body.code?.trim() ? body.code.trim().toUpperCase() : undefined;
     if (trimmedCode) {
       const duplicateCode = await Category.findOne({
         code: trimmedCode,
@@ -252,8 +258,10 @@ const updateCategory = async (
       if (duplicateCode) {
         throw new AppError("Category code already in use", HTTP_STATUS.CONFLICT);
       }
+      updatePayload.code = trimmedCode;
+    } else {
+      shouldUnsetCode = true;
     }
-    updatePayload.code = trimmedCode;
   }
 
   if (body.slug) {
@@ -322,7 +330,12 @@ const updateCategory = async (
     updatePayload.bannerImageId = bannerMedia?.id ? new mongoose.Types.ObjectId(bannerMedia.id) : null;
   }
 
-  const updatedCategory = await Category.findByIdAndUpdate(id, updatePayload, {
+  const updateQuery: Record<string, unknown> = { $set: updatePayload };
+  if (shouldUnsetCode) {
+    updateQuery.$unset = { code: 1 };
+  }
+
+  const updatedCategory = await Category.findByIdAndUpdate(id, updateQuery, {
     new: true,
     runValidators: true,
   })
