@@ -20,7 +20,7 @@ const productSchema = new Schema(
 
     name: { type: String, required: true, trim: true, index: true,},
     slug: { type: String, required: true, unique: true, lowercase: true, trim: true,index: true, },
-    productCode: { type: String, unique: true,  sparse: true, uppercase: true, trim: true, index: true,},
+    productCode: { type: String, uppercase: true, trim: true, default: undefined },
     brandName: { type: String, default: "", trim: true, index: true,},
     genericName: { type: String, default: "", trim: true, index: true },
     manufacturer: { type: String, default: "", trim: true,},
@@ -171,6 +171,13 @@ productSchema.index({ isFeatured: 1, featuredOrder: 1, isDeleted: 1, isActive: 1
 productSchema.index({ isNewLaunch: 1, launchDate: -1,isDeleted: 1,isActive: 1});
 productSchema.index({ status: 1, isDeleted: 1, isActive: 1,});
 productSchema.index({ createdAt: -1});
+productSchema.index(
+  { productCode: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { productCode: { $type: "string" } },
+  }
+);
 
 // =====================================================
 // FULL TEXT SEARCH

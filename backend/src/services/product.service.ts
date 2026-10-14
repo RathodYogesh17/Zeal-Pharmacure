@@ -168,7 +168,7 @@ const createProduct = async (body: ICreateProductRequest, user?: IAuthenticatedU
   }
 
   // 6.5 Check Product Code uniqueness if provided
-  const productCodeValue = body.productCode ? body.productCode.trim().toUpperCase() : null;
+  const productCodeValue = body.productCode?.trim() ? body.productCode.trim().toUpperCase() : undefined;
   if (productCodeValue) {
     const existingCode = await Product.findOne({ productCode: productCodeValue, isDeleted: false });
     if (existingCode) {
@@ -177,10 +177,9 @@ const createProduct = async (body: ICreateProductRequest, user?: IAuthenticatedU
   }
 
   // 7. Create Product
-  const product = await Product.create({
+  const productPayload: Record<string, any> = {
     name: trimmedName,
     slug: uniqueSlug,
-    productCode: productCodeValue,
     brandName: body.brandName?.trim() || "",
     genericName: body.genericName?.trim() || "",
     manufacturer: body.manufacturer?.trim() || "",
@@ -242,7 +241,13 @@ const createProduct = async (body: ICreateProductRequest, user?: IAuthenticatedU
     createdBy: user?._id || null,
     updatedBy: null,
     deletedBy: null,
-  });
+  };
+
+  if (productCodeValue) {
+    productPayload.productCode = productCodeValue;
+  }
+
+  const product = await Product.create(productPayload);
 
   return Product.findById(product._id).populate(defaultPopulate).lean();
 };
@@ -616,8 +621,9 @@ const updateProduct = async (
     updatePayload.indications = resolvedIndicationIds;
     updatePayload.indicationTags = indicationTags;
   }
+  const unsetPayload: Record<string, 1> = {};
   if (body.productCode !== undefined) {
-    const trimmedCode = body.productCode ? body.productCode.trim().toUpperCase() : null;
+    const trimmedCode = body.productCode?.trim() ? body.productCode.trim().toUpperCase() : null;
     if (trimmedCode) {
       const duplicateCode = await Product.findOne({
         productCode: trimmedCode,
@@ -627,8 +633,10 @@ const updateProduct = async (
       if (duplicateCode) {
         throw new AppError("Product code already in use", HTTP_STATUS.CONFLICT);
       }
+      updatePayload.productCode = trimmedCode;
+    } else {
+      unsetPayload.productCode = 1;
     }
-    updatePayload.productCode = trimmedCode;
   }
   if (body.brandName !== undefined) updatePayload.brandName = body.brandName.trim();
   if (body.manufacturer !== undefined) updatePayload.manufacturer = body.manufacturer.trim();
@@ -692,7 +700,12 @@ const updateProduct = async (
     updatePayload.mediaGallery = normalizeMediaGallery(body.mediaGallery);
   }
 
-  const updatedProduct = await Product.findByIdAndUpdate(id, updatePayload, {
+  const updateQuery: Record<string, any> = { $set: updatePayload };
+  if (Object.keys(unsetPayload).length > 0) {
+    updateQuery.$unset = unsetPayload;
+  }
+
+  const updatedProduct = await Product.findByIdAndUpdate(id, updateQuery, {
     new: true,
     runValidators: true,
   })
