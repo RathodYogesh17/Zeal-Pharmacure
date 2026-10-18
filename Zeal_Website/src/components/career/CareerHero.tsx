@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Briefcase, ChevronRight, Sparkles, Building2, Users, ShieldCheck, Clock, ArrowRight } from 'lucide-react';
+import { Briefcase, ChevronRight, Sparkles, Building2, Users, ShieldCheck, Truck, ArrowRight } from 'lucide-react';
 import './CareerStyles.css';
 
 export interface CareerHeroProps {
@@ -17,7 +17,7 @@ export const CareerHero: React.FC<CareerHeroProps> = ({ totalJobs }) => {
       <div className="container" style={{ position: 'relative', zIndex: 2 }}>
         {/* Breadcrumb Navigation */}
         <nav
-          style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px',  color: '#CBD5E1',  marginBottom: '24px', fontFamily: 'var(--font-heading, "Outfit", sans-serif)', }}>
+          style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px',  color: '#CBD5E1',  marginBottom: '28px', fontFamily: 'var(--font-heading, "Outfit", sans-serif)', }}>
           <Link to="/" style={{ color: '#E9D5FF', textDecoration: 'none', fontWeight: 600 }}>
             Home
           </Link>
@@ -43,45 +43,49 @@ export const CareerHero: React.FC<CareerHeroProps> = ({ totalJobs }) => {
               Join our team of dedicated supply-chain professionals, registered pharmacists, warehouse, and logistics specialists at our Surat Central Distribution Depot. We procure bulk medicines directly from accredited pharma manufacturers and reliably deliver to pharmacies, clinics, and hospitals nationwide.
             </p>
 
-            {/* 4 Trust Metric Badges */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '12px', maxWidth: '560px' }}>
-              <div style={{ background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(8px)', borderRadius: '16px', padding: '12px 14px', border: '1px solid rgba(255, 255, 255, 0.16)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', color: '#CBD5E1', fontWeight: 700 }}>
-                  <Users size={14} style={{ color: '#C4B5FD' }} />
-                  <span>Team Strength</span>
+            {/* 4 Trust Metric Cards (Redesigned 2x2 Glassmorphic Bento Cards) */}
+            <div className="zp-career-stats-grid">
+              <div className="zp-career-stat-card zp-career-stat-card-purple">
+                <div className="zp-career-stat-icon-wrap zp-career-stat-icon-purple">
+                  <Users size={20} />
                 </div>
-                <div style={{ fontFamily: 'var(--font-heading, "Outfit", sans-serif)', fontSize: '18px', fontWeight: 900, color: '#FFFFFF', marginTop: '4px' }}>
-                  23+ Staff
-                </div>
-              </div>
-
-              <div style={{ background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(8px)', borderRadius: '16px', padding: '12px 14px', border: '1px solid rgba(255, 255, 255, 0.16)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', color: '#CBD5E1', fontWeight: 700 }}>
-                  <Building2 size={14} style={{ color: '#34D399' }} />
-                  <span>Central Depot</span>
-                </div>
-                <div style={{ fontFamily: 'var(--font-heading, "Outfit", sans-serif)', fontSize: '18px', fontWeight: 900, color: '#FFFFFF', marginTop: '4px' }}>
-                  Surat, Gujarat
+                <div className="zp-career-stat-info">
+                  <span className="zp-career-stat-label zp-career-label-purple">Team Strength</span>
+                  <span className="zp-career-stat-val">23+ Staff Members</span>
+                  <span className="zp-career-stat-sub">Pharma &amp; Logistics Team</span>
                 </div>
               </div>
 
-              <div style={{ background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(8px)', borderRadius: '16px', padding: '12px 14px', border: '1px solid rgba(255, 255, 255, 0.16)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', color: '#CBD5E1', fontWeight: 700 }}>
-                  <ShieldCheck size={14} style={{ color: '#6EE7B7' }} />
-                  <span>Quality Protocol</span>
+              <div className="zp-career-stat-card zp-career-stat-card-emerald">
+                <div className="zp-career-stat-icon-wrap zp-career-stat-icon-emerald">
+                  <Building2 size={20} />
                 </div>
-                <div style={{ fontFamily: 'var(--font-heading, "Outfit", sans-serif)', fontSize: '18px', fontWeight: 900, color: '#FFFFFF', marginTop: '4px' }}>
-                  GSDP &amp; FEFO
+                <div className="zp-career-stat-info">
+                  <span className="zp-career-stat-label zp-career-label-emerald">Central Depot Hub</span>
+                  <span className="zp-career-stat-val">Surat, Gujarat</span>
+                  <span className="zp-career-stat-sub">Primary Wholesale Godown</span>
                 </div>
               </div>
 
-              <div style={{ background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(8px)', borderRadius: '16px', padding: '12px 14px', border: '1px solid rgba(255, 255, 255, 0.16)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', color: '#CBD5E1', fontWeight: 700 }}>
-                  <Clock size={14} style={{ color: '#FBBF24' }} />
-                  <span>Dispatch Window</span>
+              <div className="zp-career-stat-card zp-career-stat-card-cyan">
+                <div className="zp-career-stat-icon-wrap zp-career-stat-icon-cyan">
+                  <ShieldCheck size={20} />
                 </div>
-                <div style={{ fontFamily: 'var(--font-heading, "Outfit", sans-serif)', fontSize: '18px', fontWeight: 900, color: '#FFFFFF', marginTop: '4px' }}>
-                  24–48 Hours
+                <div className="zp-career-stat-info">
+                  <span className="zp-career-stat-label zp-career-label-cyan">Quality Protocol</span>
+                  <span className="zp-career-stat-val">GSDP &amp; FEFO</span>
+                  <span className="zp-career-stat-sub">Certified Storage Standards</span>
+                </div>
+              </div>
+
+              <div className="zp-career-stat-card zp-career-stat-card-amber">
+                <div className="zp-career-stat-icon-wrap zp-career-stat-icon-amber">
+                  <Truck size={20} />
+                </div>
+                <div className="zp-career-stat-info">
+                  <span className="zp-career-stat-label zp-career-label-amber">Distribution Reach</span>
+                  <span className="zp-career-stat-val">Pan-India Delivery</span>
+                  <span className="zp-career-stat-sub">Gujarat &amp; Interstate Network</span>
                 </div>
               </div>
             </div>

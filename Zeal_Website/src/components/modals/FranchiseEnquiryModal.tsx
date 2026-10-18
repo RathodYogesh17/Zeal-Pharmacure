@@ -573,7 +573,7 @@ export const FranchiseEnquiryModal: React.FC = () => {
                   color: '#5B21B6',
                 }}
               >
-                <Clock size={13} color="#6828DC" /> 24-48h Express Dispatch
+                <Truck size={13} color="#6828DC" /> Pan-India Express Delivery
               </span>
             </div>
           </div>

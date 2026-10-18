@@ -1,7 +1,6 @@
 import React from 'react';
 import { ShieldCheck, CheckCircle2 } from 'lucide-react';
 import type { ICertificationItem } from '../../types';
-import { SectionHeader } from '../common';
 
 export interface HomeCertificationsProps {
   certifications?: ICertificationItem[];
@@ -13,13 +12,64 @@ export const HomeCertifications: React.FC<HomeCertificationsProps> = ({ certific
   return (
     <section style={{ padding: '64px 0 72px', background: '#FAF8FF', borderTop: '1px solid #EDE9FE' }}>
       <div className="container">
-        <SectionHeader
-          badge="Quality Assurance & Accreditations"
-          badgeIcon={<ShieldCheck size={13} />}
-          title="Manufacturing Standards & Certifications"
-          subtitle="Formulated in state-of-the-art cGMP cleanrooms under international validation protocols."
-          centered={true}
-        />
+        {/* Executive Section Header with Right-Side Quality Scorecard */}
+        <div className="zp-home-testimonials-header-row">
+          <div>
+            <div className="zp-home-testimonials-badge">
+              <ShieldCheck size={13} />
+              <span>Quality Assurance &amp; Accreditations</span>
+            </div>
+
+            <h2 className="zp-home-testimonials-title">
+              Manufacturing Standards &amp; <span className="highlight-gradient">Certifications</span>
+            </h2>
+
+            <p className="zp-home-testimonials-sub">
+              Formulated in state-of-the-art cGMP cleanrooms under strict international quality validation protocols.
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
+            <div className="zp-home-testimonials-scorecard">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div
+                  style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '10px',
+                    background: '#ECFDF5',
+                    border: '1px solid #A7F3D0',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <CheckCircle2 size={18} style={{ color: '#059669' }} />
+                </div>
+                <div>
+                  <div
+                    style={{
+                      fontFamily: 'Outfit, sans-serif',
+                      fontWeight: 900,
+                      fontSize: '15px',
+                      color: '#0F172A',
+                    }}
+                  >
+                    100% cGMP &amp; ISO
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#059669', fontWeight: 700 }}>
+                    Certified Cleanrooms
+                  </div>
+                </div>
+              </div>
+              <div style={{ height: '24px', width: '1px', background: '#E2E8F0' }} />
+              <div style={{ fontSize: '11.5px', color: '#475569', fontWeight: 700, lineHeight: 1.3 }}>
+                <div>Zero Defect Batch</div>
+                <div style={{ color: '#6828DC', fontSize: '10.5px' }}>WHO-GMP Compliant</div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '20px' }}>
           {certifications.map((c, idx) => (

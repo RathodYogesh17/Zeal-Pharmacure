@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Sparkles, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Sparkles, ShieldCheck, Truck } from 'lucide-react';
 import { useSiteSettings } from '../../context/SiteSettingsContext';
 import { getMediaUrl } from '../../utils/mediaUtils';
 import './HomeStyles.css';
@@ -11,64 +11,73 @@ export interface HomeShowcaseCardsProps {
 
 export const HomeShowcaseCards: React.FC<HomeShowcaseCardsProps> = ({ onOpenFranchiseModal }) => {
   const { productCount, settings } = useSiteSettings();
-  const monopolyImg = getMediaUrl((settings as any)?.promoBanners?.cardMonopoly, '/banners/card_monopoly_formulations.jpg');
-  const depotImg = getMediaUrl((settings as any)?.promoBanners?.warehouseDepot, '/banners/pharma_warehouse_depot.jpg');
+  const monopolyImg = getMediaUrl((settings as any)?.promoBanners?.cardMonopoly, '/banners/card_stockist_medical_green.jpg');
+  const depotImg = getMediaUrl((settings as any)?.promoBanners?.warehouseDepot, '/banners/card_depot_herbal_leaf.jpg');
   return (
     <section className="zp-home-showcase-section">
       <div className="container">
-        {/* Section Header */}
-        <div style={{ textAlign: 'center', maxWidth: '680px', margin: '0 auto 40px' }}>
-          <span
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              background: '#F5F3FF',
-              border: '1px solid #DDD6FE',
-              padding: '4px 14px',
-              borderRadius: '999px',
-              fontSize: '11px',
-              fontWeight: 800,
-              color: 'var(--zp-primary, #6828DC)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.8px',
-              marginBottom: '12px',
-              fontFamily: 'var(--font-heading, "Outfit", sans-serif)',
-            }}
-          >
-            <ShieldCheck size={13} />
-            <span>Pharma Wholesale &amp; Stockist Excellence</span>
-          </span>
+        {/* Executive Section Header with Right-Side Logistics Scorecard */}
+        <div className="zp-home-testimonials-header-row">
+          <div>
+            <div className="zp-home-testimonials-badge">
+              <ShieldCheck size={13} />
+              <span>Pharma Wholesale &amp; Stockist Excellence</span>
+            </div>
 
-          <h2
-            style={{
-              fontFamily: 'var(--font-heading, "Outfit", sans-serif)',
-              fontSize: 'clamp(26px, 3.2vw, 36px)',
-              fontWeight: 900,
-              color: '#0F172A',
-              lineHeight: 1.2,
-              letterSpacing: '-0.6px',
-              margin: '0 0 10px 0',
-            }}
-          >
-            Direct Depot Supply &amp; Monopoly Protection
-          </h2>
+            <h2 className="zp-home-testimonials-title">
+              Direct Depot Supply &amp; <span className="highlight-gradient">Stockist Distribution</span>
+            </h2>
 
-          <p
-            style={{
-              fontFamily: 'var(--font-body, "Plus Jakarta Sans", sans-serif)',
-              fontSize: '14.5px',
-              color: '#64748B',
-              margin: 0,
-            }}
-          >
-            Built for stockists, wholesale distributors, and healthcare procurement teams seeking zero-conflict supply.
-          </p>
+            <p className="zp-home-testimonials-sub">
+              Access computerized inventory management, authorized distribution rights, and express logistics from our Surat central warehouse.
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
+            <div className="zp-home-testimonials-scorecard">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div
+                  style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '10px',
+                    background: '#E0F2FE',
+                    border: '1px solid #BAE6FD',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Truck size={18} style={{ color: '#0284C7' }} />
+                </div>
+                <div>
+                  <div
+                    style={{
+                      fontFamily: 'Outfit, sans-serif',
+                      fontWeight: 900,
+                      fontSize: '15px',
+                      color: '#0F172A',
+                    }}
+                  >
+                    Surat Central Depot
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#0284C7', fontWeight: 700 }}>
+                    7015, BTM Market
+                  </div>
+                </div>
+              </div>
+              <div style={{ height: '24px', width: '1px', background: '#E2E8F0' }} />
+              <div style={{ fontSize: '11.5px', color: '#475569', fontWeight: 700, lineHeight: 1.3 }}>
+                <div>Pan-India Delivery</div>
+                <div style={{ color: '#059669', fontSize: '10.5px' }}>Zero Stockout Guarantee</div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* 2 Wide Cards Grid */}
         <div className="zp-home-showcase-grid-2col">
-          {/* Card 1: Exclusive Territory Monopoly Rights (Emerald/Mint Theme) */}
+          {/* Card 1: Authorized District Stockist & Distribution (Emerald/Mint Theme) */}
           <div
             className="zp-home-wide-card"
             style={{
@@ -82,21 +91,21 @@ export const HomeShowcaseCards: React.FC<HomeShowcaseCardsProps> = ({ onOpenFran
                 style={{ background: '#059669', color: '#FFFFFF' }}
               >
                 <Sparkles size={12} />
-                <span>STOCKIST TERRITORY MONOPOLY</span>
+                <span>AUTHORIZED STOCKIST NETWORK</span>
               </span>
 
               <h3
                 className="zp-home-wide-title"
                 style={{ color: '#064E3B' }}
               >
-                Exclusive Territory Monopoly Rights
+                Authorized District Stockist &amp; Distribution
               </h3>
 
               <p
                 className="zp-home-wide-desc"
                 style={{ color: '#047857' }}
               >
-                Secure guaranteed market monopoly for your district with zero internal competition, protected wholesale profit margins, free doctor visual aids, and express 24-48h dispatch.
+                Partner as an authorized district stockist with direct depot wholesale pricing, protected trade margins, doctor detailing visual aids, and reliable Pan-India distribution dispatch.
               </p>
 
               <button

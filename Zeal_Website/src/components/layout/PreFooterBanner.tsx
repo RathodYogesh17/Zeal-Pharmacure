@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, PhoneCall, Sparkles, Award, Clock, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, PhoneCall, Sparkles, Award, Truck, CheckCircle2 } from 'lucide-react';
 import { useSiteSettings } from '../../context/SiteSettingsContext';
 
 export const PreFooterBanner: React.FC = () => {
@@ -184,8 +184,8 @@ export const PreFooterBanner: React.FC = () => {
                 color: '#F1F5F9',
               }}
             >
-              <Clock size={14} style={{ color: '#60A5FA' }} />
-              <span>24–48h Dispatch</span>
+              <Truck size={14} style={{ color: '#60A5FA' }} />
+              <span>Pan-India Delivery</span>
             </div>
           </div>
         </div>

@@ -314,7 +314,7 @@ export const BulkProductEnquiryModal: React.FC<BulkProductEnquiryModalProps> = (
           {[
             { icon: ShieldCheck, color: '#6828DC', title: 'Stockists Distribution', sub: 'Authorized Network', titleColor: '#4C1D95', subColor: '#6D28D9' },
             { icon: BadgePercent, color: '#059669', title: 'Wholesale Margin', sub: 'Direct Depot Tier', titleColor: '#065F46', subColor: '#047857' },
-            { icon: Truck, color: '#D97706', title: 'Priority Dispatch', sub: '24-48h Batch SLA', titleColor: '#92400E', subColor: '#B45309' },
+            { icon: Truck, color: '#D97706', title: 'Pan-India Delivery', sub: 'Reliable Cargo Network', titleColor: '#92400E', subColor: '#B45309' },
             { icon: FileText, color: '#2563EB', title: 'Visual Aid Kit', sub: 'Samples & LBLs', titleColor: '#1E40AF', subColor: '#1D4ED8' },
           ].map((pill, idx) => {
             const Icon = pill.icon;

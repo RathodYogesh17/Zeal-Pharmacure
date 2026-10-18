@@ -13,10 +13,10 @@ import {
   ShieldAlert,
   Filter,
   Wind,
+  ArrowRight,
 } from 'lucide-react';
 import type { ICategory } from '../../types';
 import { useSiteSettings } from '../../context/SiteSettingsContext';
-import { SectionHeader } from '../common';
 import './HomeStyles.css';
 
 export interface HomeCategoriesGridProps {
@@ -133,13 +133,87 @@ export const HomeCategoriesGrid: React.FC<HomeCategoriesGridProps> = ({ categori
   return (
     <section style={{ padding: '72px 0 60px', background: '#FFFFFF' }}>
       <div className="container">
-        <SectionHeader
-          badge="Specialized Therapeutic Segments"
-          title="Explore Formulations by Category"
-          subtitle={`Comprehensive pharmaceutical portfolio formulated in cGMP-certified facilities covering ${productCount || 130}+ DCGI-approved formulations.`}
-          actionLink="/products"
-          actionText="View Complete Catalog"
-        />
+        {/* Executive Section Header with Right-Side Segments Scorecard */}
+        <div className="zp-home-testimonials-header-row">
+          <div>
+            <div className="zp-home-testimonials-badge">
+              <Layers size={13} />
+              <span>Specialized Therapeutic Segments</span>
+            </div>
+
+            <h2 className="zp-home-testimonials-title">
+              Explore Formulations <span className="highlight-gradient">by Category</span>
+            </h2>
+
+            <p className="zp-home-testimonials-sub">
+              Comprehensive pharmaceutical portfolio formulated in cGMP-certified facilities covering {productCount || 130}+ DCGI-approved formulations.
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
+            <div className="zp-home-testimonials-scorecard">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div
+                  style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '10px',
+                    background: '#F5F3FF',
+                    border: '1px solid #DDD6FE',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Layers size={18} style={{ color: 'var(--zp-primary, #6828DC)' }} />
+                </div>
+                <div>
+                  <div
+                    style={{
+                      fontFamily: 'Outfit, sans-serif',
+                      fontWeight: 900,
+                      fontSize: '15px',
+                      color: '#0F172A',
+                    }}
+                  >
+                    12+ Segments
+                  </div>
+                  <div style={{ fontSize: '11px', color: 'var(--zp-primary, #6828DC)', fontWeight: 700 }}>
+                    {productCount || 130}+ Formulations
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <Link
+              to="/products"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '10px 18px',
+                borderRadius: '12px',
+                background: 'var(--zp-primary, #6828DC)',
+                color: '#FFFFFF',
+                fontFamily: 'Outfit, sans-serif',
+                fontSize: '13px',
+                fontWeight: 700,
+                textDecoration: 'none',
+                boxShadow: '0 4px 12px rgba(104, 40, 220, 0.25)',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              <span>View All Products</span>
+              <ArrowRight size={14} />
+            </Link>
+          </div>
+        </div>
 
         {loading && categories.length === 0 ? (
           <div className="zp-home-categories-grid">

@@ -13,7 +13,7 @@ export const ProductDetailPromoBanner: React.FC<ProductDetailPromoBannerProps> =
   categoryName = 'Therapeutic',
 }) => {
   const { settings } = useSiteSettings();
-  const bannerImg = getMediaUrl((settings as any)?.promoBanners?.cardMonopoly, '/banners/card_monopoly_formulations.jpg');
+  const bannerImg = getMediaUrl((settings as any)?.promoBanners?.cardMonopoly, '/banners/card_stockist_medical_green.jpg');
   return (
     <div
       className="zp-product-promo-banner"
@@ -87,7 +87,7 @@ export const ProductDetailPromoBanner: React.FC<ProductDetailPromoBannerProps> =
             marginBottom: '20px',
           }}
         >
-          Partner directly with Zeal Pharmacure. Enjoy 100% territorial price protection, zero internal competition, full promotional visual aids, and guaranteed 24-48h dispatch from our Surat Central Depot.
+          Partner directly with Zeal Pharmacure. Enjoy 100% territorial price protection, zero internal competition, full promotional visual aids, and reliable Pan-India distribution dispatch from our Surat Central Depot.
         </p>
 
         {/* Key Feature Checks */}

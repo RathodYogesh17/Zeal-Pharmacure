@@ -69,22 +69,46 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         <div
           onClick={() => onViewDossier(product)}
           className="zp-product-img-box"
+          style={{
+            width: '100%',
+            height: '190px',
+            marginBottom: '12px',
+            cursor: 'pointer',
+            padding: 0,
+            background: '#FFFFFF',
+            borderRadius: '12px',
+            border: '1px solid #E2E8F0',
+            position: 'relative',
+            overflow: 'hidden',
+            display: 'block',
+          }}
         >
           {product.featuredImage ? (
             <img
               src={getMediaUrl(product.featuredImage)}
               alt={product.name}
+              style={{
+                width: '100%',
+                height: '100%',
+                minWidth: '100%',
+                minHeight: '100%',
+                maxWidth: '100%',
+                maxHeight: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center',
+                display: 'block',
+              }}
+              loading="lazy"
             />
           ) : (
             <div style={{
-              width: '100px',
-              height: '100px',
-              borderRadius: '14px',
-              background: '#FAF5FF',
+              width: '100%',
+              height: '100%',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
+              background: '#FAF5FF',
               gap: '6px',
             }}>
               <Pill size={36} style={{ color: '#8B5CF6' }} />

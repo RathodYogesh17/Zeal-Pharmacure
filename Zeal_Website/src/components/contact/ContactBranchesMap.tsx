@@ -232,9 +232,9 @@ export const ContactBranchesMap: React.FC<ContactBranchesMapProps> = ({ settings
                 <Truck size={14} />
               </div>
               <div>
-                <div style={{ fontSize: '11px', color: '#64748B', fontWeight: 600 }}>Dispatch Carrier SLA</div>
+                <div style={{ fontSize: '11px', color: '#64748B', fontWeight: 600 }}>Logistics &amp; Reach</div>
                 <div style={{ fontSize: '12.5px', fontWeight: 700, color: '#0F172A' }}>
-                  24–48 Hours Pan-India
+                  Pan-India Distribution Network
                 </div>
               </div>
             </div>

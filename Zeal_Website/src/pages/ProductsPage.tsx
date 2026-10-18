@@ -75,7 +75,24 @@ export const ProductsPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    categoryService.getCategories().then(setCategories);
+    // Load categories: cache-first then refresh
+    const CAT_CACHE_KEY = 'zeal_home_categories';
+    const TTL = 10 * 60 * 1000;
+    try {
+      const raw = localStorage.getItem(CAT_CACHE_KEY);
+      if (raw) {
+        const { ts, data } = JSON.parse(raw);
+        if (Date.now() - ts < TTL && Array.isArray(data) && data.length > 0) {
+          setCategories(data);
+        }
+      }
+    } catch {}
+    categoryService.getCategories().then(cats => {
+      if (cats && cats.length > 0) {
+        setCategories(cats);
+        try { localStorage.setItem(CAT_CACHE_KEY, JSON.stringify({ ts: Date.now(), data: cats })); } catch {}
+      }
+    });
     fetchProducts();
   }, []);
 
@@ -84,14 +101,53 @@ export const ProductsPage: React.FC = () => {
     setCurrentPage(1);
   }, [selectedCategory, selectedLetter, searchQuery, selectedDosage, selectedPrescription, sortBy, startDate, endDate]);
 
+  // Smooth scroll down to catalog if category filter is passed via URL query
+  useEffect(() => {
+    if (selectedCategory && selectedCategory !== 'ALL') {
+      const timer = setTimeout(() => {
+        scrollToCatalog();
+      }, 350);
+      return () => clearTimeout(timer);
+    }
+  }, [selectedCategory]);
+
+  const PRODUCT_CACHE_KEY = 'zeal_products_cache';
+  const PRODUCT_CACHE_TTL = 10 * 60 * 1000; // 10 minutes
+
   const fetchProducts = async () => {
+    // Try to load from cache first for instant display
+    try {
+      const raw = localStorage.getItem(PRODUCT_CACHE_KEY);
+      if (raw) {
+        const { ts, data } = JSON.parse(raw);
+        if (Date.now() - ts < PRODUCT_CACHE_TTL && Array.isArray(data) && data.length > 0) {
+          setProducts(data);
+          setLoading(false);
+          // Still refresh in background silently
+          productService.getProducts({ limit: 1000, sort: 'name' })
+            .then(res => {
+              const fresh = res?.products || [];
+              if (fresh.length > 0) {
+                setProducts(fresh);
+                try { localStorage.setItem(PRODUCT_CACHE_KEY, JSON.stringify({ ts: Date.now(), data: fresh })); } catch {}
+              }
+            })
+            .catch(() => {});
+          return;
+        }
+      }
+    } catch {}
+
     setLoading(true);
     try {
       const res = await productService.getProducts({
         limit: 1000,
         sort: 'name',
       });
-      setProducts(res.products || []);
+      const prods = res?.products || [];
+      setProducts(prods);
+      // Cache the fresh result
+      try { localStorage.setItem(PRODUCT_CACHE_KEY, JSON.stringify({ ts: Date.now(), data: prods })); } catch {}
     } catch (err) {
       console.warn('Failed to fetch products', err);
     } finally {
@@ -195,35 +251,109 @@ export const ProductsPage: React.FC = () => {
     // 3. Category / Division Filter
     if (selectedCategory !== 'ALL') {
       const target = selectedCategory.toLowerCase().trim();
+
+      // Find the category definition matching the URL parameter
+      const targetCatObj = categories.find(
+        c =>
+          c.slug.toLowerCase().trim() === target ||
+          c.name.toLowerCase().trim() === target ||
+          String(c._id) === selectedCategory
+      );
+
+      const targetId = targetCatObj ? String(targetCatObj._id) : '';
+      // targetSlug: prefer matched cat slug, otherwise use the raw URL param (it IS the slug from HomeCategoriesGrid)
+      const targetSlug = targetCatObj ? targetCatObj.slug.toLowerCase().trim() : target;
+      const targetName = targetCatObj ? targetCatObj.name.toLowerCase().trim() : target;
+
       result = result.filter(p => {
-        if (!p.category && !p.subCategoryName) return false;
+        if (!p.category && !p.subCategoryName && !(p as any).categorySlug) return false;
+
+        // 1. Populated Category Object (most common — backend populates category)
         if (typeof p.category === 'object' && p.category) {
           const cat = p.category as any;
+          const catSlug = (cat.slug || '').toLowerCase().trim();
+          const catName = (cat.name || '').toLowerCase().trim();
+          const catId = cat._id ? String(cat._id) : '';
+
+          // Direct slug match first (fastest & most reliable)
+          if (catSlug && catSlug === targetSlug) return true;
+          if (catSlug && catSlug === target) return true;
+          // Name match
+          if (catName && catName === targetName) return true;
+          if (catName && catName === target) return true;
+          // ID match
+          if (catId && (catId === targetId || catId === selectedCategory)) return true;
+          // Partial slug containment (handles minor slug variations)
+          if (catSlug && targetSlug && (targetSlug.includes(catSlug) || catSlug.includes(targetSlug))) return true;
+          if (catName && targetName && (targetName.includes(catName) || catName.includes(targetName))) return true;
+        }
+
+        // 2. Unpopulated Category string (ID or Name or Slug)
+        if (typeof p.category === 'string' && p.category.trim()) {
+          const pCatStr = p.category.trim();
+          const pCatLower = pCatStr.toLowerCase();
+
+          // Direct ID or text match
           if (
-            (cat.slug && cat.slug.toLowerCase().trim() === target) ||
-            (cat.name && cat.name.toLowerCase().trim() === target) ||
-            (cat._id && String(cat._id) === selectedCategory)
+            pCatStr === targetId ||
+            pCatStr === selectedCategory ||
+            pCatLower === targetSlug ||
+            pCatLower === targetName ||
+            pCatLower === target
           ) {
             return true;
           }
+
+          // Check if product's category string maps to a category in categories list
+          const productCat = categories.find(
+            c =>
+              String(c._id) === pCatStr ||
+              c.name.toLowerCase().trim() === pCatLower ||
+              c.slug.toLowerCase().trim() === pCatLower
+          );
+
+          if (productCat) {
+            const prodCatSlug = productCat.slug.toLowerCase().trim();
+            const prodCatName = productCat.name.toLowerCase().trim();
+            const prodCatId = String(productCat._id);
+
+            if (
+              prodCatSlug === targetSlug ||
+              prodCatName === targetName ||
+              prodCatId === targetId ||
+              prodCatId === selectedCategory ||
+              prodCatSlug.includes(targetSlug) ||
+              targetSlug.includes(prodCatSlug)
+            ) {
+              return true;
+            }
+          }
         }
-        const pCatStr = String(p.category || '').toLowerCase().trim();
-        if (pCatStr === target || pCatStr === selectedCategory) return true;
-        const matchingCat = categories.find(
-          c => String(c._id) === pCatStr || c.slug.toLowerCase().trim() === target || c.name.toLowerCase().trim() === target
-        );
-        if (matchingCat) {
-          if (
-            matchingCat.slug.toLowerCase().trim() === target ||
-            matchingCat.name.toLowerCase().trim() === target ||
-            String(matchingCat._id) === selectedCategory
-          ) {
+
+        // 3. Category Slug field directly on product object
+        if ((p as any).categorySlug) {
+          const pSlug = String((p as any).categorySlug).toLowerCase().trim();
+          if (pSlug === targetSlug || pSlug === target || pSlug.includes(targetSlug) || targetSlug.includes(pSlug)) {
             return true;
           }
         }
-        if (p.subCategoryName && p.subCategoryName.toLowerCase().trim().includes(target)) {
-          return true;
+
+        // 4. Category Name field directly on product object
+        if ((p as any).categoryName) {
+          const pName = String((p as any).categoryName).toLowerCase().trim();
+          if (pName === targetName || pName === target || pName.includes(targetName) || targetName.includes(pName)) {
+            return true;
+          }
         }
+
+        // 5. SubCategory name match (fallback)
+        if (p.subCategoryName) {
+          const pSubName = p.subCategoryName.toLowerCase().trim();
+          if (pSubName === targetName || pSubName.includes(targetName) || targetName.includes(pSubName)) {
+            return true;
+          }
+        }
+
         return false;
       });
     }

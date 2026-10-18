@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import {
   Briefcase,
+  Inbox,
   Search,
   X,
   RefreshCw,
-  Mail,
+  Sparkles,
+  Building2,
+  ShieldCheck,
+  Clock,
 } from 'lucide-react';
 import { careerService } from '../api/careerService';
 import type { IJobOpening } from '../types';
@@ -318,7 +322,7 @@ export const CareerPage: React.FC = () => {
       </section>
 
       {/* 3. Main Product-Style Job Vacancies List Section */}
-      <div className="container" style={{ padding: '40px 24px 64px' }}>
+      <div className="container" style={{ padding: '52px 24px 80px' }}>
         {/* Section Header */}
         <SectionHeader
           badge="Current Openings Catalog"
@@ -326,7 +330,7 @@ export const CareerPage: React.FC = () => {
           title={`Available Job Positions (${filteredJobs.length})`}
           titleStyle={{ fontWeight: 900 }}
           subtitle="Click any position to review full responsibilities & submit your application."
-          style={{ marginBottom: '24px' }}
+          style={{ marginBottom: '36px' }}
         />
 
         {/* Loading State */}
@@ -340,73 +344,188 @@ export const CareerPage: React.FC = () => {
             </p>
           </div>
         ) : filteredJobs.length === 0 ? (
-          /* Empty State */
+          /* Empty State - Rich Themed Card with Generous Breathing Room */
           <div
             style={{
-              background: '#FFFFFF',
-              borderRadius: '24px',
-              border: '1.5px solid #E2E8F0',
-              padding: '60px 32px',
+              background: 'linear-gradient(180deg, #FFFFFF 0%, #FAF5FF 100%)',
+              borderRadius: '28px',
+              border: '1.5px solid #EDE9FE',
+              padding: 'clamp(48px, 6vw, 68px) clamp(24px, 4vw, 48px)',
               textAlign: 'center',
-              boxShadow: '0 4px 20px rgba(15, 23, 42, 0.04)',
-              maxWidth: '680px',
+              boxShadow: '0 20px 45px -12px rgba(104, 40, 220, 0.08), 0 1px 3px rgba(15, 23, 42, 0.04)',
+              maxWidth: '820px',
               margin: '0 auto',
+              position: 'relative',
+              overflow: 'hidden',
             }}
           >
+            {/* Subtle Top-Center Ambient Purple Glow */}
             <div
               style={{
-                width: '64px',
-                height: '64px',
-                borderRadius: '20px',
-                background: '#FAF5FF',
-                border: '1.5px solid #EDE9FE',
+                position: 'absolute',
+                top: '-40px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '320px',
+                height: '180px',
+                background: 'radial-gradient(circle, rgba(104, 40, 220, 0.12) 0%, transparent 70%)',
+                pointerEvents: 'none',
+              }}
+            />
+
+            {/* Pill Badge */}
+            <span
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                background: '#F5F3FF',
+                border: '1px solid #DDD6FE',
+                padding: '5px 14px',
+                borderRadius: '999px',
+                fontSize: '11px',
+                fontWeight: 800,
+                color: 'var(--zp-primary, #6828DC)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.8px',
+                marginBottom: '22px',
+                fontFamily: 'var(--font-heading, "Outfit", sans-serif)',
+              }}
+            >
+              <Sparkles size={12} />
+              <span>Recruitment Portal</span>
+            </span>
+
+            {/* Glowing Icon Aura Tile */}
+            <div
+              style={{
+                width: '96px',
+                height: '96px',
+                borderRadius: '28px',
+                background: 'linear-gradient(135deg, #FAF5FF 0%, #EDE9FE 60%, #DDD6FE 100%)',
+                border: '1.5px solid #C4B5FD',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                margin: '0 auto 16px',
-                color: '#6828DC',
+                margin: '0 auto 20px',
+                color: 'var(--zp-primary, #6828DC)',
+                boxShadow: '0 14px 32px -6px rgba(104, 40, 220, 0.22)',
               }}
             >
-              <Briefcase size={30} />
+              <Inbox size={48} strokeWidth={1.6} />
             </div>
-            <h3 style={{ fontSize: '20px', fontWeight: 900, color: '#0F172A', margin: '0 0 8px 0' }}>
+
+            <h3
+              style={{
+                fontFamily: 'var(--font-heading, "Outfit", sans-serif)',
+                fontSize: 'clamp(22px, 2.8vw, 26px)',
+                fontWeight: 900,
+                color: '#0F172A',
+                letterSpacing: '-0.5px',
+                margin: '0 0 10px 0',
+              }}
+            >
               {jobs.length === 0
                 ? 'No Active Openings Published Currently'
                 : 'No Matching Job Openings Found'}
             </h3>
-            <p style={{ color: '#64748B', fontSize: '14.5px', lineHeight: 1.6, maxWidth: '500px', margin: '0 auto 24px' }}>
-              {jobs.length === 0
-                ? 'Our talent acquisition team has not posted any active openings in the portal at this moment. If you wish to submit a spontaneous application, feel free to email our HR department directly.'
-                : 'Try clearing your search query or department filters to see other available openings.'}
-            </p>
 
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', flexWrap: 'wrap' }}>
-              {jobs.length > 0 && (
-                <button
-                  type="button"
-                  onClick={clearAllFilters}
-                  className="btn btn-secondary"
-                  style={{ borderRadius: '12px', padding: '10px 20px', fontWeight: 700 }}
-                >
-                  Clear All Filters
-                </button>
-              )}
-              <a
-                href="mailto:careers@zealpharma.com"
-                className="btn btn-primary"
+            {jobs.length === 0 ? (
+              <p
                 style={{
-                  borderRadius: '12px',
-                  padding: '10px 20px',
-                  fontWeight: 700,
-                  textDecoration: 'none',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
+                  fontFamily: 'var(--font-body, "Plus Jakarta Sans", sans-serif)',
+                  color: '#64748B',
+                  fontSize: '14.5px',
+                  lineHeight: 1.6,
+                  maxWidth: '520px',
+                  margin: '0 auto 28px',
                 }}
               >
-                <Mail size={15} />
-                <span>Contact HR (careers@zealpharma.com)</span>
-              </a>
+                All wholesale departments and central depot positions are currently filled. New vacancies will be updated here as soon as requirements open.
+              </p>
+            ) : (
+              <>
+                <p style={{ color: '#64748B', fontSize: '14.5px', lineHeight: 1.6, maxWidth: '500px', margin: '0 auto 24px' }}>
+                  Try clearing your search query or department filters to see other available openings.
+                </p>
+
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <button
+                    type="button"
+                    onClick={clearAllFilters}
+                    className="btn btn-secondary"
+                    style={{ borderRadius: '12px', padding: '10px 20px', fontWeight: 700 }}
+                  >
+                    Clear All Filters
+                  </button>
+                </div>
+              </>
+            )}
+
+            {/* Bottom Highlights Row */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '10px',
+                flexWrap: 'wrap',
+                paddingTop: '22px',
+                borderTop: '1px solid #EDE9FE',
+                marginTop: '8px',
+              }}
+            >
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  color: '#475569',
+                  background: '#FFFFFF',
+                  border: '1px solid #E2E8F0',
+                  padding: '6px 14px',
+                  borderRadius: '999px',
+                }}
+              >
+                <Building2 size={13} style={{ color: '#6828DC' }} />
+                <span>Surat Central Godown</span>
+              </div>
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  color: '#475569',
+                  background: '#FFFFFF',
+                  border: '1px solid #E2E8F0',
+                  padding: '6px 14px',
+                  borderRadius: '999px',
+                }}
+              >
+                <ShieldCheck size={13} style={{ color: '#059669' }} />
+                <span>Verified Direct Hiring</span>
+              </div>
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  color: '#475569',
+                  background: '#FFFFFF',
+                  border: '1px solid #E2E8F0',
+                  padding: '6px 14px',
+                  borderRadius: '999px',
+                }}
+              >
+                <Clock size={13} style={{ color: '#F59E0B' }} />
+                <span>Real-Time Status Updates</span>
+              </div>
             </div>
           </div>
         ) : (
@@ -514,8 +633,8 @@ export const CareerPage: React.FC = () => {
           </div>
         )}
 
-        {/* 4. Full Width Perks & Culture Banner */}
-        <div style={{ marginTop: '12px', marginBottom: '56px' }}>
+        {/* 4. Full Width Perks & Culture Banner with Generous Spacing */}
+        <div style={{ marginTop: '64px', marginBottom: '56px' }}>
           <CareerPerksBanner />
         </div>
       </div>

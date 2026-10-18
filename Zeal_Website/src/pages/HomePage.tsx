@@ -28,36 +28,28 @@ const DEFAULT_HERO_IMAGES = [
 
 const getFallbackSlides = (productCount: number) => [
   {
-    title: 'Grow Your Business with India’s Leading Stockists Distribution Network',
-    subtitle: `Get ${productCount}+ DCGI-approved formulations procured directly from certified manufacturers with high profit margins and authorized stockists distribution rights.`,
-    badge: 'Top Stockists Distribution Network & Bulk Supply',
+    title: 'Partner with India’s Most Trusted Stockist Distribution Network',
+    subtitle: `Direct depot access to ${productCount}+ DCGI-approved pharmaceutical formulations with protected district margins, transparent wholesale pricing, and dedicated stockist support.`,
+    badge: 'WHO-GMP & DCGI COMPLIANT BULK DISTRIBUTION',
     ctaText: 'Apply for Stockists Distribution',
     ctaLink: '/contact',
     image: DEFAULT_HERO_IMAGES[0],
   },
   {
-    title: 'Guaranteed Stockists Distribution Rights with Direct Brand Wholesale Pricing',
-    subtitle: 'Become our authorized stockist partner. Zero market competition, transparent B2B wholesale pricing, and verified cGMP formulation quality.',
-    badge: 'Stockists Distribution Rights',
-    ctaText: 'Apply for Territory',
-    ctaLink: '/contact',
+    title: 'Ready Bulk Stock with Pan-India Distribution Network',
+    subtitle: 'Equipped with modern temperature-controlled warehousing at Surat (7015, BTM Market) ensuring computerized FEFO batch management, zero stockouts, and seamless transit across all states.',
+    badge: 'CENTRAL LOGISTICS DEPOT • SURAT, GUJARAT',
+    ctaText: 'Explore Product Catalog',
+    ctaLink: '/products',
     image: DEFAULT_HERO_IMAGES[1],
   },
   {
-    title: 'Ready Wholesale Stock & 24-48 Hours Rapid Pan-India Dispatch',
-    subtitle: `Air-conditioned wholesale stockist warehouse with ${productCount}+ formulations in ready stock. Real-time batch tracking and zero supply shortages.`,
-    badge: 'Wholesale Bulk Supply & Rapid Dispatch',
-    ctaText: 'Explore Catalog',
-    ctaLink: '/products',
-    image: DEFAULT_HERO_IMAGES[2],
-  },
-  {
-    title: 'Complete Free Promotional & Marketing Support for Stockist Partners',
-    subtitle: 'Boost doctor prescribing with premium Visual Aids, Product Glossaries, Reminder Cards, MR Bags, Doctor Catch Covers, and Sample Kits.',
-    badge: '100% Free Promotional Tools',
+    title: 'Accelerate Prescriptions with Free Visual Aids & Detailing Kits',
+    subtitle: 'Empower your field network with premium doctor visual aids, clinical LBLs, reminder cards, scientific product glossaries, and physician sample kits provided at zero cost.',
+    badge: 'COMPREHENSIVE B2B MARKETING COLLATERALS',
     ctaText: 'Request Stockist Kit',
     ctaLink: '/contact',
-    image: DEFAULT_HERO_IMAGES[3],
+    image: DEFAULT_HERO_IMAGES[2],
   },
 ];
 
@@ -91,12 +83,54 @@ export const HomePage: React.FC = () => {
 
   useEffect(() => {
     let isMounted = true;
+    const CAT_CACHE_KEY = 'zeal_home_categories';
+    const PROD_CACHE_KEY = 'zeal_home_featured';
+    const TTL = 10 * 60 * 1000; // 10 minutes
+
+    const loadFromCache = <T,>(key: string): T | null => {
+      try {
+        const raw = localStorage.getItem(key);
+        if (raw) {
+          const { ts, data } = JSON.parse(raw);
+          if (Date.now() - ts < TTL && data) return data as T;
+        }
+      } catch {}
+      return null;
+    };
+
+    const saveToCache = (key: string, data: any) => {
+      try { localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data })); } catch {}
+    };
+
+    // Load categories (from cache first, then API)
+    const cachedCats = loadFromCache<ICategory[]>(CAT_CACHE_KEY);
+    if (cachedCats && cachedCats.length > 0) {
+      if (isMounted) { setCategories(cachedCats); setCategoriesLoading(false); }
+    }
     categoryService.getCategories()
-      .then((data) => { if (isMounted) { setCategories(data || []); setCategoriesLoading(false); } })
+      .then((data) => {
+        if (isMounted && data && data.length > 0) {
+          setCategories(data);
+          setCategoriesLoading(false);
+          saveToCache(CAT_CACHE_KEY, data);
+        }
+      })
       .catch(() => { if (isMounted) { setCategories([]); setCategoriesLoading(false); } });
 
+    // Load featured products (from cache first, then API)
+    const cachedProds = loadFromCache<IProduct[]>(PROD_CACHE_KEY);
+    if (cachedProds && cachedProds.length > 0) {
+      if (isMounted) { setRealProducts(cachedProds); setProductsLoading(false); }
+    }
     productService.getProducts({ limit: 4 })
-      .then((res) => { if (isMounted) { setRealProducts(res?.products || []); setProductsLoading(false); } })
+      .then((res) => {
+        const prods = res?.products || [];
+        if (isMounted) {
+          setRealProducts(prods);
+          setProductsLoading(false);
+          if (prods.length > 0) saveToCache(PROD_CACHE_KEY, prods);
+        }
+      })
       .catch(() => { if (isMounted) { setRealProducts([]); setProductsLoading(false); } });
 
     return () => { isMounted = false; };

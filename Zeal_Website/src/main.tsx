@@ -6,6 +6,7 @@ import { ConfigProvider } from 'antd';
 import { store } from './store';
 import { queryClient } from './queryClient';
 import './index.css';
+import './styles/common.css';
 import App from './App.tsx';
 
 createRoot(document.getElementById('root')!).render(

@@ -1,15 +1,16 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
   Sparkles,
   ShieldCheck,
   Building2,
-  Clock,
-  MessageCircle,
+  Truck,
   Play,
   Layers,
-  Award
+  Award,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { useSiteSettings } from '../../context/SiteSettingsContext';
 import { getMediaUrl } from '../../utils/mediaUtils';
@@ -47,6 +48,8 @@ interface HomeSlideConfig {
   subtitle: string;
   ctaText: string;
   ctaLink: string;
+  secondaryText?: string;
+  secondaryLink?: string;
   btnGradient: string;
   btnShadow: string;
   dotColor: string;
@@ -80,36 +83,38 @@ const getHomeHeroSlides = (productCount: number): HomeSlideConfig[] => [
     glow1: 'rgba(104, 40, 220, 0.35)',
     glow2: 'rgba(139, 92, 246, 0.25)',
     highlightGradient: 'linear-gradient(135deg, #DDD6FE 0%, #C4B5FD 50%, #A78BFA 100%)',
-    highlightWord: 'Trusted Pharma Network',
+    highlightWord: 'Trusted Stockist Distribution',
     titlePrefix: "Partner with India's Most ",
-    titleSuffix: ' Across India',
-    subtitle: `Procure ${productCount}+ DCGI-approved formulations directly from accredited manufacturing lines with guaranteed monopoly territorial rights, zero market competition, and transparent wholesale pricing.`,
-    ctaText: 'Apply for Stockists / Distribution',
+    titleSuffix: ' Network',
+    subtitle: `Direct depot access to ${productCount}+ DCGI-approved pharmaceutical formulations with protected district margins, transparent wholesale pricing, and dedicated stockist support.`,
+    ctaText: 'Apply for Stockists Distribution',
     ctaLink: '/contact',
+    secondaryText: 'Explore Catalog',
+    secondaryLink: '/products',
     btnGradient: 'linear-gradient(135deg, #8B5CF6 0%, #6828DC 100%)',
     btnShadow: '0 8px 24px -4px rgba(104, 40, 220, 0.65)',
     dotColor: '#A78BFA',
     image: '/banners/home_animated_world.jpg',
-    imageAlt: 'Zeal Pharmacure Healthcare World & Global Stockist Network',
+    imageAlt: 'Zeal Pharmacure Healthcare World & Stockist Network',
     cardBorder: 'rgba(139, 92, 246, 0.4)',
     cardGlow: 'rgba(104, 40, 220, 0.25)',
     statusDot: '#A78BFA',
-    statusText: 'Global Supply Network: Active Dispatching',
-    bottomBarTitle: 'Zeal Pharmacure Healthcare World',
-    bottomBarSub: 'WHO-GMP & ISO 9001:2015 Certified Hub',
+    statusText: 'Surat Central Depot: Active Dispatch',
+    bottomBarTitle: 'Zeal Pharmacure Healthcare Hub',
+    bottomBarSub: 'WHO-GMP & ISO 9001:2015 Certified Stockist Depot',
     floatTopIcon: <Award size={18} style={{ color: '#8B5CF6' }} />,
-    floatTopTitle: 'Monopoly Rights',
-    floatTopSub: 'Zero Territory Conflict',
+    floatTopTitle: 'District Distribution Rights',
+    floatTopSub: 'Protected Territorial Area',
     floatTopBorder: '#DDD6FE',
     floatBottomIcon: <ShieldCheck size={18} style={{ color: '#8B5CF6' }} />,
-    floatBottomTitle: `${productCount}+ Ready Formulations`,
-    floatBottomSub: '100% DCGI Approved Batch Stock',
+    floatBottomTitle: `${productCount}+ Batch Formulations`,
+    floatBottomSub: '100% DCGI Approved Stock',
     floatBottomBorder: '#DDD6FE',
   },
   {
     id: 1,
     theme: 'cyan',
-    badgeText: 'AIR-CONDITIONED SURAT CENTRAL DEPOT',
+    badgeText: 'CENTRAL LOGISTICS DEPOT • SURAT, GUJARAT',
     badgeColor: '#BAE6FD',
     badgeBg: 'rgba(12, 74, 110, 0.72)',
     badgeBorder: 'rgba(56, 189, 248, 0.45)',
@@ -117,36 +122,38 @@ const getHomeHeroSlides = (productCount: number): HomeSlideConfig[] => [
     glow1: 'rgba(2, 132, 199, 0.35)',
     glow2: 'rgba(56, 189, 248, 0.25)',
     highlightGradient: 'linear-gradient(135deg, #BAE6FD 0%, #7DD3FC 50%, #38BDF8 100%)',
-    highlightWord: '24-48h Rapid Dispatch',
-    titlePrefix: 'Ready Wholesale Stock & ',
-    titleSuffix: ' Pan-India',
-    subtitle: `State-of-the-art Surat Central Logistics Depot with ${productCount}+ formulations under strict temperature-controlled storage, computerized batch tracking, and guaranteed zero stockout fulfillment.`,
-    ctaText: 'Explore Catalog Formulations',
+    highlightWord: 'Pan-India Distribution',
+    titlePrefix: 'Ready Bulk Stock with ',
+    titleSuffix: ' Network',
+    subtitle: 'Equipped with modern temperature-controlled warehousing at Surat (7015, BTM Market) ensuring computerized FEFO batch management, zero stockouts, and seamless transit across all states.',
+    ctaText: 'Explore Product Catalog',
     ctaLink: '/products',
+    secondaryText: 'Enquire for Stockist',
+    secondaryLink: 'modal',
     btnGradient: 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)',
     btnShadow: '0 8px 24px -4px rgba(2, 132, 199, 0.65)',
     dotColor: '#38BDF8',
     image: '/banners/home_animated_depot.jpg',
-    imageAlt: 'Zeal Pharmacure Wholesale Stockist Supply & Rapid Dispatch Depot',
+    imageAlt: 'Zeal Pharmacure Wholesale Stockist Supply & Pan-India Dispatch Depot',
     cardBorder: 'rgba(56, 189, 248, 0.4)',
     cardGlow: 'rgba(2, 132, 199, 0.25)',
     statusDot: '#38BDF8',
     statusText: 'Surat Central Depot: Active Dispatch',
     bottomBarTitle: 'Surat Central Logistics Depot',
-    bottomBarSub: '7015, BTM Market • 24-48h Dispatch',
+    bottomBarSub: '7015, BTM Market • Pan-India Delivery',
     floatTopIcon: <Building2 size={18} style={{ color: '#0284C7' }} />,
     floatTopTitle: 'Surat Central Depot',
     floatTopSub: '7015, BTM Textile Market',
     floatTopBorder: '#BAE6FD',
-    floatBottomIcon: <Clock size={18} style={{ color: '#0284C7' }} />,
-    floatBottomTitle: '24-48h Pan-India Dispatch',
-    floatBottomSub: 'Computerized Inventory Stock',
+    floatBottomIcon: <Truck size={18} style={{ color: '#0284C7' }} />,
+    floatBottomTitle: 'Pan-India Logistics',
+    floatBottomSub: 'Daily Inter-State Transport',
     floatBottomBorder: '#BAE6FD',
   },
   {
     id: 2,
     theme: 'emerald',
-    badgeText: 'COMPREHENSIVE B2B MARKETING SUPPORT',
+    badgeText: 'COMPREHENSIVE B2B MARKETING COLLATERALS',
     badgeColor: '#A7F3D0',
     badgeBg: 'rgba(6, 78, 59, 0.72)',
     badgeBorder: 'rgba(52, 211, 153, 0.45)',
@@ -154,17 +161,19 @@ const getHomeHeroSlides = (productCount: number): HomeSlideConfig[] => [
     glow1: 'rgba(16, 185, 129, 0.35)',
     glow2: 'rgba(52, 211, 153, 0.22)',
     highlightGradient: 'linear-gradient(135deg, #A7F3D0 0%, #6EE7B7 50%, #34D399 100%)',
-    highlightWord: '100% Free Promotional Tools',
-    titlePrefix: 'Accelerate Growth with ',
-    titleSuffix: ' & Visual Aids',
-    subtitle: 'Accelerate medical practitioner adoption with customized MR bags, doctor catch covers, visual aids, scientific product glossaries, and physician sample kits provided at zero cost.',
-    ctaText: 'Apply for Stockists / Distribution',
+    highlightWord: 'Free Visual Aids & Detailing Kits',
+    titlePrefix: 'Accelerate Prescriptions with ',
+    titleSuffix: '',
+    subtitle: 'Empower your field network with premium doctor visual aids, clinical LBLs, reminder cards, scientific product glossaries, and physician sample kits provided at zero cost.',
+    ctaText: 'Request Stockist Kit',
     ctaLink: '/contact',
+    secondaryText: 'View All Products',
+    secondaryLink: '/products',
     btnGradient: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
     btnShadow: '0 8px 24px -4px rgba(16, 185, 129, 0.65)',
     dotColor: '#34D399',
     image: '/banners/home_animated_marketing.jpg',
-    imageAlt: 'Zeal Pharmacure Stockists / Distribution Promotional Toolkit & Visual Aids',
+    imageAlt: 'Zeal Pharmacure Stockists Promotional Toolkit & Doctor Detailing Aids',
     cardBorder: 'rgba(52, 211, 153, 0.4)',
     cardGlow: 'rgba(16, 185, 129, 0.25)',
     statusDot: '#10B981',
@@ -172,12 +181,12 @@ const getHomeHeroSlides = (productCount: number): HomeSlideConfig[] => [
     bottomBarTitle: `${productCount}+ Approved Formulations`,
     bottomBarSub: 'Doctor Visual Aids & Samples Kit',
     floatTopIcon: <Award size={18} style={{ color: '#059669' }} />,
-    floatTopTitle: 'Stockists / Distribution Certificate',
-    floatTopSub: '100% Territory Monopoly Rights',
+    floatTopTitle: 'Authorized Stockist Kit',
+    floatTopSub: 'Complete Doctor Detailing Collaterals',
     floatTopBorder: '#A7F3D0',
     floatBottomIcon: <ShieldCheck size={18} style={{ color: '#059669' }} />,
-    floatBottomTitle: 'Doctor Visual Aids & Samples',
-    floatBottomSub: 'Zero Cost Promotional Supply',
+    floatBottomTitle: 'Zero-Cost Promotional Supply',
+    floatBottomSub: 'Visual Aids, Samples & Bags',
     floatBottomBorder: '#A7F3D0',
   },
 ];
@@ -193,11 +202,31 @@ export const HomeHeroSlider: React.FC<HomeHeroSliderProps> = ({
   const HOME_HERO_SLIDES = useMemo(() => {
     if (!slides || slides.length === 0) return BASE_SLIDES;
 
+    // If all slides in the list are the generic duplicate placeholder, return our curated BASE_SLIDES
+    const isAllPlaceholders = slides.every(
+      (s) => !s.title || s.title.includes('New Pharmaceutical Formulation Range') || s.title.includes('New Division')
+    );
+    if (isAllPlaceholders) return BASE_SLIDES;
+
     return slides.map((customSlide, idx) => {
       const template = BASE_SLIDES[idx % BASE_SLIDES.length];
       const customImage = customSlide.image
         ? getMediaUrl(customSlide.image, template.image)
         : template.image;
+
+      // If this specific slide has the generic placeholder title, preserve our rich template
+      const isPlaceholder =
+        !customSlide.title ||
+        customSlide.title.trim() === 'New Pharmaceutical Formulation Range' ||
+        customSlide.title.trim() === 'New Division';
+
+      if (isPlaceholder) {
+        return {
+          ...template,
+          id: idx,
+          image: customImage,
+        };
+      }
 
       let titlePrefix = template.titlePrefix;
       let highlightWord = template.highlightWord;
@@ -233,28 +262,36 @@ export const HomeHeroSlider: React.FC<HomeHeroSliderProps> = ({
   }, [slides, BASE_SLIDES]);
 
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const timerRef = useRef<number | null>(null);
+  const totalSlides = HOME_HERO_SLIDES.length;
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % totalSlides);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
+  };
+
+  const goToSlide = (idx: number) => {
+    setCurrentSlide(idx);
+  };
 
   const activeSlideData = HOME_HERO_SLIDES[currentSlide] || HOME_HERO_SLIDES[0];
 
   useEffect(() => {
-    if (isPaused) return;
-
-    timerRef.current = window.setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % HOME_HERO_SLIDES.length);
-    }, 3000);
+    // 5-second automatic slider (5000ms)
+    const timer = window.setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % totalSlides);
+    }, 5000);
 
     return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
+      window.clearInterval(timer);
     };
-  }, [isPaused, HOME_HERO_SLIDES.length]);
+  }, [currentSlide, totalSlides]);
 
   return (
     <section
       className="zp-home-hero-wrapper"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
       style={{
         borderBottomColor: activeSlideData.dotColor,
       }}
@@ -338,69 +375,155 @@ export const HomeHeroSlider: React.FC<HomeHeroSliderProps> = ({
                 <span>{productCount}+ DCGI Formulations</span>
               </div>
               <div className="zp-home-chip">
-                <Clock size={14} style={{ color: '#FBBF24' }} />
-                <span>24-48h Rapid Dispatch</span>
+                <Truck size={14} style={{ color: '#FBBF24' }} />
+                <span>Pan-India Delivery</span>
               </div>
             </div>
 
-            {/* Primary Action Buttons */}
+            {/* Primary Action Buttons (2 Focused Buttons) */}
             <div className="zp-home-hero-actions">
-              <button
-                type="button"
-                onClick={onOpenFranchiseModal}
-                className="zp-home-hero-btn-primary"
-                style={{
-                  background: activeSlideData.btnGradient,
-                  boxShadow: activeSlideData.btnShadow,
-                }}
-              >
-                <span>{activeSlideData.ctaText}</span>
-                <ArrowRight size={15} />
-              </button>
+              {activeSlideData.ctaLink === '/products' ? (
+                <Link
+                  to="/products"
+                  className="zp-home-hero-btn-primary"
+                  style={{
+                    background: activeSlideData.btnGradient,
+                    boxShadow: activeSlideData.btnShadow,
+                  }}
+                >
+                  <span>{activeSlideData.ctaText}</span>
+                  <ArrowRight size={15} />
+                </Link>
+              ) : (
+                <button
+                  type="button"
+                  onClick={onOpenFranchiseModal}
+                  className="zp-home-hero-btn-primary"
+                  style={{
+                    background: activeSlideData.btnGradient,
+                    boxShadow: activeSlideData.btnShadow,
+                  }}
+                >
+                  <span>{activeSlideData.ctaText}</span>
+                  <ArrowRight size={15} />
+                </button>
+              )}
 
-              <Link
-                to="/products"
-                className="zp-home-hero-btn-outline"
-              >
-                <Layers size={15} style={{ color: activeSlideData.dotColor }} />
-                <span>Explore Catalog</span>
-              </Link>
-
-              <a
-                href="https://wa.me/919714327776?text=Hello%20Zeal%20Pharmaceuticals%2C%20I%20am%20interested%20in%20becoming%20a%20Stockist%20Partner."
-                target="_blank"
-                rel="noopener noreferrer"
-                className="zp-home-hero-btn-wa"
-                title="Direct WhatsApp Support"
-              >
-                <MessageCircle size={15} />
-                <span>WhatsApp</span>
-              </a>
+              {activeSlideData.secondaryLink === 'modal' ? (
+                <button
+                  type="button"
+                  onClick={onOpenFranchiseModal}
+                  className="zp-home-hero-btn-outline"
+                >
+                  <Sparkles size={15} style={{ color: activeSlideData.dotColor }} />
+                  <span>{activeSlideData.secondaryText || 'Enquire for Stockist'}</span>
+                </button>
+              ) : (
+                <Link
+                  to={activeSlideData.secondaryLink || '/products'}
+                  className="zp-home-hero-btn-outline"
+                >
+                  <Layers size={15} style={{ color: activeSlideData.dotColor }} />
+                  <span>{activeSlideData.secondaryText || 'Explore Catalog'}</span>
+                </Link>
+              )}
             </div>
 
-            {/* Slide Pagination Dots matching Logo Colors */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '24px' }}>
-              {HOME_HERO_SLIDES.map((slide, idx) => {
-                const isActive = currentSlide === idx;
-                return (
-                  <button
-                    key={slide.id}
-                    type="button"
-                    onClick={() => setCurrentSlide(idx)}
-                    aria-label={`Slide ${idx + 1}`}
-                    style={{
-                      width: isActive ? '28px' : '8px',
-                      height: '8px',
-                      borderRadius: '999px',
-                      background: isActive ? activeSlideData.dotColor : 'rgba(255, 255, 255, 0.3)',
-                      border: 'none',
-                      cursor: 'pointer',
-                      transition: 'all 0.3s ease',
-                      padding: 0,
-                    }}
-                  />
-                );
-              })}
+            {/* Slide Pagination Dots & Quick Controls */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '26px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {HOME_HERO_SLIDES.map((slide, idx) => {
+                  const isActive = currentSlide === idx;
+                  return (
+                    <button
+                      key={slide.id}
+                      type="button"
+                      onClick={() => goToSlide(idx)}
+                      aria-label={`Go to slide ${idx + 1}`}
+                      style={{
+                        width: isActive ? '32px' : '9px',
+                        height: '9px',
+                        borderRadius: '999px',
+                        background: isActive ? activeSlideData.dotColor : 'rgba(255, 255, 255, 0.28)',
+                        border: 'none',
+                        cursor: 'pointer',
+                        transition: 'all 0.35s ease',
+                        padding: 0,
+                      }}
+                    />
+                  );
+                })}
+              </div>
+
+              {/* Prev / Next Controls */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <button
+                  type="button"
+                  onClick={prevSlide}
+                  aria-label="Previous Slide"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '28px',
+                    height: '28px',
+                    borderRadius: '50%',
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    border: '1px solid rgba(255, 255, 255, 0.16)',
+                    color: '#FFFFFF',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.22)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                  }}
+                >
+                  <ChevronLeft size={14} />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={nextSlide}
+                  aria-label="Next Slide"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '28px',
+                    height: '28px',
+                    borderRadius: '50%',
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    border: '1px solid rgba(255, 255, 255, 0.16)',
+                    color: '#FFFFFF',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.22)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                  }}
+                >
+                  <ChevronRight size={14} />
+                </button>
+              </div>
+
+              {/* Slide Counter badge */}
+              <span
+                style={{
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  color: 'rgba(255, 255, 255, 0.65)',
+                  letterSpacing: '0.04em',
+                  fontFamily: 'Outfit, sans-serif',
+                }}
+              >
+                0{currentSlide + 1} / 0{totalSlides}
+              </span>
             </div>
           </div>
 

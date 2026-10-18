@@ -7,8 +7,8 @@ export const AboutStatsBar: React.FC = () => {
   const stats = [
     { label: 'Distribution Legacy', value: '15+', sub: 'Established in 2010', icon: <Clock size={22} style={{ color: 'var(--zp-primary, #6828DC)' }} /> },
     { label: 'DCGI Formulations', value: `${productCount}+`, sub: 'Marketed & Distributed', icon: <FlaskConical size={22} style={{ color: 'var(--zp-primary, #6828DC)' }} /> },
-    { label: 'Monopoly Partners', value: '200+', sub: 'Across 12+ States', icon: <Users size={22} style={{ color: 'var(--zp-primary, #6828DC)' }} /> },
-    { label: 'Express Dispatch', value: '24-48h', sub: 'Central Warehouse Hub', icon: <Truck size={22} style={{ color: 'var(--zp-primary, #6828DC)' }} /> },
+    { label: 'Stockist Partners', value: '200+', sub: 'Across 12+ States', icon: <Users size={22} style={{ color: 'var(--zp-primary, #6828DC)' }} /> },
+    { label: 'Distribution Reach', value: 'Pan-India', sub: 'Central Warehouse Hub', icon: <Truck size={22} style={{ color: 'var(--zp-primary, #6828DC)' }} /> },
   ];
 
   return (

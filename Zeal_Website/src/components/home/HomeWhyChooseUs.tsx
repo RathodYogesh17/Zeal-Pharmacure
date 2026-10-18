@@ -1,7 +1,6 @@
 import React from 'react';
-import { ShieldCheck, Award, Users, FlaskConical, Smile, Network } from 'lucide-react';
+import { ShieldCheck, Award, Users, FlaskConical, Smile, Network, Sparkles } from 'lucide-react';
 import { useSiteSettings } from '../../context/SiteSettingsContext';
-import { SectionHeader } from '../common';
 import './HomeStyles.css';
 
 export const HomeWhyChooseUs: React.FC = () => {
@@ -43,7 +42,7 @@ export const HomeWhyChooseUs: React.FC = () => {
       border: '#FDE68A',
     },
     {
-      title: 'Rapid 24-48h Pan-India Dispatch',
+      title: 'Pan-India Express Distribution Network',
       desc: 'Air-conditioned Surat Central Depot ensures seamless stock availability with zero backorders.',
       icon: <Network size={24} style={{ color: '#DB2777' }} />,
       bg: '#FDF2F8',
@@ -54,12 +53,64 @@ export const HomeWhyChooseUs: React.FC = () => {
   return (
     <section style={{ padding: '76px 0', background: '#FFFFFF', borderTop: '1px solid #F1F5F9' }}>
       <div className="container">
-        <SectionHeader
-          badge="Why Choose Zeal Pharmacure"
-          title="Delivering Trusted Healthcare Solutions"
-          subtitle="Committed to superior clinical efficacy, verified cGMP stability, and genuine stockists distribution partner protection."
-          centered={true}
-        />
+        {/* Executive Section Header with Right-Side Trust Scorecard */}
+        <div className="zp-home-testimonials-header-row">
+          <div>
+            <div className="zp-home-testimonials-badge">
+              <Sparkles size={13} />
+              <span>Why Choose Zeal Pharmacure</span>
+            </div>
+
+            <h2 className="zp-home-testimonials-title">
+              Delivering Trusted <span className="highlight-gradient">Healthcare Solutions</span>
+            </h2>
+
+            <p className="zp-home-testimonials-sub">
+              Committed to superior clinical efficacy, verified cGMP stability, and genuine stockists distribution partner protection.
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
+            <div className="zp-home-testimonials-scorecard">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div
+                  style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '10px',
+                    background: '#FEF3C7',
+                    border: '1px solid #FDE68A',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Award size={18} style={{ color: '#D97706' }} />
+                </div>
+                <div>
+                  <div
+                    style={{
+                      fontFamily: 'Outfit, sans-serif',
+                      fontWeight: 900,
+                      fontSize: '15px',
+                      color: '#0F172A',
+                    }}
+                  >
+                    15+ Years
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#D97706', fontWeight: 700 }}>
+                    Pharma Excellence
+                  </div>
+                </div>
+              </div>
+              <div style={{ height: '24px', width: '1px', background: '#E2E8F0' }} />
+              <div style={{ fontSize: '11.5px', color: '#475569', fontWeight: 700, lineHeight: 1.3 }}>
+                <div>1000+ Partners</div>
+                <div style={{ color: '#059669', fontSize: '10.5px' }}>Pan-India Network</div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '22px' }}>
           {cards.map((c, idx) => (

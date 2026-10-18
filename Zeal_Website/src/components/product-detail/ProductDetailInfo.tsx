@@ -225,7 +225,7 @@ export const ProductDetailInfo: React.FC<ProductDetailInfoProps> = ({
           </li>
           <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Check size={15} style={{ color: '#059669', flexShrink: 0 }} />
-            <span><strong>Rapid Dispatch:</strong> Temperature-controlled central warehouse dispatch within 24-48 hours.</span>
+            <span><strong>Pan-India Dispatch:</strong> Temperature-controlled central warehouse dispatch with nationwide logistics network.</span>
           </li>
         </ul>
       </div>
@@ -403,7 +403,7 @@ export const ProductDetailInfo: React.FC<ProductDetailInfoProps> = ({
       {/* 7. Trust Badges Strip (matching photo under buttons) */}
       <div className="zp-trust-badges-strip">
         {[
-          { icon: <Truck size={16} color="var(--zp-primary)" />, label: '24-48h Dispatch' },
+          { icon: <Truck size={16} color="var(--zp-primary)" />, label: 'Pan-India Delivery' },
           { icon: <Award size={16} color="#059669" />, label: 'Stockists Distribution', border: true },
           { icon: <FileText size={16} color="#D97706" />, label: 'Free Visual Aids' },
         ].map((b, idx) => (

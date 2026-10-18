@@ -6,7 +6,7 @@ import {
   Sparkles,
   Warehouse,
   Pill,
-  Clock,
+  Truck,
   ArrowRight,
 } from 'lucide-react';
 import { useSiteSettings } from '../../context/SiteSettingsContext';
@@ -43,7 +43,7 @@ export const ContactHero: React.FC<ContactHeroProps> = ({ onOpenFranchise, onScr
             </h1>
 
             <p className="zp-contact-hero-desc">
-              Connect directly with Zeal Pharmacure for exclusive district monopoly rights, {productCount}+ DCGI-approved formulations, institutional hospital supply contracts, and 24–48h dispatches from our central distribution warehouse.
+              Connect directly with Zeal Pharmacure for authorized district stockist rights, {productCount}+ DCGI-approved formulations, institutional hospital supply contracts, and reliable Pan-India distribution from our central distribution warehouse.
             </p>
 
             {/* 3 Quick Stat Badges */}
@@ -53,8 +53,8 @@ export const ContactHero: React.FC<ContactHeroProps> = ({ onOpenFranchise, onScr
                   <Warehouse size={16} />
                 </div>
                 <div>
-                  <div className="zp-contact-stat-label">Central Depot</div>
-                  <div className="zp-contact-stat-value">12,000+ Sq. Ft.</div>
+                  <div className="zp-contact-stat-label">Central Depot Hub</div>
+                  <div className="zp-contact-stat-value">Surat, Gujarat</div>
                 </div>
               </div>
 
@@ -70,11 +70,11 @@ export const ContactHero: React.FC<ContactHeroProps> = ({ onOpenFranchise, onScr
 
               <div className="zp-contact-stat-pill">
                 <div className="zp-contact-stat-icon" style={{ color: '#FBBF24' }}>
-                  <Clock size={16} />
+                  <Truck size={16} />
                 </div>
                 <div>
-                  <div className="zp-contact-stat-label">Dispatch SLA</div>
-                  <div className="zp-contact-stat-value">24–48h Turnaround</div>
+                  <div className="zp-contact-stat-label">Distribution Reach</div>
+                  <div className="zp-contact-stat-value">Pan-India Delivery</div>
                 </div>
               </div>
             </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, ArrowRight, FlaskConical, Building2, ShieldCheck, Clock, Award } from 'lucide-react';
+import { Sparkles, ArrowRight, FlaskConical, Building2, ShieldCheck, Truck, Award } from 'lucide-react';
 import { useSiteSettings } from '../../context/SiteSettingsContext';
 import { getMediaUrl } from '../../utils/mediaUtils';
 import './AboutStyles.css';
@@ -75,7 +75,7 @@ export const AboutHero: React.FC<AboutHeroProps> = ({ onOpenFranchiseModal }) =>
 
             {/* Concise Description */}
             <p className="zp-about-hero-desc">
-              Zeal Pharmacure is an established pharmaceutical marketing and wholesale distribution powerhouse. We supply {productCount}+ DCGI-approved finished therapeutics backed by authorized territory monopoly rights and express 24-48h dispatch from our central depot.
+              Zeal Pharmacure is an established pharmaceutical marketing and wholesale distribution powerhouse. We supply {productCount}+ DCGI-approved finished therapeutics backed by authorized territory distribution rights and reliable Pan-India distribution from our central depot.
             </p>
 
             {/* Quick Value Metric Chips */}
@@ -89,8 +89,8 @@ export const AboutHero: React.FC<AboutHeroProps> = ({ onOpenFranchiseModal }) =>
                 <span>{productCount}+ DCGI Molecules</span>
               </div>
               <div className="zp-about-chip">
-                <Clock size={14} style={{ color: '#FBBF24' }} />
-                <span>24-48h Pan-India Dispatch</span>
+                <Truck size={14} style={{ color: '#FBBF24' }} />
+                <span>Pan-India Distribution Network</span>
               </div>
             </div>
 
@@ -166,7 +166,7 @@ export const AboutHero: React.FC<AboutHeroProps> = ({ onOpenFranchiseModal }) =>
                       Surat Central Logistics Depot
                     </div>
                     <div style={{ fontSize: '11px', color: '#CBD5E1', fontWeight: 600 }}>
-                      7015, BTM Market • 24-48h Dispatch
+                      7015, BTM Market • Pan-India Delivery
                     </div>
                   </div>
 

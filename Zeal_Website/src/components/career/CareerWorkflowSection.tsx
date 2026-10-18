@@ -45,7 +45,7 @@ export const CareerWorkflowSection: React.FC = () => {
     },
     {
       phase: '05',
-      title: 'Express 24–48h Dispatch & Logistics',
+      title: 'Pan-India Dispatch & Logistics Network',
       roles: 'Logistics Fleet & Dispatch Executives',
       desc: 'Immediate handover to verified logistics partners with active tracking dockets for door-to-door pan-India delivery.',
       icon: <Truck size={22} />,

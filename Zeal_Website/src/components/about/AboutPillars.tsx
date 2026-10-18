@@ -26,8 +26,8 @@ export const AboutPillars: React.FC = () => {
       border: '#FDE68A',
     },
     {
-      title: 'Express 24–48h Dispatch Buffer',
-      desc: 'Our expansive inventory buffer and tie-ups with premium logistics carriers ensure your orders are dispatched within 24 to 48 hours without stockouts.',
+      title: 'Pan-India Distribution Network',
+      desc: 'Our expansive inventory buffer and tie-ups with premium logistics carriers ensure seamless Pan-India distribution without stockouts.',
       icon: <Zap size={26} style={{ color: '#DC2626' }} />,
       bg: '#FEF2F2',
       border: '#FECACA',

@@ -33,7 +33,7 @@ export const AboutTimeline: React.FC = () => {
     {
       year: '2022',
       title: 'Centralized Barcoded Warehousing',
-      desc: 'Commissioned modern temperature-controlled central distribution hub in Gujarat with computerized inventory management and 24-48h dispatch.',
+      desc: 'Commissioned modern temperature-controlled central distribution hub in Gujarat with computerized inventory management and Pan-India distribution network.',
       badge: 'Supply Chain',
       side: 'right',
       icon: <Truck size={20} />,

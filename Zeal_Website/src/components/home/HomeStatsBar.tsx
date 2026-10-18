@@ -37,7 +37,7 @@ export const HomeStatsBar: React.FC = () => {
       number: '100',
       plusColor: '#EA580C',
       label: 'Cities Served',
-      sub: 'Prompt 24-48 Hours Dispatch',
+      sub: 'Pan-India Distribution Network',
     },
   ];
 
