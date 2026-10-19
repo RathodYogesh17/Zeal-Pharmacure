@@ -18,6 +18,7 @@ export * from './StatCard';
 export * from './Breadcrumb';
 export * from './SectionHeader';
 export * from './FaqAccordion';
+export * from './StatsBar';
 
 export * from './auth';
 export * from './forms';

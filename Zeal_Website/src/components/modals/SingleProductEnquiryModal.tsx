@@ -16,6 +16,7 @@ import { VerifiedUserBadge } from '../common/VerifiedUserBadge';
 import { getMediaUrl } from '../../utils/mediaUtils';
 import { B2BCustomerFields } from '../common/forms';
 import { buildProductWhatsAppMessage } from '../../utils/whatsappMessageBuilder';
+import { validateB2BCustomerFields } from '../../utils/pharmaUtils';
 
 interface SingleProductEnquiryModalProps {
   product: IProduct | null;
@@ -72,37 +73,12 @@ export const SingleProductEnquiryModal: React.FC<SingleProductEnquiryModalProps>
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const errs: typeof fieldErrors = {};
-    const effectiveName = formData.name.trim() || user?.name || '';
-    if (!effectiveName) {
-      errs.fullName = 'Full name is required';
-    } else if (effectiveName.length < 2) {
-      errs.fullName = 'Name must be at least 2 characters';
-    }
-
-    const effectivePhone = formData.phone.trim() || user?.phone || '';
-    const rawDigits = effectivePhone.replace(/[\s\-\(\)\+]/g, '');
-    const cleanPhone = rawDigits.length > 10 && rawDigits.startsWith('91') ? rawDigits.slice(2) : rawDigits;
-    if (!rawDigits) {
-      errs.phone = 'Mobile number is required';
-    } else if (!/^[0-9]{10}$/.test(cleanPhone)) {
-      errs.phone = 'Please enter a valid 10-digit mobile number';
-    }
-
-    const effectiveEmail = formData.email.trim() || user?.email || '';
-    if (!effectiveEmail) {
-      errs.email = 'Email address is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(effectiveEmail)) {
-      errs.email = 'Please enter a valid email address';
-    }
-
-    if (!formData.city.trim()) errs.city = 'City / Headquarters is required';
-    if (!formData.state.trim()) errs.state = 'State is required';
-
-    if (Object.keys(errs).length > 0) {
-      setFieldErrors(errs);
+    const validation = validateB2BCustomerFields(formData, user);
+    if (!validation.isValid) {
+      setFieldErrors(validation.errors);
       return;
     }
+    const { effectiveName, cleanPhone, effectiveEmail } = validation.sanitized;
 
     setLoading(true);
     setErrorMsg('');

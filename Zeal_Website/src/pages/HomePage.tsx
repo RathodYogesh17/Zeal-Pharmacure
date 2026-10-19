@@ -6,16 +6,15 @@ import { categoryService } from '../api/categoryService';
 import type { IProduct, ICategory } from '../types';
 import { SingleProductEnquiryModal } from '../components/modals/SingleProductEnquiryModal';
 import { PreFooterBanner } from '../components/layout/PreFooterBanner';
+import { FaqAccordion, StatsBar } from '../components/common';
 import {
   HomeHeroSlider,
-  HomeStatsBar,
   HomeCategoriesGrid,
   HomeFeaturedProducts,
   HomeWhyChooseUs,
   HomeCertifications,
   HomeTestimonialsSlider,
   HomeShowcaseCards,
-  HomeFaqAccordion,
   HomeStoryModal,
 } from '../components/home';
 
@@ -146,7 +145,7 @@ export const HomePage: React.FC = () => {
       />
 
       {/* 2. Key Trust & Statistics Floating Bar */}
-      <HomeStatsBar />
+      <StatsBar variant="cards" />
 
       {/* 3. Therapeutic Segments Categories Grid */}
       <HomeCategoriesGrid categories={categories} loading={categoriesLoading} />
@@ -172,7 +171,11 @@ export const HomePage: React.FC = () => {
       <HomeShowcaseCards onOpenFranchiseModal={openFranchiseModal} />
 
       {/* 9. Franchise FAQ Accordion */}
-      <HomeFaqAccordion faqs={faqs} />
+      <FaqAccordion
+        faqs={faqs}
+        headerType="executive"
+        subtitle="Transparent answers regarding authorized stockists distribution, minimum order requirements, and marketing collaterals."
+      />
 
       {/* 10. Pre-Footer Monopoly Call-to-Action */}
       <PreFooterBanner />

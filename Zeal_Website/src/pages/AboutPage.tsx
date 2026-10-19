@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { useSiteSettings } from '../context/SiteSettingsContext';
 import { PreFooterBanner } from '../components/layout/PreFooterBanner';
+import { StatsBar } from '../components/common';
 import {
   AboutHero,
-  AboutStatsBar,
   AboutCorporateProfile,
   AboutMissionVision,
   AboutPillars,
@@ -25,7 +25,7 @@ export const AboutPage: React.FC = () => {
       <AboutHero onOpenFranchiseModal={openFranchiseModal} />
 
       {/* 2. Floating Distribution Stats Bar */}
-      <AboutStatsBar />
+      <StatsBar variant="inline" />
 
       {/* 3. Corporate Profile: "Who We Are" */}
       <AboutCorporateProfile />

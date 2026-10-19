@@ -1,13 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import { useSiteSettings } from '../context/SiteSettingsContext';
 import { PreFooterBanner } from '../components/layout/PreFooterBanner';
+import { FaqAccordion } from '../components/common';
 import {
   ContactHero,
   ContactInfoCards,
   ContactFeatureBanners,
   ContactForm,
   ContactBranchesMap,
-  ContactFaqAccordion,
 } from '../components/contact';
 
 export const ContactPage: React.FC = () => {
@@ -62,7 +62,13 @@ export const ContactPage: React.FC = () => {
       </section>
 
       {/* 5. Stockist Distribution FAQs */}
-      <ContactFaqAccordion faqs={faqs} />
+      <FaqAccordion
+        faqs={faqs}
+        badge="Stockist Distribution Queries"
+        title="Frequently Asked Questions"
+        subtitle="Have questions about minimum investment, territory monopoly, or drug license requirements? Find quick answers below."
+        style={{ padding: '64px 0', borderTop: '1px solid #F1F5F9' }}
+      />
 
       {/* 6. Pre-Footer Action Banner */}
       <PreFooterBanner />

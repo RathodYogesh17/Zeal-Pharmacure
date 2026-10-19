@@ -1,5 +1,4 @@
 export * from './AboutHero';
-export * from './AboutStatsBar';
 export * from './AboutCorporateProfile';
 export * from './AboutMissionVision';
 export * from './AboutPillars';

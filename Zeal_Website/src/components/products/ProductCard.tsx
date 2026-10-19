@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Pill, FileText, Send, CheckSquare, Square, Sparkles, Droplets, Syringe } from 'lucide-react';
+import { FileText, Send, CheckSquare, Square } from 'lucide-react';
 import type { IProduct } from '../../types';
 import { getMediaUrl } from '../../utils/mediaUtils';
+import { getDosageFormDetails } from '../../utils/pharmaUtils';
 
 export interface ProductCardProps {
   product: IProduct;
@@ -10,53 +11,6 @@ export interface ProductCardProps {
   isBulkSelected?: boolean;
   onToggleBulk?: (p: IProduct) => void;
 }
-
-const getDosageFormDetails = (dosageForm?: string) => {
-  const form = (dosageForm || '').toLowerCase();
-  if (form.includes('capsule') || form.includes('cap')) {
-    return {
-      name: 'Capsule',
-      icon: Pill,
-      badgeBg: '#FAF5FF',
-      badgeBorder: '#E9D5FF',
-      badgeColor: '#7C3AED',
-    };
-  }
-  if (form.includes('cream') || form.includes('gel') || form.includes('ointment')) {
-    return {
-      name: 'Topical',
-      icon: Sparkles,
-      badgeBg: '#EFF6FF',
-      badgeBorder: '#BFDBFE',
-      badgeColor: '#2563EB',
-    };
-  }
-  if (form.includes('syrup') || form.includes('suspension') || form.includes('drops') || form.includes('liquid') || form.includes('lotion')) {
-    return {
-      name: 'Liquid',
-      icon: Droplets,
-      badgeBg: '#ECFDF5',
-      badgeBorder: '#A7F3D0',
-      badgeColor: '#059669',
-    };
-  }
-  if (form.includes('inj') || form.includes('injection')) {
-    return {
-      name: 'Injectable',
-      icon: Syringe,
-      badgeBg: '#FFF7ED',
-      badgeBorder: '#FED7AA',
-      badgeColor: '#EA580C',
-    };
-  }
-  return {
-    name: 'Tablet',
-    icon: Pill,
-    badgeBg: '#FAF5FF',
-    badgeBorder: '#DDD6FE',
-    badgeColor: '#6828DC',
-  };
-};
 
 export const ProductCard: React.FC<ProductCardProps> = ({
   product,
