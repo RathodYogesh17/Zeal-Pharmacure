@@ -5,5 +5,3 @@ export { ProductDetailLeadForm } from './ProductDetailLeadForm';
 export { ProductDetailPromoBanner } from './ProductDetailPromoBanner';
 export { ProductDetailRelated } from './ProductDetailRelated';
 export { ProductDetailSidebar } from './ProductDetailSidebar';
-export { ProductDetailComboInquiry } from './ProductDetailComboInquiry';
-export { ProductDetailComparisonTable } from './ProductDetailComparisonTable';

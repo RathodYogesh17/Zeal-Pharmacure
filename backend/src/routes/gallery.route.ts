@@ -8,6 +8,7 @@ import {
   deleteGalleryImage,
   autoOrganizeGallery,
   batchMoveGalleryImages,
+  batchDeleteGalleryImages,
 } from "../controllers/gallery.controller";
 import asyncHandler from "../utils/asyncHandler";
 
@@ -21,6 +22,9 @@ galleryRouter.post("/auto-organize", authMiddleware, asyncHandler(autoOrganizeGa
 
 // Batch move media assets into a folder
 galleryRouter.post("/batch-move", authMiddleware, asyncHandler(batchMoveGalleryImages));
+
+// Batch delete media assets
+galleryRouter.post("/batch-delete", authMiddleware, asyncHandler(batchDeleteGalleryImages));
 
 // Upload requires authenticated staff
 galleryRouter.post(

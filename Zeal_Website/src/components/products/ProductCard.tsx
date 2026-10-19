@@ -1,5 +1,5 @@
-import React from 'react';
-import { Pill, FileText, Send, CheckSquare, Square } from 'lucide-react';
+import React, { useState } from 'react';
+import { Pill, FileText, Send, CheckSquare, Square, Sparkles, Droplets, Syringe } from 'lucide-react';
 import type { IProduct } from '../../types';
 import { getMediaUrl } from '../../utils/mediaUtils';
 
@@ -11,6 +11,53 @@ export interface ProductCardProps {
   onToggleBulk?: (p: IProduct) => void;
 }
 
+const getDosageFormDetails = (dosageForm?: string) => {
+  const form = (dosageForm || '').toLowerCase();
+  if (form.includes('capsule') || form.includes('cap')) {
+    return {
+      name: 'Capsule',
+      icon: Pill,
+      badgeBg: '#FAF5FF',
+      badgeBorder: '#E9D5FF',
+      badgeColor: '#7C3AED',
+    };
+  }
+  if (form.includes('cream') || form.includes('gel') || form.includes('ointment')) {
+    return {
+      name: 'Topical',
+      icon: Sparkles,
+      badgeBg: '#EFF6FF',
+      badgeBorder: '#BFDBFE',
+      badgeColor: '#2563EB',
+    };
+  }
+  if (form.includes('syrup') || form.includes('suspension') || form.includes('drops') || form.includes('liquid') || form.includes('lotion')) {
+    return {
+      name: 'Liquid',
+      icon: Droplets,
+      badgeBg: '#ECFDF5',
+      badgeBorder: '#A7F3D0',
+      badgeColor: '#059669',
+    };
+  }
+  if (form.includes('inj') || form.includes('injection')) {
+    return {
+      name: 'Injectable',
+      icon: Syringe,
+      badgeBg: '#FFF7ED',
+      badgeBorder: '#FED7AA',
+      badgeColor: '#EA580C',
+    };
+  }
+  return {
+    name: 'Tablet',
+    icon: Pill,
+    badgeBg: '#FAF5FF',
+    badgeBorder: '#DDD6FE',
+    badgeColor: '#6828DC',
+  };
+};
+
 export const ProductCard: React.FC<ProductCardProps> = ({
   product,
   onEnquire,
@@ -18,6 +65,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   isBulkSelected = false,
   onToggleBulk,
 }) => {
+  const [imageError, setImageError] = useState(false);
+  const dosageConfig = getDosageFormDetails(product.dosageForm);
+  const DosageIcon = dosageConfig.icon;
+  const hasValidImage = Boolean(product.featuredImage && !imageError);
+
   return (
     <div className={`zp-product-card ${isBulkSelected ? 'is-selected' : ''}`}>
       <div>
@@ -26,11 +78,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          minHeight: '24px',
-          marginBottom: '8px',
+          minHeight: '26px',
+          marginBottom: '10px',
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <span className="zp-badge-purple">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span className="zp-badge-purple" style={{ textTransform: 'uppercase', letterSpacing: '0.04em' }}>
               {product.dosageForm || 'Formulation'}
             </span>
 
@@ -51,16 +103,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 border: 'none',
                 cursor: 'pointer',
                 color: isBulkSelected ? 'var(--zp-primary)' : '#94A3B8',
-                padding: '2px',
+                padding: '2px 4px',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '3px',
+                gap: '4px',
                 fontSize: '11px',
                 fontWeight: 700,
+                borderRadius: '6px',
+                transition: 'all 0.15s ease',
               }}
             >
-              {isBulkSelected ? <CheckSquare size={17} color="var(--zp-primary)" /> : <Square size={17} color="#94A3B8" />}
-              <span style={{ fontSize: '10.5px', color: isBulkSelected ? 'var(--zp-primary)' : 'var(--zp-text-muted)' }}>Bulk</span>
+              {isBulkSelected ? <CheckSquare size={16} color="var(--zp-primary)" /> : <Square size={16} color="#94A3B8" />}
+              <span style={{ fontSize: '11px', color: isBulkSelected ? 'var(--zp-primary)' : 'var(--zp-text-muted)' }}>Bulk</span>
             </button>
           )}
         </div>
@@ -69,52 +123,37 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         <div
           onClick={() => onViewDossier(product)}
           className="zp-product-img-box"
-          style={{
-            width: '100%',
-            height: '190px',
-            marginBottom: '12px',
-            cursor: 'pointer',
-            padding: 0,
-            background: '#FFFFFF',
-            borderRadius: '12px',
-            border: '1px solid #E2E8F0',
-            position: 'relative',
-            overflow: 'hidden',
-            display: 'block',
-          }}
+          title={`Click to view dossier for ${product.name}`}
         >
-          {product.featuredImage ? (
+          {hasValidImage ? (
             <img
               src={getMediaUrl(product.featuredImage)}
               alt={product.name}
-              style={{
-                width: '100%',
-                height: '100%',
-                minWidth: '100%',
-                minHeight: '100%',
-                maxWidth: '100%',
-                maxHeight: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center',
-                display: 'block',
-              }}
+              onError={() => setImageError(true)}
               loading="lazy"
             />
           ) : (
-            <div style={{
-              width: '100%',
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              background: '#FAF5FF',
-              gap: '6px',
-            }}>
-              <Pill size={36} style={{ color: '#8B5CF6' }} />
-              <span style={{ fontSize: '10.5px', fontWeight: 800, color: 'var(--zp-primary)' }}>
-                {product.dosageForm || 'Medicine'}
+            <div className="zp-product-placeholder">
+              <div
+                className="zp-product-placeholder-icon-wrap"
+                style={{
+                  background: dosageConfig.badgeBg,
+                  borderColor: dosageConfig.badgeBorder,
+                }}
+              >
+                <DosageIcon size={26} style={{ color: dosageConfig.badgeColor }} />
+              </div>
+              <span
+                className="zp-product-placeholder-label"
+                style={{
+                  color: dosageConfig.badgeColor,
+                  background: dosageConfig.badgeBg,
+                  borderColor: dosageConfig.badgeBorder,
+                }}
+              >
+                {product.dosageForm || dosageConfig.name}
               </span>
+              <span className="zp-product-placeholder-sub">ZEAL PHARMA</span>
             </div>
           )}
         </div>
@@ -128,17 +167,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           {product.name}
         </h4>
 
-        {/* Generic Molecule / Salt */}
-        <p className="zp-product-generic">
-          {product.genericName}
+        {/* Clinical Composition / Salt description */}
+        <p className="zp-product-comp" title={product.composition || product.genericName || ''}>
+          {product.composition || product.genericName || 'Active Pharmaceutical Formulation'}
         </p>
 
-        {/* Clinical Composition Snippet */}
-        <p className="zp-product-comp">
-          {product.composition || 'Active Pharmaceutical Formulation'}
-        </p>
-
-        {/* Product MRP in Plain Black Text (No box, no green) */}
+        {/* Product MRP */}
         <div className="zp-product-mrp-row">
           <span className="zp-product-mrp-text">
             <span className="zp-product-mrp-label">MRP:</span> ₹{product.mrp !== undefined && product.mrp !== null ? product.mrp.toLocaleString('en-IN') : '--'}
@@ -150,14 +184,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           <span style={{ color: '#334155', fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '65%' }}>
             {product.packaging || 'Standard Pack'}
           </span>
-          <span className="zp-badge-green" style={{ border: 'none', padding: 0, background: 'none', flexShrink: 0 }}>
-            ● Ready Stock
+          <span className="zp-badge-green" style={{ border: 'none', padding: 0, background: 'none', flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+            <span style={{ display: 'inline-block', width: '6px', height: '6px', borderRadius: '50%', background: '#10B981' }}></span>
+            Ready Stock
           </span>
         </div>
       </div>
 
       {/* Action Buttons: "Dossier" & "Enquire Now" */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.15fr', gap: '6px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.15fr', gap: '8px', marginTop: '4px' }}>
         <button
           type="button"
           onClick={() => onViewDossier(product)}

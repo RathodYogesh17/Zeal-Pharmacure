@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Pill, FileText, Send, CheckSquare, Square, CheckCircle2 } from "lucide-react";
 import type { IProduct } from "../../types";
 import { getMediaUrl } from "../../utils/mediaUtils";
@@ -18,44 +18,28 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({
   isBulkSelected = false,
   onToggleBulk,
 }) => {
+  const [imageError, setImageError] = useState(false);
+  const hasValidImage = Boolean(product.featuredImage && !imageError);
+
   return (
     <div className={`zp-pli-wrapper${isBulkSelected ? " selected" : ""}`}>
       <div className="zp-pli-left">
         <div
           className="zp-pli-img-box"
-          style={{
-            width: '90px',
-            height: '90px',
-            borderRadius: '12px',
-            background: '#FFFFFF',
-            border: '1px solid #E2E8F0',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexShrink: 0,
-            padding: 0,
-            overflow: 'hidden',
-          }}
+          onClick={() => onViewDossier(product)}
+          style={{ cursor: "pointer" }}
+          title={`Click to view dossier for ${product.name}`}
         >
-          {product.featuredImage ? (
+          {hasValidImage ? (
             <img
               src={getMediaUrl(product.featuredImage)}
               alt={product.name}
               className="zp-pli-img"
-              style={{
-                width: '100%',
-                height: '100%',
-                minWidth: '100%',
-                minHeight: '100%',
-                maxWidth: '100%',
-                maxHeight: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center',
-                display: 'block',
-              }}
+              onError={() => setImageError(true)}
+              loading="lazy"
             />
           ) : (
-            <Pill size={36} className="zp-pli-pill-icon" />
+            <Pill size={32} className="zp-pli-pill-icon" />
           )}
         </div>
         <div>

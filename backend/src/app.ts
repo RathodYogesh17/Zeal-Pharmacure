@@ -28,6 +28,9 @@ const allowedOrigins = [
   "http://localhost:5174",
   "http://127.0.0.1:5173",
   "http://127.0.0.1:5174",
+  "https://admin.zealpharmacure.com",
+  "https://zealpharmacure.com",
+  "https://www.zealpharmacure.com",
   process.env.CLIENT_URL,
   process.env.ADMIN_URL,
 ].filter(Boolean);
@@ -35,8 +38,8 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Direct browser navigation or server-side calls without Origin header
-      if (!origin) return callback(null, false);
+      // Direct browser navigation, tools, or server-side calls without Origin header
+      if (!origin) return callback(null, true);
       // Allow any web origin dynamically (Vercel, Localhost, Custom Domains)
       callback(null, true);
     },

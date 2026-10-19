@@ -405,6 +405,46 @@ const batchMoveGalleryImages = async (req: IGalleryRequest, res: Response): Prom
   sendSuccess(res, HTTP_STATUS.OK, `Successfully moved ${ids.length} images to ${normalizedFolder}`);
 };
 
+const batchDeleteGalleryImages = async (req: IGalleryRequest, res: Response): Promise<void> => {
+  const { ids } = req.body;
+  if (!Array.isArray(ids) || ids.length === 0) {
+    throw new AppError("Valid array of media IDs is required", HTTP_STATUS.BAD_REQUEST);
+  }
+
+  // Prevent deleting assets currently attached as user profile photos
+  const inUseCount = await User.countDocuments({
+    profileImageId: { $in: ids },
+    isDeleted: false,
+  });
+  if (inUseCount > 0) {
+    throw new AppError("One or more selected assets are in use by active staff profiles.", HTTP_STATUS.CONFLICT);
+  }
+
+  const result = await Media.updateMany(
+    { _id: { $in: ids }, isDeleted: false },
+    {
+      $set: {
+        isDeleted: true,
+        deletedAt: new Date(),
+        deletedBy: req.user?._id || null,
+      },
+    }
+  );
+
+  void recordAuditLog({
+    userId: req.user?._id,
+    action: "MEDIA_BATCH_DELETE",
+    module: "GALLERY",
+    targetType: "Media",
+    targetId: ids.slice(0, 10).join(",") + (ids.length > 10 ? `...(+${ids.length - 10} more)` : ""),
+    req,
+  });
+
+  sendSuccess(res, HTTP_STATUS.OK, `Successfully deleted ${result.modifiedCount} media asset(s).`, {
+    deletedCount: result.modifiedCount,
+  });
+};
+
 export {
   uploadGalleryImages,
   getGalleryImages,
@@ -412,4 +452,5 @@ export {
   deleteGalleryImage,
   autoOrganizeGallery,
   batchMoveGalleryImages,
+  batchDeleteGalleryImages,
 };

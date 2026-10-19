@@ -145,4 +145,24 @@ export const galleryService = {
   async deleteImage(id: string): Promise<void> {
     await request(`/gallery/${id}`, { method: 'DELETE' });
   },
+
+  async batchDeleteImages(ids: string[]): Promise<void> {
+    if (!ids || ids.length === 0) return;
+    try {
+      await request(`/gallery/batch-delete`, {
+        method: 'POST',
+        body: JSON.stringify({ ids }),
+      });
+    } catch (err: any) {
+      // Resilient fallback: If server returns 404 (endpoint not deployed on server yet), delete individually
+      const errMsg = err?.message || String(err);
+      if (err?.status === 404 || errMsg.includes('404')) {
+        console.warn('batch-delete returned 404, falling back to individual deletes...');
+        await Promise.all(ids.map((id) => this.deleteImage(id)));
+        return;
+      }
+      throw err;
+    }
+  },
 };
+

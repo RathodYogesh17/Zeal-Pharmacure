@@ -33,7 +33,10 @@ export async function request<T = any>(
         localStorage.removeItem('zeal_admin_user');
         localStorage.removeItem('zeal_user');
       }
-      throw new Error(errorMsg);
+      const apiErr: any = new Error(errorMsg);
+      apiErr.status = response.status;
+      apiErr.statusCode = response.status;
+      throw apiErr;
     }
     return data as ApiResponse<T>;
   } catch (err: any) {

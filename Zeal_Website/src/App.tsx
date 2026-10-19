@@ -24,18 +24,15 @@ import { RegisterPage } from './pages/auth/RegisterPage';
 import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage';
 import { UserProfilePage } from './pages/auth/UserProfilePage';
 
-// Admin Pages
-import { AdminLoginPage } from './pages/admin/AdminLoginPage';
-import { AdminLayout } from './pages/admin/AdminLayout';
-import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
-import { AdminCmsPage } from './pages/admin/AdminCmsPage';
-import { AdminProductsPage } from './pages/admin/AdminProductsPage';
-import { AdminAddProductPage } from './pages/admin/AdminAddProductPage';
-import { AdminProductDetailPage } from './pages/admin/AdminProductDetailPage';
-import { AdminCategoriesPage } from './pages/admin/AdminCategoriesPage';
-import { AdminUsersPage } from './pages/admin/AdminUsersPage';
-import { AdminEnquiriesPage } from './pages/admin/AdminEnquiriesPage';
-import { AdminCareersPage } from './pages/admin/AdminCareersPage';
+// Admin Portal Redirect to Dedicated Enterprise Portal
+const ADMIN_PORTAL_URL = import.meta.env.VITE_ADMIN_PORTAL_URL || 'http://localhost:5174/admin';
+
+const AdminPortalRedirect: React.FC = () => {
+  React.useEffect(() => {
+    window.location.href = ADMIN_PORTAL_URL;
+  }, []);
+  return null;
+};
 
 import './App.css';
 
@@ -79,21 +76,9 @@ export const App: React.FC = () => {
               <Route path="profile" element={<UserProfilePage />} />
             </Route>
 
-            {/* Admin Authentication */}
-            <Route path="/admin/login" element={<AdminLoginPage />} />
-
-            {/* Admin Portal Protected Routes */}
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<AdminDashboardPage />} />
-              <Route path="cms" element={<AdminCmsPage />} />
-              <Route path="products" element={<AdminProductsPage />} />
-              <Route path="products/new" element={<AdminAddProductPage />} />
-              <Route path="products/:id" element={<AdminProductDetailPage />} />
-              <Route path="categories" element={<AdminCategoriesPage />} />
-              <Route path="users" element={<AdminUsersPage />} />
-              <Route path="enquiries" element={<AdminEnquiriesPage />} />
-              <Route path="careers" element={<AdminCareersPage />} />
-            </Route>
+            {/* Admin Portal Redirects */}
+            <Route path="/admin" element={<AdminPortalRedirect />} />
+            <Route path="/admin/*" element={<AdminPortalRedirect />} />
 
             {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />

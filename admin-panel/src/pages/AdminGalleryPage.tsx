@@ -16,12 +16,15 @@ import {
   Users,
   RefreshCw,
   Tag,
-  ArrowRight
+  ArrowRight,
+  CheckSquare,
+  Square,
 } from 'lucide-react';
 import {
   useGalleryImagesQuery,
   useUploadGalleryImagesMutation,
-  useDeleteGalleryImageMutation
+  useDeleteGalleryImageMutation,
+  useBatchDeleteGalleryImagesMutation,
 } from '../hooks/queries/useGalleryQuery';
 import { galleryService, type IMediaItem } from '../api/galleryService';
 import { Button, Modal, Badge, ThemeSelect, ZealLoader } from '../components/common';
@@ -34,6 +37,11 @@ export const AdminGalleryPage: React.FC = () => {
   const [uploadSuccess, setUploadSuccess] = useState('');
   const [uploadError, setUploadError] = useState('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  // Multi-select bulk state
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [isBulkDeleteModalOpen, setIsBulkDeleteModalOpen] = useState(false);
+  const [isBatchDeleting, setIsBatchDeleting] = useState(false);
 
   // Auto-organize and moving state
   const [organizing, setOrganizing] = useState(false);
@@ -59,6 +67,7 @@ export const AdminGalleryPage: React.FC = () => {
 
   const uploadMutation = useUploadGalleryImagesMutation();
   const deleteMutation = useDeleteGalleryImageMutation();
+  const batchDeleteMutation = useBatchDeleteGalleryImagesMutation();
 
   const doUpload = async (files: File[], tag: string = selectedTagForUpload) => {
     if (!files || files.length === 0) return;
@@ -127,10 +136,42 @@ export const AdminGalleryPage: React.FC = () => {
     if (!deletingId) return;
     try {
       await deleteMutation.mutateAsync(deletingId);
+      showToast('✅ Media asset deleted successfully!');
       setDeletingId(null);
       refetch();
     } catch (err: any) {
-      alert(err.message || 'Failed to delete media.');
+      showToast(`❌ Failed to delete media: ${err.message || 'Server error'}`);
+    }
+  };
+
+  const handleToggleSelect = (id: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const handleSelectAllVisible = () => {
+    const visibleIds = (galleryData?.items || []).map((i) => i._id);
+    setSelectedIds(visibleIds);
+  };
+
+  const handleDeselectAll = () => {
+    setSelectedIds([]);
+  };
+
+  const handleBatchDeleteConfirm = async () => {
+    if (selectedIds.length === 0) return;
+    setIsBatchDeleting(true);
+    try {
+      await batchDeleteMutation.mutateAsync(selectedIds);
+      showToast(`✅ Successfully deleted ${selectedIds.length} media asset(s)!`);
+      setSelectedIds([]);
+      setIsBulkDeleteModalOpen(false);
+      refetch();
+    } catch (err: any) {
+      showToast(`❌ Failed to delete assets: ${err.message || 'Server error'}`);
+    } finally {
+      setIsBatchDeleting(false);
     }
   };
 
@@ -673,16 +714,84 @@ export const AdminGalleryPage: React.FC = () => {
             })}
           </div>
 
-          {/* Search */}
-          <div className="admin-search-wrap" style={{ width: '260px', flex: 'none' }}>
-            <Search size={16} className="admin-search-icon" />
-            <input
-              type="text"
-              placeholder="Search assets by name..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="admin-search-input"
-            />
+          {/* Actions & Search */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+            {allItems.length > 0 && (
+              <button
+                type="button"
+                onClick={() => {
+                  if (selectedIds.length === allItems.length && selectedIds.length > 0) {
+                    handleDeselectAll();
+                  } else {
+                    handleSelectAllVisible();
+                  }
+                }}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '7px 14px',
+                  borderRadius: '999px',
+                  fontSize: '12.5px',
+                  fontWeight: 700,
+                  background: selectedIds.length > 0 ? '#EDE9FE' : '#F8FAFC',
+                  color: selectedIds.length > 0 ? '#6828DC' : '#475569',
+                  border: '1.5px solid',
+                  borderColor: selectedIds.length > 0 ? '#C4B5FD' : '#CBD5E1',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease',
+                }}
+                title="Select or deselect all items in current view"
+              >
+                {selectedIds.length === allItems.length && selectedIds.length > 0 ? (
+                  <>
+                    <CheckSquare size={15} color="#6828DC" />
+                    <span>Deselect All ({allItems.length})</span>
+                  </>
+                ) : (
+                  <>
+                    <Square size={15} color={selectedIds.length > 0 ? '#6828DC' : '#64748B'} />
+                    <span>Select All ({allItems.length})</span>
+                  </>
+                )}
+              </button>
+            )}
+
+            {selectedIds.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setIsBulkDeleteModalOpen(true)}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '7px 14px',
+                  borderRadius: '999px',
+                  fontSize: '12.5px',
+                  fontWeight: 700,
+                  background: '#FEE2E2',
+                  color: '#DC2626',
+                  border: '1.5px solid #FCA5A5',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                <Trash2 size={14} />
+                <span>Delete Selected ({selectedIds.length})</span>
+              </button>
+            )}
+
+            {/* Search */}
+            <div className="admin-search-wrap" style={{ width: '240px', flex: 'none' }}>
+              <Search size={16} className="admin-search-icon" />
+              <input
+                type="text"
+                placeholder="Search assets by name..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="admin-search-input"
+              />
+            </div>
           </div>
         </div>
 
@@ -717,30 +826,34 @@ export const AdminGalleryPage: React.FC = () => {
             {allItems.map((item) => {
               const fullUrl = galleryService.formatUrl(item.url);
               const isCopied = copiedId === item._id;
+              const isSelected = selectedIds.includes(item._id);
               return (
                 <div
                   key={item._id}
                   style={{
                     background: '#FFFFFF',
                     borderRadius: '12px',
-                    border: '1px solid #E2E8F0',
+                    border: isSelected ? '2px solid #6828DC' : '1px solid #E2E8F0',
                     overflow: 'hidden',
                     display: 'flex',
                     flexDirection: 'column',
                     transition: 'all 0.2s ease',
-                    boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                    boxShadow: isSelected ? '0 0 0 3px rgba(104, 40, 220, 0.15)' : '0 1px 3px rgba(0,0,0,0.05)',
+                    position: 'relative',
                   }}
                 >
                   {/* Thumbnail */}
                   <div
+                    onClick={() => handleToggleSelect(item._id)}
                     style={{
                       height: '160px',
-                      background: '#F8FAFC',
+                      background: isSelected ? '#FAF5FF' : '#F8FAFC',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       position: 'relative',
                       overflow: 'hidden',
+                      cursor: 'pointer',
                     }}
                   >
                     <img
@@ -756,6 +869,36 @@ export const AdminGalleryPage: React.FC = () => {
                         (e.target as HTMLElement).style.opacity = '0.3';
                       }}
                     />
+
+                    {/* Multi-Select Checkbox */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleToggleSelect(item._id);
+                      }}
+                      style={{
+                        position: 'absolute',
+                        top: '8px',
+                        right: '8px',
+                        width: '26px',
+                        height: '26px',
+                        borderRadius: '6px',
+                        background: isSelected ? '#6828DC' : 'rgba(255, 255, 255, 0.9)',
+                        color: isSelected ? '#FFFFFF' : '#64748B',
+                        border: isSelected ? 'none' : '1.5px solid #CBD5E1',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        boxShadow: '0 2px 5px rgba(0,0,0,0.12)',
+                        transition: 'all 0.15s ease',
+                        zIndex: 2,
+                      }}
+                      title={isSelected ? 'Deselect image' : 'Select image for bulk actions'}
+                    >
+                      {isSelected ? <Check size={15} strokeWidth={2.8} /> : <Square size={14} />}
+                    </button>
 
                     {/* Tag Badge with Category Color */}
                     {(() => {
@@ -965,6 +1108,98 @@ export const AdminGalleryPage: React.FC = () => {
         >
           <div style={{ fontSize: '14px', color: '#475569', lineHeight: 1.5 }}>
             Are you sure you want to delete this media file from the gallery? Products or profiles using this image might lose their thumbnail.
+          </div>
+        </Modal>
+      )}
+
+      {/* STICKY FLOATING BULK ACTIONS BAR */}
+      {selectedIds.length > 0 && (
+        <div
+          style={{
+            position: 'fixed',
+            bottom: '24px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: '#0F172A',
+            color: '#FFFFFF',
+            padding: '10px 20px',
+            borderRadius: '999px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '16px',
+            boxShadow: '0 12px 30px rgba(0,0,0,0.35)',
+            zIndex: 1000,
+            animation: 'fadeIn 0.2s ease',
+          }}
+        >
+          <span style={{ fontSize: '13.5px', fontWeight: 700 }}>
+            <span style={{ color: '#C4B5FD', fontWeight: 800 }}>{selectedIds.length}</span> asset{selectedIds.length > 1 ? 's' : ''} selected
+          </span>
+          <div style={{ width: '1px', height: '18px', background: '#334155' }} />
+          <button
+            type="button"
+            onClick={handleDeselectAll}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#94A3B8',
+              fontSize: '12.5px',
+              fontWeight: 600,
+              cursor: 'pointer',
+            }}
+          >
+            Clear
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsBulkDeleteModalOpen(true)}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '7px 16px',
+              borderRadius: '999px',
+              background: '#EF4444',
+              color: '#FFFFFF',
+              border: 'none',
+              fontSize: '13px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              boxShadow: '0 2px 8px rgba(239, 68, 68, 0.4)',
+            }}
+          >
+            <Trash2 size={14} />
+            <span>Delete Selected ({selectedIds.length})</span>
+          </button>
+        </div>
+      )}
+
+      {/* BULK DELETE CONFIRMATION MODAL */}
+      {isBulkDeleteModalOpen && (
+        <Modal
+          isOpen={isBulkDeleteModalOpen}
+          onClose={() => setIsBulkDeleteModalOpen(false)}
+          title={`Delete ${selectedIds.length} Media Files`}
+          size="sm"
+          footer={
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+              <Button variant="outline" size="sm" onClick={() => setIsBulkDeleteModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button
+                variant="danger"
+                size="sm"
+                loading={isBatchDeleting}
+                disabled={isBatchDeleting}
+                onClick={handleBatchDeleteConfirm}
+              >
+                Yes, Delete {selectedIds.length} Files
+              </Button>
+            </div>
+          }
+        >
+          <div style={{ fontSize: '14px', color: '#475569', lineHeight: 1.5 }}>
+            Are you sure you want to permanently delete <strong>{selectedIds.length}</strong> selected media file(s) from the gallery? Products or profiles using these images might lose their thumbnail.
           </div>
         </Modal>
       )}

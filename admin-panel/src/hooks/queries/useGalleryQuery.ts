@@ -36,3 +36,13 @@ export const useDeleteGalleryImageMutation = () => {
     },
   });
 };
+
+export const useBatchDeleteGalleryImagesMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (ids: string[]) => galleryService.batchDeleteImages(ids),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: GALLERY_QUERY_KEY });
+    },
+  });
+};

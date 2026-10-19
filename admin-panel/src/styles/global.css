@@ -1206,6 +1206,13 @@ button {
   position: relative;
   overflow: hidden;
   transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.image-preview-stage:not(.has-image):hover {
+  border-color: #6828DC;
+  background: #FAF5FF;
+  box-shadow: 0 4px 16px rgba(104, 40, 220, 0.08);
 }
 
 .image-preview-stage.has-image {

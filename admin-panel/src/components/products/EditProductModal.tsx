@@ -423,12 +423,14 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onCl
                     <img
                       src={galleryService.formatUrl(primaryImage)}
                       alt="Primary"
-                      style={{ maxHeight: '110px', maxWidth: '100%', objectFit: 'contain', margin: '0 auto' }}
+                      onClick={() => { setActiveSlot('primary'); setGalleryModalOpen(true); }}
+                      title="Click to change primary image"
+                      style={{ maxHeight: '110px', maxWidth: '100%', objectFit: 'contain', margin: '0 auto', cursor: 'pointer' }}
                     />
                     <button
                       type="button"
                       onClick={() => setPrimaryImage('')}
-                      style={{ color: '#EF4444', fontSize: '11.5px', marginTop: '6px', fontWeight: 600 }}
+                      style={{ color: '#EF4444', fontSize: '11.5px', marginTop: '6px', fontWeight: 600, cursor: 'pointer', background: 'none', border: 'none' }}
                     >
                       Remove Image
                     </button>

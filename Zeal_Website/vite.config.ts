@@ -1,7 +1,7 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
-// https://vite.dev/config/
+// Zeal Pharma Website Vite Configuration
 export default defineConfig({
   plugins: [react()],
   server: {

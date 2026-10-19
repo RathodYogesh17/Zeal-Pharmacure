@@ -334,8 +334,23 @@ export const AdminAddProductPage: React.FC = () => {
     if (activeGallerySlot === 'primary') {
       setPrimaryImage(formattedUrl);
     } else {
-      setMediaGallery((prev) => [...prev, { url: formattedUrl, title: '', altText: '' }]);
+      setMediaGallery((prev) => {
+        if (prev.some((item) => item.url === formattedUrl)) return prev;
+        return [...prev, { url: formattedUrl, title: '', altText: '' }];
+      });
     }
+    setGalleryModalOpen(false);
+  };
+
+  const handleSelectMultipleFromGallery = (urls: string[]) => {
+    const formattedUrls = urls.map((u) => galleryService.formatUrl(u));
+    setMediaGallery((prev) => {
+      const existing = new Set(prev.map((item) => item.url));
+      const toAdd = formattedUrls
+        .filter((u) => !existing.has(u))
+        .map((u) => ({ url: u, title: '', altText: '' }));
+      return [...prev, ...toAdd];
+    });
     setGalleryModalOpen(false);
   };
 
@@ -1123,22 +1138,43 @@ export const AdminAddProductPage: React.FC = () => {
             </h2>
 
             {/* Featured Image Stage */}
-            <div className={`image-preview-stage ${primaryImage ? 'has-image' : ''}`}>
+            <div
+              className={`image-preview-stage ${primaryImage ? 'has-image' : ''}`}
+              onClick={() => {
+                if (!primaryImage) {
+                  setActiveGallerySlot('primary');
+                  setGalleryModalOpen(true);
+                }
+              }}
+              style={{
+                cursor: primaryImage ? 'default' : 'pointer',
+              }}
+              title={primaryImage ? 'Product Packshot' : 'Click to select packshot from Media Gallery or Upload'}
+            >
               {primaryImage ? (
                 <>
                   <img
                     src={primaryImage}
                     alt="Product Packshot Preview"
+                    onClick={() => {
+                      setActiveGallerySlot('primary');
+                      setGalleryModalOpen(true);
+                    }}
+                    title="Click image to change packshot"
                     style={{
                       width: '100%',
                       height: '100%',
                       objectFit: 'contain',
                       padding: '12px',
+                      cursor: 'pointer',
                     }}
                   />
                   <button
                     type="button"
-                    onClick={() => setPrimaryImage('')}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setPrimaryImage('');
+                    }}
                     title="Remove packshot"
                     style={{
                       position: 'absolute',
@@ -1155,13 +1191,14 @@ export const AdminAddProductPage: React.FC = () => {
                       alignItems: 'center',
                       justifyContent: 'center',
                       boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
+                      zIndex: 3,
                     }}
                   >
                     <Trash2 size={15} />
                   </button>
                 </>
               ) : (
-                <div style={{ textAlign: 'center', padding: '16px' }}>
+                <div style={{ textAlign: 'center', padding: '16px', pointerEvents: 'none' }}>
                   <div
                     style={{
                       width: '46px',
@@ -1180,8 +1217,11 @@ export const AdminAddProductPage: React.FC = () => {
                   <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#1E293B', marginBottom: '3px' }}>
                     {uploadingImage ? 'Uploading Packshot...' : 'No Packshot Selected'}
                   </div>
-                  <div style={{ fontSize: '12px', color: '#94A3B8' }}>
-                    Upload PNG / JPG packshot with transparent background
+                  <div style={{ fontSize: '12px', color: '#6828DC', fontWeight: 600 }}>
+                    Click here to choose from Media Gallery or upload file
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
+                    Supports PNG / JPG / WEBP packshots
                   </div>
                 </div>
               )}
@@ -1502,8 +1542,14 @@ export const AdminAddProductPage: React.FC = () => {
         isOpen={galleryModalOpen}
         onClose={() => setGalleryModalOpen(false)}
         onSelect={handleSelectFromGallery}
+        onSelectMultiple={handleSelectMultipleFromGallery}
+        multiple={activeGallerySlot === 'gallery'}
         defaultTag="PRODUCT"
-        title="Select Product Packshot from Media Gallery"
+        title={
+          activeGallerySlot === 'gallery'
+            ? 'Select Additional Packshots (Multi-Select)'
+            : 'Select Product Packshot from Media Gallery'
+        }
       />
     </div>
   );
