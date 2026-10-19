@@ -463,7 +463,20 @@ const getProductBySlugOrId = async (slugOrId: string, isPublic: boolean = false)
 // GET RELATED PRODUCTS
 // =====================================================
 const getRelatedProducts = async (slugOrId: string, limitCount: number = 4) => {
-  const currentProduct = await getProductBySlugOrId(slugOrId, true);
+  const currentFilter: Record<string, unknown> = { isDeleted: false, isActive: true };
+  if (mongoose.Types.ObjectId.isValid(slugOrId)) {
+    currentFilter.$or = [{ _id: slugOrId }, { slug: slugOrId.toLowerCase() }];
+  } else {
+    currentFilter.slug = slugOrId.toLowerCase();
+  }
+
+  const currentProduct = await Product.findOne(currentFilter)
+    .select('_id category subCategory dosageForm')
+    .lean();
+
+  if (!currentProduct) {
+    return [];
+  }
 
   const filter: Record<string, unknown> = {
     _id: { $ne: currentProduct._id },
@@ -477,7 +490,8 @@ const getRelatedProducts = async (slugOrId: string, limitCount: number = 4) => {
   };
 
   const related = await Product.find(filter)
-    .populate(defaultPopulate)
+    .select(publicProductFields)
+    .populate(publicPopulate)
     .limit(limitCount)
     .sort({ isFeatured: -1, createdAt: -1 })
     .lean();

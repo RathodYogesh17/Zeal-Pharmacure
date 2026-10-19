@@ -89,32 +89,80 @@ export const ProductDetailPage: React.FC = () => {
   }, [slug]);
 
   const loadProduct = async (productSlug: string) => {
-    setLoading(true);
+    let hadCached = false;
+
+    // 1. Instant Cache Look-up: check if product is already in localStorage catalog cache
     try {
-      const data = await productService.getProductBySlug(productSlug);
-      setProduct(data);
-      if (data) {
-        setActiveImage(data.featuredImage || '');
-        // Fetch related formulations
-        const related = await productService.getRelatedProducts(data.slug || data._id, 8);
-        setRelatedProducts(related || []);
+      const rawCache = localStorage.getItem('zeal_products_cache');
+      if (rawCache) {
+        const parsed = JSON.parse(rawCache);
+        const list: IProduct[] = Array.isArray(parsed) ? parsed : parsed?.data;
+        if (Array.isArray(list) && list.length > 0) {
+          const found = list.find(
+            (p) =>
+              (p.slug && p.slug.toLowerCase() === productSlug.toLowerCase()) ||
+              p._id === productSlug
+          );
+          if (found) {
+            setProduct(found);
+            setActiveImage(found.featuredImage || '');
+            setLoading(false);
+            hadCached = true;
 
-        // Also fetch general catalog to determine prev / next
-        const catSlug = typeof data.category === 'object' && data.category?.slug
-          ? data.category.slug
-          : typeof data.category === 'string' && !data.category.match(/^[0-9a-fA-F]{24}$/)
-            ? data.category
-            : '';
-
-        const allInCat = await productService.getProducts({ category: catSlug || undefined, limit: 30 });
-        if (allInCat && allInCat.products) {
-          setCategoryProducts(allInCat.products);
+            // Pre-populate sibling list for instant Prev / Next buttons
+            const catId = typeof found.category === 'object' && found.category ? (found.category as any)._id : found.category;
+            const sameCat = list.filter((p) => {
+              const pCatId = typeof p.category === 'object' && p.category ? (p.category as any)._id : p.category;
+              return pCatId && pCatId === catId;
+            });
+            if (sameCat.length > 1) {
+              setCategoryProducts(sameCat);
+            }
+          }
         }
+      }
+    } catch {}
+
+    if (!hadCached) {
+      setLoading(true);
+    }
+
+    try {
+      // 2. Fetch fresh full product dossier
+      const data = await productService.getProductBySlug(productSlug);
+      if (data) {
+        setProduct((prev) => (prev ? { ...prev, ...data } : data));
+        setActiveImage((prev) => prev || data.featuredImage || '');
+        setLoading(false);
+
+        // 3. Fetch Related & Category siblings in parallel in the background (NON-BLOCKING)
+        const catSlug =
+          typeof data.category === 'object' && data.category?.slug
+            ? data.category.slug
+            : typeof data.category === 'string' && !data.category.match(/^[0-9a-fA-F]{24}$/)
+              ? data.category
+              : '';
+
+        Promise.allSettled([
+          productService.getRelatedProducts(data.slug || data._id, 8),
+          productService.getProducts({ category: catSlug || undefined, limit: 30 }),
+        ]).then(([relatedRes, catRes]) => {
+          if (relatedRes.status === 'fulfilled' && Array.isArray(relatedRes.value)) {
+            setRelatedProducts(relatedRes.value);
+          }
+          if (catRes.status === 'fulfilled' && catRes.value?.products) {
+            setCategoryProducts(catRes.value.products);
+          }
+        });
+      } else if (!hadCached) {
+        setProduct(null);
+        setLoading(false);
       }
     } catch (err) {
       console.error('Failed to load product:', err);
-    } finally {
-      setLoading(false);
+      if (!hadCached) {
+        setLoading(false);
+      }
     }
   };
 
