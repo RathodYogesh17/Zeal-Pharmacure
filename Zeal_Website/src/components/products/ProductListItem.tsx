@@ -37,6 +37,7 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({
               className="zp-pli-img"
               onError={() => setImageError(true)}
               loading="lazy"
+              decoding="async"
             />
           ) : (
             <Pill size={32} className="zp-pli-pill-icon" />

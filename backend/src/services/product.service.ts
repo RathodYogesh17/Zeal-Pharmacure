@@ -26,6 +26,15 @@ const defaultPopulate = [
   { path: "updatedBy", select: "name email role" },
 ];
 
+const publicPopulate = [
+  { path: "category", select: "name slug description icon isFeatured" },
+  { path: "subCategory", select: "name slug description image sortOrder" },
+  { path: "indications", select: "name slug description sortOrder" },
+];
+
+const publicProductFields =
+  "_id name slug brandName genericName composition strength dosageForm packaging packSize category subCategory subCategoryName indications indicationTags therapeuticClass mrp availabilityStatus featuredImage isFeatured featuredOrder isNewLaunch prescriptionType allowEnquiry averageRating totalReviews status isActive createdAt";
+
 const validateProductId = (id: string): void => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new AppError(MESSAGES.INVALID_PRODUCT_ID, HTTP_STATUS.BAD_REQUEST);
@@ -406,9 +415,16 @@ const getAllProducts = async (query: IProductQuery = {}, isPublic: boolean = fal
     sortCriteria.createdAt = query.sortOrder === "asc" ? 1 : -1;
   }
 
+  const populateList = isPublic ? publicPopulate : defaultPopulate;
+
+  let queryBuilder = Product.find(filter);
+  if (isPublic) {
+    queryBuilder = queryBuilder.select(publicProductFields);
+  }
+
   const [products, total] = await Promise.all([
-    Product.find(filter)
-      .populate(defaultPopulate)
+    queryBuilder
+      .populate(populateList)
       .sort(sortCriteria)
       .skip(skip)
       .limit(limit)

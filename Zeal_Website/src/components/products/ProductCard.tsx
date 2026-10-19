@@ -85,6 +85,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               alt={product.name}
               onError={() => setImageError(true)}
               loading="lazy"
+              decoding="async"
             />
           ) : (
             <div className="zp-product-placeholder">

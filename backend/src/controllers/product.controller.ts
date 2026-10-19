@@ -28,6 +28,7 @@ const createProduct = async (req: IProductRequest, res: Response): Promise<void>
 const getPublicProducts = async (req: IProductRequest, res: Response): Promise<void> => {
   const query: IProductQuery = req.validatedQuery ?? (req.query as IProductQuery);
   const result = await productService.getAllProducts(query, true);
+  res.setHeader("Cache-Control", "public, s-maxage=120, stale-while-revalidate=300");
   sendSuccess(res, HTTP_STATUS.OK, MESSAGES.PRODUCTS_FETCHED, result);
 };
 
@@ -39,12 +40,14 @@ const getAdminProducts = async (req: IProductRequest, res: Response): Promise<vo
 
 const getProduct = async (req: Request, res: Response): Promise<void> => {
   const result = await productService.getProductBySlugOrId(String(req.params.slugOrId));
+  res.setHeader("Cache-Control", "public, s-maxage=300, stale-while-revalidate=600");
   sendSuccess(res, HTTP_STATUS.OK, MESSAGES.PRODUCT_FETCHED, result);
 };
 
 const getRelatedProducts = async (req: Request, res: Response): Promise<void> => {
   const limitCount = req.query.limit ? Number(req.query.limit) : 4;
   const result = await productService.getRelatedProducts(String(req.params.slugOrId), limitCount);
+  res.setHeader("Cache-Control", "public, s-maxage=300, stale-while-revalidate=600");
   sendSuccess(res, HTTP_STATUS.OK, MESSAGES.RELATED_PRODUCTS_FETCHED, result);
 };
 
