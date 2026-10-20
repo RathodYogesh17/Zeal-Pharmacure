@@ -59,6 +59,7 @@ export const ProductDetailGallery: React.FC<ProductDetailGalleryProps> = ({
               maxHeight: '100%',
               maxWidth: '100%',
               objectFit: 'contain',
+              imageRendering: '-webkit-optimize-contrast',
               filter: 'drop-shadow(0 10px 20px rgba(15, 23, 42, 0.12))',
               transition: 'transform 0.3s ease',
             }}
@@ -255,6 +256,7 @@ export const ProductDetailGallery: React.FC<ProductDetailGalleryProps> = ({
                 maxWidth: '80vw',
                 maxHeight: '75vh',
                 objectFit: 'contain',
+                imageRendering: '-webkit-optimize-contrast',
               }}
             />
             <div style={{ textAlign: 'center', marginTop: '12px' }}>

@@ -23,6 +23,7 @@ import { VerifiedUserBadge } from '../common/VerifiedUserBadge';
 import { B2BCustomerFields } from '../common/forms';
 import { buildBulkBatchWhatsAppMessage } from '../../utils/whatsappMessageBuilder';
 import { validateB2BCustomerFields } from '../../utils/pharmaUtils';
+import { getMediaUrl } from '../../utils/mediaUtils';
 
 interface BulkProductEnquiryModalProps {
   products: IProduct[];
@@ -441,9 +442,9 @@ export const BulkProductEnquiryModal: React.FC<BulkProductEnquiryModalProps> = (
                         >
                           {p.featuredImage ? (
                             <img
-                              src={p.featuredImage}
+                              src={getMediaUrl(p.featuredImage)}
                               alt={p.name}
-                              style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '2px' }}
+                              style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '2px', imageRendering: '-webkit-optimize-contrast' }}
                             />
                           ) : (
                             <Pill size={18} color="#6828DC" />

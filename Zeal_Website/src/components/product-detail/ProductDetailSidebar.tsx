@@ -183,9 +183,9 @@ export const ProductDetailSidebar: React.FC<ProductDetailSidebarProps> = ({
               >
                 {item.featuredImage ? (
                   <img
-                    src={item.featuredImage}
+                    src={getMediaUrl(item.featuredImage)}
                     alt={item.name}
-                    style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
+                    style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', imageRendering: '-webkit-optimize-contrast' }}
                   />
                 ) : (
                   <div style={{ fontSize: '24px' }}>💊</div>

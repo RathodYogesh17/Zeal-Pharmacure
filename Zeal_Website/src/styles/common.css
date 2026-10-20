@@ -169,6 +169,7 @@
   max-height: 100% !important;
   object-fit: contain !important;
   object-position: center !important;
+  image-rendering: -webkit-optimize-contrast !important;
   filter: drop-shadow(0 4px 10px rgba(15, 23, 42, 0.07)) drop-shadow(0 1px 3px rgba(15, 23, 42, 0.04)) !important;
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease !important;
   display: block !important;
@@ -1679,6 +1680,7 @@
   max-height: 100%;
   object-fit: contain;
   object-position: center;
+  image-rendering: -webkit-optimize-contrast;
   display: block;
   margin: auto;
   filter: drop-shadow(0 3px 8px rgba(15, 23, 42, 0.08));

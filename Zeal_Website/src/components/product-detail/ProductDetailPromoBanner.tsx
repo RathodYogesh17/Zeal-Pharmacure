@@ -155,6 +155,7 @@ export const ProductDetailPromoBanner: React.FC<ProductDetailPromoBannerProps> =
             width: '100%',
             height: '100%',
             objectFit: 'cover',
+            imageRendering: '-webkit-optimize-contrast',
             WebkitMaskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.1) 12%, rgba(0,0,0,0.8) 40%, #000000 70%)',
             maskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.1) 12%, rgba(0,0,0,0.8) 40%, #000000 70%)',
           }}

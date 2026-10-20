@@ -193,18 +193,19 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
                 height: '100%',
                 objectFit: 'cover',
                 objectPosition: 'center 35%',
-                WebkitMaskImage: 'linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.08) 8%, rgba(0, 0, 0, 0.6) 24%, #000000 45%)',
-                maskImage: 'linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.08) 8%, rgba(0, 0, 0, 0.6) 24%, #000000 45%)',
+                imageRendering: '-webkit-optimize-contrast',
+                WebkitMaskImage: 'linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.4) 12%, #000000 28%)',
+                maskImage: 'linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.4) 12%, #000000 28%)',
               }}
             />
-            {/* Ambient tone gradient overlay to blend into card */}
+            {/* Ambient tone gradient overlay to blend gently with card */}
             <div style={{
               position: 'absolute',
               top: 0,
               left: 0,
               right: 0,
               bottom: 0,
-              background: 'linear-gradient(90deg, rgba(248, 250, 252, 0.95) 0%, rgba(237, 233, 254, 0.4) 25%, rgba(237, 233, 254, 0) 60%)',
+              background: 'linear-gradient(90deg, rgba(248, 250, 252, 0.85) 0%, rgba(237, 233, 254, 0.15) 15%, transparent 28%)',
               pointerEvents: 'none',
             }} />
           </div>
@@ -233,7 +234,7 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
           
           {/* Top Card: Stockists / Distribution Supply Chain */}
           <div style={{
-            backgroundImage: `linear-gradient(90deg, rgba(245, 243, 255, 0.97) 0%, rgba(245, 243, 255, 0.92) 52%, rgba(245, 243, 255, 0.55) 78%, rgba(245, 243, 255, 0.15) 100%), url('${rackBgImg}')`,
+            backgroundImage: `linear-gradient(90deg, rgba(245, 243, 255, 0.96) 0%, rgba(245, 243, 255, 0.88) 45%, rgba(245, 243, 255, 0.15) 75%, transparent 100%), url('${rackBgImg}')`,
             backgroundSize: 'cover',
             backgroundPosition: 'right center',
             borderRadius: '20px',
