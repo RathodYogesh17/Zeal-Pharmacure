@@ -34,6 +34,7 @@ import {
   type DashboardKpiItem,
 } from '../components/dashboard';
 import { ZealLoader } from '../components/common';
+import { useDashboardMetricsQuery } from '../hooks/queries/useDashboardQuery';
 
 export const AdminDashboardPage: React.FC = () => {
   const { user } = useAuth();
@@ -51,7 +52,9 @@ export const AdminDashboardPage: React.FC = () => {
     return effectivePermissions.includes(perm);
   };
 
-  const [stats, setStats] = useState<IDashboardStats>({
+  const { data: statsData, isLoading: loading, isFetching, refetch: loadDashboardData } = useDashboardMetricsQuery();
+
+  const stats: IDashboardStats = statsData || {
     totalProducts: 0,
     activeProducts: 0,
     inactiveProducts: 0,
@@ -77,21 +80,6 @@ export const AdminDashboardPage: React.FC = () => {
     recentActivities: [],
     recentEnquiries: [],
     recentApplications: [],
-  });
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    loadDashboardData();
-  }, []);
-
-  const loadDashboardData = () => {
-    setLoading(true);
-    dashboardService
-      .getDashboardMetrics()
-      .then((res) => {
-        setStats(res);
-      })
-      .finally(() => setLoading(false));
   };
 
   const canSeeProducts = hasPerm('product:view');
@@ -359,7 +347,7 @@ export const AdminDashboardPage: React.FC = () => {
           {/* Sync Refresh Button */}
           <button
             type="button"
-            onClick={loadDashboardData}
+            onClick={() => loadDashboardData()}
             title="Sync Realtime ERP Data"
             style={{
               background: '#FFFFFF',
@@ -384,8 +372,8 @@ export const AdminDashboardPage: React.FC = () => {
               e.currentTarget.style.color = '#334155';
             }}
           >
-            <RefreshCw size={14} className={loading ? 'spin' : ''} />
-            <span>{loading ? 'Syncing...' : 'Sync Data'}</span>
+            <RefreshCw size={14} className={isFetching ? 'spin' : ''} />
+            <span>{isFetching ? 'Syncing...' : 'Sync Data'}</span>
           </button>
 
           {/* Primary Quick Action Button */}

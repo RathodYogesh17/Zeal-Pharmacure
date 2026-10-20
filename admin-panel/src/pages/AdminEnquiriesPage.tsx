@@ -5,6 +5,7 @@ import { careerService } from '../api/careerService';
 import { AdminEnquiryDetailModal, EnquiryStatsCards, EnquiryCategoryTabs, EnquiryFilterToolbar, EnquiryTableRow, StatusChangeConfirmModal, isCareerLead, isStockistLead, isBulkLead, isSingleProductLead, computeEnquiryStats, exportEnquiriesCSV, } from '../components/enquiries';
 import { TablePagination, filterByDateRange, type DateFilterType, ZealLoader } from '../components/common';
 import type { IEnquiry, EnquiryStatus } from '../types';
+import { useAdminEnquiriesQuery, useUpdateEnquiryStatusMutation } from '../hooks/queries/useEnquiriesQuery';
 
 export { isCareerLead, isStockistLead, isBulkLead, isSingleProductLead } from '../components/enquiries';
 
@@ -13,8 +14,10 @@ export interface AdminEnquiriesPageProps {
 }
 
 export const AdminEnquiriesPage: React.FC<AdminEnquiriesPageProps> = ({ pageMode = 'all' }) => {
-  const [enquiries, setEnquiries] = useState<IEnquiry[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: cachedEnquiries, isLoading: loadingEnquiries, isFetching, refetch } = useAdminEnquiriesQuery(pageMode);
+  const updateStatusMutation = useUpdateEnquiryStatusMutation();
+
+  const [enquiries, setEnquiries] = useState<IEnquiry[]>(() => cachedEnquiries || []);
   const [search, setSearch] = useState('');
   const [activeCategoryTab, setActiveCategoryTab] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
@@ -30,6 +33,15 @@ export const AdminEnquiriesPage: React.FC<AdminEnquiriesPageProps> = ({ pageMode
     newStatus: EnquiryStatus;
   } | null>(null);
 
+  // Sync when query resolves or updates
+  useEffect(() => {
+    if (cachedEnquiries) {
+      setEnquiries(cachedEnquiries);
+    }
+  }, [cachedEnquiries]);
+
+  const loading = loadingEnquiries && enquiries.length === 0;
+
   // Reset tab and page when pageMode route changes
   useEffect(() => {
     setActiveCategoryTab('all');
@@ -44,76 +56,8 @@ export const AdminEnquiriesPage: React.FC<AdminEnquiriesPageProps> = ({ pageMode
     setTimeout(() => setToastMessage(null), 3500);
   };
 
-  useEffect(() => {
-    loadEnquiries();
-  }, [pageMode]);
-
-  const loadEnquiries = async () => {
-    setLoading(true);
-    try {
-      const categoryParam =
-        pageMode === 'franchise'
-          ? 'franchise'
-          : pageMode === 'product'
-            ? 'product'
-            : undefined;
-
-      const shouldLoadCareers = pageMode === 'all' || pageMode === 'career';
-
-      const [res, careerApps] = await Promise.all([
-        enquiryService.adminGetEnquiries({
-          limit: 500,
-          category: categoryParam,
-        }),
-        shouldLoadCareers
-          ? careerService.adminGetApplications().catch(() => [])
-          : Promise.resolve([]),
-      ]);
-
-      const standardEnquiries = res?.enquiries || [];
-      const mappedCareers: IEnquiry[] = (careerApps || []).map((app: any) => ({
-        _id: app._id,
-        enquiryType: 'CAREER',
-        enquiryCategory: 'CAREER',
-        name: app.fullName,
-        fullName: app.fullName,
-        email: app.email,
-        phone: app.phone,
-        whatsappNumber: app.whatsappNumber || app.phone,
-        city: app.currentCity,
-        state: app.currentState,
-        preferredTerritory: app.preferredLocation,
-        positionAppliedFor: app.positionAppliedFor || app.jobTitle || 'Candidate',
-        department: app.department || 'Operations',
-        qualification: app.qualification,
-        totalExperienceYears: app.totalExperienceYears,
-        currentCompany: app.currentCompany,
-        currentDesignation: app.currentDesignation,
-        currentCtc: app.currentCtc,
-        expectedCtc: app.expectedCtc,
-        noticePeriod: app.noticePeriod,
-        resumeUrl: app.resumeUrl,
-        coverLetter: app.coverLetter || app.coverNote,
-        skills: app.skills,
-        interviewRounds: app.interviewRounds,
-        internalNotes: app.internalNotes,
-        status: (app.status || 'NEW') as EnquiryStatus,
-        createdAt: app.createdAt,
-        updatedAt: app.updatedAt,
-        message: app.coverLetter || `Applied for position: ${app.positionAppliedFor || 'Candidate'}`,
-      }));
-
-      const combined = [...standardEnquiries, ...mappedCareers].sort(
-        (a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
-      );
-
-      setEnquiries(combined);
-    } catch (err) {
-      console.error('Failed to load enquiries:', err);
-      showToast('Error connecting to enquiries database');
-    } finally {
-      setLoading(false);
-    }
+  const loadEnquiries = () => {
+    refetch();
   };
 
   const handleInitiateStatusChange = async (id: string, newStatus: EnquiryStatus) => {

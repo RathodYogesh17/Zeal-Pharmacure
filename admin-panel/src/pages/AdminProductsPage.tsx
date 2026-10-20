@@ -31,6 +31,13 @@ import {
   ZealLoader,
 } from '../components/common';
 import type { IProduct, ICategory } from '../types';
+import {
+  useAdminProductsQuery,
+  useCategoriesQuery,
+  useToggleProductStatusMutation,
+  useDuplicateProductMutation,
+  useDeleteProductMutation,
+} from '../hooks/queries/useProductsQuery';
 
 export const AdminProductsPage: React.FC = () => {
   const activeRole = useAppSelector(selectCurrentRole);
@@ -47,9 +54,27 @@ export const AdminProductsPage: React.FC = () => {
   const canUpdate = hasPerm('product:update');
   const canDelete = hasPerm('product:delete');
 
-  const [products, setProducts] = useState<IProduct[]>([]);
-  const [categories, setCategories] = useState<ICategory[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: prodData, isLoading: loadingProducts, isFetching, refetch } = useAdminProductsQuery({
+    limit: 1000,
+    sortBy: 'name',
+    sortOrder: 'asc',
+  });
+  const { data: catData } = useCategoriesQuery();
+
+  const toggleStatusMutation = useToggleProductStatusMutation();
+  const duplicateMutation = useDuplicateProductMutation();
+  const deleteMutation = useDeleteProductMutation();
+
+  const [products, setProducts] = useState<IProduct[]>(() => prodData?.products || []);
+  const categories = catData || [];
+
+  useEffect(() => {
+    if (prodData?.products) {
+      setProducts(prodData.products);
+    }
+  }, [prodData?.products]);
+
+  const loading = loadingProducts && products.length === 0;
 
   // Filters & View State
   const [search, setSearch] = useState('');
@@ -69,26 +94,8 @@ export const AdminProductsPage: React.FC = () => {
   const [feedbackMsg, setFeedbackMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
-    setLoading(true);
-    setErrorMsg('');
-    try {
-      const [prodRes, catList] = await Promise.all([
-        productService.getProducts({ limit: 1000, sortBy: 'name', sortOrder: 'asc' }),
-        productService.getCategories(),
-      ]);
-      setProducts(prodRes?.products || []);
-      setCategories(catList || []);
-    } catch (err: any) {
-      setErrorMsg(err.message || 'Failed to load products from database.');
-      setProducts([]);
-    } finally {
-      setLoading(false);
-    }
+  const loadData = () => {
+    refetch();
   };
 
   const handleToggleStatus = async (id: string, currentStatus?: boolean) => {
@@ -106,16 +113,13 @@ export const AdminProductsPage: React.FC = () => {
 
   const handleDuplicateProduct = async (product: IProduct) => {
     try {
-      setLoading(true);
       setErrorMsg('');
-      const duplicated = await productService.adminDuplicateProduct(product._id);
+      const duplicated = await duplicateMutation.mutateAsync(product._id);
       setProducts((prev) => [duplicated, ...prev]);
       setFeedbackMsg(`Formulation "${product.name}" duplicated successfully as draft!`);
       setTimeout(() => setFeedbackMsg(''), 3500);
     } catch (err: any) {
       setErrorMsg(err.message || 'Failed to duplicate product.');
-    } finally {
-      setLoading(false);
     }
   };
 

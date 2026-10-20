@@ -44,14 +44,17 @@ import {
   AdvancedWhatsAppModal,
   ZealLoader,
 } from '../components/common';
+import { useCareersDataQuery } from '../hooks/queries/useCareersQuery';
 
 export const AdminCareersPage: React.FC = () => {
-  const [jobs, setJobs] = useState<IJobOpening[]>([]);
+  const { data: careersQueryData, isLoading: loadingCareers, isFetching, refetch } = useCareersDataQuery();
+
+  const [jobs, setJobs] = useState<IJobOpening[]>(() => careersQueryData?.jobs || []);
   const [viewCandidateModal, setViewCandidateModal] = useState<ICareerApplication | null>(null);
-  const [applications, setApplications] = useState<ICareerApplication[]>([]);
-  const [reviews, setReviews] = useState<any[]>([]);
+  const [applications, setApplications] = useState<ICareerApplication[]>(() => careersQueryData?.applications || []);
+  const [reviews, setReviews] = useState<any[]>(() => careersQueryData?.reviews || []);
   const [activeTab, setActiveTab] = useState<'applications' | 'vacancies' | 'reviews'>('applications');
-  const [loading, setLoading] = useState(true);
+  const loading = loadingCareers && jobs.length === 0 && applications.length === 0;
 
   // Filters for Applications
   const [appSearch, setAppSearch] = useState('');
@@ -151,26 +154,15 @@ export const AdminCareersPage: React.FC = () => {
   };
 
   useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
-    setLoading(true);
-    setErrorMsg('');
-    try {
-      const [jobsData, appsData, reviewsData] = await Promise.all([
-        careerService.getJobs(),
-        careerService.adminGetApplications(),
-        productService.adminGetReviews({ limit: 50 }).catch(() => ({ reviews: [] })),
-      ]);
-      setJobs(jobsData || []);
-      setApplications(appsData || []);
-      setReviews(reviewsData?.reviews || []);
-    } catch (err: any) {
-      console.warn('Failed to load careers and reviews data:', err);
-    } finally {
-      setLoading(false);
+    if (careersQueryData) {
+      setJobs(careersQueryData.jobs);
+      setApplications(careersQueryData.applications);
+      setReviews(careersQueryData.reviews);
     }
+  }, [careersQueryData]);
+
+  const loadData = () => {
+    refetch();
   };
 
   const handleCreateJob = async (e: React.FormEvent) => {

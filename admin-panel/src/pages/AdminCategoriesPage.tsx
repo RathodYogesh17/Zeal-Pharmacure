@@ -32,6 +32,7 @@ import {
   ZealLoader,
 } from '../components/common';
 import type { ICategory, ISubCategory } from '../types';
+import { useAdminCategoriesQuery, useCategoryMutations } from '../hooks/queries/useCategoriesQuery';
 
 interface GalleryImagePickerProps {
   label: string;
@@ -242,10 +243,13 @@ const GalleryImagePicker: React.FC<GalleryImagePickerProps> = ({
 };
 
 export const AdminCategoriesPage: React.FC = () => {
-  const [categories, setCategories] = useState<ICategory[]>([]);
-  const [subCategories, setSubCategories] = useState<ISubCategory[]>([]);
+  const { data: catData, isLoading: loadingCats, isFetching, refetch } = useAdminCategoriesQuery();
+  const { invalidateAll } = useCategoryMutations();
+
+  const [categories, setCategories] = useState<ICategory[]>(() => catData?.categories || []);
+  const [subCategories, setSubCategories] = useState<ISubCategory[]>(() => catData?.subCategories || []);
   const [activeTab, setActiveTab] = useState<'categories' | 'subcategories'>('categories');
-  const [loading, setLoading] = useState(true);
+  const loading = loadingCats && categories.length === 0;
 
   const [feedbackMsg, setFeedbackMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
@@ -332,39 +336,19 @@ export const AdminCategoriesPage: React.FC = () => {
   const [subCatNameError, setSubCatNameError] = useState('');
 
   useEffect(() => {
-    loadData();
-  }, []);
+    if (catData) {
+      setCategories(catData.categories);
+      setSubCategories(catData.subCategories);
+      setUsersMap(catData.usersMap);
 
-  const loadData = async () => {
-    setLoading(true);
-    try {
-      const [cats, subs, usersRes] = await Promise.all([
-        categoryService.getAdminCategories(),
-        categoryService.getAdminSubCategories(),
-        userService.getAllUsers({ limit: 100 }).catch(() => ({ users: [], total: 0 })),
-      ]);
-      setCategories(cats);
-      setSubCategories(subs);
-
-      if (usersRes?.users?.length) {
-        const map: Record<string, string> = {};
-        usersRes.users.forEach((u: any) => {
-          if (u._id) {
-            map[u._id] = u.name || u.fullName || u.email || 'Admin';
-          }
-        });
-        setUsersMap(map);
+      if (catData.categories.length > 0 && !subCategoryForm.category) {
+        setSubCategoryForm((prev) => ({ ...prev, category: catData.categories[0]._id }));
       }
-
-      if (cats.length > 0 && !subCategoryForm.category) {
-        setSubCategoryForm(prev => ({ ...prev, category: cats[0]._id }));
-      }
-    } catch (err: unknown) {
-      const error = err as { message?: string };
-      setErrorMsg(error.message || 'Failed to load categories.');
-    } finally {
-      setLoading(false);
     }
+  }, [catData]);
+
+  const loadData = () => {
+    refetch();
   };
 
   const openGalleryFor = (
