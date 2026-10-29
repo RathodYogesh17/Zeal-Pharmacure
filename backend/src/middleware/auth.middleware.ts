@@ -18,7 +18,8 @@ const authMiddleware = async (
       return;
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET || "access_secret") as { _id: string; email: string;  role: string;};
+    const accessSecret = process.env.JWT_ACCESS_SECRET?.trim() || "zeal_pharma_production_access_key_2026_secured";
+    const decoded = jwt.verify(token, accessSecret) as { _id: string; email: string;  role: string;};
     const user = await User.findById(decoded._id).select("-password").populate("role", "name code").lean();
     if (!user || user.isDeleted || !user.isActive) {
       res.status(HTTP_STATUS.UNAUTHORIZED).json({ success: false, message: MESSAGES.UNAUTHORIZED, });

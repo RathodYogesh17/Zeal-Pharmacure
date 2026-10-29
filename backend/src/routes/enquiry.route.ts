@@ -28,6 +28,7 @@ import {
 import { validate, validateQuery } from "../middleware/validation.middleware";
 import { authMiddleware } from "../middleware/auth.middleware";
 import { requirePermissions, requireAnyPermission } from "../middleware/role.middleware";
+import { enquiryRateLimiter } from "../middleware/rateLimit.middleware";
 import PERMISSIONS from "../constants/permissions";
 import asyncHandler from "../utils/asyncHandler";
 
@@ -35,10 +36,11 @@ const enquiryRouter = Router();
 
 // =====================================================
 // PUBLIC ROUTES (Doctors, Chemists, B2B Stockists / Distribution Partners)
+// Protected with enquiryRateLimiter to prevent bot spam while allowing 25 requests/15m
 // =====================================================
-enquiryRouter.post("/", validate(createEnquirySchema), asyncHandler(createEnquiry));
-enquiryRouter.post("/product", validate(createProductEnquirySchema), asyncHandler(createProductEnquiry));
-enquiryRouter.post("/franchise", validate(createFranchiseEnquirySchema), asyncHandler(createFranchiseEnquiry));
+enquiryRouter.post("/", enquiryRateLimiter, validate(createEnquirySchema), asyncHandler(createEnquiry));
+enquiryRouter.post("/product", enquiryRateLimiter, validate(createProductEnquirySchema), asyncHandler(createProductEnquiry));
+enquiryRouter.post("/franchise", enquiryRateLimiter, validate(createFranchiseEnquirySchema), asyncHandler(createFranchiseEnquiry));
 enquiryRouter.post("/:id/confirm", asyncHandler(confirmEnquiry));
 enquiryRouter.post("/validate-dl", validate(validateDlSchema), asyncHandler(validateDrugLicense));
 enquiryRouter.get("/validate-dl", asyncHandler(validateDrugLicense));

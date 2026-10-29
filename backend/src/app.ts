@@ -33,15 +33,25 @@ const allowedOrigins = [
   "https://www.zealpharmacure.com",
   process.env.CLIENT_URL,
   process.env.ADMIN_URL,
-].filter(Boolean);
+].filter(Boolean) as string[];
+
+const isOriginAllowed = (origin: string): boolean => {
+  if (allowedOrigins.includes(origin)) return true;
+  // Allow all localhost / 127.0.0.1 development ports
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return true;
+  // Allow Zeal Pharma Vercel preview/production deployments
+  if (/^https:\/\/.*zeal.*\.vercel\.app$/.test(origin)) return true;
+  return false;
+};
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Direct browser navigation, tools, or server-side calls without Origin header
-      if (!origin) return callback(null, true);
-      // Allow any web origin dynamically (Vercel, Localhost, Custom Domains)
-      callback(null, true);
+      // Allow non-browser requests (tools, curl, server-to-server) without Origin header
+      if (!origin || isOriginAllowed(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error(`CORS policy: Origin ${origin} is not allowed.`));
     },
     credentials: true,
   })

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import crypto from "crypto";
 import User from "../models/user.model";
 import { USER_ROLES } from "../constants/enums";
 import MESSAGES from "../constants/messages";
@@ -25,7 +26,7 @@ const throwServiceError = (message: string, statusCode: HttpStatusCode): never =
   throw new AppError(message, statusCode);
 };
 
-const createOtp = (): string => { return Math.floor(100000 + Math.random() * 900000).toString(); };
+const createOtp = (): string => { return (typeof crypto !== "undefined" && crypto.randomInt ? crypto.randomInt(100000, 1000000) : Math.floor(100000 + Math.random() * 900000)).toString(); };
 
 
 const sendOtpNotification = async ({

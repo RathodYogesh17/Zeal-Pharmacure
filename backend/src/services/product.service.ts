@@ -296,6 +296,7 @@ const getAllProducts = async (query: IProductQuery = {}, isPublic: boolean = fal
   }
 
   // SubCategory / Division filter (supports ObjectId OR name/slug)
+  let divisionOrCondition: Array<Record<string, unknown>> | null = null;
   const divisionQuery = (query.division || query.subCategory)?.trim();
   if (divisionQuery) {
     if (mongoose.Types.ObjectId.isValid(divisionQuery)) {
@@ -306,7 +307,7 @@ const getAllProducts = async (query: IProductQuery = {}, isPublic: boolean = fal
         isDeleted: false,
       });
       if (foundSub) {
-        filter.$or = [{ subCategory: foundSub._id }, { subCategoryName: { $regex: new RegExp(`^${divisionQuery}$`, "i") } }];
+        divisionOrCondition = [{ subCategory: foundSub._id }, { subCategoryName: { $regex: new RegExp(`^${divisionQuery}$`, "i") } }];
       } else {
         filter.subCategoryName = { $regex: new RegExp(`^${divisionQuery}$`, "i") };
       }
@@ -359,9 +360,10 @@ const getAllProducts = async (query: IProductQuery = {}, isPublic: boolean = fal
   }
 
   // Search filter across name, brandName, productCode, genericName, composition, indications, subCategory
+  let searchOrCondition: Array<Record<string, unknown>> | null = null;
   if (query.search && query.search.trim()) {
     const searchRegex = { $regex: query.search.trim(), $options: "i" };
-    filter.$or = [
+    searchOrCondition = [
       { name: searchRegex },
       { brandName: searchRegex },
       { productCode: searchRegex },
@@ -374,6 +376,18 @@ const getAllProducts = async (query: IProductQuery = {}, isPublic: boolean = fal
       { searchKeywords: searchRegex },
       { tags: searchRegex },
     ];
+  }
+
+  // Safely combine division condition and search condition so neither is overwritten
+  if (divisionOrCondition && searchOrCondition) {
+    filter.$and = [
+      { $or: divisionOrCondition },
+      { $or: searchOrCondition },
+    ];
+  } else if (divisionOrCondition) {
+    filter.$or = divisionOrCondition;
+  } else if (searchOrCondition) {
+    filter.$or = searchOrCondition;
   }
 
   // Letter filter (A-Z alphabet index)

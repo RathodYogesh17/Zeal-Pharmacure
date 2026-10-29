@@ -4,6 +4,7 @@ import { validateDrugLicenseNumber } from "../utils/dlValidator";
 import HTTP_STATUS from "../constants/httpStatus";
 import MESSAGES from "../constants/messages";
 import { sendSuccess } from "../utils/apiResponse";
+import { recordAuditLog } from "../utils/auditLogger";
 import type {
   IEnquiryRequest,
   ICreateEnquiryRequest,
@@ -89,6 +90,15 @@ const updateEnquiryStatus = async (req: IEnquiryRequest, res: Response): Promise
   const body: IUpdateEnquiryStatusRequest = req.body;
   const user = req.user ? (req.user as unknown as IAuthenticatedUser) : undefined;
   const result = await enquiryService.updateEnquiryStatus(String(req.params.id), body, user);
+  void recordAuditLog({
+    userId: req.user?._id,
+    action: "ENQUIRY_STATUS_CHANGE",
+    module: "ENQUIRY",
+    targetType: "Enquiry",
+    targetId: String(req.params.id),
+    req,
+    metadata: { newStatus: body.status, notes: body.note },
+  });
   sendSuccess(res, HTTP_STATUS.OK, MESSAGES.ENQUIRY_STATUS_UPDATED, result);
 };
 
@@ -96,6 +106,15 @@ const assignEnquiry = async (req: IEnquiryRequest, res: Response): Promise<void>
   const body: IAssignEnquiryRequest = req.body;
   const user = req.user ? (req.user as unknown as IAuthenticatedUser) : undefined;
   const result = await enquiryService.assignEnquiry(String(req.params.id), body, user);
+  void recordAuditLog({
+    userId: req.user?._id,
+    action: "ENQUIRY_ASSIGN",
+    module: "ENQUIRY",
+    targetType: "Enquiry",
+    targetId: String(req.params.id),
+    req,
+    metadata: { assignedTo: body.assignedTo },
+  });
   sendSuccess(res, HTTP_STATUS.OK, MESSAGES.ENQUIRY_ASSIGNED, result);
 };
 
@@ -103,12 +122,29 @@ const addEnquiryNote = async (req: IEnquiryRequest, res: Response): Promise<void
   const body: IAddEnquiryNoteRequest = req.body;
   const user = req.user ? (req.user as unknown as IAuthenticatedUser) : undefined;
   const result = await enquiryService.addEnquiryNote(String(req.params.id), body, user);
+  void recordAuditLog({
+    userId: req.user?._id,
+    action: "ENQUIRY_NOTE_ADD",
+    module: "ENQUIRY",
+    targetType: "Enquiry",
+    targetId: String(req.params.id),
+    req,
+    metadata: { noteLength: body.note?.length || 0 },
+  });
   sendSuccess(res, HTTP_STATUS.OK, MESSAGES.ENQUIRY_NOTE_ADDED, result);
 };
 
 const deleteEnquiry = async (req: IEnquiryRequest, res: Response): Promise<void> => {
   const user = req.user ? (req.user as unknown as IAuthenticatedUser) : undefined;
   const result = await enquiryService.deleteEnquiry(String(req.params.id), user);
+  void recordAuditLog({
+    userId: req.user?._id,
+    action: "ENQUIRY_DELETE",
+    module: "ENQUIRY",
+    targetType: "Enquiry",
+    targetId: String(req.params.id),
+    req,
+  });
   sendSuccess(res, HTTP_STATUS.OK, MESSAGES.ENQUIRY_DELETED, result);
 };
 
@@ -121,6 +157,15 @@ const replyEnquiryEmail = async (req: IEnquiryRequest, res: Response): Promise<v
   const user = req.user ? (req.user as unknown as IAuthenticatedUser) : undefined;
   const { message, subject } = req.body;
   const result = await enquiryService.replyEnquiryEmail(String(req.params.id), message, user, subject);
+  void recordAuditLog({
+    userId: req.user?._id,
+    action: "ENQUIRY_EMAIL_REPLY",
+    module: "ENQUIRY",
+    targetType: "Enquiry",
+    targetId: String(req.params.id),
+    req,
+    metadata: { subject: subject || "Enquiry Response" },
+  });
   sendSuccess(res, HTTP_STATUS.OK, result.message, result);
 };
 
@@ -140,4 +185,3 @@ export {
   deleteEnquiry,
   replyEnquiryEmail,
 };
-
