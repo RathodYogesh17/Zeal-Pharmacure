@@ -125,7 +125,10 @@ const downloadVisualAidPdf = async (req: Request, res: Response): Promise<void> 
     res.status(HTTP_STATUS.OK).end(pdfBuffer);
   } catch (err: any) {
     console.error(`[VISUAL-AID ERROR] Failed generating PDF for ${slugOrId}:`, err);
-    throw new AppError("Failed to generate Visual Aid PDF. Please try again later.", HTTP_STATUS.INTERNAL_SERVER_ERROR);
+    throw new AppError(
+      err?.message ? `Failed to generate Visual Aid PDF: ${err.message}` : "Failed to generate Visual Aid PDF. Please try again later.",
+      HTTP_STATUS.INTERNAL_SERVER_ERROR
+    );
   }
 };
 
