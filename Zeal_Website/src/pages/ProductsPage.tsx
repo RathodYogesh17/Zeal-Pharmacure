@@ -120,7 +120,8 @@ export const ProductsPage: React.FC = () => {
       const raw = localStorage.getItem(PRODUCT_CACHE_KEY);
       if (raw) {
         const { ts, data } = JSON.parse(raw);
-        if (Date.now() - ts < PRODUCT_CACHE_TTL && Array.isArray(data) && data.length > 0) {
+        const isFakeCache = Array.isArray(data) && (data.length <= 6 || data[0]?._id === 'prod-1');
+        if (!isFakeCache && Date.now() - ts < PRODUCT_CACHE_TTL && Array.isArray(data) && data.length > 0) {
           setProducts(data);
           setLoading(false);
           // Still refresh in background silently

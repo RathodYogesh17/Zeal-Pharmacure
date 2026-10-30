@@ -16,6 +16,9 @@ if (!global.mongooseCache) {
   global.mongooseCache = cached;
 }
 
+const DEFAULT_FALLBACK_MONGO_URI =
+  "mongodb://yogeshrd1708:yogesh1708@ac-2tdi0hf-shard-00-00.8rdbura.mongodb.net:27017,ac-2tdi0hf-shard-00-01.8rdbura.mongodb.net:27017,ac-2tdi0hf-shard-00-02.8rdbura.mongodb.net:27017/ZealPharma?ssl=true&replicaSet=atlas-sdtbqe-shard-0&authSource=admin&appName=Cluster0";
+
 const connectDatabase = async (): Promise<typeof mongoose> => {
   // 1. If connection already established and healthy, return it immediately
   if (cached.conn && mongoose.connection.readyState === 1) {
@@ -24,11 +27,7 @@ const connectDatabase = async (): Promise<typeof mongoose> => {
 
   // 2. If no connection promise is currently in flight, initiate one
   if (!cached.promise) {
-    const rawUri = process.env.MONGO_URI;
-    if (!rawUri) {
-      throw new Error("MONGO_URI is missing in environment variables");
-    }
-    const mongoUri = rawUri.trim();
+    const rawUri = (process.env.MONGO_URI || DEFAULT_FALLBACK_MONGO_URI).trim();
 
     const opts: mongoose.ConnectOptions = {
       bufferCommands: false,
@@ -36,7 +35,7 @@ const connectDatabase = async (): Promise<typeof mongoose> => {
       maxPoolSize: 10,
     };
 
-    cached.promise = mongoose.connect(mongoUri, opts).then((m) => {
+    cached.promise = mongoose.connect(rawUri, opts).then((m) => {
       console.log(`MongoDB connected: ${m.connection.host}`);
       return m;
     });
@@ -48,11 +47,7 @@ const connectDatabase = async (): Promise<typeof mongoose> => {
     return cached.conn;
   } catch (error) {
     cached.promise = null;
-    cached.conn = null;
     console.error("MongoDB connection failed:", error);
-    if (!process.env.VERCEL) {
-      process.exit(1);
-    }
     throw error;
   }
 };

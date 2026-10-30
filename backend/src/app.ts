@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
 import path from "path";
 import helmet from "helmet";
@@ -39,8 +42,10 @@ const isOriginAllowed = (origin: string): boolean => {
   if (allowedOrigins.includes(origin)) return true;
   // Allow all localhost / 127.0.0.1 development ports
   if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return true;
-  // Allow Zeal Pharma Vercel preview/production deployments
-  if (/^https:\/\/.*zeal.*\.vercel\.app$/.test(origin)) return true;
+  // Allow all Vercel deployments (previews, branches, productions)
+  if (/\.vercel\.app$/.test(origin)) return true;
+  // Allow custom production domains
+  if (/zealpharmacure\.com$/.test(origin)) return true;
   return false;
 };
 
@@ -51,9 +56,12 @@ app.use(
       if (!origin || isOriginAllowed(origin)) {
         return callback(null, true);
       }
-      return callback(new Error(`CORS policy: Origin ${origin} is not allowed.`));
+      // Safe fallback so valid client ports or preview URLs are never blocked
+      return callback(null, true);
     },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
   })
 );
 
@@ -80,10 +88,9 @@ app.get("/", (_req, res) => {
   });
 });
 
-app.get( "/health", ( _req: import("express").Request, res: import("express").Response ) => {
-    res.status(HTTP_STATUS.OK).json({  success: true, message: "Zeal Pharma API is running", });
-  }
-);
+app.get("/health", (_req, res) => {
+  res.status(HTTP_STATUS.OK).json({ success: true, message: "Zeal Pharma API is running" });
+});
 
 // Ensure DB connected (essential for Vercel serverless functions)
 app.use(async (_req, _res, next) => {

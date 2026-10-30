@@ -118,7 +118,8 @@ export const HomePage: React.FC = () => {
 
     // Load featured products (from cache first, then API)
     const cachedProds = loadFromCache<IProduct[]>(PROD_CACHE_KEY);
-    if (cachedProds && cachedProds.length > 0) {
+    const isFake = Array.isArray(cachedProds) && (cachedProds.length <= 6 && cachedProds[0]?._id === 'prod-1');
+    if (cachedProds && cachedProds.length > 0 && !isFake) {
       if (isMounted) { setRealProducts(cachedProds); setProductsLoading(false); }
     }
     productService.getProducts({ limit: 4 })
