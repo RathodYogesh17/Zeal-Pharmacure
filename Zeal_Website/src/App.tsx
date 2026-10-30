@@ -25,7 +25,7 @@ import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage';
 import { UserProfilePage } from './pages/auth/UserProfilePage';
 
 // Admin Portal Redirect to Dedicated Enterprise Portal
-const ADMIN_PORTAL_URL = import.meta.env.VITE_ADMIN_PORTAL_URL || 'http://localhost:5174/admin';
+const ADMIN_PORTAL_URL = import.meta.env.VITE_ADMIN_PORTAL_URL || 'https://admin.zealpharmacure.com';
 
 const AdminPortalRedirect: React.FC = () => {
   React.useEffect(() => {

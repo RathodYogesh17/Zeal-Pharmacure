@@ -221,6 +221,7 @@ export interface IProductQuery {
   isNewLaunch?: string;
   isActive?: string;
   sortBy?: "name" | "createdAt" | "isFeatured" | "averageRating" | "featuredOrder";
+  sort?: "name" | "createdAt" | "isFeatured" | "averageRating" | "featuredOrder";
   sortOrder?: "asc" | "desc";
   letter?: string;
   startDate?: string;

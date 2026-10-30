@@ -366,7 +366,7 @@ export const sendLeadWhatsAppNotification = async (
 export const formatCareerAlertMessage = (applicant: ICareerNotificationPayload): string => {
   const cleanApplicantDigits = sanitizeWhatsAppNumber(applicant.phone);
   const nowTime = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
-  const serverBaseUrl = process.env.BASE_URL || "http://localhost:5000";
+  const serverBaseUrl = (process.env.BASE_URL || "https://zeal-pharmacure-backend.vercel.app").replace(/\/$/, "");
   const fullResumeUrl = applicant.resumeUrl
     ? applicant.resumeUrl.startsWith("http")
       ? applicant.resumeUrl

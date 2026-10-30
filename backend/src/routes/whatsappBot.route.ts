@@ -1,6 +1,9 @@
 import { Router, type Request, type Response } from "express";
 import whatsAppBotService from "../services/whatsappBot.service";
 import asyncHandler from "../utils/asyncHandler";
+import { authMiddleware } from "../middleware/auth.middleware";
+import { requirePermissions } from "../middleware/role.middleware";
+import PERMISSIONS from "../constants/permissions";
 
 const whatsappBotRouter = Router();
 
@@ -34,9 +37,11 @@ whatsappBotRouter.get(
   })
 );
 
-// Reset / Logout Session
+// Reset / Logout Session (Admin only)
 whatsappBotRouter.post(
   "/reset",
+  authMiddleware,
+  requirePermissions(PERMISSIONS.SETTINGS_UPDATE),
   asyncHandler(async (_req: Request, res: Response): Promise<void> => {
     whatsAppBotService.clearSession();
     void whatsAppBotService.initWhatsAppBot();
@@ -47,9 +52,11 @@ whatsappBotRouter.post(
   })
 );
 
-// Send a test message directly
+// Send a test message directly (Admin only)
 whatsappBotRouter.post(
   "/test-send",
+  authMiddleware,
+  requirePermissions(PERMISSIONS.SETTINGS_UPDATE),
   asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const toPhone = String(req.body?.phone || "9316227576");
     const text = String(
@@ -68,6 +75,8 @@ whatsappBotRouter.post(
 // Send custom message to any phone (from Admin Panel WhatsApp Hub)
 whatsappBotRouter.post(
   "/send-message",
+  authMiddleware,
+  requirePermissions(PERMISSIONS.SETTINGS_UPDATE),
   asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const rawPhone = String(req.body?.phone || "").trim();
     const text = String(req.body?.message || "").trim();

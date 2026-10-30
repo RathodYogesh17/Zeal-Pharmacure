@@ -157,7 +157,7 @@ export const AdminProductDetailPage: React.FC = () => {
 
   const allImages = p.featuredImage ? [p.featuredImage, ...galleryItems.filter((url) => url !== p.featuredImage)] : galleryItems;
   const currentDisplayImage = selectedGalleryImg || p.featuredImage || allImages[0];
-  const websiteBase = (import.meta.env.VITE_WEBSITE_URL || 'http://localhost:5173').replace(/\/$/, '');
+  const websiteBase = (import.meta.env.VITE_WEBSITE_URL || 'https://zealpharmacure.com').replace(/\/$/, '');
 
   return (
     <div className="dossier-page-container">

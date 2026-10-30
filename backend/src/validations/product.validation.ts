@@ -217,6 +217,7 @@ const productQuerySchema = Joi.object({
   isNewLaunch: Joi.string().valid("true", "false").optional(),
   isActive: Joi.string().valid("true", "false").optional(),
   sortBy: Joi.string().valid("name", "createdAt", "isFeatured", "averageRating", "featuredOrder").optional(),
+  sort: Joi.string().valid("name", "createdAt", "isFeatured", "averageRating", "featuredOrder").optional(),
   sortOrder: Joi.string().valid("asc", "desc").optional(),
   letter: Joi.string().trim().max(10).optional(),
   startDate: Joi.string().trim().optional(),

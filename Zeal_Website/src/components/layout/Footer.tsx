@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Phone,
@@ -12,9 +12,18 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { useSiteSettings } from '../../context/SiteSettingsContext';
+import { ComplianceModal, type ComplianceTab } from '../modals/ComplianceModal';
 
 export const Footer: React.FC = () => {
   const { settings, openFranchiseModal } = useSiteSettings();
+  const [complianceModalOpen, setComplianceModalOpen] = useState(false);
+  const [complianceTab, setComplianceTab] = useState<ComplianceTab>('terms');
+
+  const openCompliance = (tab: ComplianceTab) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    setComplianceTab(tab);
+    setComplianceModalOpen(true);
+  };
 
   return (
     <footer
@@ -532,33 +541,42 @@ export const Footer: React.FC = () => {
           </div>
 
           <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-            <Link
-              to="/contact"
-              style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s ease' }}
+            <a
+              href="#franchise-terms"
+              onClick={openCompliance('terms')}
+              style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s ease', cursor: 'pointer' }}
               onMouseEnter={(e) => (e.currentTarget.style.color = '#EDE9FE')}
               onMouseLeave={(e) => (e.currentTarget.style.color = '#94A3B8')}
             >
               Franchise Terms
-            </Link>
-            <Link
-              to="/contact"
-              style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s ease' }}
+            </a>
+            <a
+              href="#privacy-policy"
+              onClick={openCompliance('privacy')}
+              style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s ease', cursor: 'pointer' }}
               onMouseEnter={(e) => (e.currentTarget.style.color = '#EDE9FE')}
               onMouseLeave={(e) => (e.currentTarget.style.color = '#94A3B8')}
             >
               Privacy Policy
-            </Link>
-            <Link
-              to="/contact"
-              style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s ease' }}
+            </a>
+            <a
+              href="#pharmacovigilance"
+              onClick={openCompliance('pharmacovigilance')}
+              style={{ color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s ease', cursor: 'pointer' }}
               onMouseEnter={(e) => (e.currentTarget.style.color = '#EDE9FE')}
               onMouseLeave={(e) => (e.currentTarget.style.color = '#94A3B8')}
             >
               Pharmacovigilance
-            </Link>
+            </a>
           </div>
         </div>
       </div>
+
+      <ComplianceModal
+        isOpen={complianceModalOpen}
+        onClose={() => setComplianceModalOpen(false)}
+        initialTab={complianceTab}
+      />
     </footer>
   );
 };

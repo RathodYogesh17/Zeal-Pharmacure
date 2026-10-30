@@ -3,6 +3,7 @@ import * as productService from "../services/product.service";
 import { generateVisualAidPdf } from "../services/visualAid.service";
 import HTTP_STATUS from "../constants/httpStatus";
 import MESSAGES from "../constants/messages";
+import AppError from "../utils/appError";
 import { sendSuccess } from "../utils/apiResponse";
 import type { IProductRequest, ICreateProductRequest, IUpdateProductRequest, IToggleProductStatusRequest, IProductQuery,} from "../types/product.types";
 import type { IAuthenticatedUser } from "../types/user.types";
@@ -110,14 +111,22 @@ const getProductFilters = async (req: Request, res: Response): Promise<void> => 
 const downloadVisualAidPdf = async (req: Request, res: Response): Promise<void> => {
   const slugOrId = String(req.params.slugOrId);
   const product = await productService.getProductBySlugOrId(slugOrId, false);
-  const pdfBuffer = await generateVisualAidPdf(product as any);
+  if (!product) {
+    throw new AppError("Product not found", HTTP_STATUS.NOT_FOUND);
+  }
 
-  const sanitizedFilename = `${product.slug || "product"}-visual-aid.pdf`;
+  try {
+    const pdfBuffer = await generateVisualAidPdf(product as any);
+    const sanitizedFilename = `${product.slug || "product"}-visual-aid.pdf`;
 
-  res.setHeader("Content-Type", "application/pdf");
-  res.setHeader("Content-Disposition", `inline; filename="${sanitizedFilename}"`);
-  res.setHeader("Content-Length", pdfBuffer.length);
-  res.status(HTTP_STATUS.OK).end(pdfBuffer);
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `inline; filename="${sanitizedFilename}"`);
+    res.setHeader("Content-Length", pdfBuffer.length);
+    res.status(HTTP_STATUS.OK).end(pdfBuffer);
+  } catch (err: any) {
+    console.error(`[VISUAL-AID ERROR] Failed generating PDF for ${slugOrId}:`, err);
+    throw new AppError("Failed to generate Visual Aid PDF. Please try again later.", HTTP_STATUS.INTERNAL_SERVER_ERROR);
+  }
 };
 
 const duplicateProduct = async (req: IProductRequest, res: Response): Promise<void> => {

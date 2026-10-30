@@ -9,7 +9,7 @@ import asyncHandler from "../utils/asyncHandler";
 
 const authRouter = express.Router();
 
-authRouter.post("/register", uploadProfileImage, attachProfileImageUrl, validate(registerUserSchema), asyncHandler(registerUser));
+authRouter.post("/register", authRateLimiter, uploadProfileImage, attachProfileImageUrl, validate(registerUserSchema), asyncHandler(registerUser));
 authRouter.post("/login", authRateLimiter, uploadNone, validate(loginSchema), asyncHandler(loginUser));
 authRouter.post("/logout", authMiddleware, asyncHandler(logoutUser));
 authRouter.post("/change-password", authMiddleware, uploadNone, validate(changePasswordSchema), asyncHandler(changePassword));

@@ -413,16 +413,17 @@ const getAllProducts = async (query: IProductQuery = {}, isPublic: boolean = fal
 
   // Sorting
   const sortCriteria: Record<string, 1 | -1> = {};
-  if (query.sortBy === "name") {
+  const sortField = query.sortBy || query.sort;
+  if (sortField === "name") {
     sortCriteria.name = query.sortOrder === "desc" ? -1 : 1;
-  } else if (query.sortBy === "averageRating") {
+  } else if (sortField === "averageRating") {
     sortCriteria.averageRating = query.sortOrder === "asc" ? 1 : -1;
     sortCriteria.totalReviews = -1;
-  } else if (query.sortBy === "isFeatured") {
+  } else if (sortField === "isFeatured") {
     sortCriteria.isFeatured = -1;
     sortCriteria.featuredOrder = 1;
     sortCriteria.createdAt = -1;
-  } else if (query.sortBy === "featuredOrder") {
+  } else if (sortField === "featuredOrder") {
     sortCriteria.featuredOrder = 1;
     sortCriteria.createdAt = -1;
   } else {

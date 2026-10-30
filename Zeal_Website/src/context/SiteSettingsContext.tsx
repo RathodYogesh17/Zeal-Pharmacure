@@ -10,7 +10,7 @@ export const fallbackTestimonials: ITestimonialItem[] = [
     role: 'Consultant Physician & Cardiologist',
     clinic: 'Apex Multispeciality Hospital, Ahmedabad',
     rating: 5,
-    comment: 'Zeal Pharma formulations like Telma and Pantop have demonstrated exceptional clinical efficacy in our outpatient department. Bioavailability and batch consistency are truly unmatched.',
+    comment: 'Zeal Pharma formulations like ZEPENTA 40 and ZEPANTA-DSR have demonstrated exceptional clinical efficacy in our outpatient department. Bioavailability and batch consistency are truly unmatched.',
     verified: true,
   },
   {
@@ -28,7 +28,7 @@ export const fallbackTestimonials: ITestimonialItem[] = [
     role: 'Consultant Gynecologist',
     clinic: 'Mothercare Maternity Hospital, Pune',
     rating: 5,
-    comment: 'Prescribing Folvite and Shelcal formulations regularly. Patients have shown zero gastrointestinal tolerance issues. Highly recommend their WHO-GMP certified therapeutics.',
+    comment: 'Prescribing CAL-ZEAL 500 and ZEAL-FOLIC formulations regularly. Patients have shown zero gastrointestinal tolerance issues. Highly recommend their WHO-GMP certified therapeutics.',
     verified: true,
   },
   {
@@ -46,7 +46,7 @@ export const fallbackTestimonials: ITestimonialItem[] = [
     role: 'Senior Pediatrician',
     clinic: 'Child Healthcare Clinic, Indore',
     rating: 5,
-    comment: 'Calpol suspension and pediatric antibiotics are well accepted by children due to great palatable taste masking and precision dosing syringes.',
+    comment: 'ZEAL-MOL pediatric suspensions and antibiotic syrups are well accepted by children due to great palatable taste masking and precision dosing syringes.',
     verified: true,
   },
   {

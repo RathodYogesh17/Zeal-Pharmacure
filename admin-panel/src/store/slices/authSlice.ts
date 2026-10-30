@@ -58,27 +58,16 @@ interface AuthState {
 }
 
 // Load token and initial user from localStorage if present
-const storedToken = localStorage.getItem('zeal_admin_token') || 'mock-admin-token';
+const storedToken = localStorage.getItem('zeal_admin_token') || null;
 const storedUserStr = localStorage.getItem('zeal_admin_user');
 let initialUser: IAuthUser | null = null;
 
-if (storedUserStr) {
+if (storedToken && storedUserStr) {
   try {
     initialUser = JSON.parse(storedUserStr);
   } catch {
     initialUser = null;
   }
-}
-
-if (!initialUser) {
-  initialUser = {
-    _id: 'admin-001',
-    name: 'Dr. Amit Shah',
-    email: 'admin@zealpharma.com',
-    role: 'SUPER_ADMIN',
-    phone: '+91 93162 27576',
-    permissions: ['*'],
-  };
 }
 
 const storedRolePermsStr = localStorage.getItem('zeal_role_permissions');
@@ -158,17 +147,18 @@ export const {
 
 // Selectors
 export const selectCurrentUser = (state: RootState) => state.auth.user;
-export const selectIsAuthenticated = (state: RootState) => !!state.auth.token;
+export const selectIsAuthenticated = (state: RootState) => !!state.auth.token && !!state.auth.user;
 export const selectCurrentRole = (state: RootState): string => {
-  const role = state.auth.simulatedRole || state.auth.user?.role || 'SUPER_ADMIN';
+  if (!state.auth.user) return '';
+  const role = state.auth.simulatedRole || state.auth.user?.role || '';
   if (typeof role === 'object' && role !== null) {
     const code = (role as any).code || (role as any).name || '';
     if (code && !/^[0-9a-fA-F]{24}$/.test(code)) return String(code).toUpperCase();
-    return 'SUPER_ADMIN';
+    return 'USER';
   }
   const str = String(role);
   if (/^[0-9a-fA-F]{24}$/.test(str)) {
-    return 'SUPER_ADMIN';
+    return 'USER';
   }
   return str.toUpperCase();
 };
@@ -193,6 +183,10 @@ export const selectEffectivePermissions = createSelector(
     userPermissionOverrides: Record<string, string[]>,
     userPermissions: string[] | undefined
   ): string[] => {
+    if (!activeRole) {
+      return EMPTY_PERMISSIONS;
+    }
+
     if (activeRole === 'SUPER_ADMIN') {
       return ALL_PERMISSIONS;
     }

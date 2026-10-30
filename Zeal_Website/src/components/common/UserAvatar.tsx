@@ -50,7 +50,7 @@ export const resolveImageUrl = (url?: string | null): string => {
   ) {
     return url;
   }
-  const backendBase = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace(
+  const backendBase = (import.meta.env.VITE_API_URL || 'https://zeal-pharmacure-backend.vercel.app/api').replace(
     /\/api\/?$/,
     ''
   );

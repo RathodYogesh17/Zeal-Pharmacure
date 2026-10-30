@@ -50,6 +50,6 @@ export const getMediaUrl = (url?: string | null, fallback = ''): string => {
   ) {
     return trimmed;
   }
-  const apiBase = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace(/\/api\/?$/, '');
+  const apiBase = (import.meta.env.VITE_API_URL || 'https://zeal-pharmacure-backend.vercel.app/api').replace(/\/api\/?$/, '');
   return `${apiBase}${trimmed.startsWith('/') ? '' : '/'}${trimmed}`;
 };
