@@ -99,7 +99,7 @@ export const FaqAccordion: React.FC<FaqAccordionProps> = ({
                       justifyContent: 'center',
                     }}
                   >
-                    <HelpCircle size={18} style={{ color: 'var(--zp-primary, #6828DC)' }} />
+                    <HelpCircle size={18} style={{ color: 'var(--zp-primary, #7C3AED)' }} />
                   </div>
                   <div>
                     <div
@@ -112,7 +112,7 @@ export const FaqAccordion: React.FC<FaqAccordionProps> = ({
                     >
                       {supportCardTitle}
                     </div>
-                    <div style={{ fontSize: '11px', color: 'var(--zp-primary, #6828DC)', fontWeight: 700 }}>
+                    <div style={{ fontSize: '11px', color: 'var(--zp-primary, #7C3AED)', fontWeight: 700 }}>
                       {supportCardSubtitle}
                     </div>
                   </div>
@@ -128,13 +128,13 @@ export const FaqAccordion: React.FC<FaqAccordionProps> = ({
                     gap: '8px',
                     padding: '10px 18px',
                     borderRadius: '12px',
-                    background: 'var(--zp-primary, #6828DC)',
+                    background: 'var(--zp-primary, #7C3AED)',
                     color: '#FFFFFF',
                     fontFamily: 'Outfit, sans-serif',
                     fontSize: '13px',
                     fontWeight: 700,
                     textDecoration: 'none',
-                    boxShadow: '0 4px 12px rgba(104, 40, 220, 0.25)',
+                    boxShadow: '0 4px 12px rgba(124, 58, 237, 0.25)',
                     transition: 'all 0.2s ease',
                   }}
                   onMouseEnter={(e) => {
@@ -178,7 +178,7 @@ export const FaqAccordion: React.FC<FaqAccordionProps> = ({
                   background: isOpen ? '#FAF5FF' : '#F8FAFC',
                   borderRadius: '14px',
                   border: isOpen ? '1.5px solid #C4B5FD' : '1px solid #E2E8F0',
-                  boxShadow: isOpen ? '0 4px 16px rgba(104, 40, 220, 0.08)' : '0 2px 4px rgba(0,0,0,0.02)',
+                  boxShadow: isOpen ? '0 4px 16px rgba(124, 58, 237, 0.08)' : '0 2px 4px rgba(0,0,0,0.02)',
                   overflow: 'hidden',
                   transition: 'all 0.2s ease',
                 }}
@@ -203,7 +203,7 @@ export const FaqAccordion: React.FC<FaqAccordionProps> = ({
                     style={{
                       fontSize: '15px',
                       fontWeight: 700,
-                      color: isOpen ? 'var(--zp-primary, #6828DC)' : '#0F172A',
+                      color: isOpen ? 'var(--zp-primary, #7C3AED)' : '#0F172A',
                       fontFamily: 'Outfit, sans-serif',
                     }}
                   >
@@ -214,7 +214,7 @@ export const FaqAccordion: React.FC<FaqAccordionProps> = ({
                     style={{
                       transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                       transition: 'transform 0.2s ease',
-                      color: isOpen ? 'var(--zp-primary, #6828DC)' : '#64748B',
+                      color: isOpen ? 'var(--zp-primary, #7C3AED)' : '#64748B',
                       flexShrink: 0,
                     }}
                   />
@@ -247,7 +247,7 @@ export const FaqAccordion: React.FC<FaqAccordionProps> = ({
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px',
-                color: 'var(--zp-primary, #6828DC)',
+                color: 'var(--zp-primary, #7C3AED)',
                 fontWeight: 700,
                 fontSize: '14px',
                 textDecoration: 'none',

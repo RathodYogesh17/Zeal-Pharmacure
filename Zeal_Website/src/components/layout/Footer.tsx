@@ -58,7 +58,7 @@ export const Footer: React.FC = () => {
           width: '420px',
           height: '420px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(104, 40, 220, 0.16) 0%, rgba(0,0,0,0) 70%)',
+          background: 'radial-gradient(circle, rgba(124, 58, 237, 0.16) 0%, rgba(0,0,0,0) 70%)',
           pointerEvents: 'none',
         }}
       />
@@ -109,7 +109,7 @@ export const Footer: React.FC = () => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '0 4px 18px rgba(104, 40, 220, 0.4)',
+                  boxShadow: '0 4px 18px rgba(124, 58, 237, 0.4)',
                   border: '1.5px solid rgba(255, 255, 255, 0.3)',
                   flexShrink: 0,
                 }}
@@ -196,7 +196,7 @@ export const Footer: React.FC = () => {
                   gap: '5px',
                   padding: '4px 9px',
                   borderRadius: '6px',
-                  background: 'rgba(104, 40, 220, 0.16)',
+                  background: 'rgba(124, 58, 237, 0.16)',
                   border: '1px solid rgba(139, 92, 246, 0.28)',
                   color: '#DDD6FE',
                   fontSize: '11px',
@@ -214,7 +214,7 @@ export const Footer: React.FC = () => {
                   gap: '5px',
                   padding: '4px 9px',
                   borderRadius: '6px',
-                  background: 'rgba(104, 40, 220, 0.16)',
+                  background: 'rgba(124, 58, 237, 0.16)',
                   border: '1px solid rgba(139, 92, 246, 0.28)',
                   color: '#DDD6FE',
                   fontSize: '11px',
@@ -232,7 +232,7 @@ export const Footer: React.FC = () => {
                   gap: '5px',
                   padding: '4px 9px',
                   borderRadius: '6px',
-                  background: 'rgba(104, 40, 220, 0.16)',
+                  background: 'rgba(124, 58, 237, 0.16)',
                   border: '1px solid rgba(139, 92, 246, 0.28)',
                   color: '#DDD6FE',
                   fontSize: '11px',
@@ -253,7 +253,7 @@ export const Footer: React.FC = () => {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '8px',
-                  background: 'linear-gradient(135deg, #6828DC 0%, #8B5CF6 100%)',
+                  background: 'linear-gradient(135deg, #7C3AED 0%, #8B5CF6 100%)',
                   color: '#FFFFFF',
                   border: '1px solid rgba(255, 255, 255, 0.15)',
                   padding: '9px 18px',
@@ -261,16 +261,16 @@ export const Footer: React.FC = () => {
                   fontSize: '13px',
                   fontWeight: 700,
                   cursor: 'pointer',
-                  boxShadow: '0 4px 14px rgba(104, 40, 220, 0.35)',
+                  boxShadow: '0 4px 14px rgba(124, 58, 237, 0.35)',
                   transition: 'all 0.2s ease',
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 6px 18px rgba(104, 40, 220, 0.5)';
+                  e.currentTarget.style.boxShadow = '0 6px 18px rgba(124, 58, 237, 0.5)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 4px 14px rgba(104, 40, 220, 0.35)';
+                  e.currentTarget.style.boxShadow = '0 4px 14px rgba(124, 58, 237, 0.35)';
                 }}
               >
                 <Sparkles size={14} style={{ color: '#FDE047' }} />
@@ -399,7 +399,7 @@ export const Footer: React.FC = () => {
                     width: '30px',
                     height: '30px',
                     borderRadius: '8px',
-                    background: 'rgba(104, 40, 220, 0.2)',
+                    background: 'rgba(124, 58, 237, 0.2)',
                     border: '1px solid rgba(139, 92, 246, 0.3)',
                     display: 'flex',
                     alignItems: 'center',

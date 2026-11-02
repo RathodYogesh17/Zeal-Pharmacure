@@ -16,7 +16,7 @@ export const HomeWhyChooseUs: React.FC = () => {
     {
       title: `${productCount}+ DCGI Formulations`,
       desc: 'Broad therapeutic spectrum covering cardiac, derma, respiratory, orthopedic, pediatric, and chronic care.',
-      icon: <Award size={24} style={{ color: 'var(--zp-primary, #6828DC)' }} />,
+      icon: <Award size={24} style={{ color: 'var(--zp-primary, #7C3AED)' }} />,
       bg: '#F5F3FF',
       border: '#DDD6FE',
     },

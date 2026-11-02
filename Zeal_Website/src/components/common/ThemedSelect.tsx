@@ -106,7 +106,7 @@ export const ThemedSelect: React.FC<ThemedSelectProps> = ({label,name, id,icon, 
         <label
           htmlFor={id}
           style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: 700, color: '#334155', marginBottom: '5px', textTransform: 'uppercase', letterSpacing: '0.4px', }}>
-          {icon && <span style={{ color: 'var(--zp-primary, #6828DC)', display: 'inline-flex' }}>{icon}</span>}
+          {icon && <span style={{ color: 'var(--zp-primary, #7C3AED)', display: 'inline-flex' }}>{icon}</span>}
           <span>{label}</span>
           {required && <span style={{ color: '#EF4444' }}>*</span>}
         </label>
@@ -129,7 +129,7 @@ export const ThemedSelect: React.FC<ThemedSelectProps> = ({label,name, id,icon, 
           border: error
             ? '1.5px solid #EF4444'
             : isOpen
-            ? '1.5px solid var(--zp-primary, #6828DC)'
+            ? '1.5px solid var(--zp-primary, #7C3AED)'
             : '1.5px solid #CBD5E1',
           borderRadius: '12px',
           fontSize: '13.5px',
@@ -137,7 +137,7 @@ export const ThemedSelect: React.FC<ThemedSelectProps> = ({label,name, id,icon, 
           color: disabled ? '#94A3B8' : '#0F172A',
           cursor: disabled ? 'not-allowed' : 'pointer',
           boxShadow: isOpen
-            ? '0 0 0 3px rgba(104, 40, 220, 0.14)'
+            ? '0 0 0 3px rgba(124, 58, 237, 0.14)'
             : '0 1px 2px rgba(15, 23, 42, 0.04)',
           transition: 'all 0.18s ease',
           outline: 'none',
@@ -148,7 +148,7 @@ export const ThemedSelect: React.FC<ThemedSelectProps> = ({label,name, id,icon, 
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, overflow: 'hidden' }}>
           {!label && icon && (
-            <span style={{ color: 'var(--zp-primary, #6828DC)', display: 'flex', flexShrink: 0 }}>{icon}</span>
+            <span style={{ color: 'var(--zp-primary, #7C3AED)', display: 'flex', flexShrink: 0 }}>{icon}</span>
           )}
           {selectedOption?.icon && (
             <span style={{ display: 'inline-flex', flexShrink: 0 }}>{selectedOption.icon}</span>
@@ -160,18 +160,18 @@ export const ThemedSelect: React.FC<ThemedSelectProps> = ({label,name, id,icon, 
 
         <ChevronDown
           size={16}
-          style={{ color: disabled ? '#94A3B8' : 'var(--zp-primary, #6828DC)', flexShrink: 0, transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)',}}/>
+          style={{ color: disabled ? '#94A3B8' : 'var(--zp-primary, #7C3AED)', flexShrink: 0, transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)',}}/>
       </button>
 
       {/* Floating Theme Dropdown Popover */}
       {isOpen && !disabled && (
-        <div style={{ position: 'absolute', top: 'calc(100% + 6px)', left: 0, width: '100%', minWidth: '220px',  background: '#FFFFFF', borderRadius: '14px',  border: '1.5px solid #E2E8F0', boxShadow: '0 14px 34px rgba(15, 23, 42, 0.14), 0 0 0 1px rgba(104, 40, 220, 0.08)', zIndex: 9999, overflow: 'hidden',  boxSizing: 'border-box', ...menuStyle, }}>
+        <div style={{ position: 'absolute', top: 'calc(100% + 6px)', left: 0, width: '100%', minWidth: '220px',  background: '#FFFFFF', borderRadius: '14px',  border: '1.5px solid #E2E8F0', boxShadow: '0 14px 34px rgba(15, 23, 42, 0.14), 0 0 0 1px rgba(124, 58, 237, 0.08)', zIndex: 9999, overflow: 'hidden',  boxSizing: 'border-box', ...menuStyle, }}>
           {/* Search Bar inside Dropdown */}
           {searchable && (
             <div style={{ padding: '8px 12px', borderBottom: '1px solid #F1F5F9', background: '#FAF5FF', display: 'flex', alignItems: 'center', gap: '8px',}}
               onClick={(e) => e.stopPropagation()}
             >
-              <Search size={14} color="var(--zp-primary, #6828DC)" style={{ flexShrink: 0 }} />
+              <Search size={14} color="var(--zp-primary, #7C3AED)" style={{ flexShrink: 0 }} />
               <input
                 ref={searchInputRef}
                 type="text"
@@ -184,7 +184,7 @@ export const ThemedSelect: React.FC<ThemedSelectProps> = ({label,name, id,icon, 
                 <button
                   type="button"
                   onClick={() => setSearchTerm('')}
-                  style={{background: '#EDE9FE', border: 'none', borderRadius: '50%',  width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--zp-primary, #6828DC)', flexShrink: 0,}}>
+                  style={{background: '#EDE9FE', border: 'none', borderRadius: '50%',  width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--zp-primary, #7C3AED)', flexShrink: 0,}}>
                   <X size={10} />
                 </button>
               )}
@@ -206,7 +206,7 @@ export const ThemedSelect: React.FC<ThemedSelectProps> = ({label,name, id,icon, 
                     type="button"
                     disabled={opt.disabled}
                     onClick={() => !opt.disabled && handleSelect(opt.value)}
-                    style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '9px 12px', borderRadius: '10px', border: 'none', background: isSelected ? '#EDE9FE' : 'transparent', color: isSelected ? 'var(--zp-primary, #6828DC)' : opt.disabled ? '#94A3B8' : '#1E293B', fontSize: '12.5px', fontWeight: isSelected ? 800 : 500,  cursor: opt.disabled ? 'not-allowed' : 'pointer', textAlign: 'left', transition: 'background 0.15s ease', marginBottom: '2px', gap: '8px', boxSizing: 'border-box',}}
+                    style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '9px 12px', borderRadius: '10px', border: 'none', background: isSelected ? '#EDE9FE' : 'transparent', color: isSelected ? 'var(--zp-primary, #7C3AED)' : opt.disabled ? '#94A3B8' : '#1E293B', fontSize: '12.5px', fontWeight: isSelected ? 800 : 500,  cursor: opt.disabled ? 'not-allowed' : 'pointer', textAlign: 'left', transition: 'background 0.15s ease', marginBottom: '2px', gap: '8px', boxSizing: 'border-box',}}
                     onMouseEnter={(e) => {
                       if (!isSelected && !opt.disabled) e.currentTarget.style.background = '#F8FAFC';
                     }}
@@ -221,7 +221,7 @@ export const ThemedSelect: React.FC<ThemedSelectProps> = ({label,name, id,icon, 
                           {opt.label}
                         </div>
                         {opt.subtitle && (
-                          <div style={{fontSize: '10.5px', color: isSelected ? '#6828DC' : '#64748B', fontWeight: 500, marginTop: '2px', }}>
+                          <div style={{fontSize: '10.5px', color: isSelected ? '#7C3AED' : '#64748B', fontWeight: 500, marginTop: '2px', }}>
                             {opt.subtitle}
                           </div>
                         )}
@@ -230,11 +230,11 @@ export const ThemedSelect: React.FC<ThemedSelectProps> = ({label,name, id,icon, 
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
                       {opt.count !== undefined && (
-                        <span style={{ fontSize: '11px', color: isSelected ? 'var(--zp-primary, #6828DC)' : '#64748B', background: isSelected ? '#DDD6FE' : '#F1F5F9', padding: '2px 7px', borderRadius: '999px',  fontWeight: 700, }}>
+                        <span style={{ fontSize: '11px', color: isSelected ? 'var(--zp-primary, #7C3AED)' : '#64748B', background: isSelected ? '#DDD6FE' : '#F1F5F9', padding: '2px 7px', borderRadius: '999px',  fontWeight: 700, }}>
                           {opt.count}
                         </span>
                       )}
-                      {isSelected && <Check size={14} style={{ color: 'var(--zp-primary, #6828DC)' }} />}
+                      {isSelected && <Check size={14} style={{ color: 'var(--zp-primary, #7C3AED)' }} />}
                     </div>
                   </button>
                 );

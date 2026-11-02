@@ -12,7 +12,7 @@ export interface StatCardProps {
 
 export const StatCard: React.FC<StatCardProps> = ({ icon, label, value, subtext, colorScheme = 'purple', className, style}) => {
   const schemeStyles = {
-    purple: { bg: '#FAF5FF', text: 'var(--zp-primary, #6828DC)', border: '#EDE9FE' },
+    purple: { bg: '#FAF5FF', text: 'var(--zp-primary, #7C3AED)', border: '#EDE9FE' },
     green: { bg: '#F0FDF4', text: '#16A34A', border: '#DCFCE7' },
     amber: { bg: '#FFFBEB', text: '#D97706', border: '#FEF3C7' },
     blue: { bg: '#F0F9FF', text: '#0284C7', border: '#E0F2FE' },

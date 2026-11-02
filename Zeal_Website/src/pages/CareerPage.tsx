@@ -157,7 +157,7 @@ export const CareerPage: React.FC = () => {
             <div style={{ position: 'relative', flex: '1 1 300px', maxWidth: '460px' }}>
               <Search
                 size={18}
-                color="#6828DC"
+                color="#7C3AED"
                 style={{
                   position: 'absolute',
                   left: '14px',
@@ -183,9 +183,9 @@ export const CareerPage: React.FC = () => {
                   transition: 'all 0.2s ease',
                 }}
                 onFocus={(e) => {
-                  e.target.style.borderColor = '#6828DC';
+                  e.target.style.borderColor = '#7C3AED';
                   e.target.style.background = '#FFFFFF';
-                  e.target.style.boxShadow = '0 0 0 3px rgba(104, 40, 220, 0.12)';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.12)';
                 }}
                 onBlur={(e) => {
                   e.target.style.borderColor = '#CBD5E1';
@@ -245,7 +245,7 @@ export const CareerPage: React.FC = () => {
                 }}
                 title="Central Distribution Hub: Zeal Pharma, 7015, Billingo, Parvat Patiya, Sita Nagar, Surat"
               >
-                <MapPin size={15} style={{ color: '#6828DC', flexShrink: 0 }} />
+                <MapPin size={15} style={{ color: '#7C3AED', flexShrink: 0 }} />
                 <span>Surat Central Godown</span>
               </div>
 
@@ -305,12 +305,12 @@ export const CareerPage: React.FC = () => {
                     fontSize: '12.5px',
                     fontWeight: isSelected ? 800 : 600,
                     whiteSpace: 'nowrap',
-                    border: isSelected ? '1.5px solid #6828DC' : '1px solid #E2E8F0',
-                    background: isSelected ? '#6828DC' : '#FFFFFF',
+                    border: isSelected ? '1.5px solid #7C3AED' : '1px solid #E2E8F0',
+                    background: isSelected ? '#7C3AED' : '#FFFFFF',
                     color: isSelected ? '#FFFFFF' : '#475569',
                     cursor: 'pointer',
                     transition: 'all 0.2s ease',
-                    boxShadow: isSelected ? '0 4px 12px rgba(104, 40, 220, 0.25)' : 'none',
+                    boxShadow: isSelected ? '0 4px 12px rgba(124, 58, 237, 0.25)' : 'none',
                   }}
                 >
                   {dept === 'ALL' ? 'All Roles' : dept}
@@ -335,7 +335,7 @@ export const CareerPage: React.FC = () => {
 
         {/* Loading State */}
         {loading ? (
-          <div style={{ padding: '60px 24px', textAlign: 'center', color: '#6828DC' }}>
+          <div style={{ padding: '60px 24px', textAlign: 'center', color: '#7C3AED' }}>
             <div style={{ width: '40px', height: '40px', margin: '0 auto 12px' }} className="pulse-dot">
               <Briefcase size={40} />
             </div>
@@ -352,7 +352,7 @@ export const CareerPage: React.FC = () => {
               border: '1.5px solid #EDE9FE',
               padding: 'clamp(48px, 6vw, 68px) clamp(24px, 4vw, 48px)',
               textAlign: 'center',
-              boxShadow: '0 20px 45px -12px rgba(104, 40, 220, 0.08), 0 1px 3px rgba(15, 23, 42, 0.04)',
+              boxShadow: '0 20px 45px -12px rgba(124, 58, 237, 0.08), 0 1px 3px rgba(15, 23, 42, 0.04)',
               maxWidth: '820px',
               margin: '0 auto',
               position: 'relative',
@@ -368,7 +368,7 @@ export const CareerPage: React.FC = () => {
                 transform: 'translateX(-50%)',
                 width: '320px',
                 height: '180px',
-                background: 'radial-gradient(circle, rgba(104, 40, 220, 0.12) 0%, transparent 70%)',
+                background: 'radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, transparent 70%)',
                 pointerEvents: 'none',
               }}
             />
@@ -385,7 +385,7 @@ export const CareerPage: React.FC = () => {
                 borderRadius: '999px',
                 fontSize: '11px',
                 fontWeight: 800,
-                color: 'var(--zp-primary, #6828DC)',
+                color: 'var(--zp-primary, #7C3AED)',
                 textTransform: 'uppercase',
                 letterSpacing: '0.8px',
                 marginBottom: '22px',
@@ -408,8 +408,8 @@ export const CareerPage: React.FC = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 margin: '0 auto 20px',
-                color: 'var(--zp-primary, #6828DC)',
-                boxShadow: '0 14px 32px -6px rgba(104, 40, 220, 0.22)',
+                color: 'var(--zp-primary, #7C3AED)',
+                boxShadow: '0 14px 32px -6px rgba(124, 58, 237, 0.22)',
               }}
             >
               <Inbox size={48} strokeWidth={1.6} />
@@ -489,7 +489,7 @@ export const CareerPage: React.FC = () => {
                   borderRadius: '999px',
                 }}
               >
-                <Building2 size={13} style={{ color: '#6828DC' }} />
+                <Building2 size={13} style={{ color: '#7C3AED' }} />
                 <span>Surat Central Godown</span>
               </div>
               <div
@@ -591,8 +591,8 @@ export const CareerPage: React.FC = () => {
                           width: '36px',
                           height: '36px',
                           borderRadius: '8px',
-                          border: isActive ? '1.5px solid #6828DC' : '1px solid #E2E8F0',
-                          background: isActive ? '#6828DC' : '#FFFFFF',
+                          border: isActive ? '1.5px solid #7C3AED' : '1px solid #E2E8F0',
+                          background: isActive ? '#7C3AED' : '#FFFFFF',
                           color: isActive ? '#FFFFFF' : '#334155',
                           fontWeight: isActive ? 800 : 600,
                           fontSize: '13px',
@@ -600,7 +600,7 @@ export const CareerPage: React.FC = () => {
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          boxShadow: isActive ? '0 2px 8px rgba(104, 40, 220, 0.25)' : 'none',
+                          boxShadow: isActive ? '0 2px 8px rgba(124, 58, 237, 0.25)' : 'none',
                           transition: 'all 0.15s ease',
                         }}
                       >

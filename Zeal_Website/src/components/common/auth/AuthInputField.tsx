@@ -73,7 +73,7 @@ export const AuthInputField: React.FC<AuthInputFieldProps> = ({
               left: compact ? '12px' : '14px',
               top: '50%',
               transform: 'translateY(-50%)',
-              color: isFocused ? '#6828DC' : iconColor,
+              color: isFocused ? '#7C3AED' : iconColor,
               transition: 'color 0.2s ease',
               pointerEvents: 'none',
               zIndex: 2,
@@ -107,7 +107,7 @@ export const AuthInputField: React.FC<AuthInputFieldProps> = ({
             border: error
               ? '1.5px solid #EF4444'
               : isFocused
-                ? '1.5px solid #6828DC'
+                ? '1.5px solid #7C3AED'
                 : '1.5px solid #E2E8F0',
             background: isFocused ? '#FFFFFF' : '#F8FAFC',
             color: '#0F172A',
@@ -116,7 +116,7 @@ export const AuthInputField: React.FC<AuthInputFieldProps> = ({
             boxShadow: error
               ? '0 0 0 3px rgba(239, 68, 68, 0.12)'
               : isFocused
-                ? '0 0 0 3px rgba(104, 40, 220, 0.12)'
+                ? '0 0 0 3px rgba(124, 58, 237, 0.12)'
                 : 'none',
             transition: 'all 0.2s ease',
             fontFamily: 'inherit',

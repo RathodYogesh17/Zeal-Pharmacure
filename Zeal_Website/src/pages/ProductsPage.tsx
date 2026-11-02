@@ -572,7 +572,7 @@ export const ProductsPage: React.FC = () => {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '8px',
-                background: 'linear-gradient(135deg, #7C3AED 0%, #6828DC 100%)',
+                background: 'linear-gradient(135deg, #7C3AED 0%, #7C3AED 100%)',
                 color: '#FFFFFF',
                 borderRadius: '10px',
                 border: 'none',

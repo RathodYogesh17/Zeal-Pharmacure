@@ -106,7 +106,7 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
           position: 'relative',
           overflow: 'hidden',
           minHeight: '380px',
-          boxShadow: '0 8px 30px rgba(104, 40, 220, 0.06)',
+          boxShadow: '0 8px 30px rgba(124, 58, 237, 0.06)',
         }}>
           <div style={{ zIndex: 2, maxWidth: '380px', position: 'relative' }}>
             <span style={{
@@ -246,7 +246,7 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
             position: 'relative',
             overflow: 'hidden',
             minHeight: '190px',
-            boxShadow: '0 4px 16px rgba(104, 40, 220, 0.05)',
+            boxShadow: '0 4px 16px rgba(124, 58, 237, 0.05)',
           }}>
             <div style={{ zIndex: 2, maxWidth: '340px' }}>
               <span style={{

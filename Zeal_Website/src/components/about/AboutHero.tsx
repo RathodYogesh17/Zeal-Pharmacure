@@ -31,7 +31,7 @@ export const AboutHero: React.FC<AboutHeroProps> = ({ onOpenFranchiseModal }) =>
         <div
           className="zp-about-hero-glow-1"
           style={{
-            background: 'radial-gradient(circle, rgba(104, 40, 220, 0.35) 0%, rgba(0, 0, 0, 0) 70%)',
+            background: 'radial-gradient(circle, rgba(124, 58, 237, 0.35) 0%, rgba(0, 0, 0, 0) 70%)',
           }}
         />
         <div
@@ -101,8 +101,8 @@ export const AboutHero: React.FC<AboutHeroProps> = ({ onOpenFranchiseModal }) =>
                 onClick={onOpenFranchiseModal}
                 className="zp-about-btn-primary"
                 style={{
-                  background: 'linear-gradient(135deg, #8B5CF6 0%, #6828DC 100%)',
-                  boxShadow: '0 8px 24px -4px rgba(104, 40, 220, 0.65)',
+                  background: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
+                  boxShadow: '0 8px 24px -4px rgba(124, 58, 237, 0.65)',
                 }}
               >
                 <span>Apply for Stockists / Distribution</span>
@@ -122,7 +122,7 @@ export const AboutHero: React.FC<AboutHeroProps> = ({ onOpenFranchiseModal }) =>
               className="zp-about-visual-card"
               style={{
                 borderColor: 'rgba(139, 92, 246, 0.4)',
-                boxShadow: '0 24px 50px -12px rgba(0, 0, 0, 0.5), 0 0 35px rgba(104, 40, 220, 0.25)',
+                boxShadow: '0 24px 50px -12px rgba(0, 0, 0, 0.5), 0 0 35px rgba(124, 58, 237, 0.25)',
               }}
             >
               {/* Top Floating Pill Badge */}
@@ -171,7 +171,7 @@ export const AboutHero: React.FC<AboutHeroProps> = ({ onOpenFranchiseModal }) =>
                   </div>
 
                   <span
-                    style={{ background: '#F5F3FF', color: '#6828DC',fontSize: '11px', fontWeight: 800,  padding: '4px 10px',  borderRadius: '999px', textTransform: 'uppercase',whiteSpace: 'nowrap', }}>
+                    style={{ background: '#F5F3FF', color: '#7C3AED',fontSize: '11px', fontWeight: 800,  padding: '4px 10px',  borderRadius: '999px', textTransform: 'uppercase',whiteSpace: 'nowrap', }}>
                     Active Hub
                   </span>
                 </div>

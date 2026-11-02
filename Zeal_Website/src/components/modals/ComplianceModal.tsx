@@ -62,7 +62,7 @@ export const ComplianceModal: React.FC<ComplianceModalProps> = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            background: 'linear-gradient(135deg, #4C1D95 0%, #6828DC 100%)',
+            background: 'linear-gradient(135deg, #4C1D95 0%, #7C3AED 100%)',
             color: '#FFFFFF',
           }}
         >
@@ -123,8 +123,8 @@ export const ComplianceModal: React.FC<ComplianceModalProps> = ({
               padding: '12px 18px',
               border: 'none',
               background: 'transparent',
-              borderBottom: activeTab === 'terms' ? '2px solid #6828DC' : '2px solid transparent',
-              color: activeTab === 'terms' ? '#6828DC' : '#64748B',
+              borderBottom: activeTab === 'terms' ? '2px solid #7C3AED' : '2px solid transparent',
+              color: activeTab === 'terms' ? '#7C3AED' : '#64748B',
               fontWeight: activeTab === 'terms' ? 700 : 500,
               fontSize: '13.5px',
               cursor: 'pointer',
@@ -144,8 +144,8 @@ export const ComplianceModal: React.FC<ComplianceModalProps> = ({
               padding: '12px 18px',
               border: 'none',
               background: 'transparent',
-              borderBottom: activeTab === 'privacy' ? '2px solid #6828DC' : '2px solid transparent',
-              color: activeTab === 'privacy' ? '#6828DC' : '#64748B',
+              borderBottom: activeTab === 'privacy' ? '2px solid #7C3AED' : '2px solid transparent',
+              color: activeTab === 'privacy' ? '#7C3AED' : '#64748B',
               fontWeight: activeTab === 'privacy' ? 700 : 500,
               fontSize: '13.5px',
               cursor: 'pointer',
@@ -165,8 +165,8 @@ export const ComplianceModal: React.FC<ComplianceModalProps> = ({
               padding: '12px 18px',
               border: 'none',
               background: 'transparent',
-              borderBottom: activeTab === 'pharmacovigilance' ? '2px solid #6828DC' : '2px solid transparent',
-              color: activeTab === 'pharmacovigilance' ? '#6828DC' : '#64748B',
+              borderBottom: activeTab === 'pharmacovigilance' ? '2px solid #7C3AED' : '2px solid transparent',
+              color: activeTab === 'pharmacovigilance' ? '#7C3AED' : '#64748B',
               fontWeight: activeTab === 'pharmacovigilance' ? 700 : 500,
               fontSize: '13.5px',
               cursor: 'pointer',
@@ -224,11 +224,11 @@ export const ComplianceModal: React.FC<ComplianceModalProps> = ({
 
               <div style={{ padding: '12px 16px', borderRadius: '10px', background: '#F1F5F9', border: '1px solid #E2E8F0' }}>
                 <strong>Territory Dispute / Clarification Helpline:</strong> Phone:{' '}
-                <a href={`tel:${settings.phone}`} style={{ color: '#6828DC', fontWeight: 600 }}>
+                <a href={`tel:${settings.phone}`} style={{ color: '#7C3AED', fontWeight: 600 }}>
                   {settings.phone}
                 </a>{' '}
                 | Email:{' '}
-                <a href={`mailto:${settings.email}`} style={{ color: '#6828DC', fontWeight: 600 }}>
+                <a href={`mailto:${settings.email}`} style={{ color: '#7C3AED', fontWeight: 600 }}>
                   {settings.email}
                 </a>
               </div>

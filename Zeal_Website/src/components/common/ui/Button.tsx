@@ -16,7 +16,7 @@ export const Button: React.FC<ButtonProps> = ({ children, variant = 'primary',si
       case 'secondary':
         return { backgroundColor: '#F1F5F9', color: '#334155', border: '1.5px solid #CBD5E1',};
       case 'outline':
-        return { backgroundColor: 'transparent', color: '#6828DC', border: '1.5px solid #6828DC',};
+        return { backgroundColor: 'transparent', color: '#7C3AED', border: '1.5px solid #7C3AED',};
       case 'ghost':
         return { backgroundColor: 'transparent', color: '#475569', border: '1.5px solid transparent',};
       case 'danger':
@@ -25,7 +25,7 @@ export const Button: React.FC<ButtonProps> = ({ children, variant = 'primary',si
         return { backgroundColor: '#059669', color: '#FFFFFF', border: '1.5px solid #059669', boxShadow: '0 2px 4px rgba(5, 150, 105, 0.2)',};
       case 'primary':
       default:
-        return { backgroundColor: '#6828DC', color: '#FFFFFF', border: '1.5px solid #6828DC', boxShadow: '0 2px 8px rgba(104, 40, 220, 0.25)',};
+        return { backgroundColor: '#7C3AED', color: '#FFFFFF', border: '1.5px solid #7C3AED', boxShadow: '0 2px 8px rgba(124, 58, 237, 0.25)',};
     }
   };
 

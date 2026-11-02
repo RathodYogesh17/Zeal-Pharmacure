@@ -145,7 +145,7 @@ export const ProfileHero: React.FC<ProfileHeroProps> = ({
                 height: '32px',
                 borderRadius: '50%',
                 background: '#FFFFFF',
-                color: '#6828DC',
+                color: '#7C3AED',
                 border: '2px solid #EDE9FE',
                 boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
                 display: 'flex',

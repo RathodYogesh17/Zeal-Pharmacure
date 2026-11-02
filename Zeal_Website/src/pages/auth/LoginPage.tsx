@@ -140,7 +140,7 @@ export const LoginPage: React.FC = () => {
           Don&apos;t have an account yet?{' '}
           <Link
             to="/register"
-            style={{ fontWeight: 700, color: '#6828DC', textDecoration: 'none' }}
+            style={{ fontWeight: 700, color: '#7C3AED', textDecoration: 'none' }}
           >
             Create Account
           </Link>
@@ -168,7 +168,7 @@ export const LoginPage: React.FC = () => {
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '4px' }}>
               <Link
                 to="/forgot-password"
-                style={{ fontSize: '12px', fontWeight: 700, color: '#6828DC', textDecoration: 'none' }}
+                style={{ fontSize: '12px', fontWeight: 700, color: '#7C3AED', textDecoration: 'none' }}
               >
                 Forgot Password?
               </Link>
@@ -222,7 +222,7 @@ export const LoginPage: React.FC = () => {
                 textAlign: 'center',
                 fontWeight: 700,
                 borderRadius: '12px',
-                border: '2px solid #6828DC',
+                border: '2px solid #7C3AED',
                 outline: 'none',
                 boxSizing: 'border-box',
                 background: '#FAF5FF',
@@ -238,7 +238,7 @@ export const LoginPage: React.FC = () => {
             style={{
               background: 'none',
               border: 'none',
-              color: '#6828DC',
+              color: '#7C3AED',
               fontSize: '13.5px',
               fontWeight: 700,
               cursor: 'pointer',

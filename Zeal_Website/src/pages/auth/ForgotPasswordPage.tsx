@@ -226,7 +226,7 @@ export const ForgotPasswordPage: React.FC = () => {
           to="/login"
           style={{
             fontWeight: 700,
-            color: '#6828DC',
+            color: '#7C3AED',
             textDecoration: 'none',
             display: 'inline-flex',
             alignItems: 'center',
@@ -326,7 +326,7 @@ export const ForgotPasswordPage: React.FC = () => {
                 textAlign: 'center',
                 fontWeight: 800,
                 borderRadius: '12px',
-                border: `2px solid ${otpCountdown === 0 ? '#FECACA' : '#6828DC'}`,
+                border: `2px solid ${otpCountdown === 0 ? '#FECACA' : '#7C3AED'}`,
                 outline: 'none',
                 boxSizing: 'border-box',
                 background: otpCountdown === 0 ? '#FEF2F2' : '#FAF5FF',
@@ -355,7 +355,7 @@ export const ForgotPasswordPage: React.FC = () => {
               style={{
                 background: 'none',
                 border: 'none',
-                color: otpCountdown > 0 ? '#94A3B8' : '#6828DC',
+                color: otpCountdown > 0 ? '#94A3B8' : '#7C3AED',
                 fontSize: '13px',
                 fontWeight: 600,
                 cursor: isLoading || otpCountdown > 0 ? 'not-allowed' : 'pointer',
@@ -469,11 +469,11 @@ export const ForgotPasswordPage: React.FC = () => {
               gap: '8px',
               padding: '12px 24px',
               borderRadius: '12px',
-              background: 'linear-gradient(135deg, #7C3AED 0%, #6828DC 100%)',
+              background: 'linear-gradient(135deg, #7C3AED 0%, #7C3AED 100%)',
               color: '#FFFFFF',
               textDecoration: 'none',
               fontWeight: 800,
-              boxShadow: '0 6px 18px rgba(104, 40, 220, 0.35)',
+              boxShadow: '0 6px 18px rgba(124, 58, 237, 0.35)',
             }}
           >
             <span>Proceed to Sign In</span>

@@ -29,7 +29,7 @@ export const PreFooterBanner: React.FC = () => {
           width: '500px',
           height: '500px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(104, 40, 220, 0.42) 0%, rgba(139, 92, 246, 0.12) 55%, transparent 75%)',
+          background: 'radial-gradient(circle, rgba(124, 58, 237, 0.42) 0%, rgba(139, 92, 246, 0.12) 55%, transparent 75%)',
           filter: 'blur(75px)',
           pointerEvents: 'none',
         }}
@@ -42,7 +42,7 @@ export const PreFooterBanner: React.FC = () => {
           width: '460px',
           height: '460px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(168, 85, 247, 0.28) 0%, rgba(104, 40, 220, 0.06) 60%, transparent 75%)',
+          background: 'radial-gradient(circle, rgba(168, 85, 247, 0.28) 0%, rgba(124, 58, 237, 0.06) 60%, transparent 75%)',
           filter: 'blur(65px)',
           pointerEvents: 'none',
         }}
@@ -68,7 +68,7 @@ export const PreFooterBanner: React.FC = () => {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '8px',
-              background: 'rgba(104, 40, 220, 0.4)',
+              background: 'rgba(124, 58, 237, 0.4)',
               border: '1px solid rgba(196, 181, 253, 0.45)',
               padding: '6px 16px',
               borderRadius: '999px',
@@ -79,7 +79,7 @@ export const PreFooterBanner: React.FC = () => {
               fontFamily: 'var(--font-heading, "Outfit", sans-serif)',
               letterSpacing: '0.05em',
               textTransform: 'uppercase',
-              boxShadow: '0 2px 8px rgba(104, 40, 220, 0.2)',
+              boxShadow: '0 2px 8px rgba(124, 58, 237, 0.2)',
             }}
           >
             <Sparkles size={14} style={{ color: '#C4B5FD' }} />
@@ -232,7 +232,7 @@ export const PreFooterBanner: React.FC = () => {
                 fontWeight: 800,
                 borderRadius: '999px',
                 fontFamily: 'var(--font-heading, "Outfit", sans-serif)',
-                background: 'linear-gradient(135deg, #8B5CF6 0%, #6828DC 100%)',
+                background: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
                 color: '#FFFFFF',
                 border: 'none',
                 cursor: 'pointer',
@@ -240,16 +240,16 @@ export const PreFooterBanner: React.FC = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '10px',
-                boxShadow: '0 8px 22px -3px rgba(104, 40, 220, 0.55)',
+                boxShadow: '0 8px 22px -3px rgba(124, 58, 237, 0.55)',
                 transition: 'all 0.2s ease',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-1px)';
-                e.currentTarget.style.boxShadow = '0 12px 28px -2px rgba(104, 40, 220, 0.7)';
+                e.currentTarget.style.boxShadow = '0 12px 28px -2px rgba(124, 58, 237, 0.7)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'none';
-                e.currentTarget.style.boxShadow = '0 8px 22px -3px rgba(104, 40, 220, 0.55)';
+                e.currentTarget.style.boxShadow = '0 8px 22px -3px rgba(124, 58, 237, 0.55)';
               }}
             >
               <span>{settings.primaryCtaText || 'Apply for Stockists / Distribution'}</span>

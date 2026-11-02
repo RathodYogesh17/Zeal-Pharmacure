@@ -11,7 +11,7 @@ export const CareerWorkflowSection: React.FC = () => {
       icon: <Factory size={22} />,
       bg: '#F5F3FF',
       border: '#DDD6FE',
-      accent: 'var(--zp-primary, #6828DC)',
+      accent: 'var(--zp-primary, #7C3AED)',
     },
     {
       phase: '02',
@@ -58,7 +58,7 @@ export const CareerWorkflowSection: React.FC = () => {
   const supportDepartments = [
     {
       name: 'Inventory Software & ERP',
-      icon: <Database size={18} style={{ color: 'var(--zp-primary, #6828DC)' }} />,
+      icon: <Database size={18} style={{ color: 'var(--zp-primary, #7C3AED)' }} />,
       role: 'Real-time stock ledger, batch/expiry master updates, inwards data entry, and audit reporting.',
     },
     {
@@ -84,7 +84,7 @@ export const CareerWorkflowSection: React.FC = () => {
         {/* Section Header */}
         <div style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 48px' }}>
           <div
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#FAF5FF', border: '1.5px solid #DDD6FE',  borderRadius: '999px', padding: '6px 18px', fontSize: '12.5px', fontWeight: 800, color:'var(--zp-primary, #6828DC)',marginBottom: '14px', textTransform: 'uppercase', letterSpacing: '0.04em', fontFamily: 'var(--font-heading, "Outfit", sans-serif)',}}>
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#FAF5FF', border: '1.5px solid #DDD6FE',  borderRadius: '999px', padding: '6px 18px', fontSize: '12.5px', fontWeight: 800, color:'var(--zp-primary, #7C3AED)',marginBottom: '14px', textTransform: 'uppercase', letterSpacing: '0.04em', fontFamily: 'var(--font-heading, "Outfit", sans-serif)',}}>
             <span>Third-Party Pharmaceutical Wholesale Stockist Model</span>
           </div>
 
@@ -145,7 +145,7 @@ export const CareerWorkflowSection: React.FC = () => {
         <div style={{ marginTop: '48px', background: '#F8FAFC', borderRadius: '24px', padding: '36px 32px', border: '1.5px solid #E2E8F0' }}>
           <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 28px' }}>
             <span
-              style={{ background: '#EDE9FE', color: 'var(--zp-primary, #6828DC)',  padding: '4px 14px', borderRadius: '999px',  fontSize: '11.5px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', fontFamily: 'var(--font-heading, "Outfit", sans-serif)', }}>
+              style={{ background: '#EDE9FE', color: 'var(--zp-primary, #7C3AED)',  padding: '4px 14px', borderRadius: '999px',  fontSize: '11.5px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', fontFamily: 'var(--font-heading, "Outfit", sans-serif)', }}>
               Collaborative Backbone
             </span>
             <h3

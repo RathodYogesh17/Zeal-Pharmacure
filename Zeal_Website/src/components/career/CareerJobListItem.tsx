@@ -43,7 +43,7 @@ export const CareerJobListItem: React.FC<CareerJobListItemProps> = ({ job }) => 
       style={{ background: '#FFFFFF', borderRadius: '16px', border: '1.5px solid #E2E8F0',padding: '20px 24px',boxShadow: '0 2px 6px rgba(15, 23, 42, 0.03)',transition: 'all 0.2s ease',cursor: 'pointer',}}
       onMouseEnter={(e) => {
         e.currentTarget.style.borderColor = '#C4B5FD';
-        e.currentTarget.style.boxShadow = '0 6px 18px rgba(104, 40, 220, 0.08)';
+        e.currentTarget.style.boxShadow = '0 6px 18px rgba(124, 58, 237, 0.08)';
         e.currentTarget.style.transform = 'translateY(-2px)';
       }}
       onMouseLeave={(e) => {
@@ -56,7 +56,7 @@ export const CareerJobListItem: React.FC<CareerJobListItemProps> = ({ job }) => 
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', marginBottom: '8px', }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
           {/* Department Pill */}
-          <span style={{ background: '#EDE9FE', color: '#6828DC', padding: '4px 12px', borderRadius: '999px', fontSize: '12px', fontWeight: 700,display: 'inline-flex', alignItems: 'center', gap: '5px',}}>
+          <span style={{ background: '#EDE9FE', color: '#7C3AED', padding: '4px 12px', borderRadius: '999px', fontSize: '12px', fontWeight: 700,display: 'inline-flex', alignItems: 'center', gap: '5px',}}>
             {job.department}
           </span>
 
@@ -86,7 +86,7 @@ export const CareerJobListItem: React.FC<CareerJobListItemProps> = ({ job }) => 
 
       {/* Second Row: Big Bold Title */}
       <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#0F172A', margin: '0 0 10px 0', transition: 'color 0.15s ease',}}
-        onMouseEnter={(e) => (e.currentTarget.style.color = '#6828DC')}
+        onMouseEnter={(e) => (e.currentTarget.style.color = '#7C3AED')}
         onMouseLeave={(e) => (e.currentTarget.style.color = '#0F172A')}
       >
         {job.title}
@@ -120,7 +120,7 @@ export const CareerJobListItem: React.FC<CareerJobListItemProps> = ({ job }) => 
       <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px', paddingTop: '12px', borderTop: '1px solid #F1F5F9', }}>
         {/* Left: Division Badge */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#64748B' }}>
-          <Building size={14} color="#6828DC" />
+          <Building size={14} color="#7C3AED" />
           <span>Zeal Pharma • Wholesale Stockist Distribution</span>
         </div>
 
@@ -128,12 +128,12 @@ export const CareerJobListItem: React.FC<CareerJobListItemProps> = ({ job }) => 
         <button
           type="button"
           onClick={(e) => {e.stopPropagation(); handleOpenDetail();}}
-          style={{ fontSize: '12.5px', padding: '7px 16px', borderRadius: '8px', background: 'linear-gradient(135deg, #6828DC 0%, #7C3AED 100%)', color: '#FFFFFF', border: 'none',fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px', boxShadow: '0 3px 10px rgba(104, 40, 220, 0.24)', transition: 'all 0.15s ease',}}
+          style={{ fontSize: '12.5px', padding: '7px 16px', borderRadius: '8px', background: 'linear-gradient(135deg, #7C3AED 0%, #7C3AED 100%)', color: '#FFFFFF', border: 'none',fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px', boxShadow: '0 3px 10px rgba(124, 58, 237, 0.24)', transition: 'all 0.15s ease',}}
           onMouseEnter={(e) => {
-            e.currentTarget.style.boxShadow = '0 5px 14px rgba(104, 40, 220, 0.35)';
+            e.currentTarget.style.boxShadow = '0 5px 14px rgba(124, 58, 237, 0.35)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.boxShadow = '0 3px 10px rgba(104, 40, 220, 0.24)';
+            e.currentTarget.style.boxShadow = '0 3px 10px rgba(124, 58, 237, 0.24)';
           }}
         >
           <span>View Details &amp; Apply</span>

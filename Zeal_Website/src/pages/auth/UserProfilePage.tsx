@@ -239,7 +239,7 @@ export const UserProfilePage: React.FC = () => {
 
   if (authLoading || !user) {
     return (
-      <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '14px', color: '#6828DC' }}>
+      <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '14px', color: '#7C3AED' }}>
         <Loader2 size={36} className="animate-spin" />
         <span style={{ fontSize: '17px', fontWeight: 700 }}>Loading your pharmaceutical profile...</span>
       </div>

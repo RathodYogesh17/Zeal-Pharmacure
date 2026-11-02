@@ -95,7 +95,7 @@ export const ProfileDetailsTab: React.FC<ProfileDetailsTabProps> = ({
             Update your pharmaceutical partner profile, contact information, and business credentials.
           </p>
         </div>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#6828DC', fontWeight: 800, fontSize: '13.5px' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#7C3AED', fontWeight: 800, fontSize: '13.5px' }}>
           <CheckCircle2 size={16} color="#10B981" />
           <span>Verified</span>
         </div>
@@ -126,7 +126,7 @@ export const ProfileDetailsTab: React.FC<ProfileDetailsTabProps> = ({
                 height: '64px',
                 borderRadius: '50%',
                 border: '2.5px solid #FFFFFF',
-                boxShadow: '0 4px 14px rgba(104, 40, 220, 0.2)',
+                boxShadow: '0 4px 14px rgba(124, 58, 237, 0.2)',
                 overflow: 'hidden',
                 flexShrink: 0,
               }}

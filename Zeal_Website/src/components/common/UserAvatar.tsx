@@ -25,7 +25,7 @@ const GMAIL_PALETTE = [
   { bg: '#3949AB', text: '#FFFFFF' }, // Indigo
   { bg: '#D81B60', text: '#FFFFFF' }, // Pink / Berry
   { bg: '#F57C00', text: '#FFFFFF' }, // Amber
-  { bg: '#6828DC', text: '#FFFFFF' }, // Zeal Brand Violet
+  { bg: '#7C3AED', text: '#FFFFFF' }, // Zeal Brand Violet
   { bg: '#C2185B', text: '#FFFFFF' }, // Rose
   { bg: '#0288D1', text: '#FFFFFF' }, // Light Blue
 ];

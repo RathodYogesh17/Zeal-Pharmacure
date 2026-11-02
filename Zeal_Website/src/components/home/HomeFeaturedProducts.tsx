@@ -83,13 +83,13 @@ export const HomeFeaturedProducts: React.FC<HomeFeaturedProductsProps> = ({
                 gap: '8px',
                 padding: '10px 18px',
                 borderRadius: '12px',
-                background: 'var(--zp-primary, #6828DC)',
+                background: 'var(--zp-primary, #7C3AED)',
                 color: '#FFFFFF',
                 fontFamily: 'Outfit, sans-serif',
                 fontSize: '13px',
                 fontWeight: 700,
                 textDecoration: 'none',
-                boxShadow: '0 4px 12px rgba(104, 40, 220, 0.25)',
+                boxShadow: '0 4px 12px rgba(124, 58, 237, 0.25)',
                 transition: 'all 0.2s ease',
               }}
               onMouseEnter={(e) => {

@@ -39,7 +39,7 @@ export const CareerHiringProcess: React.FC = () => {
     <section style={{ background: '#FFFFFF', padding: '64px 0 80px', borderTop: '1px solid #F1F5F9' }}>
       <div className="container">
         <div style={{ textAlign: 'center', maxWidth: '680px', margin: '0 auto 48px' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', fontWeight: 800, color: '#6828DC', background: '#EDE9FE', padding: '4px 14px', borderRadius: '20px', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '10px', }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', fontWeight: 800, color: '#7C3AED', background: '#EDE9FE', padding: '4px 14px', borderRadius: '20px', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '10px', }}>
             <CheckCircle2 size={13} />
             <span>Transparent Recruitment</span>
           </div>

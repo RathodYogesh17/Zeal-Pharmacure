@@ -27,7 +27,7 @@ export const Badge: React.FC<BadgeProps> = ({
         return { bg: '#F1F5F9', color: '#475569', border: '#CBD5E1' };
       case 'purple':
       default:
-        return { bg: '#F5F3FF', color: '#6828DC', border: '#DDD6FE' };
+        return { bg: '#F5F3FF', color: '#7C3AED', border: '#DDD6FE' };
     }
   };
 

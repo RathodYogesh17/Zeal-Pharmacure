@@ -61,7 +61,7 @@ export const AboutTimeline: React.FC = () => {
 
         <div style={{ position: 'relative', marginTop: '48px' }}>
           {/* Center Spine Line */}
-          <div style={{ position: 'absolute', left: '50%', top: '40px',  bottom: '40px', width: '4px', background: 'linear-gradient(180deg, var(--zp-primary, #6828DC) 0%, #A855F7 50%, #059669 100%)', transform: 'translateX(-50%)', borderRadius: '999px',}}
+          <div style={{ position: 'absolute', left: '50%', top: '40px',  bottom: '40px', width: '4px', background: 'linear-gradient(180deg, var(--zp-primary, #7C3AED) 0%, #A855F7 50%, #059669 100%)', transform: 'translateX(-50%)', borderRadius: '999px',}}
             className="hidden md:block"
           />
 
@@ -73,7 +73,7 @@ export const AboutTimeline: React.FC = () => {
                   key={idx}
                   style={{ display: 'flex', alignItems: 'center', position: 'relative', justifyContent: isLeft ? 'flex-start' : 'flex-end',  }}>
                   {/* Center Node Badge */}
-                  <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', width: '44px', height: '44px', borderRadius: '50%', background: idx === timelineMilestones.length - 1 ? '#059669' : 'var(--zp-primary, #6828DC)', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, zIndex: 5, boxShadow: '0 0 0 6px #FAF5FF, 0 4px 12px rgba(104, 40, 220, 0.3)', }}>
+                  <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', width: '44px', height: '44px', borderRadius: '50%', background: idx === timelineMilestones.length - 1 ? '#059669' : 'var(--zp-primary, #7C3AED)', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, zIndex: 5, boxShadow: '0 0 0 6px #FAF5FF, 0 4px 12px rgba(124, 58, 237, 0.3)', }}>
                     {item.icon}
                   </div>
 
@@ -92,11 +92,11 @@ export const AboutTimeline: React.FC = () => {
                     }}
                   >
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                      <span style={{ fontSize: '22px', fontWeight: 900, color: isLeft ? 'var(--zp-primary, #6828DC)' : '#059669', letterSpacing: '-0.5px' }}>
+                      <span style={{ fontSize: '22px', fontWeight: 900, color: isLeft ? 'var(--zp-primary, #7C3AED)' : '#059669', letterSpacing: '-0.5px' }}>
                         {item.year}
                       </span>
                       <span
-                        style={{ background: isLeft ? '#EDE9FE' : '#DCFCE7', color: isLeft ? 'var(--zp-primary, #6828DC)' : '#15803D', fontSize: '11px',  fontWeight: 800, padding: '3px 10px', borderRadius: '999px', textTransform: 'uppercase', }}>
+                        style={{ background: isLeft ? '#EDE9FE' : '#DCFCE7', color: isLeft ? 'var(--zp-primary, #7C3AED)' : '#15803D', fontSize: '11px',  fontWeight: 800, padding: '3px 10px', borderRadius: '999px', textTransform: 'uppercase', }}>
                         {item.badge}
                       </span>
                     </div>

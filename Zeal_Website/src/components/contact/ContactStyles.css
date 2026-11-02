@@ -7,7 +7,7 @@
   position: relative;
   background: linear-gradient(135deg, #0F172A 0%, #1E1B4B 45%, #2E1065 100%);
   color: #FFFFFF;
-  border-bottom: 3px solid var(--zp-primary, #6828DC);
+  border-bottom: 3px solid var(--zp-primary, #7C3AED);
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -37,7 +37,7 @@
   width: 500px;
   height: 500px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(104, 40, 220, 0.25) 0%, rgba(104, 40, 220, 0.03) 70%, transparent 100%);
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.25) 0%, rgba(124, 58, 237, 0.03) 70%, transparent 100%);
   filter: blur(60px);
   pointer-events: none;
 }

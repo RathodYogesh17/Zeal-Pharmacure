@@ -291,7 +291,7 @@ export const CareerApplicationForm: React.FC<CareerApplicationFormProps> = ({
           {targetJob ? (
             <div
               style={{ background: 'linear-gradient(135deg, #FAF5FF 0%, #F5F3FF 100%)', borderRadius: '12px', padding: '12px 14px', border: '1.5px solid #DDD6FE', marginTop: '12px', }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontWeight: 800, color: '#6828DC', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontWeight: 800, color: '#7C3AED', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                 <Briefcase size={12} />
                 <span>Selected Opening:</span>
               </div>
@@ -302,7 +302,7 @@ export const CareerApplicationForm: React.FC<CareerApplicationFormProps> = ({
                 <span style={{ fontWeight: 600, color: '#475569' }}>{targetJob.department}</span>
                 <span>•</span>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
-                  <MapPin size={11} color="#6828DC" />
+                  <MapPin size={11} color="#7C3AED" />
                   {targetJob.location}
                 </span>
               </div>
@@ -625,7 +625,7 @@ export const CareerApplicationForm: React.FC<CareerApplicationFormProps> = ({
                     }
                   }}
                 >
-                  <UploadCloud size={30} color={fieldErrors.resumeFile ? '#EF4444' : '#6828DC'} style={{ marginBottom: '6px' }} />
+                  <UploadCloud size={30} color={fieldErrors.resumeFile ? '#EF4444' : '#7C3AED'} style={{ marginBottom: '6px' }} />
                   <span style={{ fontSize: '13px', fontWeight: 700, color: '#1E1B4B' }}>
                     Click to Browse or Drag &amp; Drop CV
                   </span>

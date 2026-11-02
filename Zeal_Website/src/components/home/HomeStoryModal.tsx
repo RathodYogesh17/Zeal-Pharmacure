@@ -27,7 +27,7 @@ export const HomeStoryModal: React.FC<HomeStoryModalProps> = ({
     >
       <div style={{ textAlign: 'center' }}>
         <div style={{ height: '220px', borderRadius: '16px', background: 'linear-gradient(135deg, #1E1B4B 0%, #312E81 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', padding: '20px', marginBottom: '24px', }}>
-          <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'var(--zp-primary, #6828DC)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12px', boxShadow: '0 0 20px rgba(104, 40, 220, 0.6)', }}>
+          <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'var(--zp-primary, #7C3AED)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12px', boxShadow: '0 0 20px rgba(124, 58, 237, 0.6)', }}>
             <Play size={26} fill="#FFFFFF" />
           </div>
           <div style={{ fontSize: '16px', fontWeight: 700 }}>A Legacy of Better Healthcare</div>

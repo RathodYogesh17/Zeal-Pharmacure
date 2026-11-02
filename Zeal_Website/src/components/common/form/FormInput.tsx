@@ -32,8 +32,8 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
             }}
             onFocus={(e) => {
               if (!error) {
-                e.currentTarget.style.borderColor = '#6828DC';
-                e.currentTarget.style.boxShadow = '0 0 0 3px rgba(104, 40, 220, 0.12)';
+                e.currentTarget.style.borderColor = '#7C3AED';
+                e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.12)';
               }
               props.onFocus?.(e);
             }}

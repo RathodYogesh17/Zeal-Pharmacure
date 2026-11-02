@@ -16,7 +16,7 @@ createRoot(document.getElementById('root')!).render(
         <ConfigProvider
           theme={{
             token: {
-              colorPrimary: '#6828DC',
+              colorPrimary: '#7C3AED',
               borderRadius: 8,
               fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
             },

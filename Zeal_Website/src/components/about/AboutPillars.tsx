@@ -7,7 +7,7 @@ export const AboutPillars: React.FC = () => {
     {
       title: 'WHO-GMP Certified Sourcing',
       desc: 'We procure all pharmaceutical finished dosage forms exclusively from top-tier, WHO-GMP, ISO, and Schedule M accredited manufacturing units.',
-      icon: <ShieldCheck size={26} style={{ color: 'var(--zp-primary, #6828DC)' }} />,
+      icon: <ShieldCheck size={26} style={{ color: 'var(--zp-primary, #7C3AED)' }} />,
       bg: '#F5F3FF',
       border: '#DDD6FE',
     },

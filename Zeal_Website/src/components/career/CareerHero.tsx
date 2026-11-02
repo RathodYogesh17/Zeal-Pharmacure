@@ -110,7 +110,7 @@ export const CareerHero: React.FC<CareerHeroProps> = ({ totalJobs }) => {
 
               <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
                 <a href="#openings"
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '11px 24px', borderRadius: '999px', background: 'linear-gradient(135deg, #8B5CF6 0%, #6828DC 100%)', color: '#FFFFFF', fontFamily: 'var(--font-heading, "Outfit", sans-serif)', fontSize: '13.5px',  fontWeight: 800, textDecoration: 'none',  boxShadow: '0 4px 16px rgba(104, 40, 220, 0.45)',}}>
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '11px 24px', borderRadius: '999px', background: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)', color: '#FFFFFF', fontFamily: 'var(--font-heading, "Outfit", sans-serif)', fontSize: '13.5px',  fontWeight: 800, textDecoration: 'none',  boxShadow: '0 4px 16px rgba(124, 58, 237, 0.45)',}}>
                   <span>View Available Positions</span>
                   <ArrowRight size={14} />
                 </a>

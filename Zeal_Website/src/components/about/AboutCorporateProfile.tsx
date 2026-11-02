@@ -22,7 +22,7 @@ export const AboutCorporateProfile: React.FC = () => {
           {/* Left Text */}
           <div>
             <div style={{ marginBottom: '14px' }}>
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', fontWeight: 800, color: 'var(--zp-primary, #6828DC)', background: 'var(--zp-primary-light, #F5F3FF)', padding: '4px 12px', borderRadius: '999px', textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'var(--font-heading, "Outfit", sans-serif)', }}>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', fontWeight: 800, color: 'var(--zp-primary, #7C3AED)', background: 'var(--zp-primary-light, #F5F3FF)', padding: '4px 12px', borderRadius: '999px', textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'var(--font-heading, "Outfit", sans-serif)', }}>
                 <Building size={13} />
                 <span>Our Corporate Profile</span>
               </span>
@@ -46,7 +46,7 @@ export const AboutCorporateProfile: React.FC = () => {
               {highlights.map((point, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <div
-                    style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#EDE9FE', color: 'var(--zp-primary, #6828DC)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, }}>
+                    style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#EDE9FE', color: 'var(--zp-primary, #7C3AED)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, }}>
                     <Check size={13} strokeWidth={3} />
                   </div>
                   <span style={{ fontSize: '13.5px', fontWeight: 700, color: '#1E293B' }}>{point}</span>
@@ -57,7 +57,7 @@ export const AboutCorporateProfile: React.FC = () => {
             <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
               <Link
                 to="/products"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 24px', borderRadius: '999px', background: 'linear-gradient(135deg, #6828DC 0%, #5218B8 100%)',color: '#FFFFFF', fontFamily: 'var(--font-heading, "Outfit", sans-serif)', fontSize: '14px', fontWeight: 800,  textDecoration: 'none', boxShadow: '0 6px 18px rgba(104, 40, 220, 0.35)', }}>
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 24px', borderRadius: '999px', background: 'linear-gradient(135deg, #7C3AED 0%, #5218B8 100%)',color: '#FFFFFF', fontFamily: 'var(--font-heading, "Outfit", sans-serif)', fontSize: '14px', fontWeight: 800,  textDecoration: 'none', boxShadow: '0 6px 18px rgba(124, 58, 237, 0.35)', }}>
                 <span>Explore Therapeutic Divisions</span>
                 <ArrowRight size={15} />
               </Link>

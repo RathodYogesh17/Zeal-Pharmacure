@@ -165,7 +165,7 @@ export const HomeCategoriesGrid: React.FC<HomeCategoriesGridProps> = ({ categori
                     justifyContent: 'center',
                   }}
                 >
-                  <Layers size={18} style={{ color: 'var(--zp-primary, #6828DC)' }} />
+                  <Layers size={18} style={{ color: 'var(--zp-primary, #7C3AED)' }} />
                 </div>
                 <div>
                   <div
@@ -178,7 +178,7 @@ export const HomeCategoriesGrid: React.FC<HomeCategoriesGridProps> = ({ categori
                   >
                     12+ Segments
                   </div>
-                  <div style={{ fontSize: '11px', color: 'var(--zp-primary, #6828DC)', fontWeight: 700 }}>
+                  <div style={{ fontSize: '11px', color: 'var(--zp-primary, #7C3AED)', fontWeight: 700 }}>
                     {productCount || 130}+ Formulations
                   </div>
                 </div>
@@ -193,13 +193,13 @@ export const HomeCategoriesGrid: React.FC<HomeCategoriesGridProps> = ({ categori
                 gap: '8px',
                 padding: '10px 18px',
                 borderRadius: '12px',
-                background: 'var(--zp-primary, #6828DC)',
+                background: 'var(--zp-primary, #7C3AED)',
                 color: '#FFFFFF',
                 fontFamily: 'Outfit, sans-serif',
                 fontSize: '13px',
                 fontWeight: 700,
                 textDecoration: 'none',
-                boxShadow: '0 4px 12px rgba(104, 40, 220, 0.25)',
+                boxShadow: '0 4px 12px rgba(124, 58, 237, 0.25)',
                 transition: 'all 0.2s ease',
               }}
               onMouseEnter={(e) => {

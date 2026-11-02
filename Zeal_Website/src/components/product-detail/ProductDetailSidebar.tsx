@@ -147,7 +147,7 @@ export const ProductDetailSidebar: React.FC<ProductDetailSidebarProps> = ({
               onMouseEnter={(e) => {
                 e.currentTarget.style.borderColor = 'var(--zp-primary-light)';
                 e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(104, 40, 220, 0.08)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(124, 58, 237, 0.08)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.borderColor = '#E2E8F0';

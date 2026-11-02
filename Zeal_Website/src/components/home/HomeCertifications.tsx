@@ -65,7 +65,7 @@ export const HomeCertifications: React.FC<HomeCertificationsProps> = ({ certific
               <div style={{ height: '24px', width: '1px', background: '#E2E8F0' }} />
               <div style={{ fontSize: '11.5px', color: '#475569', fontWeight: 700, lineHeight: 1.3 }}>
                 <div>Zero Defect Batch</div>
-                <div style={{ color: '#6828DC', fontSize: '10.5px' }}>WHO-GMP Compliant</div>
+                <div style={{ color: '#7C3AED', fontSize: '10.5px' }}>WHO-GMP Compliant</div>
               </div>
             </div>
           </div>
@@ -91,7 +91,7 @@ export const HomeCertifications: React.FC<HomeCertificationsProps> = ({ certific
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
                   <div
                     style={{ width: '46px', height: '46px', borderRadius: '12px', background: 'var(--zp-primary-light, #F5F3FF)', display: 'flex', alignItems: 'center', justifyContent: 'center', }}>
-                    <ShieldCheck size={26} style={{ color: 'var(--zp-primary, #6828DC)' }} />
+                    <ShieldCheck size={26} style={{ color: 'var(--zp-primary, #7C3AED)' }} />
                   </div>
                   <span
                     style={{ fontSize: '11px', fontWeight: 700, color: '#059669', background: '#ECFDF5', padding: '3px 8px', borderRadius: '6px', display: 'inline-flex', alignItems: 'center', gap: '4px', }}>
@@ -105,7 +105,7 @@ export const HomeCertifications: React.FC<HomeCertificationsProps> = ({ certific
                 </h4>
 
                 {((c as any).code || (c as any).certificateNumber) && (
-                  <div style={{ fontSize: '11.5px', color: 'var(--zp-primary, #6828DC)', fontWeight: 700, marginBottom: '8px' }}>
+                  <div style={{ fontSize: '11.5px', color: 'var(--zp-primary, #7C3AED)', fontWeight: 700, marginBottom: '8px' }}>
                     Code: {(c as any).code || (c as any).certificateNumber}
                   </div>
                 )}

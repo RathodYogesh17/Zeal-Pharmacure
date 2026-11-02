@@ -27,8 +27,8 @@ export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
             style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: error ? '1.5px solid #EF4444' : '1.5px solid #CBD5E1', boxShadow: error ? '0 0 0 3px rgba(239, 68, 68, 0.12)' : 'none', fontSize: '13.5px',color: '#0F172A', backgroundColor: disabled ? '#F1F5F9' : '#FFFFFF', outline: 'none', resize: 'vertical', boxSizing: 'border-box', transition: 'border-color 0.2s, box-shadow 0.2s',...style,}}
             onFocus={(e) => {
               if (!error) {
-                e.currentTarget.style.borderColor = '#6828DC';
-                e.currentTarget.style.boxShadow = '0 0 0 3px rgba(104, 40, 220, 0.12)';
+                e.currentTarget.style.borderColor = '#7C3AED';
+                e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.12)';
               }
               props.onFocus?.(e);
             }}

@@ -76,7 +76,7 @@ export const ContactInfoCards: React.FC<ContactInfoCardsProps> = ({ settings }) 
       icon: <MapPin size={22} />,
       iconColor: 'var(--zp-primary)',
       iconBg: '#F5F3FF',
-      iconShadow: '0 4px 14px rgba(104, 40, 220, 0.15)',
+      iconShadow: '0 4px 14px rgba(124, 58, 237, 0.15)',
       badgeText: 'CENTRAL DEPOT',
       badgeStyle: { color: 'var(--zp-primary)', background: '#F5F3FF', border: '1px solid #DDD6FE' },
       title: 'Surat Central Depot',
@@ -89,8 +89,8 @@ export const ContactInfoCards: React.FC<ContactInfoCardsProps> = ({ settings }) 
       btnText: 'Open in Google Maps',
       btnHref: googleMapsUrl,
       targetBlank: true,
-      btnBg: 'linear-gradient(135deg, #7C3AED 0%, #6828DC 100%)',
-      btnShadow: '0 4px 14px rgba(104, 40, 220, 0.28)',
+      btnBg: 'linear-gradient(135deg, #7C3AED 0%, #7C3AED 100%)',
+      btnShadow: '0 4px 14px rgba(124, 58, 237, 0.28)',
     },
   ];
 

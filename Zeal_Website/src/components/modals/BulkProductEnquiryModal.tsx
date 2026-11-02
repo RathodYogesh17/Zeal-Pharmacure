@@ -217,7 +217,7 @@ export const BulkProductEnquiryModal: React.FC<BulkProductEnquiryModalProps> = (
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px',
-                color: '#6828DC',
+                color: '#7C3AED',
                 background: '#EDE9FE',
                 padding: '4px 12px',
                 borderRadius: '20px',
@@ -228,7 +228,7 @@ export const BulkProductEnquiryModal: React.FC<BulkProductEnquiryModalProps> = (
                 marginBottom: '6px',
               }}
             >
-              <PackageCheck size={14} color="#6828DC" />
+              <PackageCheck size={14} color="#7C3AED" />
               <span>Bulk Stockist Distribution Network</span>
             </div>
 
@@ -289,7 +289,7 @@ export const BulkProductEnquiryModal: React.FC<BulkProductEnquiryModalProps> = (
           }}
         >
           {[
-            { icon: ShieldCheck, color: '#6828DC', title: 'Stockists Distribution', sub: 'Authorized Network', titleColor: '#4C1D95', subColor: '#6D28D9' },
+            { icon: ShieldCheck, color: '#7C3AED', title: 'Stockists Distribution', sub: 'Authorized Network', titleColor: '#4C1D95', subColor: '#6D28D9' },
             { icon: BadgePercent, color: '#059669', title: 'Wholesale Margin', sub: 'Direct Depot Tier', titleColor: '#065F46', subColor: '#047857' },
             { icon: Truck, color: '#D97706', title: 'Pan-India Delivery', sub: 'Reliable Cargo Network', titleColor: '#92400E', subColor: '#B45309' },
             { icon: FileText, color: '#2563EB', title: 'Visual Aid Kit', sub: 'Samples & LBLs', titleColor: '#1E40AF', subColor: '#1D4ED8' },
@@ -332,7 +332,7 @@ export const BulkProductEnquiryModal: React.FC<BulkProductEnquiryModalProps> = (
               <span
                 style={{
                   background: '#EDE9FE',
-                  color: '#6828DC',
+                  color: '#7C3AED',
                   fontSize: '11px',
                   fontWeight: 800,
                   padding: '2px 8px',
@@ -447,7 +447,7 @@ export const BulkProductEnquiryModal: React.FC<BulkProductEnquiryModalProps> = (
                               style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '2px', imageRendering: '-webkit-optimize-contrast' }}
                             />
                           ) : (
-                            <Pill size={18} color="#6828DC" />
+                            <Pill size={18} color="#7C3AED" />
                           )}
                         </div>
 
@@ -464,7 +464,7 @@ export const BulkProductEnquiryModal: React.FC<BulkProductEnquiryModalProps> = (
                           >
                             {p.name}
                           </div>
-                          <div style={{ fontSize: '11px', color: '#6828DC', fontWeight: 600 }}>
+                          <div style={{ fontSize: '11px', color: '#7C3AED', fontWeight: 600 }}>
                             {p.packaging || 'Standard Pack'} &bull; {p.dosageForm || 'Formulation'}
                           </div>
                         </div>
@@ -549,7 +549,7 @@ export const BulkProductEnquiryModal: React.FC<BulkProductEnquiryModalProps> = (
                             border: '1.5px solid #DDD6FE',
                             fontSize: '12px',
                             fontWeight: 700,
-                            color: '#6828DC',
+                            color: '#7C3AED',
                             background: '#FAF5FF',
                             outline: 'none',
                             cursor: 'pointer',

@@ -28,7 +28,7 @@ export const AboutCertifications: React.FC = () => {
               className="zp-card-subtle"
               style={{ background: '#F8FAFC', borderRadius: '16px', padding: '24px 20px', border: '1.5px solid #E2E8F0', textAlign: 'center', }}>
               <div
-                style={{ width: '46px', height: '46px', borderRadius: '50%', background: '#EDE9FE', color: 'var(--zp-primary, #6828DC)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', }}>
+                style={{ width: '46px', height: '46px', borderRadius: '50%', background: '#EDE9FE', color: 'var(--zp-primary, #7C3AED)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', }}>
                 <FileCheck size={22} />
               </div>
               <div style={{ fontSize: '15px', fontWeight: 800, color: '#0F172A', marginBottom: '6px' }}>

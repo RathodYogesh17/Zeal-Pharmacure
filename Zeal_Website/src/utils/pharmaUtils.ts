@@ -52,7 +52,7 @@ export const getDosageFormDetails = (dosageForm?: string): DosageFormConfig => {
     icon: Pill,
     badgeBg: '#FAF5FF',
     badgeBorder: '#DDD6FE',
-    badgeColor: '#6828DC',
+    badgeColor: '#7C3AED',
   };
 };
 

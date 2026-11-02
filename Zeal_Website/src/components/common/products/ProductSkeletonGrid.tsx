@@ -15,7 +15,7 @@ export const ProductSkeletonGrid: React.FC<ProductSkeletonGridProps> = ({
 }) => {
   if (mode === 'spinner') {
     return (
-      <div style={{ padding: '60px 0', textAlign: 'center', color: 'var(--zp-primary, #6828DC)' }}>
+      <div style={{ padding: '60px 0', textAlign: 'center', color: 'var(--zp-primary, #7C3AED)' }}>
         <Pill size={40} className="pulse-dot" style={{ margin: '0 auto 12px' }} />
         <div style={{ fontWeight: 800, fontSize: '16px', color: '#0F172A' }}>
           {spinnerText}

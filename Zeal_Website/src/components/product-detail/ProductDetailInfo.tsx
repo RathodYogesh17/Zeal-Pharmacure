@@ -243,7 +243,7 @@ export const ProductDetailInfo: React.FC<ProductDetailInfoProps> = ({
           style={{
             fontSize: '11px',
             fontWeight: 800,
-            color: '#6828DC',
+            color: '#7C3AED',
             textTransform: 'uppercase',
             letterSpacing: '0.04em',
             marginBottom: '4px',
@@ -310,7 +310,7 @@ export const ProductDetailInfo: React.FC<ProductDetailInfoProps> = ({
               padding: '13px 20px',
               fontSize: '14.5px',
               fontWeight: 800,
-              boxShadow: '0 4px 14px rgba(104, 40, 220, 0.3)',
+              boxShadow: '0 4px 14px rgba(124, 58, 237, 0.3)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',

@@ -96,7 +96,7 @@ export const Navbar: React.FC = () => {
               color: '#1E293B',
               lineHeight: 1.1,
             }}>
-              <span style={{ color: '#6828DC' }}>ZEAL</span> PHARMACURE
+              <span style={{ color: '#7C3AED' }}>ZEAL</span> PHARMACURE
             </div>
             <div style={{
               fontSize: '11px',
@@ -119,7 +119,7 @@ export const Navbar: React.FC = () => {
               style={{
                 fontSize: '15px',
                 fontWeight: isActive(link.path) ? 700 : 500,
-                color: isActive(link.path) ? '#6828DC' : '#334155',
+                color: isActive(link.path) ? '#7C3AED' : '#334155',
                 position: 'relative',
                 padding: '8px 0',
                 textDecoration: 'none',
@@ -133,7 +133,7 @@ export const Navbar: React.FC = () => {
                   left: '0',
                   right: '0',
                   height: '2.5px',
-                  background: '#6828DC',
+                  background: '#7C3AED',
                   borderRadius: '999px',
                 }} />
               )}
@@ -159,7 +159,7 @@ export const Navbar: React.FC = () => {
                   border: '1.5px solid #DDD6FE',
                   cursor: 'pointer',
                   transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                  boxShadow: userMenuOpen ? '0 4px 12px rgba(104, 40, 220, 0.15)' : 'none',
+                  boxShadow: userMenuOpen ? '0 4px 12px rgba(124, 58, 237, 0.15)' : 'none',
                 }}
                 title={user.name}
               >
@@ -185,7 +185,7 @@ export const Navbar: React.FC = () => {
                 </span>
                 <ChevronDown
                   size={14}
-                  color="#6828DC"
+                  color="#7C3AED"
                   style={{
                     transform: userMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                     transition: 'transform 0.2s ease',
@@ -203,7 +203,7 @@ export const Navbar: React.FC = () => {
                     width: '305px',
                     background: '#FFFFFF',
                     borderRadius: '24px',
-                    boxShadow: '0 24px 48px -12px rgba(104, 40, 220, 0.24), 0 4px 16px rgba(0, 0, 0, 0.04)',
+                    boxShadow: '0 24px 48px -12px rgba(124, 58, 237, 0.24), 0 4px 16px rgba(0, 0, 0, 0.04)',
                     border: '1.5px solid #EDE9FE',
                     padding: 0,
                     zIndex: 100,
@@ -234,7 +234,7 @@ export const Navbar: React.FC = () => {
                         width: '110px',
                         height: '110px',
                         borderRadius: '50%',
-                        background: 'radial-gradient(circle, rgba(104, 40, 220, 0.18) 0%, transparent 70%)',
+                        background: 'radial-gradient(circle, rgba(124, 58, 237, 0.18) 0%, transparent 70%)',
                         pointerEvents: 'none',
                       }}
                     />
@@ -244,7 +244,7 @@ export const Navbar: React.FC = () => {
                       style={{
                         marginBottom: '10px',
                         borderRadius: '50%',
-                        boxShadow: '0 6px 18px rgba(104, 40, 220, 0.22)',
+                        boxShadow: '0 6px 18px rgba(124, 58, 237, 0.22)',
                       }}
                     >
                       <UserAvatar
@@ -297,13 +297,13 @@ export const Navbar: React.FC = () => {
                         padding: '3px 12px',
                         borderRadius: '999px',
                         background: '#FFFFFF',
-                        color: '#6828DC',
+                        color: '#7C3AED',
                         fontSize: '10.5px',
                         fontWeight: 800,
                         border: '1px solid #DDD6FE',
                         textTransform: 'uppercase',
                         letterSpacing: '0.5px',
-                        boxShadow: '0 2px 6px rgba(104, 40, 220, 0.08)',
+                        boxShadow: '0 2px 6px rgba(124, 58, 237, 0.08)',
                       }}
                     >
                       <ShieldCheck size={12} style={{ color: '#7C3AED' }} />
@@ -323,12 +323,12 @@ export const Navbar: React.FC = () => {
                         padding: '10px 18px',
                         borderRadius: '999px',
                         border: 'none',
-                        background: 'linear-gradient(135deg, #7C3AED 0%, #6828DC 100%)',
+                        background: 'linear-gradient(135deg, #7C3AED 0%, #7C3AED 100%)',
                         color: '#FFFFFF',
                         fontSize: '12.5px',
                         fontWeight: 800,
                         textDecoration: 'none',
-                        boxShadow: '0 6px 18px -3px rgba(104, 40, 220, 0.45)',
+                        boxShadow: '0 6px 18px -3px rgba(124, 58, 237, 0.45)',
                         width: '100%',
                         boxSizing: 'border-box',
                         transition: 'all 0.2s ease',
@@ -336,11 +336,11 @@ export const Navbar: React.FC = () => {
                       }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.transform = 'translateY(-1px)';
-                        e.currentTarget.style.boxShadow = '0 8px 22px -2px rgba(104, 40, 220, 0.6)';
+                        e.currentTarget.style.boxShadow = '0 8px 22px -2px rgba(124, 58, 237, 0.6)';
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.transform = 'none';
-                        e.currentTarget.style.boxShadow = '0 6px 18px -3px rgba(104, 40, 220, 0.45)';
+                        e.currentTarget.style.boxShadow = '0 6px 18px -3px rgba(124, 58, 237, 0.45)';
                       }}
                     >
                       <UserIcon size={14} />
@@ -376,7 +376,7 @@ export const Navbar: React.FC = () => {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            color: '#6828DC',
+                            color: '#7C3AED',
                             flexShrink: 0,
                           }}
                         >
@@ -420,7 +420,7 @@ export const Navbar: React.FC = () => {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            color: '#6828DC',
+                            color: '#7C3AED',
                             flexShrink: 0,
                           }}
                         >
@@ -506,7 +506,7 @@ export const Navbar: React.FC = () => {
               }}
               className="hide-mobile"
             >
-              <UserIcon size={15} color="#6828DC" />
+              <UserIcon size={15} color="#7C3AED" />
               <span>Sign In</span>
             </Link>
           )}
@@ -611,8 +611,8 @@ export const Navbar: React.FC = () => {
                 gap: '8px',
                 padding: '12px',
                 borderRadius: '10px',
-                border: '1.5px solid #6828DC',
-                color: '#6828DC',
+                border: '1.5px solid #7C3AED',
+                color: '#7C3AED',
                 fontSize: '14.5px',
                 fontWeight: 700,
                 textDecoration: 'none',
@@ -631,7 +631,7 @@ export const Navbar: React.FC = () => {
               style={{
                 fontSize: '16px',
                 fontWeight: isActive(link.path) ? 700 : 500,
-                color: isActive(link.path) ? '#6828DC' : '#1E293B',
+                color: isActive(link.path) ? '#7C3AED' : '#1E293B',
                 padding: '10px 0',
                 borderBottom: '1px solid #F1F5F9',
                 textDecoration: 'none',

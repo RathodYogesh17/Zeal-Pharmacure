@@ -6,11 +6,11 @@
 
 :root {
   /* Brand Purple Palette */
-  --zp-primary: #6828DC;
+  --zp-primary: #7C3AED;
   --zp-primary-hover: #581C87;
   --zp-primary-light: #F5F3FF;
   --zp-primary-border: #DDD6FE;
-  --zp-primary-glow: rgba(104, 40, 220, 0.25);
+  --zp-primary-glow: rgba(124, 58, 237, 0.25);
 
   /* Medical Accents */
   --zp-emerald: #059669;
@@ -127,12 +127,12 @@
 .zp-product-card:hover {
   border-color: #C4B5FD;
   transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(104, 40, 220, 0.1);
+  box-shadow: 0 12px 28px rgba(124, 58, 237, 0.1);
 }
 
 .zp-product-card.is-selected {
   border: 2px solid var(--zp-primary);
-  box-shadow: 0 8px 24px rgba(104, 40, 220, 0.14);
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.14);
 }
 
 /* Product Card Visual Showcase Box - Clean Pharma Display */
@@ -156,7 +156,7 @@
 
 .zp-product-card:hover .zp-product-img-box {
   border-color: #DDD6FE !important;
-  box-shadow: 0 4px 16px rgba(104, 40, 220, 0.08) !important;
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.08) !important;
 }
 
 /* Product image itself: NEVER cropped, always contain, beautifully centered with drop shadow */
@@ -179,7 +179,7 @@
 
 .zp-product-card:hover .zp-product-img-box img {
   transform: scale(1.05) translateY(-2px) !important;
-  filter: drop-shadow(0 8px 18px rgba(104, 40, 220, 0.14)) drop-shadow(0 2px 4px rgba(15, 23, 42, 0.06)) !important;
+  filter: drop-shadow(0 8px 18px rgba(124, 58, 237, 0.14)) drop-shadow(0 2px 4px rgba(15, 23, 42, 0.06)) !important;
 }
 
 /* Elegant Placeholder for products without uploaded images */
@@ -996,7 +996,7 @@
   background-color: #3B0764;
   background-image: 
     radial-gradient(rgba(255, 255, 255, 0.14) 1.5px, transparent 1.5px),
-    linear-gradient(135deg, rgba(30, 10, 60, 0.94) 0%, rgba(104, 40, 220, 0.88) 55%, rgba(67, 18, 126, 0.95) 100%),
+    linear-gradient(135deg, rgba(30, 10, 60, 0.94) 0%, rgba(124, 58, 237, 0.88) 55%, rgba(67, 18, 126, 0.95) 100%),
     url('/banners/banner_research_lab.jpg');
   background-size: 24px 24px, 100% 100%, cover;
   background-position: 0 0, 0 0, center 25%;
@@ -1012,7 +1012,7 @@
   width: 360px;
   height: 360px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(167, 139, 250, 0.28) 0%, rgba(104, 40, 220, 0.05) 70%, transparent 100%);
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.28) 0%, rgba(124, 58, 237, 0.05) 70%, transparent 100%);
   filter: blur(50px);
   pointer-events: none;
   animation: float-slow 8s ease-in-out infinite alternate;
@@ -1053,7 +1053,7 @@
 .contact-card-modern:hover {
   transform: translateY(-5px);
   border-color: #DDD6FE !important;
-  box-shadow: 0 18px 36px -8px rgba(104, 40, 220, 0.12), 0 6px 16px rgba(15, 23, 42, 0.04) !important;
+  box-shadow: 0 18px 36px -8px rgba(124, 58, 237, 0.12), 0 6px 16px rgba(15, 23, 42, 0.04) !important;
 }
 
 /* Card Icon with gentle hover effect */
@@ -1084,10 +1084,10 @@
 }
 
 .contact-card-modern:hover .card-action-pill {
-  background: var(--zp-primary, #6828DC);
+  background: var(--zp-primary, #7C3AED);
   color: #FFFFFF;
-  border-color: var(--zp-primary, #6828DC);
-  box-shadow: 0 4px 14px rgba(104, 40, 220, 0.25);
+  border-color: var(--zp-primary, #7C3AED);
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.25);
 }
 
 .card-action-pill .action-arrow-icon {
@@ -1153,8 +1153,8 @@
 
 .zp-card-interactive:hover {
   transform: translateY(-4px);
-  border-color: var(--zp-primary, #6828DC) !important;
-  box-shadow: 0 14px 28px -6px rgba(104, 40, 220, 0.16), 0 4px 10px rgba(15, 23, 42, 0.04) !important;
+  border-color: var(--zp-primary, #7C3AED) !important;
+  box-shadow: 0 14px 28px -6px rgba(124, 58, 237, 0.16), 0 4px 10px rgba(15, 23, 42, 0.04) !important;
 }
 
 .zp-card-subtle {
@@ -1164,7 +1164,7 @@
 .zp-card-subtle:hover {
   transform: translateY(-3px);
   border-color: #DDD6FE !important;
-  box-shadow: 0 10px 24px -4px rgba(104, 40, 220, 0.1) !important;
+  box-shadow: 0 10px 24px -4px rgba(124, 58, 237, 0.1) !important;
 }
 
 /* ========================================================
@@ -1224,8 +1224,8 @@
 }
 
 .zp-form-input:focus {
-  border-color: var(--zp-primary, #6828DC);
-  box-shadow: 0 0 0 3px rgba(104, 40, 220, 0.1);
+  border-color: var(--zp-primary, #7C3AED);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
 }
 
 .zp-form-label {
@@ -1260,7 +1260,7 @@
   position: relative;
   background: linear-gradient(135deg, #0F172A 0%, #1E1B4B 45%, #2E1065 100%);
   color: #FFFFFF;
-  border-bottom: 3px solid var(--zp-primary, #6828DC);
+  border-bottom: 3px solid var(--zp-primary, #7C3AED);
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -1338,7 +1338,7 @@
   left: 16px;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--zp-primary, #6828DC);
+  color: var(--zp-primary, #7C3AED);
   pointer-events: none;
   z-index: 2;
 }
@@ -1361,8 +1361,8 @@
 
 .zp-pfb-search-inner .zp-input:focus {
   background: #FFFFFF;
-  border-color: var(--zp-primary, #6828DC);
-  box-shadow: 0 0 0 3.5px rgba(104, 40, 220, 0.12);
+  border-color: var(--zp-primary, #7C3AED);
+  box-shadow: 0 0 0 3.5px rgba(124, 58, 237, 0.12);
 }
 
 .zp-pfb-clear-btn {
@@ -1475,18 +1475,18 @@
 }
 
 .zp-pfb-alpha-btn:hover {
-  border-color: var(--zp-primary, #6828DC);
-  color: var(--zp-primary, #6828DC);
+  border-color: var(--zp-primary, #7C3AED);
+  color: var(--zp-primary, #7C3AED);
   background: var(--zp-primary-light, #F5F3FF);
   transform: translateY(-1px);
-  box-shadow: 0 2px 6px rgba(104, 40, 220, 0.15);
+  box-shadow: 0 2px 6px rgba(124, 58, 237, 0.15);
 }
 
 .zp-pfb-alpha-btn.active {
-  background: var(--zp-primary, #6828DC) !important;
+  background: var(--zp-primary, #7C3AED) !important;
   color: #FFFFFF !important;
-  border-color: var(--zp-primary, #6828DC) !important;
-  box-shadow: 0 3px 10px rgba(104, 40, 220, 0.35);
+  border-color: var(--zp-primary, #7C3AED) !important;
+  box-shadow: 0 3px 10px rgba(124, 58, 237, 0.35);
   font-weight: 800;
 }
 
@@ -1530,7 +1530,7 @@
   font-size: 12px;
   font-weight: 600;
   background: var(--zp-primary-light, #F5F3FF);
-  color: var(--zp-primary, #6828DC);
+  color: var(--zp-primary, #7C3AED);
   border: 1px solid var(--zp-primary-border, #DDD6FE);
   transition: all 0.15s ease;
 }
@@ -1613,12 +1613,12 @@
 }
 
 .zp-pfb-view-btn:hover {
-  color: var(--zp-primary, #6828DC);
+  color: var(--zp-primary, #7C3AED);
 }
 
 .zp-pfb-view-btn.active {
   background: #FFFFFF;
-  color: var(--zp-primary, #6828DC);
+  color: var(--zp-primary, #7C3AED);
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
   font-weight: 700;
 }
@@ -1641,12 +1641,12 @@
 
 .zp-pli-wrapper:hover {
   border-color: #C4B5FD;
-  box-shadow: 0 8px 24px rgba(104, 40, 220, 0.08);
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.08);
   transform: translateY(-2px);
 }
 
 .zp-pli-wrapper.selected {
-  border: 2px solid var(--zp-primary, #6828DC);
+  border: 2px solid var(--zp-primary, #7C3AED);
   background: #FAF9FF;
 }
 
@@ -1725,13 +1725,13 @@
 }
 
 .zp-pli-title:hover {
-  color: var(--zp-primary, #6828DC);
+  color: var(--zp-primary, #7C3AED);
 }
 
 .zp-pli-generic {
   font-size: 13px;
   font-weight: 600;
-  color: var(--zp-primary, #6828DC);
+  color: var(--zp-primary, #7C3AED);
   margin: 0 0 4px 0;
 }
 
@@ -1774,9 +1774,9 @@
 }
 
 .zp-pli-bulk-btn.selected {
-  border-color: var(--zp-primary, #6828DC);
+  border-color: var(--zp-primary, #7C3AED);
   background: var(--zp-primary-light, #F5F3FF);
-  color: var(--zp-primary, #6828DC);
+  color: var(--zp-primary, #7C3AED);
 }
 
 @media (max-width: 860px) {
@@ -1805,14 +1805,14 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: var(--zp-primary, #6828DC);
+  background: var(--zp-primary, #7C3AED);
   color: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
   font-size: 13px;
-  box-shadow: 0 2px 8px rgba(104, 40, 220, 0.4);
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.4);
 }
 
 .zp-feb-count-label {
@@ -1833,7 +1833,7 @@
   gap: 6px;
   padding: 8px 18px;
   border-radius: 999px;
-  background: linear-gradient(135deg, #7C3AED 0%, #6828DC 100%);
+  background: linear-gradient(135deg, #7C3AED 0%, #7C3AED 100%);
   color: #FFFFFF;
   font-size: 13px;
   font-weight: 700;

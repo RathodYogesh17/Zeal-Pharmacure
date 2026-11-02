@@ -10,7 +10,7 @@ import {
 export const CareerPerksBanner: React.FC = () => {
   const perks = [
     {
-      icon: <TrendingUp size={24} color="#6828DC" />,
+      icon: <TrendingUp size={24} color="#7C3AED" />,
       title: 'Fast-Track Meritocracy',
       desc: 'Transparent biannual performance evaluations with accelerated promotions for outstanding field performers and formulation scientists.',
     },
@@ -33,10 +33,10 @@ export const CareerPerksBanner: React.FC = () => {
 
   return (
     <section
-      style={{ background: 'linear-gradient(135deg, #FAF5FF 0%, #F5F3FF 50%, #ECFDF5 100%)', borderRadius: '24px', border: '1.5px solid #DDD6FE', padding: '40px 32px', margin: '0 auto', boxShadow: '0 8px 30px rgba(104, 40, 220, 0.05)', }}>
+      style={{ background: 'linear-gradient(135deg, #FAF5FF 0%, #F5F3FF 50%, #ECFDF5 100%)', borderRadius: '24px', border: '1.5px solid #DDD6FE', padding: '40px 32px', margin: '0 auto', boxShadow: '0 8px 30px rgba(124, 58, 237, 0.05)', }}>
       <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 32px' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', fontWeight: 800, color: '#6828DC', background: '#FFFFFF',  border: '1px solid #DDD6FE', padding: '4px 14px', borderRadius: '20px', textTransform: 'uppercase', letterSpacing: '0.04em',  marginBottom: '8px',  }}>
-          <Sparkles size={13} color="#6828DC" />
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', fontWeight: 800, color: '#7C3AED', background: '#FFFFFF',  border: '1px solid #DDD6FE', padding: '4px 14px', borderRadius: '20px', textTransform: 'uppercase', letterSpacing: '0.04em',  marginBottom: '8px',  }}>
+          <Sparkles size={13} color="#7C3AED" />
           <span>Workplace Culture &amp; Benefits</span>
         </div>
 

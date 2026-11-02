@@ -47,7 +47,7 @@ interface ProductDetailTabsProps {
 const BENCHMARK_MATRIX = [
   { feature: 'Bioavailability & Plasma Peak', desc: 'Rapid gastrointestinal dissolution with high bio-equivalence', standard: 'Micronized USP/IP standard active', rating: 4.9, stars: 5, verdict: '⭐ Best Feature (Peak Action)', badgeBg: '#FEF3C7', badgeColor: '#92400E' },
   { feature: 'Packaging Barrier (Alu-Alu / Blister)', desc: 'Cold-formed tropical foil protecting against humidity and oxidation', standard: 'USP <671> moisture-proof packaging', rating: 5.0, stars: 5, verdict: '⭐ Best Feature (Zero Degradation)', badgeBg: '#DCFCE7', badgeColor: '#166534' },
-  { feature: 'Active Assay Potency & Purity', desc: 'Tested through high-pressure liquid chromatography (HPLC)', standard: '99.8% assay purity consistency', rating: 5.0, stars: 5, verdict: '✓ Export Pharmacopoeia Grade', badgeBg: '#EDE9FE', badgeColor: '#6828DC' },
+  { feature: 'Active Assay Potency & Purity', desc: 'Tested through high-pressure liquid chromatography (HPLC)', standard: '99.8% assay purity consistency', rating: 5.0, stars: 5, verdict: '✓ Export Pharmacopoeia Grade', badgeBg: '#EDE9FE', badgeColor: '#7C3AED' },
   { feature: 'Gastric Tolerance & Safety Profile', desc: 'Buffered non-irritating composition with high therapeutic compliance', standard: 'Physician approved tolerance trials', rating: 4.8, stars: 5, verdict: '✓ High Prescription Compliance', badgeBg: '#E0F2FE', badgeColor: '#0369A1' },
   { feature: 'Batch-to-Batch Shelf Stability', desc: 'Passed real-time and accelerated thermal stability protocols', standard: '24-36 Months shelf-life certified', rating: 4.9, stars: 5, verdict: '✓ Stability Validated', badgeBg: '#F1F5F9', badgeColor: '#475569' },
   { feature: 'Distributor Demand & Repeat Turnover', desc: 'Fast inventory velocity with attractive franchisee margins', standard: 'Exclusive territory monopoly supply', rating: 4.9, stars: 5, verdict: '⭐ High Demand Asset', badgeBg: '#FEF3C7', badgeColor: '#B45309' },
@@ -441,7 +441,7 @@ export const ProductDetailTabs: React.FC<ProductDetailTabsProps> = ({
               </h4>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
                 <div style={{ background: '#FAF5FF', border: '1px solid #DDD6FE', borderRadius: '10px', padding: '12px 14px' }}>
-                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#6828DC', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block', marginBottom: '4px' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#7C3AED', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block', marginBottom: '4px' }}>
                     Marketed By
                   </span>
                   <div style={{ fontSize: '13.5px', fontWeight: 700, color: '#0F172A' }}>

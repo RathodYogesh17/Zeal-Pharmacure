@@ -181,7 +181,7 @@ export const EnquiryAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
               borderRadius: '24px',
               maxWidth: '460px',
               width: '100%',
-              boxShadow: '0 25px 60px -12px rgba(104, 40, 220, 0.2), 0 2px 10px rgba(0, 0, 0, 0.04)',
+              boxShadow: '0 25px 60px -12px rgba(124, 58, 237, 0.2), 0 2px 10px rgba(0, 0, 0, 0.04)',
               border: '1.5px solid #EDE9FE',
               overflow: 'hidden',
               position: 'relative',
@@ -211,7 +211,7 @@ export const EnquiryAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = '#EDE9FE';
-                  e.currentTarget.style.color = '#6828DC';
+                  e.currentTarget.style.color = '#7C3AED';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = '#F8FAFC';
@@ -227,12 +227,12 @@ export const EnquiryAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
                     width: '48px',
                     height: '48px',
                     borderRadius: '15px',
-                    background: 'linear-gradient(135deg, #7C3AED 0%, #6828DC 100%)',
+                    background: 'linear-gradient(135deg, #7C3AED 0%, #7C3AED 100%)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     color: '#FFFFFF',
-                    boxShadow: '0 8px 20px rgba(104, 40, 220, 0.28)',
+                    boxShadow: '0 8px 20px rgba(124, 58, 237, 0.28)',
                     flexShrink: 0,
                   }}
                 >
@@ -243,7 +243,7 @@ export const EnquiryAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
                     style={{
                       fontSize: '11px',
                       fontWeight: 800,
-                      color: '#6828DC',
+                      color: '#7C3AED',
                       textTransform: 'uppercase',
                       letterSpacing: '0.06em',
                       background: '#F5F3FF',
@@ -301,9 +301,9 @@ export const EnquiryAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
                     fontSize: '13px',
                     fontWeight: 800,
                     cursor: 'pointer',
-                    background: tab === 'login' ? '#6828DC' : 'transparent',
+                    background: tab === 'login' ? '#7C3AED' : 'transparent',
                     color: tab === 'login' ? '#FFFFFF' : '#64748B',
-                    boxShadow: tab === 'login' ? '0 4px 14px rgba(104, 40, 220, 0.25)' : 'none',
+                    boxShadow: tab === 'login' ? '0 4px 14px rgba(124, 58, 237, 0.25)' : 'none',
                     transition: 'all 0.15s ease',
                   }}
                 >
@@ -323,9 +323,9 @@ export const EnquiryAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
                     fontSize: '13px',
                     fontWeight: 800,
                     cursor: 'pointer',
-                    background: tab === 'register' ? '#6828DC' : 'transparent',
+                    background: tab === 'register' ? '#7C3AED' : 'transparent',
                     color: tab === 'register' ? '#FFFFFF' : '#64748B',
-                    boxShadow: tab === 'register' ? '0 4px 14px rgba(104, 40, 220, 0.25)' : 'none',
+                    boxShadow: tab === 'register' ? '0 4px 14px rgba(124, 58, 237, 0.25)' : 'none',
                     transition: 'all 0.15s ease',
                   }}
                 >
@@ -473,7 +473,7 @@ export const EnquiryAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                  <ShieldCheck size={14} style={{ color: '#6828DC' }} />
+                  <ShieldCheck size={14} style={{ color: '#7C3AED' }} />
                   <span>100% Privacy &amp; Data Security</span>
                 </div>
                 <button
@@ -482,7 +482,7 @@ export const EnquiryAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
                   style={{
                     background: 'none',
                     border: 'none',
-                    color: '#6828DC',
+                    color: '#7C3AED',
                     fontWeight: 700,
                     cursor: 'pointer',
                     display: 'flex',

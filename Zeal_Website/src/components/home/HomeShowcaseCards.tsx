@@ -142,7 +142,7 @@ export const HomeShowcaseCards: React.FC<HomeShowcaseCardsProps> = ({ onOpenFran
             <div className="zp-home-wide-content">
               <span
                 className="zp-home-wide-badge"
-                style={{ background: 'var(--zp-primary, #6828DC)', color: '#FFFFFF' }}
+                style={{ background: 'var(--zp-primary, #7C3AED)', color: '#FFFFFF' }}
               >
                 <ShieldCheck size={12} />
                 <span>CENTRAL DEPOT &amp; {productCount}+ FORMULATIONS</span>
@@ -166,8 +166,8 @@ export const HomeShowcaseCards: React.FC<HomeShowcaseCardsProps> = ({ onOpenFran
                 to="/products"
                 className="zp-home-wide-btn"
                 style={{
-                  background: 'linear-gradient(135deg, #7C3AED 0%, #6828DC 100%)',
-                  boxShadow: '0 4px 14px rgba(104, 40, 220, 0.35)',
+                  background: 'linear-gradient(135deg, #7C3AED 0%, #7C3AED 100%)',
+                  boxShadow: '0 4px 14px rgba(124, 58, 237, 0.35)',
                 }}
               >
                 <span>Explore {productCount}+ Formulations</span>

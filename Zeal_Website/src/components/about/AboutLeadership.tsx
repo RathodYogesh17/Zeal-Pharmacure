@@ -16,11 +16,11 @@ export const AboutLeadership: React.FC<AboutLeadershipProps> = ({ directorMessag
     <section style={{ background: '#FAF5FF', padding: '80px 0' }}>
       <div className="container">
         <div
-          style={{ background: '#FFFFFF', borderRadius: '24px', border: '1.5px solid #DDD6FE', padding: 'clamp(28px, 5vw, 44px)', boxShadow: '0 16px 40px rgba(104, 40, 220, 0.08)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '36px', alignItems: 'center', }}>
+          style={{ background: '#FFFFFF', borderRadius: '24px', border: '1.5px solid #DDD6FE', padding: 'clamp(28px, 5vw, 44px)', boxShadow: '0 16px 40px rgba(124, 58, 237, 0.08)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '36px', alignItems: 'center', }}>
           <div>
             <div style={{ marginBottom: '14px' }}>
               <span
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', fontWeight: 800, color: 'var(--zp-primary, #6828DC)', background: 'var(--zp-primary-light, #F5F3FF)', padding: '4px 12px',  borderRadius: '999px', textTransform: 'uppercase', letterSpacing: '0.06em',  fontFamily: 'var(--font-heading, "Outfit", sans-serif)', }}>
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', fontWeight: 800, color: 'var(--zp-primary, #7C3AED)', background: 'var(--zp-primary-light, #F5F3FF)', padding: '4px 12px',  borderRadius: '999px', textTransform: 'uppercase', letterSpacing: '0.06em',  fontFamily: 'var(--font-heading, "Outfit", sans-serif)', }}>
                 <Quote size={13} />
                 <span>Leadership Perspective</span>
               </span>
@@ -48,7 +48,7 @@ export const AboutLeadership: React.FC<AboutLeadershipProps> = ({ directorMessag
               <div style={{ fontFamily: 'var(--font-heading, "Outfit", sans-serif)', fontSize: '17px', fontWeight: 800, color: '#0F172A' }}>
                 {directorName || 'Board of Executive Directors'}
               </div>
-              <div style={{ fontSize: '13.5px', color: 'var(--zp-primary, #6828DC)', fontWeight: 700, marginTop: '2px' }}>
+              <div style={{ fontSize: '13.5px', color: 'var(--zp-primary, #7C3AED)', fontWeight: 700, marginTop: '2px' }}>
                 {directorTitle || 'Managing Directorate, Zeal Pharmacure'}
               </div>
               <div style={{ fontSize: '12px', color: '#64748B', marginTop: '3px' }}>
@@ -68,7 +68,7 @@ export const AboutLeadership: React.FC<AboutLeadershipProps> = ({ directorMessag
             </div>
             <div
               style={{ marginTop: '14px', background: '#FFFFFF', borderRadius: '12px', padding: '12px 16px', border: '1px solid #E9D5FF', display: 'flex', alignItems: 'center', gap: '10px', }}>
-              <Award size={18} style={{ color: 'var(--zp-primary, #6828DC)', flexShrink: 0 }} />
+              <Award size={18} style={{ color: 'var(--zp-primary, #7C3AED)', flexShrink: 0 }} />
               <span style={{ fontSize: '12px', color: '#4C1D95', fontWeight: 700 }}>
                 Empowering exclusive stockist partners across all Indian territories with zero-defect formulations.
               </span>

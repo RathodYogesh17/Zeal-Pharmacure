@@ -23,8 +23,8 @@ export const AboutMissionVision: React.FC<AboutMissionVisionProps> = ({ mission,
           {/* Mission Card */}
           <div
             className="zp-card-subtle"
-            style={{ background: 'linear-gradient(135deg, #FAF5FF 0%, #FFFFFF 100%)', borderRadius: '20px', padding: '36px', border: '1.5px solid #DDD6FE', boxShadow: '0 8px 24px rgba(104, 40, 220, 0.04)', }}>
-            <div style={{ width: '52px', height: '52px', borderRadius: '14px', background: 'var(--zp-primary, #6828DC)', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px', boxShadow: '0 4px 14px rgba(104, 40, 220, 0.25)', }}>
+            style={{ background: 'linear-gradient(135deg, #FAF5FF 0%, #FFFFFF 100%)', borderRadius: '20px', padding: '36px', border: '1.5px solid #DDD6FE', boxShadow: '0 8px 24px rgba(124, 58, 237, 0.04)', }}>
+            <div style={{ width: '52px', height: '52px', borderRadius: '14px', background: 'var(--zp-primary, #7C3AED)', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px', boxShadow: '0 4px 14px rgba(124, 58, 237, 0.25)', }}>
               <Target size={24} />
             </div>
             <h3 style={{ fontSize: '22px', fontWeight: 800, color: '#0F172A', marginBottom: '10px' }}>

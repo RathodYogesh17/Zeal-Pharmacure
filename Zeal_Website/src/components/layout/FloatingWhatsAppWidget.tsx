@@ -403,7 +403,7 @@ export const FloatingWhatsAppWidget: React.FC = () => {
                 <span
                   style={{
                     background: '#EDE9FE',
-                    color: '#6828DC',
+                    color: '#7C3AED',
                     fontSize: '9.5px',
                     fontWeight: 800,
                     padding: '2px 6px',
@@ -420,7 +420,7 @@ export const FloatingWhatsAppWidget: React.FC = () => {
                   Premier pharmaceutical brand offering 250+ WHO-GMP certified Tablets, Capsules, Syrups & Injections.
                 </div>
                 <div style={{ marginTop: '5px', fontSize: '11px', color: '#64748B', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <MapPin size={11} color="#6828DC" />
+                  <MapPin size={11} color="#7C3AED" />
                   <span>7015, Billiogo Textile Market, Parvat Patiya, Surat</span>
                 </div>
               </div>

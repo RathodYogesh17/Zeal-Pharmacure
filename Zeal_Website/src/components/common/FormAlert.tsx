@@ -23,7 +23,7 @@ export const FormAlert: React.FC<FormAlertProps> = ({ type, message, onClose, cl
     },
     info: {
       className: 'zp-alert-info',
-      icon: <Info size={18} style={{ color: '#6828DC', flexShrink: 0 }} />,
+      icon: <Info size={18} style={{ color: '#7C3AED', flexShrink: 0 }} />,
     },
   }[type];
 

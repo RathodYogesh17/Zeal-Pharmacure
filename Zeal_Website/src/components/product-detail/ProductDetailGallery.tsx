@@ -103,15 +103,15 @@ export const ProductDetailGallery: React.FC<ProductDetailGalleryProps> = ({
             borderRadius: '20px',
             fontSize: '11.5px',
             fontWeight: 800,
-            color: '#6828DC',
+            color: '#7C3AED',
             border: '1.5px solid #EDE9FE',
-            boxShadow: '0 2px 8px rgba(104, 40, 220, 0.08)',
+            boxShadow: '0 2px 8px rgba(124, 58, 237, 0.08)',
             display: 'flex',
             alignItems: 'center',
             gap: '4px',
           }}
         >
-          <ShieldCheck size={14} color="#6828DC" />
+          <ShieldCheck size={14} color="#7C3AED" />
           <span>{product.prescriptionType || 'Schedule H'}</span>
         </div>
 
@@ -178,7 +178,7 @@ export const ProductDetailGallery: React.FC<ProductDetailGalleryProps> = ({
                   width: '68px',
                   height: '68px',
                   borderRadius: '10px',
-                  border: isSelected ? '2.5px solid #6828DC' : '1.5px solid #E2E8F0',
+                  border: isSelected ? '2.5px solid #7C3AED' : '1.5px solid #E2E8F0',
                   background: '#FFFFFF',
                   padding: '4px',
                   cursor: 'pointer',

@@ -186,8 +186,8 @@
 
 .zp-tab-button.is-active {
   background: #FFFFFF;
-  color: var(--zp-primary, #6828DC);
-  border-bottom: 3px solid var(--zp-primary, #6828DC);
+  color: var(--zp-primary, #7C3AED);
+  border-bottom: 3px solid var(--zp-primary, #7C3AED);
 }
 
 @media (max-width: 768px) {

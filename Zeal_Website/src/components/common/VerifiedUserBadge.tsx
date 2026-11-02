@@ -38,7 +38,7 @@ export const VerifiedUserBadge: React.FC<VerifiedUserBadgeProps> = ({
         justifyContent: 'space-between',
         gap: '12px',
         flexWrap: 'wrap',
-        boxShadow: '0 4px 16px rgba(104, 40, 220, 0.06)',
+        boxShadow: '0 4px 16px rgba(124, 58, 237, 0.06)',
         ...style,
       }}
     >
@@ -52,8 +52,8 @@ export const VerifiedUserBadge: React.FC<VerifiedUserBadgeProps> = ({
             borderRadius: '50%',
             flexShrink: 0,
             border: '2px solid #8B5CF6',
-            boxShadow: '0 4px 12px rgba(104, 40, 220, 0.25)',
-            background: 'linear-gradient(135deg, #7C3AED 0%, #6828DC 100%)',
+            boxShadow: '0 4px 12px rgba(124, 58, 237, 0.25)',
+            background: 'linear-gradient(135deg, #7C3AED 0%, #7C3AED 100%)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -179,7 +179,7 @@ export const VerifiedUserBadge: React.FC<VerifiedUserBadgeProps> = ({
       <div
         style={{
           fontSize: '11.5px',
-          color: '#6828DC',
+          color: '#7C3AED',
           fontWeight: 700,
           display: 'inline-flex',
           alignItems: 'center',

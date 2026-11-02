@@ -124,7 +124,7 @@ const SectionWrapper: React.FC<{
           gap: '8px',
           fontSize: '13px',
           fontWeight: 800,
-          color: '#6828DC',
+          color: '#7C3AED',
           textTransform: 'uppercase',
           letterSpacing: '0.4px',
         }}
@@ -179,8 +179,8 @@ const FormFieldInput: React.FC<{
       }}
       onFocus={(e) => {
         if (!error) {
-          e.currentTarget.style.borderColor = '#6828DC';
-          e.currentTarget.style.boxShadow = '0 0 0 3px rgba(104, 40, 220, 0.12)';
+          e.currentTarget.style.borderColor = '#7C3AED';
+          e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.12)';
         }
       }}
       onBlur={(e) => {
@@ -450,8 +450,8 @@ export const FranchiseEnquiryModal: React.FC = () => {
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
-          boxShadow: '0 25px 65px -12px rgba(104, 40, 220, 0.35), 0 0 0 1px rgba(104, 40, 220, 0.15)',
-          border: '1.5px solid rgba(104, 40, 220, 0.2)',
+          boxShadow: '0 25px 65px -12px rgba(124, 58, 237, 0.35), 0 0 0 1px rgba(124, 58, 237, 0.15)',
+          border: '1.5px solid rgba(124, 58, 237, 0.2)',
           position: 'relative',
         }}
       >
@@ -481,17 +481,17 @@ export const FranchiseEnquiryModal: React.FC = () => {
                 gap: '6px',
                 fontSize: '11px',
                 fontWeight: 900,
-                color: 'var(--zp-primary, #6828DC)',
+                color: 'var(--zp-primary, #7C3AED)',
                 background: '#FFFFFF',
                 padding: '4px 10px',
                 borderRadius: '8px',
                 marginBottom: '8px',
                 border: '1.2px solid #DDD6FE',
                 letterSpacing: '0.6px',
-                boxShadow: '0 2px 6px rgba(104, 40, 220, 0.08)',
+                boxShadow: '0 2px 6px rgba(124, 58, 237, 0.08)',
               }}
             >
-              <Sparkles size={13} color="#6828DC" />
+              <Sparkles size={13} color="#7C3AED" />
               <span>STOCKISTS / DISTRIBUTION</span>
             </div>
 
@@ -539,7 +539,7 @@ export const FranchiseEnquiryModal: React.FC = () => {
                   color: '#5B21B6',
                 }}
               >
-                <ShieldCheck size={13} color="#6828DC" /> 100% District Monopoly
+                <ShieldCheck size={13} color="#7C3AED" /> 100% District Monopoly
               </span>
               <span
                 style={{
@@ -573,7 +573,7 @@ export const FranchiseEnquiryModal: React.FC = () => {
                   color: '#5B21B6',
                 }}
               >
-                <Truck size={13} color="#6828DC" /> Pan-India Express Delivery
+                <Truck size={13} color="#7C3AED" /> Pan-India Express Delivery
               </span>
             </div>
           </div>
@@ -695,13 +695,13 @@ export const FranchiseEnquiryModal: React.FC = () => {
                       <label style={{ fontSize: '12.5px', fontWeight: 700, color: '#334155' }}>
                         WhatsApp Number
                       </label>
-                      <label style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: '#6828DC', cursor: 'pointer', fontWeight: 600 }}>
+                      <label style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: '#7C3AED', cursor: 'pointer', fontWeight: 600 }}>
                         <input
                           type="checkbox"
                           name="sameAsPhone"
                           checked={formData.sameAsPhone}
                           onChange={handleChange}
-                          style={{ width: '13px', height: '13px', accentColor: '#6828DC' }}
+                          style={{ width: '13px', height: '13px', accentColor: '#7C3AED' }}
                         />
                         Same as mobile
                       </label>
@@ -875,13 +875,13 @@ export const FranchiseEnquiryModal: React.FC = () => {
                           fontWeight: 700,
                           cursor: 'pointer',
                           transition: 'all 0.18s ease',
-                          border: isSelected ? '1.5px solid #6828DC' : '1.2px solid #CBD5E1',
+                          border: isSelected ? '1.5px solid #7C3AED' : '1.2px solid #CBD5E1',
                           background: isSelected ? '#F5F3FF' : '#FFFFFF',
-                          color: isSelected ? '#6828DC' : '#475569',
-                          boxShadow: isSelected ? '0 2px 8px rgba(104, 40, 220, 0.15)' : 'none',
+                          color: isSelected ? '#7C3AED' : '#475569',
+                          boxShadow: isSelected ? '0 2px 8px rgba(124, 58, 237, 0.15)' : 'none',
                         }}
                       >
-                        {isSelected && <CheckCircle size={14} color="#6828DC" />}
+                        {isSelected && <CheckCircle size={14} color="#7C3AED" />}
                         <span>{div}</span>
                       </button>
                     );
@@ -911,7 +911,7 @@ export const FranchiseEnquiryModal: React.FC = () => {
                         name="hasDrugLicense"
                         checked={formData.hasDrugLicense}
                         onChange={handleChange}
-                        style={{ width: '16px', height: '16px', accentColor: '#6828DC', cursor: 'pointer' }}
+                        style={{ width: '16px', height: '16px', accentColor: '#7C3AED', cursor: 'pointer' }}
                       />
                       <label
                         htmlFor="modalHasDrugLicense"
@@ -959,7 +959,7 @@ export const FranchiseEnquiryModal: React.FC = () => {
                         name="hasGst"
                         checked={formData.hasGst}
                         onChange={handleChange}
-                        style={{ width: '16px', height: '16px', accentColor: '#6828DC', cursor: 'pointer' }}
+                        style={{ width: '16px', height: '16px', accentColor: '#7C3AED', cursor: 'pointer' }}
                       />
                       <label
                         htmlFor="modalHasGst"
@@ -1011,9 +1011,9 @@ export const FranchiseEnquiryModal: React.FC = () => {
                         name="hasGodownFacility"
                         checked={formData.hasGodownFacility}
                         onChange={handleChange}
-                        style={{ width: '15px', height: '15px', accentColor: '#6828DC' }}
+                        style={{ width: '15px', height: '15px', accentColor: '#7C3AED' }}
                       />
-                      <Warehouse size={15} color="#6828DC" />
+                      <Warehouse size={15} color="#7C3AED" />
                       <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#334155' }}>
                         Warehouse / Godown Space Available
                       </span>
@@ -1036,7 +1036,7 @@ export const FranchiseEnquiryModal: React.FC = () => {
                         name="hasTransportFacility"
                         checked={formData.hasTransportFacility}
                         onChange={handleChange}
-                        style={{ width: '15px', height: '15px', accentColor: '#6828DC' }}
+                        style={{ width: '15px', height: '15px', accentColor: '#7C3AED' }}
                       />
                       <Truck size={15} color="#059669" />
                       <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#334155' }}>
@@ -1086,14 +1086,14 @@ export const FranchiseEnquiryModal: React.FC = () => {
                     fontWeight: 800,
                     borderRadius: '12px',
                     border: 'none',
-                    background: 'linear-gradient(135deg, #6828DC 0%, #4F46E5 100%)',
+                    background: 'linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%)',
                     color: '#FFFFFF',
                     cursor: loading ? 'not-allowed' : 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: '10px',
-                    boxShadow: '0 8px 20px rgba(104, 40, 220, 0.35)',
+                    boxShadow: '0 8px 20px rgba(124, 58, 237, 0.35)',
                     transition: 'all 0.2s ease',
                   }}
                 >

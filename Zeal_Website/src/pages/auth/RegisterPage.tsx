@@ -127,7 +127,7 @@ export const RegisterPage: React.FC = () => {
           Already have an account?{' '}
           <Link
             to="/login"
-            style={{ fontWeight: 800, color: '#6828DC', textDecoration: 'none' }}
+            style={{ fontWeight: 800, color: '#7C3AED', textDecoration: 'none' }}
           >
             Sign In
           </Link>

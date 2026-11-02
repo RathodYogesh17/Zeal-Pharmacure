@@ -258,7 +258,7 @@ export const HomeTestimonialsSlider: React.FC<HomeTestimonialsSliderProps> = ({ 
                       <div
                         style={{
                           fontSize: '12px',
-                          color: isDoc ? '#6828DC' : '#0284C7',
+                          color: isDoc ? '#7C3AED' : '#0284C7',
                           fontWeight: 700,
                           marginBottom: '2px',
                         }}
@@ -313,7 +313,7 @@ export const HomeTestimonialsSlider: React.FC<HomeTestimonialsSliderProps> = ({ 
                       width: isActive ? '32px' : '9px',
                       height: '9px',
                       borderRadius: '999px',
-                      background: isActive ? 'var(--zp-primary, #6828DC)' : '#CBD5E1',
+                      background: isActive ? 'var(--zp-primary, #7C3AED)' : '#CBD5E1',
                       border: 'none',
                       cursor: 'pointer',
                       transition: 'all 0.35s ease',

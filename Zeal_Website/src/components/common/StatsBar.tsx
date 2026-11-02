@@ -30,10 +30,10 @@ export const StatsBar: React.FC<StatsBarProps> = ({
 
   if (variant === 'inline') {
     const defaultAboutStats: IStatItem[] = [
-      { label: 'Distribution Legacy', value: '15+', sub: 'Established in 2010', icon: <Clock size={22} style={{ color: 'var(--zp-primary, #6828DC)' }} /> },
-      { label: 'DCGI Formulations', value: `${productCount || 500}+`, sub: 'Marketed & Distributed', icon: <FlaskConical size={22} style={{ color: 'var(--zp-primary, #6828DC)' }} /> },
-      { label: 'Stockist Partners', value: '200+', sub: 'Across 12+ States', icon: <Users size={22} style={{ color: 'var(--zp-primary, #6828DC)' }} /> },
-      { label: 'Distribution Reach', value: 'Pan-India', sub: 'Central Warehouse Hub', icon: <Truck size={22} style={{ color: 'var(--zp-primary, #6828DC)' }} /> },
+      { label: 'Distribution Legacy', value: '15+', sub: 'Established in 2010', icon: <Clock size={22} style={{ color: 'var(--zp-primary, #7C3AED)' }} /> },
+      { label: 'DCGI Formulations', value: `${productCount || 500}+`, sub: 'Marketed & Distributed', icon: <FlaskConical size={22} style={{ color: 'var(--zp-primary, #7C3AED)' }} /> },
+      { label: 'Stockist Partners', value: '200+', sub: 'Across 12+ States', icon: <Users size={22} style={{ color: 'var(--zp-primary, #7C3AED)' }} /> },
+      { label: 'Distribution Reach', value: 'Pan-India', sub: 'Central Warehouse Hub', icon: <Truck size={22} style={{ color: 'var(--zp-primary, #7C3AED)' }} /> },
     ];
     const displayItems = items || defaultAboutStats;
 
@@ -71,11 +71,11 @@ export const StatsBar: React.FC<StatsBarProps> = ({
   // variant === 'cards' (Home standard)
   const defaultHomeStats: IStatItem[] = [
     {
-      icon: <Pill size={24} style={{ color: 'var(--zp-primary, #6828DC)' }} />,
+      icon: <Pill size={24} style={{ color: 'var(--zp-primary, #7C3AED)' }} />,
       bg: '#F5F3FF',
       border: '#DDD6FE',
       number: productCount ? `${productCount}` : '500',
-      plusColor: 'var(--zp-primary, #6828DC)',
+      plusColor: 'var(--zp-primary, #7C3AED)',
       label: 'Formulation Products',
       sub: 'DCGI & Schedule M Approved',
     },
@@ -112,7 +112,7 @@ export const StatsBar: React.FC<StatsBarProps> = ({
   return (
     <section className={className} style={{ position: 'relative', zIndex: 10, marginTop: '-38px', marginBottom: '16px', ...style }}>
       <div className="container">
-        <div style={{ background: '#FFFFFF', borderRadius: '22px', border: '1.5px solid var(--zp-primary-light, #F5F3FF)', boxShadow: '0 20px 40px -12px rgba(104, 40, 220, 0.12), 0 4px 16px rgba(15, 23, 42, 0.04)', padding: '24px 28px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '20px' }}>
+        <div style={{ background: '#FFFFFF', borderRadius: '22px', border: '1.5px solid var(--zp-primary-light, #F5F3FF)', boxShadow: '0 20px 40px -12px rgba(124, 58, 237, 0.12), 0 4px 16px rgba(15, 23, 42, 0.04)', padding: '24px 28px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '20px' }}>
           {displayItems.map((s, idx) => (
             <div
               key={idx}
@@ -125,7 +125,7 @@ export const StatsBar: React.FC<StatsBarProps> = ({
               <div>
                 <div style={{ fontSize: '30px', fontWeight: 900, color: '#0F172A', lineHeight: 1.1, letterSpacing: '-0.5px' }}>
                   {s.number || s.value}
-                  <span style={{ color: s.plusColor || 'var(--zp-primary, #6828DC)' }}>+</span>
+                  <span style={{ color: s.plusColor || 'var(--zp-primary, #7C3AED)' }}>+</span>
                 </div>
                 <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#1E293B', marginTop: '2px' }}>
                   {s.label}

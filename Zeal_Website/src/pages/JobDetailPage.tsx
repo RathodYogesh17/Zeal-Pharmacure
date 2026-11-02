@@ -65,7 +65,7 @@ export const JobDetailPage: React.FC = () => {
   if (loading) {
     return (
       <div style={{ background: '#FAFAFC', minHeight: '80vh', padding: '120px 24px', textAlign: 'center' }}>
-        <div style={{ width: '48px', height: '48px', margin: '0 auto 16px', color: '#6828DC' }} className="pulse-dot">
+        <div style={{ width: '48px', height: '48px', margin: '0 auto 16px', color: '#7C3AED' }} className="pulse-dot">
           <Briefcase size={48} />
         </div>
         <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#0F172A' }}>Loading Job Details...</h3>
@@ -131,8 +131,8 @@ export const JobDetailPage: React.FC = () => {
           background: 'linear-gradient(135deg, #0F172A 0%, #1E1B4B 42%, #2E1065 78%, #3B0764 100%)',
           color: '#FFFFFF',
           padding: '42px 0 54px',
-          borderBottom: '3px solid var(--zp-primary, #6828DC)',
-          boxShadow: '0 15px 35px -10px rgba(104, 40, 220, 0.25)',
+          borderBottom: '3px solid var(--zp-primary, #7C3AED)',
+          boxShadow: '0 15px 35px -10px rgba(124, 58, 237, 0.25)',
           overflow: 'hidden',
         }}
       >
@@ -145,7 +145,7 @@ export const JobDetailPage: React.FC = () => {
             width: '520px',
             height: '520px',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(104, 40, 220, 0.45) 0%, rgba(139, 92, 246, 0.15) 55%, transparent 75%)',
+            background: 'radial-gradient(circle, rgba(124, 58, 237, 0.45) 0%, rgba(139, 92, 246, 0.15) 55%, transparent 75%)',
             filter: 'blur(70px)',
             pointerEvents: 'none',
           }}
@@ -158,7 +158,7 @@ export const JobDetailPage: React.FC = () => {
             width: '460px',
             height: '460px',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(168, 85, 247, 0.28) 0%, rgba(104, 40, 220, 0.08) 60%, transparent 75%)',
+            background: 'radial-gradient(circle, rgba(168, 85, 247, 0.28) 0%, rgba(124, 58, 237, 0.08) 60%, transparent 75%)',
             filter: 'blur(65px)',
             pointerEvents: 'none',
           }}
@@ -259,7 +259,7 @@ export const JobDetailPage: React.FC = () => {
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px', flexWrap: 'wrap' }}>
                 <span
                   style={{
-                    background: 'rgba(104, 40, 220, 0.4)',
+                    background: 'rgba(124, 58, 237, 0.4)',
                     border: '1px solid rgba(196, 181, 253, 0.45)',
                     color: '#EDE9FE',
                     padding: '5px 14px',
@@ -393,7 +393,7 @@ export const JobDetailPage: React.FC = () => {
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: '8px',
-                      background: 'rgba(104, 40, 220, 0.4)',
+                      background: 'rgba(124, 58, 237, 0.4)',
                       backdropFilter: 'blur(10px)',
                       border: '1px solid rgba(196, 181, 253, 0.45)',
                       borderRadius: '999px',
@@ -433,7 +433,7 @@ export const JobDetailPage: React.FC = () => {
                 }}
                 onMouseEnter={(e) => {
                   if (!copiedLink) {
-                    e.currentTarget.style.background = 'linear-gradient(135deg, #7C3AED, #6828DC)';
+                    e.currentTarget.style.background = 'linear-gradient(135deg, #7C3AED, #7C3AED)';
                     e.currentTarget.style.borderColor = '#A78BFA';
                   }
                 }}
@@ -477,7 +477,7 @@ export const JobDetailPage: React.FC = () => {
                   width: '36px',
                   height: '36px',
                   borderRadius: '10px',
-                  background: 'rgba(104, 40, 220, 0.45)',
+                  background: 'rgba(124, 58, 237, 0.45)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -587,7 +587,7 @@ export const JobDetailPage: React.FC = () => {
                   alignItems: 'center',
                   gap: '8px',
                   background: '#EDE9FE',
-                  color: '#6828DC',
+                  color: '#7C3AED',
                   padding: '6px 14px',
                   borderRadius: '999px',
                   fontSize: '12px',
@@ -694,7 +694,7 @@ export const JobDetailPage: React.FC = () => {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      color: '#6828DC',
+                      color: '#7C3AED',
                     }}
                   >
                     <Award size={18} />
@@ -716,9 +716,9 @@ export const JobDetailPage: React.FC = () => {
                         marginBottom: '4px',
                       }}
                     >
-                      <GraduationCap size={18} color="#6828DC" style={{ flexShrink: 0 }} />
+                      <GraduationCap size={18} color="#7C3AED" style={{ flexShrink: 0 }} />
                       <div>
-                        <div style={{ fontSize: '11px', fontWeight: 800, color: '#6828DC', textTransform: 'uppercase' }}>
+                        <div style={{ fontSize: '11px', fontWeight: 800, color: '#7C3AED', textTransform: 'uppercase' }}>
                           Required Educational Qualification
                         </div>
                         <div style={{ fontSize: '14px', fontWeight: 700, color: '#0F172A', marginTop: '2px' }}>
@@ -741,7 +741,7 @@ export const JobDetailPage: React.FC = () => {
                         border: '1px solid #E2E8F0',
                       }}
                     >
-                      <CheckCircle2 size={16} color="#6828DC" style={{ marginTop: '2px', flexShrink: 0 }} />
+                      <CheckCircle2 size={16} color="#7C3AED" style={{ marginTop: '2px', flexShrink: 0 }} />
                       <span style={{ fontSize: '14px', color: '#334155', lineHeight: 1.6 }}>{req}</span>
                     </div>
                   ))}
@@ -763,7 +763,7 @@ export const JobDetailPage: React.FC = () => {
                 }}
               >
                 <div style={{ background: '#F8FAFC', padding: '14px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
-                  <div style={{ fontSize: '11px', color: '#6828DC', fontWeight: 800, textTransform: 'uppercase' }}>Team Strength</div>
+                  <div style={{ fontSize: '11px', color: '#7C3AED', fontWeight: 800, textTransform: 'uppercase' }}>Team Strength</div>
                   <div style={{ fontSize: '16px', fontWeight: 900, color: '#0F172A', marginTop: '2px' }}>23+ Dedicated Staff</div>
                   <div style={{ fontSize: '12px', color: '#64748B', marginTop: '4px' }}>Close-knit, transparent team structure</div>
                 </div>

@@ -184,7 +184,7 @@ export const SingleProductEnquiryModal: React.FC<SingleProductEnquiryModalProps>
                   style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '4px' }}
                 />
               ) : (
-                <Pill size={28} color="#6828DC" />
+                <Pill size={28} color="#7C3AED" />
               )}
             </div>
 
@@ -215,7 +215,7 @@ export const SingleProductEnquiryModal: React.FC<SingleProductEnquiryModalProps>
               <h3 style={{ fontSize: '20px', fontWeight: 900, color: '#0F172A', margin: 0, lineHeight: 1.25 }}>
                 Enquire for {product.name}
               </h3>
-              <p style={{ fontSize: '12.5px', color: '#6828DC', fontWeight: 600, margin: '2px 0 0 0' }}>
+              <p style={{ fontSize: '12.5px', color: '#7C3AED', fontWeight: 600, margin: '2px 0 0 0' }}>
                 {product.genericName} • {product.packaging || 'Commercial Packaging'}
               </p>
             </div>
@@ -262,7 +262,7 @@ export const SingleProductEnquiryModal: React.FC<SingleProductEnquiryModalProps>
             gap: '8px',
           }}
         >
-          <ShieldCheck size={16} color="#6828DC" style={{ flexShrink: 0 }} />
+          <ShieldCheck size={16} color="#7C3AED" style={{ flexShrink: 0 }} />
           <span>
             <strong>Composition:</strong> {product.composition || 'Active Pharmaceutical Formulation'}
           </span>
@@ -283,7 +283,7 @@ export const SingleProductEnquiryModal: React.FC<SingleProductEnquiryModalProps>
             {/* Quantity & Unit Selector */}
             <div>
               <label className="zp-label" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <Package size={13} color="#6828DC" />
+                <Package size={13} color="#7C3AED" />
                 <span>ESTIMATED QUANTITY & PACK TYPE</span>
               </label>
 
@@ -323,7 +323,7 @@ export const SingleProductEnquiryModal: React.FC<SingleProductEnquiryModalProps>
                       borderRadius: '10px',
                       background: '#FAF5FF',
                       border: '1.5px solid #DDD6FE',
-                      color: '#6828DC',
+                      color: '#7C3AED',
                       fontWeight: 700,
                       fontSize: '13px',
                     }}
@@ -343,8 +343,8 @@ export const SingleProductEnquiryModal: React.FC<SingleProductEnquiryModalProps>
                     }}
                     style={{
                       background: String(quantityCount) === String(num) ? '#EDE9FE' : '#F8FAFC',
-                      color: String(quantityCount) === String(num) ? '#6828DC' : '#64748B',
-                      border: String(quantityCount) === String(num) ? '1px solid #6828DC' : '1px solid #E2E8F0',
+                      color: String(quantityCount) === String(num) ? '#7C3AED' : '#64748B',
+                      border: String(quantityCount) === String(num) ? '1px solid #7C3AED' : '1px solid #E2E8F0',
                       padding: '3px 10px',
                       borderRadius: '6px',
                       fontSize: '11px',

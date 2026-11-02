@@ -91,8 +91,8 @@ export const B2BCustomerFields: React.FC<B2BCustomerFieldsProps> = ({
 
   const handleFocus = (fieldName: keyof B2BCustomerData) => (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (!errors?.[fieldName]) {
-      e.target.style.borderColor = '#6828DC';
-      e.target.style.boxShadow = '0 0 0 3px rgba(104, 40, 220, 0.1)';
+      e.target.style.borderColor = '#7C3AED';
+      e.target.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)';
     }
   };
 
@@ -109,7 +109,7 @@ export const B2BCustomerFields: React.FC<B2BCustomerFieldsProps> = ({
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
         <div>
           <label style={labelStyle}>
-            <Building2 size={13} color="#6828DC" />
+            <Building2 size={13} color="#7C3AED" />
             <span>{nameLabel}</span>
           </label>
           <input
@@ -150,7 +150,7 @@ export const B2BCustomerFields: React.FC<B2BCustomerFieldsProps> = ({
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
         <div>
           <label style={labelStyle}>
-            <Mail size={13} color="#6828DC" />
+            <Mail size={13} color="#7C3AED" />
             <span>BUSINESS EMAIL ADDRESS *</span>
           </label>
           <input
@@ -170,7 +170,7 @@ export const B2BCustomerFields: React.FC<B2BCustomerFieldsProps> = ({
         {showCompany && (
           <div>
             <label style={labelStyle}>
-              <Building2 size={13} color="#6828DC" />
+              <Building2 size={13} color="#7C3AED" />
               <span>COMPANY / DISTRIBUTOR FIRM NAME</span>
             </label>
             <input
@@ -192,7 +192,7 @@ export const B2BCustomerFields: React.FC<B2BCustomerFieldsProps> = ({
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
         <div>
           <label style={labelStyle}>
-            <MapPin size={13} color="#6828DC" />
+            <MapPin size={13} color="#7C3AED" />
             <span>CITY / HEADQUARTERS *</span>
           </label>
           <input
@@ -211,7 +211,7 @@ export const B2BCustomerFields: React.FC<B2BCustomerFieldsProps> = ({
 
         <div>
           <label style={labelStyle}>
-            <MapPin size={13} color="#6828DC" />
+            <MapPin size={13} color="#7C3AED" />
             <span>STATE *</span>
           </label>
           <input
@@ -235,7 +235,7 @@ export const B2BCustomerFields: React.FC<B2BCustomerFieldsProps> = ({
           {showDrugLicense && (
             <div>
               <label style={labelStyle}>
-                <FileCheck size={13} color="#6828DC" />
+                <FileCheck size={13} color="#7C3AED" />
                 <span>DRUG LICENSE NUMBER (OPTIONAL)</span>
               </label>
               <input
@@ -254,7 +254,7 @@ export const B2BCustomerFields: React.FC<B2BCustomerFieldsProps> = ({
           {showGst && (
             <div>
               <label style={labelStyle}>
-                <FileCheck size={13} color="#6828DC" />
+                <FileCheck size={13} color="#7C3AED" />
                 <span>GSTIN NUMBER (OPTIONAL)</span>
               </label>
               <input
@@ -276,7 +276,7 @@ export const B2BCustomerFields: React.FC<B2BCustomerFieldsProps> = ({
       {showMessage && (
         <div>
           <label style={labelStyle}>
-            <MessageSquare size={13} color="#6828DC" />
+            <MessageSquare size={13} color="#7C3AED" />
             <span>{messageLabel}</span>
           </label>
           <textarea
