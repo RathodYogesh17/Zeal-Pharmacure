@@ -1,7 +1,7 @@
-export const ZEAL_OFFICIAL_PHONE = '9316227576';
-export const ZEAL_OFFICIAL_PHONE_DISPLAY = '+91 9316227576';
-export const ZEAL_HEAD_OFFICE_ADDRESS = '7015, billiogo text tile market , Parvat Patiya < puna gam';
-export const ZEAL_PORTAL_URL = 'www.zealpharma.com';
+export const ZEAL_OFFICIAL_PHONE = '9909160190';
+export const ZEAL_OFFICIAL_PHONE_DISPLAY = '+91 9909160190';
+export const ZEAL_HEAD_OFFICE_ADDRESS = '7015, BTM (Bellagio Textile Market), Sita Nagar, Parvat Patiya, Puna Gam, Surat, Gujarat – 395010';
+export const ZEAL_PORTAL_URL = 'https://zealpharmacure.com';
 
 export type WhatsAppEnquiryCategory = 'PRODUCT' | 'BULK' | 'FRANCHISE' | 'CAREER';
 

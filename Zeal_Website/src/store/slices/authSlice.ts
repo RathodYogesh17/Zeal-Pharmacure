@@ -77,7 +77,7 @@ if (!initialUser) {
     name: 'Dr. Amit Shah',
     email: 'admin@zealpharma.com',
     role: 'SUPER_ADMIN',
-    phone: '+91 93162 27576',
+    phone: '+91 99091 60190',
     permissions: ['*'],
   };
 }

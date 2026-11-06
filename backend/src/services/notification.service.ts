@@ -1,7 +1,7 @@
 /**
  * Notification Service
  * Handles instant WhatsApp lead notifications, 100% Free wa.me links,
- * and automated alerts to Sales Manager (+91 9316227576).
+ * and automated alerts to Sales Manager (+91 9909160190).
  */
 
 export interface ILeadNotificationPayload {
@@ -78,7 +78,7 @@ export const sanitizeWhatsAppNumber = (rawPhone?: string | null): string => {
 };
 
 /**
- * Build pre-filled wa.me link for Sales Manager (+91 9316227576) to 1-click reply to doctor/lead
+ * Build pre-filled wa.me link for Sales Manager (+91 9909160190) to 1-click reply to doctor/lead
  */
 export const buildWhatsAppClickToChatUrl = (
   phone: string,
@@ -91,12 +91,12 @@ export const buildWhatsAppClickToChatUrl = (
 };
 
 /**
- * Build 100% FREE direct wa.me link for Client to send enquiry straight to Sales Manager (+91 9316227576).
+ * Build 100% FREE direct wa.me link for Client to send enquiry straight to Sales Manager (+91 9909160190).
  * No third-party API or paid package required!
  */
 export const buildAdminDirectWhatsAppUrl = (
   lead: ILeadNotificationPayload,
-  adminPhone: string = "919316227576"
+  adminPhone: string = "919909160190"
 ): string => {
   const cleanAdminPhone = sanitizeWhatsAppNumber(adminPhone);
   const isFranchise = lead.enquiryType === "FRANCHISE";
@@ -251,7 +251,7 @@ export const formatSalesAlertMessage = (lead: ILeadNotificationPayload): string 
 
 
 /**
- * Send Instant WhatsApp lead notification to Sales Manager (+91 9316227576)
+ * Send Instant WhatsApp lead notification to Sales Manager (+91 9909160190)
  * Supports:
  * 1. Live WhatsApp Bot session (Scanned QR code via @whiskeysockets/baileys)
  * 2. 100% Free wa.me direct links (Zero paid packages)
@@ -265,7 +265,7 @@ export const sendLeadWhatsAppNotification = async (
     process.env.ADMIN_WHATSAPP ||
     process.env.SALES_MANAGER_WHATSAPP ||
     process.env.SALES_PHONE ||
-    "919316227576";
+    "919909160190";
   const hrPhone = process.env.HR_WHATSAPP || process.env.HR_PHONE;
   const webhookUrl = process.env.WHATSAPP_WEBHOOK_URL || process.env.LEAD_WEBHOOK_URL;
   const callMeBotApiKey = process.env.CALLMEBOT_API_KEY;
@@ -408,7 +408,7 @@ export const formatCareerAlertMessage = (applicant: ICareerNotificationPayload):
 };
 
 /**
- * Send career application notification to HR & Leadership (+91 9316227576)
+ * Send career application notification to HR & Leadership (+91 9909160190)
  */
 export const sendCareerWhatsAppNotification = async (
   applicant: ICareerNotificationPayload
@@ -417,7 +417,7 @@ export const sendCareerWhatsAppNotification = async (
   const adminPhone =
     process.env.ADMIN_WHATSAPP ||
     process.env.SALES_MANAGER_WHATSAPP ||
-    "919316227576";
+    "919909160190";
 
   const recipients = [adminPhone, ...(hrPhone && hrPhone !== adminPhone ? [hrPhone] : [])];
 
@@ -644,10 +644,10 @@ export const formatStatusUpdateMessage = (payload: IStatusUpdateNotificationPayl
       statusNarrative + noteLine,
       ``,
       `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-      `📞 *HR Desk Direct Helpline:* +91 9316227576`,
+      `📞 *HR Desk Direct Helpline:* +91 9909160190`,
       `✉️ *HR Email:* careers@zealpharma.com`,
       `🌐 *Careers Portal:* www.zealpharma.com/careers`,
-      `🏢 *Zeal Pharmaceuticals Pvt. Ltd.* (Ahmedabad, Gujarat)`,
+      `🏢 *Zeal Pharmaceuticals Pvt. Ltd.* (Surat, Gujarat)`,
     ].filter(Boolean).join("\n");
   }
 
@@ -801,10 +801,10 @@ export const formatStatusUpdateMessage = (payload: IStatusUpdateNotificationPayl
       statusNarrative + noteLine,
       ``,
       `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-      `📞 *Stockists Sales Desk Helpline:* +91 9316227576`,
+      `📞 *Stockists Sales Desk Helpline:* +91 9909160190`,
       `✉️ *Franchise Support Email:* distribution@zealpharma.com`,
       `🌐 *Product Catalog & Portal:* www.zealpharma.com`,
-      `🏢 *Zeal Pharmaceuticals Pvt. Ltd.* (Ahmedabad, Gujarat)`,
+      `🏢 *Zeal Pharmaceuticals Pvt. Ltd.* (Surat, Gujarat)`,
     ].filter(Boolean).join("\n");
   }
 
@@ -954,10 +954,10 @@ export const formatStatusUpdateMessage = (payload: IStatusUpdateNotificationPayl
     statusNarrative + noteLine,
     ``,
     `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `📞 *Institutional Sales Desk:* +91 9316227576`,
+    `📞 *Institutional Sales Desk:* +91 9909160190`,
     `✉️ *Sales Support Email:* sales@zealpharma.com`,
     `🌐 *WHO-GMP Formulation Catalog:* www.zealpharma.com`,
-    `🏢 *Zeal Pharmaceuticals Pvt. Ltd.* (Ahmedabad, Gujarat)`,
+    `🏢 *Zeal Pharmaceuticals Pvt. Ltd.* (Surat, Gujarat)`,
   ].filter(Boolean).join("\n");
 };
 

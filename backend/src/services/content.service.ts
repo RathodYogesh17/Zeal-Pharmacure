@@ -250,14 +250,14 @@ const defaultCmsSeeds: Array<{
       section: "corporate",
       content: {
         companyName: "Zeal Pharmaceuticals",
-        headOfficeAddress: "Corporate Heights, S.G. Highway, Ahmedabad, Gujarat 380054, India",
+        headOfficeAddress: "7015, BTM (Bellagio Textile Market), Sita Nagar, Parvat Patiya, Puna Gam, Surat, Gujarat – 395010, India",
         plantAddress: "Sanand GIDC Industrial Estate, Phase II, Ahmedabad, Gujarat 382110, India",
-        phone: "+91 9316227576",
-        salesHelpline: "+91 9316227576",
-        hrHelpline: "+91 9316227576",
+        phone: "+91 9909160190",
+        salesHelpline: "+91 9909160190",
+        hrHelpline: "+91 9909160190",
         email: "info@zealpharma.com",
         salesEmail: "sales@zealpharma.com",
-        whatsappNumber: "+91 9316227576",
+        whatsappNumber: "+91 9909160190",
         gstNumber: "24AAACZ1234F1Z5",
         drugLicenseNumber: "20B-123456 / 21B-123456",
         workingHours: "Monday - Saturday: 9:30 AM - 6:30 PM",
@@ -305,14 +305,18 @@ const ensureCmsSeeded = async (): Promise<void> => {
           String(c.phone || '').includes('74360') ||
           String(c.salesHelpline || '').includes('74360') ||
           String(c.hrHelpline || '').includes('74360') ||
-          String(c.whatsappNumber || '').includes('74360')
+          String(c.whatsappNumber || '').includes('74360') ||
+          String(c.phone || '').includes('93162') ||
+          String(c.salesHelpline || '').includes('93162') ||
+          String(c.hrHelpline || '').includes('93162') ||
+          String(c.whatsappNumber || '').includes('93162')
         ) {
           updateFields.content = {
             ...c,
-            phone: "+91 9316227576",
-            salesHelpline: "+91 9316227576",
-            hrHelpline: "+91 9316227576",
-            whatsappNumber: "+91 9316227576",
+            phone: "+91 9909160190",
+            salesHelpline: "+91 9909160190",
+            hrHelpline: "+91 9909160190",
+            whatsappNumber: "+91 9909160190",
           };
         }
       }

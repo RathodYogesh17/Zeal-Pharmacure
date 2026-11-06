@@ -472,7 +472,7 @@ export const generateVisualAidPdf = async (
         .fontSize(7.5)
         .fillColor("#93c5fd")
         .text(
-          "Stockists Distribution Hotline: +91 93162 27576  |  Email: contact@zealpharma.com  |  Web: www.zealpharma.com",
+          "Stockists Distribution Hotline: +91 99091 60190  |  Email: contact@zealpharma.com  |  Web: www.zealpharma.com",
           margin + 12,
           footerY + 24
         );

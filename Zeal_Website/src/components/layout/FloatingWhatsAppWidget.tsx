@@ -595,7 +595,7 @@ export const FloatingWhatsAppWidget: React.FC = () => {
             >
               <ShieldCheck size={12} color="#10B981" />
               <span>
-                Official Helpline: <strong>+91 93162 27576</strong>
+                Official Helpline: <strong>+91 99091 60190</strong>
               </span>
             </div>
           </form>

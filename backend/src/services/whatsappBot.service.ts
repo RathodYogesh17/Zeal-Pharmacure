@@ -254,7 +254,7 @@ class WhatsAppBotService {
         : isScanQr
         ? `<img src="${this.qrCodeDataUrl}" style="width:240px;height:240px;border-radius:12px;background:white;padding:10px;" />
            <p>Scan with WhatsApp on Sales Desk device</p>`
-        : `<p>Real-time lead alerts are operational via WhatsApp Webhook & Direct 1-Click WhatsApp links to Sales Desk (+91 9316227576).</p>`
+        : `<p>Real-time lead alerts are operational via WhatsApp Webhook & Direct 1-Click WhatsApp links to Sales Desk (+91 9909160190).</p>`
     }
     <br>
     <a href="/" class="btn">Back to Website</a>

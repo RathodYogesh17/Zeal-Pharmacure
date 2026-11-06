@@ -146,14 +146,14 @@ export const AdminEnquiryDetailModal: React.FC<AdminEnquiryDetailModalProps> = (
         const num = Number((enquiry.product as any).mrp);
         mrpLine = `\n• Single Unit MRP: Rs. ${isNaN(num) ? (enquiry.product as any).mrp : num.toLocaleString('en-IN')} / Pack`;
       }
-      const text = `Dear ${leadName} Ji,\n\nGreetings from Zeal Pharmacure Pvt. Ltd.!\n\nThank you very much for your enquiry regarding *${singleProdName}*. We truly appreciate your interest in our formulations.\n\n*Enquiry Details:*${mrpLine}${qtyText}\n\nOur institutional sales team has reviewed your requirement and prepared our net distributor rates. May we take a brief moment of your time to share the commercial details?\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nWarm regards,\nSales Desk | Zeal Pharmacure\nHelpline: +91 93162 27576`;
+      const text = `Dear ${leadName} Ji,\n\nGreetings from Zeal Pharmacure Pvt. Ltd.!\n\nThank you very much for your enquiry regarding *${singleProdName}*. We truly appreciate your interest in our formulations.\n\n*Enquiry Details:*${mrpLine}${qtyText}\n\nOur institutional sales team has reviewed your requirement and prepared our net distributor rates. May we take a brief moment of your time to share the commercial details?\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nWarm regards,\nSales Desk | Zeal Pharmacure\nHelpline: +91 99091 60190`;
       return `https://wa.me/${rawPhone}?text=${encodeURIComponent(text)}`;
     } else if (isBulk) {
       const prodPreview = bulkItems
         .slice(0, 3)
         .map(i => (typeof i.product === 'object' && i.product?.name ? i.product.name : 'Formulation'))
         .join(', ');
-      const text = `Dear ${leadName} Ji,\n\nGreetings from Zeal Pharmacure Pvt. Ltd.!\n\nThank you very much for submitting your Bulk Requirement Batch for *${bulkItems.length} formulations* (${prodPreview}${bulkItems.length > 3 ? '...' : ''}). We truly appreciate your trust in our brand.\n\nOur commercial sales desk has prepared the institutional wholesale quotation with net rates and freight estimates. Could you please confirm your expected delivery schedule?\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nWarm regards,\nInstitutional Sales Desk | Zeal Pharmacure\nHelpline: +91 93162 27576`;
+      const text = `Dear ${leadName} Ji,\n\nGreetings from Zeal Pharmacure Pvt. Ltd.!\n\nThank you very much for submitting your Bulk Requirement Batch for *${bulkItems.length} formulations* (${prodPreview}${bulkItems.length > 3 ? '...' : ''}). We truly appreciate your trust in our brand.\n\nOur commercial sales desk has prepared the institutional wholesale quotation with net rates and freight estimates. Could you please confirm your expected delivery schedule?\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nWarm regards,\nInstitutional Sales Desk | Zeal Pharmacure\nHelpline: +91 99091 60190`;
       return `https://wa.me/${rawPhone}?text=${encodeURIComponent(text)}`;
     } else if (isCareer) {
       const role = enquiry.positionAppliedFor || 'the advertised position';
@@ -161,7 +161,7 @@ export const AdminEnquiryDetailModal: React.FC<AdminEnquiryDetailModalProps> = (
       return `https://wa.me/${rawPhone}?text=${encodeURIComponent(text)}`;
     } else {
       const territory = enquiry.territoryDistrict || enquiry.preferredTerritory || enquiry.city || 'your territory';
-      const text = `Dear ${leadName} Ji,\n\nGreetings from Zeal Pharmacure Pvt. Ltd.!\n\nThank you very much for your application for our *Stockists Distribution Network* in *${territory}*. We sincerely appreciate your interest in partnering with our company.\n\nOur market expansion desk has reviewed your file and is pleased to share our product catalog, monopoly division details, and distribution rate charts. Are you available for a brief phone consultation today?\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nWarm regards,\nStockists Network Desk | Zeal Pharmacure\nHelpline: +91 93162 27576`;
+      const text = `Dear ${leadName} Ji,\n\nGreetings from Zeal Pharmacure Pvt. Ltd.!\n\nThank you very much for your application for our *Stockists Distribution Network* in *${territory}*. We sincerely appreciate your interest in partnering with our company.\n\nOur market expansion desk has reviewed your file and is pleased to share our product catalog, monopoly division details, and distribution rate charts. Are you available for a brief phone consultation today?\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nWarm regards,\nStockists Network Desk | Zeal Pharmacure\nHelpline: +91 99091 60190`;
       return `https://wa.me/${rawPhone}?text=${encodeURIComponent(text)}`;
     }
   };
@@ -197,7 +197,7 @@ export const AdminEnquiryDetailModal: React.FC<AdminEnquiryDetailModalProps> = (
     setEmailStatusMsg(null);
     if (presetKey === 'quotation') {
       setEmailSubject(`Commercial Price Quotation - Zeal Pharmaceuticals`);
-      setEmailBody(`Dear ${leadName},\n\nThank you for reaching out to Zeal Pharmaceuticals regarding ${isSingle ? singleProdName : (isBulk ? `${bulkItems.length} formulations` : 'Stockists Distribution')}.\n\nWe have prepared our wholesale net distributor rate proposal. Attached/below are the commercial terms and minimum supply schedule.\n\nPlease let us know if you require product samples or our Visual Aid booklet.\n\nWarm regards,\nZeal Pharma Sales Management\nHelpline: +91 9316227576 | info@zealpharma.com`);
+      setEmailBody(`Dear ${leadName},\n\nThank you for reaching out to Zeal Pharmaceuticals regarding ${isSingle ? singleProdName : (isBulk ? `${bulkItems.length} formulations` : 'Stockists Distribution')}.\n\nWe have prepared our wholesale net distributor rate proposal. Attached/below are the commercial terms and minimum supply schedule.\n\nPlease let us know if you require product samples or our Visual Aid booklet.\n\nWarm regards,\nZeal Pharma Sales Management\nHelpline: +91 9909160190 | info@zealpharma.com`);
     } else if (presetKey === 'docs') {
       setEmailSubject(`Document Verification Required - Zeal Pharmaceuticals`);
       setEmailBody(`Dear ${leadName},\n\nWe have received your B2B inquiry. To process your distributor registration and dispatch commercial Visual Aids, please share a scanned copy of your:\n\n1. Valid Wholesale Drug License (Form 20B/21B)\n2. GST Registration Certificate\n3. Transport/Consignment delivery preferences\n\nYou can reply directly to this email.\n\nBest regards,\nZeal Pharma Compliance Desk`);

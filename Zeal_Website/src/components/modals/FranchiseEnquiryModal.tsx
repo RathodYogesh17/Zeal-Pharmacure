@@ -412,7 +412,7 @@ export const FranchiseEnquiryModal: React.FC = () => {
       message: formData.message,
       authUser: user ? { name: user.name, phone: user.phone || formData.phone, email: user.email } : undefined,
     });
-    const targetNumber = (settings.whatsappNumber || settings.salesHelpline || '919876543210').replace(
+    const targetNumber = (settings.whatsappNumber || settings.salesHelpline || '919909160190').replace(
       /[^0-9]/g,
       ''
     );

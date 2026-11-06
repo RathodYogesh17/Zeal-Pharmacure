@@ -6,7 +6,7 @@ const test = async () => {
     body: JSON.stringify({
       name: "Dr. Ramesh Kumar (Client)",
       email: "dr.ramesh@gmail.com",
-      phone: "9316227576",
+      phone: "9909160190",
       city: "Ahmedabad",
       state: "Gujarat",
       productSlug: "cal-zeal-500",
@@ -33,8 +33,8 @@ const test = async () => {
   console.log("Message:", data2.message);
   console.log("Is Confirmed?:", data2.data?.isConfirmed);
   console.log("Confirmed At:", data2.data?.confirmedAt);
-  console.log("WhatsApp Alert Dispatched to 9316227576?:", data2.data?.whatsAppAlertSent);
-  console.log("Target Link for 9316227576:", data2.data?.adminDirectWhatsAppUrl);
+  console.log("WhatsApp Alert Dispatched to 9909160190?:", data2.data?.whatsAppAlertSent);
+  console.log("Target Link for 9909160190:", data2.data?.adminDirectWhatsAppUrl);
 };
 
 test();

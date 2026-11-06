@@ -771,7 +771,7 @@ export const AdminCmsPage: React.FC = () => {
                   <input
                     type="text"
                     name="phone"
-                    placeholder="e.g. +91 9316227576"
+                    placeholder="e.g. +91 9909160190"
                     value={formSettings.phone || ''}
                     onChange={handleSettingsChange}
                     className="cms-input"
@@ -786,7 +786,7 @@ export const AdminCmsPage: React.FC = () => {
                   <input
                     type="text"
                     name="salesHelpline"
-                    placeholder="e.g. +91 9316227576"
+                    placeholder="e.g. +91 9909160190"
                     value={formSettings.salesHelpline || ''}
                     onChange={handleSettingsChange}
                     className="cms-input"
@@ -801,7 +801,7 @@ export const AdminCmsPage: React.FC = () => {
                   <input
                     type="text"
                     name="hrHelpline"
-                    placeholder="e.g. +91 9316227576"
+                    placeholder="e.g. +91 9909160190"
                     value={formSettings.hrHelpline || ''}
                     onChange={handleSettingsChange}
                     className="cms-input"
@@ -816,7 +816,7 @@ export const AdminCmsPage: React.FC = () => {
                   <input
                     type="text"
                     name="whatsappNumber"
-                    placeholder="e.g. +91 9316227576"
+                    placeholder="e.g. +91 9909160190"
                     value={formSettings.whatsappNumber || ''}
                     onChange={handleSettingsChange}
                     className="cms-input"
@@ -1003,7 +1003,7 @@ export const AdminCmsPage: React.FC = () => {
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                   <Phone size={13} style={{ color: '#A78BFA' }} />
-                  <strong>Hotline:</strong> {formSettings.phone || '+91 9316227576'}
+                  <strong>Hotline:</strong> {formSettings.phone || '+91 9909160190'}
                 </span>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                   <Mail size={13} style={{ color: '#A78BFA' }} />

@@ -47,7 +47,7 @@ export const AdminSettingsPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'whatsapp' | 'audit'>('profile');
 
   // WhatsApp Helpline & Click-to-Chat State
-  const [testNumber, setTestNumber] = useState('919316227576');
+  const [testNumber, setTestNumber] = useState('919909160190');
   const [testMsgText, setTestMsgText] = useState('Hello from Zeal Pharmaceuticals Head Office! Your WhatsApp lead routing is working perfectly.');
   const [testCopied, setTestCopied] = useState(false);
 
@@ -63,7 +63,7 @@ export const AdminSettingsPage: React.FC = () => {
 
   // Profile form state
   const [name, setName] = useState(user?.name || '');
-  const [phone, setPhone] = useState(user?.phone || '+91 93162 27576');
+  const [phone, setPhone] = useState(user?.phone || '+91 99091 60190');
   const [profileImage, setProfileImage] = useState<string>(user?.profileImage || '');
   const [avatarImgError, setAvatarImgError] = useState(false);
   const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);
@@ -765,7 +765,7 @@ export const AdminSettingsPage: React.FC = () => {
                 label="Phone Number"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="e.g. +91 93162 27576"
+                placeholder="e.g. +91 99091 60190"
                 prefixIcon={<Phone size={16} />}
               />
             </div>
@@ -1153,7 +1153,7 @@ export const AdminSettingsPage: React.FC = () => {
                     Registered Mobile Line
                   </div>
                   <div style={{ fontSize: '22px', fontWeight: 800, color: '#0F172A', marginTop: '4px', fontFamily: 'monospace' }}>
-                    +91 9316227576
+                    +91 9909160190
                   </div>
                   <div style={{ fontSize: '12.5px', color: '#059669', marginTop: '4px', fontWeight: 600 }}>
                     Zeal Pharmaceuticals Head Office / Sales Desk
@@ -1178,7 +1178,7 @@ export const AdminSettingsPage: React.FC = () => {
 
               <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px solid #F1F5F9' }}>
                 <a
-                  href="https://wa.me/919316227576?text=Hello%20Zeal%20Pharma%20Sales%20Team%2C%20testing%20WhatsApp%20routing."
+                  href="https://wa.me/919909160190?text=Hello%20Zeal%20Pharma%20Sales%20Team%2C%20testing%20WhatsApp%20routing."
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn-secondary"
@@ -1227,7 +1227,7 @@ export const AdminSettingsPage: React.FC = () => {
                     type="text"
                     value={testNumber}
                     onChange={(e) => setTestNumber(e.target.value)}
-                    placeholder="e.g. 919316227576"
+                    placeholder="e.g. 919909160190"
                     required
                     style={{
                       width: '100%',

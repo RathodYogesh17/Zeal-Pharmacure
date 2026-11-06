@@ -58,7 +58,7 @@ whatsappBotRouter.post(
   authMiddleware,
   requirePermissions(PERMISSIONS.SETTINGS_UPDATE),
   asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const toPhone = String(req.body?.phone || "9316227576");
+    const toPhone = String(req.body?.phone || "9909160190");
     const text = String(
       req.body?.message ||
         "🔔 *ZEAL PHARMA - Live Test Message*\nWhatsApp Bot is successfully connected and delivering messages!"

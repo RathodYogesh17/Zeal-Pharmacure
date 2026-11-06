@@ -7,7 +7,7 @@ import ProductEnquiry from '../src/models/productEnquiry.model';
 import FranchiseEnquiry from '../src/models/franchiseEnquiry.model';
 import CareerApplication from '../src/models/careerApplication.model';
 
-const TARGET_PHONE = '9316227576';
+const TARGET_PHONE = '9909160190';
 
 async function seedTestEnquiries() {
   try {

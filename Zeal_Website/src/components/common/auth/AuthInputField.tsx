@@ -47,7 +47,7 @@ export const AuthInputField: React.FC<AuthInputFieldProps> = ({
   const [isFocused, setIsFocused] = useState(false);
 
   const isPassword = type === 'password';
-  const effectiveType = isPassword ? (showPassword ? 'text' : 'password') : type;
+  const  effectiveType = isPassword ? (showPassword ? 'text' : 'password') : type;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: compact ? '4px' : '6px', ...style }}>
