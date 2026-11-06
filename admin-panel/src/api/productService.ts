@@ -194,6 +194,31 @@ export const productService = {
     return res.data?.product || res.data;
   },
 
+  async exportCatalogPdf(): Promise<void> {
+    const token = localStorage.getItem('zeal_admin_token') || localStorage.getItem('zeal_token');
+    const url = `${API_BASE}/products/export/catalog-pdf${token ? `?token=${encodeURIComponent(token)}` : ''}`;
+    const headers: HeadersInit = {};
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    const response = await fetch(url, { headers });
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({ message: 'Failed to export catalog PDF' }));
+      throw new Error(err.message || 'Failed to export catalog PDF. Please make sure you are logged in.');
+    }
+
+    const blob = await response.blob();
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = `Zeal_Pharmacure_Product_Catalog_${new Date().toISOString().slice(0, 10)}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(downloadUrl);
+  },
+
   async adminDeleteProduct(id: string): Promise<void> {
     await request(`/products/${id}`, {
       method: 'DELETE',

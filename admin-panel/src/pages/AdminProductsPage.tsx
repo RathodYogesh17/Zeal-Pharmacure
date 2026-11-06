@@ -93,6 +93,21 @@ export const AdminProductsPage: React.FC = () => {
   const [editingProduct, setEditingProduct] = useState<IProduct | null>(null);
   const [feedbackMsg, setFeedbackMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [isExportingPdf, setIsExportingPdf] = useState(false);
+
+  const handleExportCatalogPdf = async () => {
+    try {
+      setIsExportingPdf(true);
+      await productService.exportCatalogPdf();
+      setFeedbackMsg('Product catalog PDF exported successfully.');
+      setTimeout(() => setFeedbackMsg(''), 4000);
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Failed to export catalog PDF.');
+      setTimeout(() => setErrorMsg(''), 4000);
+    } finally {
+      setIsExportingPdf(false);
+    }
+  };
 
   const loadData = () => {
     refetch();
@@ -287,6 +302,30 @@ export const AdminProductsPage: React.FC = () => {
               <span>Cards</span>
             </button>
           </div>
+
+          <button
+            type="button"
+            onClick={handleExportCatalogPdf}
+            disabled={isExportingPdf}
+            className="btn btn-outline"
+            style={{
+              padding: '9px 16px',
+              borderRadius: '8px',
+              fontSize: '13px',
+              fontWeight: 600,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              background: '#FFFFFF',
+              border: '1px solid #CBD5E1',
+              color: '#0F172A',
+              cursor: isExportingPdf ? 'not-allowed' : 'pointer',
+            }}
+            title="Export complete WHO-GMP price list and catalog as multi-page PDF"
+          >
+            <Download size={15} style={{ color: '#6828DC' }} />
+            <span>{isExportingPdf ? 'Exporting PDF...' : 'Export Catalog PDF'}</span>
+          </button>
 
           {canCreate && (
             <Link

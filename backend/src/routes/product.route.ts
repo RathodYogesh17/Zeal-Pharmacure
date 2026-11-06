@@ -10,6 +10,7 @@ import {
   deleteProduct,
   getProductFilters,
   downloadVisualAidPdf,
+  downloadCatalogPdf,
   duplicateProduct,
 } from "../controllers/product.controller";
 import {
@@ -174,6 +175,13 @@ productRouter.post(
   authMiddleware,
   requirePermissions(PERMISSIONS.PRODUCT_CREATE),
   asyncHandler(duplicateProduct)
+);
+
+// Full Formulation Catalog & Wholesale Price Directory PDF (Login Required)
+productRouter.get(
+  "/export/catalog-pdf",
+  authMiddleware,
+  asyncHandler(downloadCatalogPdf)
 );
 
 // Visual Aid / Leave Behind Leaflet (LBL) A4 PDF for MRs, Doctors & Franchisees

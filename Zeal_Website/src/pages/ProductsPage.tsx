@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Search, ShoppingBag, Send } from 'lucide-react';
+import { Search, ShoppingBag, Send, FileDown, Loader2 } from 'lucide-react';
 import { productService } from '../api/productService';
 import { categoryService } from '../api/categoryService';
 import type { IProduct, ICategory } from '../types';
@@ -34,6 +34,24 @@ export const ProductsPage: React.FC = () => {
   const [singleEnquiryProduct, setSingleEnquiryProduct] = useState<IProduct | null>(null);
   const [bulkEnquiryList, setBulkEnquiryList] = useState<IProduct[]>([]);
   const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
+  const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
+
+  const handleDownloadCatalogPdf = () => {
+    requireAuth(async () => {
+      try {
+        setIsDownloadingPdf(true);
+        await productService.downloadCatalogPdf();
+      } catch (err: any) {
+        alert(err.message || 'Failed to download catalog PDF. Please try again.');
+      } finally {
+        setIsDownloadingPdf(false);
+      }
+    }, {
+      title: 'Download Wholesale Product Catalog (PDF)',
+      subtitle: 'Please login or register to securely download the full WHO-GMP price list with compositions and packaging specifications.',
+      source: 'catalog_pdf_download',
+    });
+  };
 
   const handleOpenSingleEnquiry = (p: IProduct) => {
     requireAuth(() => {
@@ -563,10 +581,39 @@ export const ProductsPage: React.FC = () => {
 
             <button
               type="button"
+              onClick={handleDownloadCatalogPdf}
+              disabled={isDownloadingPdf}
+              title="Download official formulation & price catalog PDF (Login required)"
+              style={{
+                padding: '10px 18px',
+                fontSize: '13px',
+                fontWeight: 700,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                color: '#FFFFFF',
+                borderRadius: '10px',
+                border: 'none',
+                boxShadow: '0 4px 14px rgba(16, 185, 129, 0.35)',
+                cursor: isDownloadingPdf ? 'not-allowed' : 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              {isDownloadingPdf ? (
+                <Loader2 size={15} className="animate-spin" />
+              ) : (
+                <FileDown size={15} />
+              )}
+              <span>{isDownloadingPdf ? 'Generating PDF...' : 'Download Price List (PDF)'}</span>
+            </button>
+
+            <button
+              type="button"
               onClick={openFranchiseModal}
               className="zp-btn-primary"
               style={{
-                padding: '10px 20px',
+                padding: '10px 18px',
                 fontSize: '13px',
                 fontWeight: 700,
                 display: 'inline-flex',
@@ -582,7 +629,7 @@ export const ProductsPage: React.FC = () => {
               }}
             >
               <Send size={14} color="#FFFFFF" />
-              <span>Full Portfolio Price List</span>
+              <span>Franchise Enquiry</span>
             </button>
           </div>
         </div>
