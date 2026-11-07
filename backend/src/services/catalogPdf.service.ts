@@ -52,7 +52,8 @@ const getLogoBuffer = (): Buffer | null => {
 /**
  * Generate a multi-page, executive A4 Product Price List & Formulation Directory PDF.
  * Formats exactly 20 formulations per page, covering the full height without bottom dead-space.
- * ZERO extra blank pages: strictly generates only the exact pages required by products data.
+ * ZERO truncation / NO '...': Full content wraps cleanly to 2nd or 3rd line.
+ * Strictly maintains 20 products per page with dynamic vertical centering inside each row cell.
  */
 export const generateProductCatalogPdf = async (
   products: ICatalogProduct[],
@@ -89,14 +90,15 @@ export const generateProductCatalogPdf = async (
       const website = options.website || "www.zealpharmacure.com";
       const address = options.headOfficeAddress || "7015, BTM Market, Sita Nagar, Parvat Patiya, Surat, Gujarat – 395010";
 
-      // Column Widths (Total: 551 pt)
-      const colSr = { x: margin, w: 22 };                      // 22  (sum 22)
-      const colName = { x: margin + 22, w: 114 };              // 114 (sum 136)
-      const colCat = { x: margin + 136, w: 78 };               // 78  (sum 214)
-      const colComp = { x: margin + 214, w: 172 };             // 172 (sum 386)
-      const colForm = { x: margin + 386, w: 45 };              // 45  (sum 431)
-      const colPack = { x: margin + 431, w: 52 };              // 52  (sum 483)
-      const colMrp = { x: margin + 483, w: 68 };               // 68  (sum 551)
+      // Optimized Column Widths (Total: 551 pt)
+      // Expanded Name to 120pt, Category to 90pt, Composition to 195pt for full multi-line visibility
+      const colSr = { x: margin, w: 20 };                      // 20  (sum 20)
+      const colName = { x: margin + 20, w: 120 };              // 120 (sum 140)
+      const colCat = { x: margin + 140, w: 90 };               // 90  (sum 230)
+      const colComp = { x: margin + 230, w: 195 };             // 195 (sum 425)
+      const colForm = { x: margin + 425, w: 38 };              // 38  (sum 463)
+      const colPack = { x: margin + 463, w: 44 };              // 44  (sum 507)
+      const colMrp = { x: margin + 507, w: 44 };               // 44  (sum 551)
 
       const ROWS_PER_PAGE = 20;
       const rowHeight = 34.2; // 20 * 34.2 = 684 pt
@@ -212,12 +214,12 @@ export const generateProductCatalogPdf = async (
         // Table Column Labels
         doc.font("Helvetica-Bold").fontSize(7.2).fillColor("#FFFFFF");
         doc.text("SR.", colSr.x, tableHeaderY + 6.5, { width: colSr.w, align: "center", lineBreak: false });
-        doc.text("PRODUCT NAME", colName.x + 4, tableHeaderY + 6.5, { width: colName.w - 4, align: "left", lineBreak: false });
-        doc.text("CATEGORY", colCat.x + 4, tableHeaderY + 6.5, { width: colCat.w - 4, align: "left", lineBreak: false });
-        doc.text("COMPOSITION / SALT FORMULATION", colComp.x + 4, tableHeaderY + 6.5, { width: colComp.w - 4, align: "left", lineBreak: false });
+        doc.text("PRODUCT NAME", colName.x + 3, tableHeaderY + 6.5, { width: colName.w - 4, align: "left", lineBreak: false });
+        doc.text("CATEGORY", colCat.x + 3, tableHeaderY + 6.5, { width: colCat.w - 4, align: "left", lineBreak: false });
+        doc.text("COMPOSITION / SALT FORMULATION", colComp.x + 3, tableHeaderY + 6.5, { width: colComp.w - 4, align: "left", lineBreak: false });
         doc.text("DOSAGE", colForm.x, tableHeaderY + 6.5, { width: colForm.w, align: "center", lineBreak: false });
-        doc.text("PACKING", colPack.x + 4, tableHeaderY + 6.5, { width: colPack.w - 4, align: "left", lineBreak: false });
-        doc.text("M.R.P. (Rs.)", colMrp.x, tableHeaderY + 6.5, { width: colMrp.w - 5, align: "right", lineBreak: false });
+        doc.text("PACKING", colPack.x + 2, tableHeaderY + 6.5, { width: colPack.w - 3, align: "left", lineBreak: false });
+        doc.text("M.R.P. (Rs.)", colMrp.x, tableHeaderY + 6.5, { width: colMrp.w - 3, align: "right", lineBreak: false });
       };
 
       // Helper to format dosage form string
@@ -234,13 +236,6 @@ export const generateProductCatalogPdf = async (
         if (typeof cat === "string") return cat;
         if (typeof cat === "object" && cat.name) return String(cat.name);
         return "General";
-      };
-
-      // Helper to truncate text cleanly
-      const truncateText = (text: string, maxLen: number): string => {
-        const cleaned = String(text || "").trim();
-        if (cleaned.length <= maxLen) return cleaned;
-        return cleaned.slice(0, maxLen - 1) + "…";
       };
 
       // Render all products page by page
@@ -286,85 +281,94 @@ export const generateProductCatalogPdf = async (
               .strokeColor("#E2E8F0")
               .stroke();
 
-            const textY = y + 12; // Comfortable vertical centering in 34.2pt row
+            // Helper to dynamically calculate vertical center for multi-line or single-line text
+            const getCellY = (str: string, width: number, fontSize: number, fontName: string): number => {
+              doc.font(fontName).fontSize(fontSize);
+              const textHeight = doc.heightOfString(str, { width, lineBreak: true });
+              const topPadding = Math.max(3, (rowHeight - textHeight) / 2);
+              return y + topPadding;
+            };
 
-            // 1. Sr. No.
+            // 1. Sr. No. (Vertically centered)
             doc
               .font("Helvetica")
-              .fontSize(7.8)
+              .fontSize(7.5)
               .fillColor("#64748B")
-              .text(String(globalIdx).padStart(2, "0"), colSr.x, textY, {
+              .text(String(globalIdx).padStart(2, "0"), colSr.x, y + 13, {
                 width: colSr.w,
                 align: "center",
                 lineBreak: false,
               });
 
-            // 2. Product Name (Bold)
+            // 2. Product Name (Bold, wraps to 2nd line if long without '...')
+            const prodName = String(prod.name || "").trim();
+            const yName = getCellY(prodName, colName.w - 6, 8, "Helvetica-Bold");
             doc
               .font("Helvetica-Bold")
-              .fontSize(8.2)
+              .fontSize(8)
               .fillColor("#0F172A")
-              .text(truncateText(prod.name, 24), colName.x + 4, textY, {
+              .text(prodName, colName.x + 3, yName, {
                 width: colName.w - 6,
-                align: "left",
-                lineBreak: false,
+                lineBreak: true,
               });
 
-            // 3. Category (Purple font)
+            // 3. Category (Purple font, wraps to 2nd line if long without '...')
             const catName = getCategoryName(prod.category);
+            const yCat = getCellY(catName, colCat.w - 6, 7, "Helvetica-Bold");
             doc
               .font("Helvetica-Bold")
-              .fontSize(7.2)
+              .fontSize(7)
               .fillColor("#6D28D9")
-              .text(truncateText(catName, 18), colCat.x + 4, textY, {
+              .text(catName, colCat.x + 3, yCat, {
                 width: colCat.w - 6,
-                align: "left",
-                lineBreak: false,
+                lineBreak: true,
               });
 
-            // 4. Composition (Dark charcoal)
+            // 4. Composition (Dark charcoal, wraps across lines without '...')
+            const compStr = String(prod.composition || "").trim();
+            const yComp = getCellY(compStr, colComp.w - 6, 6.8, "Helvetica");
             doc
               .font("Helvetica")
-              .fontSize(7.2)
+              .fontSize(6.8)
               .fillColor("#334155")
-              .text(truncateText(prod.composition, 44), colComp.x + 4, textY, {
+              .text(compStr, colComp.x + 3, yComp, {
                 width: colComp.w - 6,
-                align: "left",
-                lineBreak: false,
+                lineBreak: true,
               });
 
-            // 5. Dosage Form (Soft cyan/blue)
+            // 5. Dosage Form (Soft cyan/blue, centered vertically and horizontally)
             const dosage = getDosageFormName(prod.dosageForm);
             doc
               .font("Helvetica-Bold")
               .fontSize(7.2)
               .fillColor("#0284C7")
-              .text(truncateText(dosage, 10), colForm.x, textY, {
+              .text(dosage, colForm.x, y + 13, {
                 width: colForm.w,
                 align: "center",
                 lineBreak: false,
               });
 
-            // 6. Packaging Details
+            // 6. Packaging Details (Wraps if needed, e.g. 10x10 Blister)
+            const packStr = String(prod.packaging || "").trim();
+            const yPack = getCellY(packStr, colPack.w - 4, 7, "Helvetica");
             doc
               .font("Helvetica")
-              .fontSize(7.2)
+              .fontSize(7)
               .fillColor("#475569")
-              .text(truncateText(prod.packaging, 12), colPack.x + 4, textY, {
-                width: colPack.w - 6,
-                align: "left",
-                lineBreak: false,
+              .text(packStr, colPack.x + 2, yPack, {
+                width: colPack.w - 4,
+                lineBreak: true,
               });
 
-            // 7. MRP (Green bold)
+            // 7. MRP (Green bold, right aligned)
             const mrpVal = prod.mrp ? Number(prod.mrp) : null;
             const mrpStr = mrpVal && !isNaN(mrpVal) ? `Rs. ${mrpVal.toFixed(2)}` : "On Req.";
             doc
               .font("Helvetica-Bold")
-              .fontSize(8.2)
+              .fontSize(8)
               .fillColor("#059669")
-              .text(mrpStr, colMrp.x, textY, {
-                width: colMrp.w - 5,
+              .text(mrpStr, colMrp.x, y + 13, {
+                width: colMrp.w - 3,
                 align: "right",
                 lineBreak: false,
               });
