@@ -208,7 +208,7 @@ export const productService = {
   },
 
   getVisualAidUrl(slugOrId: string): string {
-    return `${API_BASE}/products/${slugOrId}/visual-aid`;
+    return `${API_BASE}/products/${slugOrId}/visual-aid?t=${Date.now()}`;
   },
 
   async downloadCatalogPdf(): Promise<void> {

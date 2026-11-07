@@ -108,7 +108,7 @@ export const productService = {
   },
 
   getVisualAidUrl(slugOrId: string): string {
-    return `${API_BASE}/products/${slugOrId}/visual-aid`;
+    return `${API_BASE}/products/${slugOrId}/visual-aid?t=${Date.now()}`;
   },
 
   async submitReview(slugOrId: string, payload: { doctorName: string; clinicName?: string; qualification?: string; rating: number; reviewText: string }): Promise<any> {

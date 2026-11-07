@@ -129,6 +129,9 @@ const downloadVisualAidPdf = async (req: Request, res: Response): Promise<void> 
 
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", `inline; filename="${sanitizedFilename}"`);
+    res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate, proxy-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
     res.setHeader("Content-Length", pdfBuffer.length);
     res.status(HTTP_STATUS.OK).end(pdfBuffer);
   } catch (err: any) {
@@ -163,6 +166,9 @@ const downloadCatalogPdf = async (req: IProductRequest, res: Response): Promise<
 
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+    res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate, proxy-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
     res.setHeader("Content-Length", pdfBuffer.length);
     res.status(HTTP_STATUS.OK).end(pdfBuffer);
   } catch (err: any) {
