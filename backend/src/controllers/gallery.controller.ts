@@ -82,7 +82,7 @@ const uploadGalleryImages = async (req: IGalleryRequest, res: Response): Promise
 
 const getGalleryImages = async (req: Request, res: Response): Promise<void> => {
   const page = Math.max(Number(req.query.page) || 1, 1);
-  const limit = Math.min(Math.max(Number(req.query.limit) || 30, 1), 100);
+  const limit = Math.min(Math.max(Number(req.query.limit) || 50, 1), 200);
   const search = String(req.query.search || "").trim();
   const folder = req.query.folder ? String(req.query.folder).trim().toUpperCase() : "";
   const tag = req.query.tag ? String(req.query.tag).toUpperCase() : "";
@@ -149,13 +149,17 @@ const getGalleryImages = async (req: Request, res: Response): Promise<void> => {
     filter.isPublic = isPublicQuery;
   }
 
-  const [items, total] = await Promise.all([
+  const [items, total, folderStats] = await Promise.all([
     Media.find(filter)
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
       .lean() as Promise<IMedia[]>,
     Media.countDocuments(filter) as Promise<number>,
+    Media.aggregate([
+      { $match: { isDeleted: false } },
+      { $group: { _id: "$folder", count: { $sum: 1 } } },
+    ]) as Promise<Array<{ _id: string; count: number }>>,
   ]);
 
   const mappedItems = items.map((item) => ({
@@ -163,9 +167,24 @@ const getGalleryImages = async (req: Request, res: Response): Promise<void> => {
     tag: item.folder || (item.tags && item.tags[0]) || "OTHER",
   }));
 
+  const getStatCount = (...keys: string[]) => {
+    return folderStats
+      .filter((s) => keys.includes(String(s._id || "").toUpperCase()))
+      .reduce((acc, curr) => acc + (curr.count || 0), 0);
+  };
+
+  const categoryCounts = {
+    total: folderStats.reduce((acc, curr) => acc + (curr.count || 0), 0),
+    product: getStatCount("PRODUCT", "PRODUCTS"),
+    profile: getStatCount("PROFILE", "PROFILES", "STAFF"),
+    logo: getStatCount("LOGO", "LOGOS", "BRANDING"),
+    banner: getStatCount("BANNER", "BANNERS", "CMS", "HERO"),
+  };
+
   const response: IGalleryListResponse = {
     items: mappedItems as any,
     pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
+    categoryCounts,
   };
   sendSuccess(res, HTTP_STATUS.OK, MESSAGES.GALLERY_FETCHED, response);
 };

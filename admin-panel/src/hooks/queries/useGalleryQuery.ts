@@ -5,12 +5,21 @@ export const GALLERY_QUERY_KEY = ['gallery'];
 
 export const useGalleryImagesQuery = (params?: {
   tag?: string;
+  folder?: string;
+  mediaType?: string;
   search?: string;
   page?: number;
   limit?: number;
 }) => {
   return useQuery<IGalleryResponse, Error>({
-    queryKey: [...GALLERY_QUERY_KEY, params?.tag || 'ALL', params?.search || '', params?.page || 1],
+    queryKey: [
+      ...GALLERY_QUERY_KEY,
+      params?.folder || params?.tag || 'ALL',
+      params?.mediaType || 'ALL',
+      params?.search || '',
+      params?.page || 1,
+      params?.limit || 50,
+    ],
     queryFn: () => galleryService.getImages(params),
     staleTime: 1000 * 60 * 5, // 5 minutes fresh
   });

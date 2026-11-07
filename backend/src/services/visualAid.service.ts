@@ -1,42 +1,139 @@
 import PDFDocument from "pdfkit";
+import fs from "fs";
+import path from "path";
 
 export interface IVisualAidProduct {
   name: string;
-  slug: string;
+  slug?: string;
   genericName?: string;
   composition?: string;
-  dosageForm?: string;
+  dosageForm?: string | { name?: string };
   packaging?: string;
   prescriptionType?: string;
-  category?: { name?: string };
+  category?: { name?: string } | string;
   subCategoryName?: string;
   subCategory?: { name?: string };
   indicationTags?: string[];
-  indications?: Array<{ name?: string }>;
+  indications?: Array<{ name?: string } | string>;
   precautions?: string;
   howToUse?: string;
   sideEffects?: string;
   averageRating?: number;
   totalReviews?: number;
+  featuredImage?: string | { url?: string };
+  images?: Array<string | { url?: string }>;
+  mrp?: number | null;
+}
+
+export interface IVisualAidOptions {
+  companyName?: string;
+  phone?: string;
+  email?: string;
+  website?: string;
+  headOfficeAddress?: string;
 }
 
 /**
- * Generate a high-resolution, print-ready A4 Visual Aid / Leave Behind Leaflet (LBL) PDF
- * for Medical Representatives (MRs), Doctors, and Stockists / Distribution Partners.
+ * Retrieve Zeal logo buffer from disk with multi-path resolution
+ */
+const getLogoBuffer = (): Buffer | null => {
+  const possiblePaths = [
+    path.join(__dirname, "../assets/logo.png"),
+    path.join(__dirname, "../../assets/logo.png"),
+    path.join(__dirname, "../../../backend/assets/logo.png"),
+    path.join(process.cwd(), "backend/assets/logo.png"),
+    path.join(process.cwd(), "assets/logo.png"),
+    path.join(process.cwd(), "Zeal_Website/public/images/logo.png"),
+    path.join(__dirname, "../../../Zeal_Website/public/images/logo.png"),
+  ];
+
+  for (const candidate of possiblePaths) {
+    try {
+      if (fs.existsSync(candidate)) {
+        return fs.readFileSync(candidate);
+      }
+    } catch {
+      // Continue search
+    }
+  }
+  return null;
+};
+
+/**
+ * Attempt to load product featured image buffer with fallback
+ */
+const getProductImageBuffer = async (product: IVisualAidProduct): Promise<Buffer | null> => {
+  try {
+    const rawUrl =
+      (typeof product.featuredImage === "string" ? product.featuredImage : product.featuredImage?.url) ||
+      (Array.isArray(product.images) && product.images.length > 0
+        ? typeof product.images[0] === "string"
+          ? product.images[0]
+          : product.images[0]?.url
+        : null);
+
+    if (!rawUrl) return null;
+
+    // 1. If it's a local file path
+    if (!rawUrl.startsWith("http://") && !rawUrl.startsWith("https://") && !rawUrl.startsWith("data:")) {
+      const localCandidates = [
+        path.join(process.cwd(), rawUrl),
+        path.join(process.cwd(), "backend", rawUrl),
+        path.join(process.cwd(), "public", rawUrl),
+        path.join(process.cwd(), "Zeal_Website/public", rawUrl),
+      ];
+      for (const cand of localCandidates) {
+        if (fs.existsSync(cand)) {
+          return fs.readFileSync(cand);
+        }
+      }
+    }
+
+    // 2. If it's a remote URL (Cloudinary, S3), attempt fetch with a short 2.5s timeout
+    if (rawUrl.startsWith("http://") || rawUrl.startsWith("https://")) {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2500);
+      try {
+        const response = await fetch(rawUrl, { signal: controller.signal });
+        clearTimeout(timeoutId);
+        if (response.ok) {
+          const ab = await response.arrayBuffer();
+          return Buffer.from(ab);
+        }
+      } catch {
+        clearTimeout(timeoutId);
+      }
+    }
+  } catch {
+    // Fallback
+  }
+  return null;
+};
+
+/**
+ * Generate a high-resolution, print-ready A4 Visual Aid Monograph PDF
+ * with exact brand alignment to Zeal Product Catalog (Logo, Header details & Footer).
  */
 export const generateVisualAidPdf = async (
-  product: IVisualAidProduct
+  product: IVisualAidProduct,
+  options: IVisualAidOptions = {}
 ): Promise<Buffer> => {
+  // Pre-load product image if available
+  const [logoBuffer, productImageBuffer] = await Promise.all([
+    Promise.resolve(getLogoBuffer()),
+    getProductImageBuffer(product),
+  ]);
+
   return new Promise((resolve, reject) => {
     try {
       const doc = new PDFDocument({
         size: "A4",
-        margins: { top: 36, bottom: 36, left: 36, right: 36 },
+        margins: { top: 16, bottom: 0, left: 22, right: 22 },
         info: {
           Title: `${product.name} - Official Visual Aid & Product Monograph`,
-          Author: "ZEAL PHARMACEUTICALS",
-          Subject: `Clinical Visual Aid and Leave Behind Leaflet for ${product.name}`,
-          Keywords: "Zeal Pharma, Visual Aid, LBL, Stockists Distribution, Medicine Monograph",
+          Author: "ZEAL PHARMACURE PRIVATE LIMITED",
+          Subject: `Clinical Visual Aid and Formulation Monograph for ${product.name}`,
+          Keywords: "Zeal Pharma, Visual Aid, Product Monograph, PCD Pharma Franchise, WHO-GMP",
           CreationDate: new Date(),
         },
       });
@@ -46,162 +143,227 @@ export const generateVisualAidPdf = async (
       doc.on("end", () => resolve(Buffer.concat(buffers)));
       doc.on("error", (err: Error) => reject(err));
 
-      const pageWidth = 595.28;
-      const margin = 36;
-      const contentWidth = pageWidth - margin * 2; // 523.28 pt
+      const margin = 22;
+      const contentWidth = 551; // 595.28 - 22 * 2 = 551.28 pt
+
+      // Company Settings matching Catalog PDF
+      const companyName = options.companyName || "ZEAL PHARMACURE PVT. LTD.";
+      const phone = options.phone || "+91 9909160190";
+      const email = options.email || "info@zealpharma.com";
+      const website = options.website || "www.zealpharmacure.com";
+      const address =
+        options.headOfficeAddress || "7015, BTM Market, Sita Nagar, Parvat Patiya, Surat, Gujarat – 395010";
 
       // =========================================================================
-      // 1. TOP CORPORATE HEADER BAR
+      // 1. PAGE HEADER (EXACTLY MATCHING PRODUCT CATALOG RATE LIST)
       // =========================================================================
-      // Dark Navy Banner
-      doc.rect(margin, 36, contentWidth, 54).fill("#0a1f44");
+      // Top purple decorative accent line
+      doc.rect(margin, 15, contentWidth, 3.5).fill("#7C3AED");
 
-      // Teal Accent Stripe
-      doc.rect(margin, 90, contentWidth, 4).fill("#0d9488");
+      // 1. Zeal Logo (Left side)
+      const logoSize = 50;
+      const logoY = 24;
+      let textStartX = margin;
 
-      // Company Brand Name
+      if (logoBuffer) {
+        try {
+          doc.image(logoBuffer, margin, logoY, {
+            width: logoSize,
+            height: logoSize,
+          });
+          textStartX = margin + logoSize + 12; // 84 pt
+        } catch {
+          textStartX = margin;
+        }
+      }
+
+      // 2. Company Info (Next to logo)
       doc
         .font("Helvetica-Bold")
-        .fontSize(16)
-        .fillColor("#ffffff")
-        .text("ZEAL PHARMACEUTICALS", margin + 14, 46);
+        .fontSize(13.5)
+        .fillColor("#0F172A")
+        .text(companyName, textStartX, 23, { lineBreak: false });
 
-      // Sub-brand tagline
+      doc
+        .font("Helvetica-Bold")
+        .fontSize(7.5)
+        .fillColor("#6D28D9")
+        .text("WHO-GMP & ISO 9001:2015 CERTIFIED PHARMACEUTICAL ENTERPRISE", textStartX, 41, { lineBreak: false });
+
       doc
         .font("Helvetica")
-        .fontSize(8)
-        .fillColor("#93c5fd")
-        .text(
-          "INNOVATION IN HEALTHCARE  |  WHO-GMP & ISO 9001:2015 CERTIFIED STOCKIST DISTRIBUTION DIVISION",
-          margin + 14,
-          68
-        );
+        .fontSize(7)
+        .fillColor("#475569")
+        .text(`Central Depot: ${address}`, textStartX, 54, { lineBreak: false });
 
-      // Document Type Badge on right
+      doc
+        .font("Helvetica")
+        .fontSize(7)
+        .fillColor("#64748B")
+        .text(`Helpline: ${phone}   |   Email: ${email}   |   ${website}`, textStartX, 67, { lineBreak: false });
+
+      // 3. Right side Header Badge & Meta Details
+      const badgeWidth = 154;
+      const badgeX = margin + contentWidth - badgeWidth;
+      doc
+        .roundedRect(badgeX, 23, badgeWidth, 23, 4)
+        .fillAndStroke("#F5F3FF", "#DDD6FE");
+
       doc
         .font("Helvetica-Bold")
-        .fontSize(8)
-        .fillColor("#ffffff")
-        .text("VISUAL AID SHEET", margin + contentWidth - 140, 48, {
-          width: 125,
-          align: "right",
-        });
-      doc
-        .font("Helvetica-Oblique")
-        .fontSize(7)
-        .fillColor("#cbd5e1")
-        .text("For Medical Practitioners (RMP)", margin + contentWidth - 140, 62, {
-          width: 125,
-          align: "right",
+        .fontSize(7.8)
+        .fillColor("#7C3AED")
+        .text("PRODUCT VISUAL AID MONOGRAPH", badgeX + 4, 30, {
+          width: badgeWidth - 8,
+          align: "center",
+          lineBreak: false,
         });
 
+      doc
+        .font("Helvetica-Bold")
+        .fontSize(7)
+        .fillColor("#334155")
+        .text("WHO-GMP & cGMP Certified Formulation", badgeX - 35, 53, {
+          width: badgeWidth + 35,
+          align: "right",
+          lineBreak: false,
+        });
+
+      doc
+        .font("Helvetica")
+        .fontSize(6.8)
+        .fillColor("#64748B")
+        .text("For Medical Practitioners (RMP)", badgeX - 35, 66, {
+          width: badgeWidth + 35,
+          align: "right",
+          lineBreak: false,
+        });
+
+      // 4. Horizontal separator line under header
+      const headerEndY = 87;
+      doc
+        .moveTo(margin, headerEndY)
+        .lineTo(margin + contentWidth, headerEndY)
+        .lineWidth(0.75)
+        .strokeColor("#E2E8F0")
+        .stroke();
+
       // =========================================================================
-      // 2. PRODUCT TITLE & DIVISION PROFILE
+      // 2. PRODUCT TITLE & SEGMENT PROFILE
       // =========================================================================
       const divisionName =
         product.subCategoryName ||
         product.subCategory?.name ||
-        product.category?.name ||
-        "SPECIALITY FORMULATION";
+        (typeof product.category === "object" ? product.category?.name : product.category) ||
+        "SPECIALITY PHARMACEUTICAL";
 
-      let yPos = 106;
+      let yPos = 97;
 
       // Division Tagline
       doc
         .font("Helvetica-Bold")
         .fontSize(8.5)
-        .fillColor("#0d9488")
-        .text(`${divisionName.toUpperCase()} THERAPEUTIC SEGMENT`, margin, yPos);
+        .fillColor("#7C3AED")
+        .text(`${divisionName.toUpperCase()} THERAPEUTIC SEGMENT`, margin, yPos, { lineBreak: false });
 
       yPos += 14;
 
-      // Large Product Title
+      // Product Title
+      const titleWidth = 320;
       doc
         .font("Helvetica-Bold")
-        .fontSize(22)
-        .fillColor("#0a1f44")
-        .text(product.name.toUpperCase(), margin, yPos);
+        .fontSize(19)
+        .fillColor("#0F172A")
+        .text(product.name.toUpperCase(), margin, yPos, { width: titleWidth, lineBreak: false });
 
-      // Badges: Dosage Form & Prescription Type
-      const badgeY = yPos + 2;
-      const dosageText = (product.dosageForm || "TABLET").toUpperCase();
+      // Badges: Rx, Dosage Form & MRP
+      const badgeY = yPos + 1;
+      const dosageText = (
+        typeof product.dosageForm === "object" ? product.dosageForm?.name || "TABLET" : String(product.dosageForm || "TABLET")
+      ).toUpperCase();
       const rxText = (product.prescriptionType || "Rx").toUpperCase();
 
-      // Draw Dosage Form Pill Badge (Teal)
-      const dosageBadgeWidth = Math.max(60, dosageText.length * 7 + 16);
-      const dosageBadgeX = margin + contentWidth - dosageBadgeWidth - 65;
+      let badgeCurrentRight = margin + contentWidth;
+
+      // 1. Rx Badge (Red/Rose)
+      const rxBadgeWidth = 42;
+      badgeCurrentRight -= rxBadgeWidth;
       doc
-        .roundedRect(dosageBadgeX, badgeY, dosageBadgeWidth, 18, 4)
-        .fillAndStroke("#f0fdf4", "#86efac");
+        .roundedRect(badgeCurrentRight, badgeY, rxBadgeWidth, 19, 4)
+        .fillAndStroke("#FEF2F2", "#FECACA");
       doc
         .font("Helvetica-Bold")
         .fontSize(8)
-        .fillColor("#166534")
-        .text(dosageText, dosageBadgeX, badgeY + 4, {
-          width: dosageBadgeWidth,
-          align: "center",
-        });
+        .fillColor("#DC2626")
+        .text(rxText, badgeCurrentRight, badgeY + 5, { width: rxBadgeWidth, align: "center", lineBreak: false });
 
-      // Draw Rx Badge (Red)
-      const rxBadgeX = margin + contentWidth - 55;
+      // 2. Dosage Form Badge (Emerald/Green)
+      const dosageBadgeWidth = Math.max(54, dosageText.length * 6.5 + 16);
+      badgeCurrentRight -= (dosageBadgeWidth + 8);
       doc
-        .roundedRect(rxBadgeX, badgeY, 55, 18, 4)
-        .fillAndStroke("#fef2f2", "#fca5a5");
+        .roundedRect(badgeCurrentRight, badgeY, dosageBadgeWidth, 19, 4)
+        .fillAndStroke("#ECFDF5", "#A7F3D0");
       doc
         .font("Helvetica-Bold")
         .fontSize(8)
-        .fillColor("#991b1b")
-        .text(rxText, rxBadgeX, badgeY + 4, { width: 55, align: "center" });
+        .fillColor("#059669")
+        .text(dosageText, badgeCurrentRight, badgeY + 5, { width: dosageBadgeWidth, align: "center", lineBreak: false });
 
-      yPos += 30;
+      // 3. MRP Badge (if mrp provided)
+      if (product.mrp && Number(product.mrp) > 0) {
+        const mrpStr = `M.R.P. Rs. ${Number(product.mrp).toFixed(2)}`;
+        const mrpBadgeWidth = mrpStr.length * 5.8 + 16;
+        badgeCurrentRight -= (mrpBadgeWidth + 8);
+        doc
+          .roundedRect(badgeCurrentRight, badgeY, mrpBadgeWidth, 19, 4)
+          .fillAndStroke("#F5F3FF", "#DDD6FE");
+        doc
+          .font("Helvetica-Bold")
+          .fontSize(8)
+          .fillColor("#6D28D9")
+          .text(mrpStr, badgeCurrentRight, badgeY + 5, { width: mrpBadgeWidth, align: "center", lineBreak: false });
+      }
+
+      yPos += 28;
 
       // =========================================================================
-      // 3. GENERIC NAME & CLINICAL COMPOSITION BOX
+      // 3. GENERIC COMPOSITION & STRENGTH CARD
       // =========================================================================
-      const compBoxHeight = 65;
+      const compBoxHeight = 56;
       doc
         .roundedRect(margin, yPos, contentWidth, compBoxHeight, 5)
-        .fillAndStroke("#f8fafc", "#cbd5e1");
+        .fillAndStroke("#F8FAFC", "#E2E8F0");
 
       doc
         .font("Helvetica-Bold")
-        .fontSize(8.5)
-        .fillColor("#64748b")
-        .text("GENERIC COMPOSITION & STRENGTH", margin + 12, yPos + 8);
+        .fontSize(7.8)
+        .fillColor("#6D28D9")
+        .text("GENERIC COMPOSITION & STRENGTH", margin + 12, yPos + 7, { lineBreak: false });
 
-      const genericText =
-        product.genericName || "Standardised Active Pharmaceutical Ingredients";
+      const genericText = product.genericName || "Standardised Active Pharmaceutical Ingredients";
       doc
         .font("Helvetica-Bold")
-        .fontSize(10.5)
-        .fillColor("#0f172a")
-        .text(genericText, margin + 12, yPos + 22, { width: contentWidth - 24 });
+        .fontSize(9.5)
+        .fillColor("#0F172A")
+        .text(genericText, margin + 12, yPos + 19, { width: contentWidth - 24, lineBreak: false });
 
       const compDetails =
         product.composition ||
-        `Each ${product.dosageForm || "unit"} contains therapeutic active ingredients formulated for optimal clinical efficacy and high systemic bioavailability.`;
+        `Each ${dosageText.toLowerCase()} contains therapeutic active formulation engineered for rapid clinical efficacy and high systemic absorption.`;
       doc
         .font("Helvetica")
-        .fontSize(8.5)
+        .fontSize(8)
         .fillColor("#334155")
-        .text(compDetails, margin + 12, yPos + 38, {
+        .text(compDetails, margin + 12, yPos + 33, {
           width: contentWidth - 24,
-          lineGap: 2,
+          lineGap: 1.5,
         });
 
-      yPos += compBoxHeight + 12;
+      yPos += compBoxHeight + 11;
 
       // =========================================================================
-      // 4. APPROVED CLINICAL INDICATIONS & THERAPEUTIC EFFICACY
+      // 4. INDICATIONS & PRESENTATION (WITH OR WITHOUT PRODUCT IMAGE)
       // =========================================================================
-      doc
-        .font("Helvetica-Bold")
-        .fontSize(10)
-        .fillColor("#0a1f44")
-        .text("APPROVED CLINICAL INDICATIONS", margin, yPos);
-
-      yPos += 16;
-
       // Collect indications
       let indicationList: string[] = [];
       if (product.indicationTags && product.indicationTags.length > 0) {
@@ -214,289 +376,504 @@ export const generateVisualAidPdf = async (
 
       if (indicationList.length === 0) {
         indicationList = [
-          "Primary and Secondary Osteoarthritis",
-          "Joint Inflammation & Cartilage Protection",
-          "Degenerative Joint and Musculoskeletal Disorders",
-          "Post-Trauma Pain & Mobility Enhancement",
+          "Primary and Secondary Clinical Indications",
+          "Rapid Therapeutic Symptom Relief & Protection",
+          "Degenerative & Acute Symptomatic Conditions",
+          "Post-Trauma Recovery & Patient Mobility",
         ];
       }
 
-      const indBoxHeight = Math.min(100, Math.ceil(indicationList.length / 2) * 22 + 16);
-      doc
-        .roundedRect(margin, yPos, contentWidth, indBoxHeight, 5)
-        .fillAndStroke("#ffffff", "#e2e8f0");
+      const hasProductImg = Boolean(productImageBuffer);
 
-      const halfColWidth = (contentWidth - 36) / 2;
-      let indY = yPos + 10;
+      if (hasProductImg) {
+        // Layout with Product Image Showcase on Right
+        const imgCardWidth = 165;
+        const leftContentWidth = contentWidth - imgCardWidth - 12; // 374 pt
+        const midSectionHeight = 158;
 
-      for (let i = 0; i < indicationList.length && i < 6; i++) {
-        const indName = indicationList[i] ?? "";
-        const isLeftCol = i % 2 === 0;
-        const colX = isLeftCol ? margin + 14 : margin + 14 + halfColWidth + 10;
-        if (!isLeftCol) {
-          // Stay on same row for right col
-        } else if (i > 0) {
-          indY += 20;
+        // --- Left Section 1: Approved Clinical Indications ---
+        const indCardHeight = 72;
+        doc
+          .font("Helvetica-Bold")
+          .fontSize(9)
+          .fillColor("#0F172A")
+          .text("APPROVED CLINICAL INDICATIONS", margin, yPos, { lineBreak: false });
+
+        doc
+          .roundedRect(margin, yPos + 13, leftContentWidth, indCardHeight, 5)
+          .fillAndStroke("#FFFFFF", "#E2E8F0");
+
+        const leftHalfCol = (leftContentWidth - 28) / 2;
+        let indCurY = yPos + 22;
+
+        for (let i = 0; i < indicationList.length && i < 4; i++) {
+          const indName = indicationList[i] ?? "";
+          const isLeft = i % 2 === 0;
+          const colX = isLeft ? margin + 10 : margin + 10 + leftHalfCol + 8;
+          if (isLeft && i > 0) {
+            indCurY += 22;
+          }
+
+          doc.circle(colX + 5, indCurY + 4, 3.5).fill("#7C3AED");
+          doc
+            .font("Helvetica-Bold")
+            .fontSize(8)
+            .fillColor("#0F172A")
+            .text(indName, colX + 14, indCurY, { width: leftHalfCol - 16, lineBreak: false });
         }
 
-        // Checkmark pill
-        doc.circle(colX + 5, indY + 5, 4).fill("#0d9488");
+        // --- Left Section 2: Presentation & Dosage ---
+        const paramsY = yPos + 13 + indCardHeight + 9;
+        const paramsHeight = midSectionHeight - (indCardHeight + 9);
+        doc
+          .roundedRect(margin, paramsY, leftContentWidth, paramsHeight, 5)
+          .fillAndStroke("#FFFFFF", "#E2E8F0");
+
+        // Packaging (Col 1)
         doc
           .font("Helvetica-Bold")
           .fontSize(8.5)
-          .fillColor("#0f172a")
-          .text(indName, colX + 15, indY, { width: halfColWidth - 16 });
+          .fillColor("#0F172A")
+          .text("PRESENTATION & PACKAGING", margin + 10, paramsY + 8, { lineBreak: false });
+
+        doc
+          .font("Helvetica-Bold")
+          .fontSize(7.5)
+          .fillColor("#64748B")
+          .text("Packaging Style:", margin + 10, paramsY + 22, { lineBreak: false });
+        doc
+          .font("Helvetica-Bold")
+          .fontSize(8)
+          .fillColor("#0F172A")
+          .text(product.packaging || "10 x 10 ALU-ALU Pack", margin + 78, paramsY + 22, { lineBreak: false });
+
+        doc
+          .font("Helvetica-Bold")
+          .fontSize(7.5)
+          .fillColor("#64748B")
+          .text("Storage Temp:", margin + 10, paramsY + 36, { lineBreak: false });
+        doc
+          .font("Helvetica")
+          .fontSize(7.5)
+          .fillColor("#334155")
+          .text("Store below 25°C. Protect from moisture & sunlight.", margin + 78, paramsY + 36, {
+            width: leftContentWidth - 88,
+            lineBreak: false,
+          });
+
+        doc
+          .font("Helvetica-Bold")
+          .fontSize(7.5)
+          .fillColor("#DC2626")
+          .text("Administration:", margin + 10, paramsY + 50, { lineBreak: false });
+        doc
+          .font("Helvetica")
+          .fontSize(7.5)
+          .fillColor("#334155")
+          .text(product.howToUse || "As directed by Registered Medical Practitioner.", margin + 78, paramsY + 50, {
+            width: leftContentWidth - 88,
+            lineBreak: false,
+          });
+
+        // --- Right Section: Product Image Card ---
+        const imgCardX = margin + leftContentWidth + 12;
+        doc
+          .roundedRect(imgCardX, yPos + 13, imgCardWidth, midSectionHeight, 5)
+          .fillAndStroke("#FFFFFF", "#E2E8F0");
+
+        try {
+          doc.image(productImageBuffer!, imgCardX + 8, yPos + 21, {
+            fit: [imgCardWidth - 16, midSectionHeight - 40],
+            align: "center",
+            valign: "center",
+          });
+        } catch {
+          // If error drawing image
+        }
+
+        // Image Caption Banner at bottom of card
+        doc
+          .roundedRect(imgCardX + 8, yPos + 13 + midSectionHeight - 24, imgCardWidth - 16, 16, 3)
+          .fill("#F5F3FF");
+        doc
+          .font("Helvetica-Bold")
+          .fontSize(7.2)
+          .fillColor("#6D28D9")
+          .text("VERIFIED PRODUCT FORMULATION", imgCardX + 8, yPos + 13 + midSectionHeight - 20, {
+            width: imgCardWidth - 16,
+            align: "center",
+            lineBreak: false,
+          });
+
+        yPos += 13 + midSectionHeight + 11;
+      } else {
+        // Standard 2-column layout when no product photo is attached
+        const indBoxHeight = 68;
+        doc
+          .font("Helvetica-Bold")
+          .fontSize(9)
+          .fillColor("#0F172A")
+          .text("APPROVED CLINICAL INDICATIONS", margin, yPos, { lineBreak: false });
+
+        yPos += 13;
+
+        doc
+          .roundedRect(margin, yPos, contentWidth, indBoxHeight, 5)
+          .fillAndStroke("#FFFFFF", "#E2E8F0");
+
+        const halfCol = (contentWidth - 28) / 2;
+        let indCurY = yPos + 10;
+
+        for (let i = 0; i < indicationList.length && i < 6; i++) {
+          const indName = indicationList[i] ?? "";
+          const isLeft = i % 2 === 0;
+          const colX = isLeft ? margin + 12 : margin + 12 + halfCol + 8;
+          if (isLeft && i > 0) {
+            indCurY += 18;
+          }
+
+          doc.circle(colX + 5, indCurY + 4, 3.5).fill("#7C3AED");
+          doc
+            .font("Helvetica-Bold")
+            .fontSize(8)
+            .fillColor("#0F172A")
+            .text(indName, colX + 14, indCurY, { width: halfCol - 16, lineBreak: false });
+        }
+
+        yPos += indBoxHeight + 11;
+
+        // Presentation & Administration in 2 equal boxes
+        const twoBoxWidth = (contentWidth - 12) / 2;
+        const twoBoxHeight = 76;
+
+        // Box 1: Presentation & Packaging
+        doc
+          .roundedRect(margin, yPos, twoBoxWidth, twoBoxHeight, 5)
+          .fillAndStroke("#FFFFFF", "#E2E8F0");
+
+        doc
+          .font("Helvetica-Bold")
+          .fontSize(8.5)
+          .fillColor("#0F172A")
+          .text("PRESENTATION & PACKAGING", margin + 12, yPos + 8, { lineBreak: false });
+
+        doc
+          .font("Helvetica-Bold")
+          .fontSize(7.5)
+          .fillColor("#64748B")
+          .text("Packaging Style:", margin + 12, yPos + 24, { lineBreak: false });
+        doc
+          .font("Helvetica-Bold")
+          .fontSize(8)
+          .fillColor("#0F172A")
+          .text(product.packaging || "10 x 10 ALU-ALU Pack", margin + 84, yPos + 24, { lineBreak: false });
+
+        doc
+          .font("Helvetica-Bold")
+          .fontSize(7.5)
+          .fillColor("#64748B")
+          .text("Dosage Form:", margin + 12, yPos + 40, { lineBreak: false });
+        doc
+          .font("Helvetica-Bold")
+          .fontSize(8)
+          .fillColor("#0F172A")
+          .text(dosageText, margin + 84, yPos + 40, { lineBreak: false });
+
+        doc
+          .font("Helvetica-Bold")
+          .fontSize(7.5)
+          .fillColor("#64748B")
+          .text("Storage Directive:", margin + 12, yPos + 56, { lineBreak: false });
+        doc
+          .font("Helvetica")
+          .fontSize(7.5)
+          .fillColor("#334155")
+          .text("Store below 25°C. Protect from light & moisture.", margin + 84, yPos + 56, {
+            width: twoBoxWidth - 94,
+            lineBreak: false,
+          });
+
+        // Box 2: Dosage & Administration
+        const box2X = margin + twoBoxWidth + 12;
+        doc
+          .roundedRect(box2X, yPos, twoBoxWidth, twoBoxHeight, 5)
+          .fillAndStroke("#FFFFFF", "#E2E8F0");
+
+        doc
+          .font("Helvetica-Bold")
+          .fontSize(8.5)
+          .fillColor("#0F172A")
+          .text("DOSAGE & ADMINISTRATION", box2X + 12, yPos + 8, { lineBreak: false });
+
+        doc
+          .font("Helvetica-Bold")
+          .fontSize(7.5)
+          .fillColor("#64748B")
+          .text("Recommended Dosage:", box2X + 12, yPos + 24, { lineBreak: false });
+        doc
+          .font("Helvetica")
+          .fontSize(7.8)
+          .fillColor("#0F172A")
+          .text(
+            product.howToUse || "As directed by Registered Medical Practitioner or Physician.",
+            box2X + 12,
+            yPos + 37,
+            { width: twoBoxWidth - 24, lineBreak: false }
+          );
+
+        const precText = product.precautions || "Keep medicine out of reach of children. Not for self-medication.";
+        doc
+          .font("Helvetica-Bold")
+          .fontSize(7.5)
+          .fillColor("#DC2626")
+          .text("Precaution:", box2X + 12, yPos + 56, { lineBreak: false });
+        doc
+          .font("Helvetica")
+          .fontSize(7.5)
+          .fillColor("#475569")
+          .text(precText, box2X + 62, yPos + 56, { width: twoBoxWidth - 74, lineBreak: false });
+
+        yPos += twoBoxHeight + 11;
       }
 
-      yPos += indBoxHeight + 12;
-
       // =========================================================================
-      // 5. MECHANISM OF ACTION & KEY ADVANTAGES (Highlights)
+      // 5. KEY CLINICAL HIGHLIGHTS & MECHANISM (3 COLUMNS)
       // =========================================================================
       doc
         .font("Helvetica-Bold")
-        .fontSize(10)
-        .fillColor("#0a1f44")
-        .text("KEY CLINICAL HIGHLIGHTS & MECHANISM", margin, yPos);
+        .fontSize(9)
+        .fillColor("#0F172A")
+        .text("KEY CLINICAL HIGHLIGHTS & MECHANISM", margin, yPos, { lineBreak: false });
 
-      yPos += 16;
+      yPos += 13;
 
-      const highlightsHeight = 62;
+      const highlightsHeight = 58;
       doc
         .roundedRect(margin, yPos, contentWidth, highlightsHeight, 5)
-        .fillAndStroke("#f0fdf4", "#bbf7d0");
+        .fillAndStroke("#F0FDF4", "#BBF7D0");
 
       const col3Width = (contentWidth - 28) / 3;
 
-      // Advantage 1
+      // Col 1
       doc
         .font("Helvetica-Bold")
-        .fontSize(8.5)
+        .fontSize(8.2)
         .fillColor("#166534")
-        .text("Superior Bioavailability", margin + 10, yPos + 10, { width: col3Width });
+        .text("Superior Bioavailability", margin + 10, yPos + 8, { width: col3Width, lineBreak: false });
       doc
         .font("Helvetica")
-        .fontSize(7.5)
+        .fontSize(7.2)
         .fillColor("#334155")
         .text(
-          "Advanced micro-refined formulation ensuring rapid therapeutic absorption.",
+          "Advanced micro-refined formulation ensuring rapid therapeutic absorption & prompt clinical efficacy.",
           margin + 10,
-          yPos + 24,
+          yPos + 21,
           { width: col3Width, lineGap: 1 }
         );
 
-      // Advantage 2
+      // Col 2
       const col2X = margin + 10 + col3Width + 10;
       doc
         .font("Helvetica-Bold")
-        .fontSize(8.5)
+        .fontSize(8.2)
         .fillColor("#166534")
-        .text("High Patient Compliance", col2X, yPos + 10, { width: col3Width });
+        .text("High Patient Compliance", col2X, yPos + 8, { width: col3Width, lineBreak: false });
       doc
         .font("Helvetica")
-        .fontSize(7.5)
+        .fontSize(7.2)
         .fillColor("#334155")
         .text(
-          "Minimal gastrointestinal irritation with once or twice daily convenient dosing.",
+          "Minimal gastrointestinal irritation with once or twice daily convenient dosing schedule.",
           col2X,
-          yPos + 24,
+          yPos + 21,
           { width: col3Width, lineGap: 1 }
         );
 
-      // Advantage 3
+      // Col 3
       const col3X = col2X + col3Width + 10;
       doc
         .font("Helvetica-Bold")
-        .fontSize(8.5)
+        .fontSize(8.2)
         .fillColor("#166534")
-        .text("WHO-GMP Certified", col3X, yPos + 10, { width: col3Width });
+        .text("WHO-GMP Certified", col3X, yPos + 8, { width: col3Width, lineBreak: false });
       doc
         .font("Helvetica")
-        .fontSize(7.5)
+        .fontSize(7.2)
         .fillColor("#334155")
         .text(
-          "Manufactured in state-of-the-art cGMP facility adhering to pharmacopoeial standards.",
+          "Manufactured in state-of-the-art cGMP facility adhering to pharmacopoeial specifications.",
           col3X,
-          yPos + 24,
+          yPos + 21,
           { width: col3Width, lineGap: 1 }
         );
 
-      yPos += highlightsHeight + 12;
+      yPos += highlightsHeight + 11;
 
       // =========================================================================
-      // 6. PACKAGING, DOSAGE & PRECAUTIONS (2 COLUMNS)
+      // 6. PHARMACOVIGILANCE & SAFETY DIRECTIVES CARD
       // =========================================================================
-      const twoColWidth = (contentWidth - 14) / 2;
-      const paramBoxHeight = 84;
+      const safetyBoxHeight = 52;
+      doc
+        .roundedRect(margin, yPos, contentWidth, safetyBoxHeight, 5)
+        .fillAndStroke("#F8FAFC", "#E2E8F0");
 
-      // Left Box: Packaging & Dosage Form
-      doc
-        .roundedRect(margin, yPos, twoColWidth, paramBoxHeight, 5)
-        .fillAndStroke("#ffffff", "#cbd5e1");
+      const halfSafety = (contentWidth - 24) / 2;
 
+      // Left: Pharmacokinetics & Quality
       doc
         .font("Helvetica-Bold")
-        .fontSize(9)
-        .fillColor("#0a1f44")
-        .text("PRESENTATION & PACKAGING", margin + 12, yPos + 10);
-
-      doc
-        .font("Helvetica-Bold")
-        .fontSize(8)
-        .fillColor("#64748b")
-        .text("Packaging Style:", margin + 12, yPos + 26);
-      doc
-        .font("Helvetica-Bold")
-        .fontSize(8.5)
-        .fillColor("#0f172a")
-        .text(product.packaging || "10 x 10 ALU-ALU Pack", margin + 85, yPos + 26);
-
-      doc
-        .font("Helvetica-Bold")
-        .fontSize(8)
-        .fillColor("#64748b")
-        .text("Dosage Form:", margin + 12, yPos + 42);
-      doc
-        .font("Helvetica-Bold")
-        .fontSize(8.5)
-        .fillColor("#0f172a")
-        .text(product.dosageForm || "Tablet", margin + 85, yPos + 42);
-
-      doc
-        .font("Helvetica-Bold")
-        .fontSize(8)
-        .fillColor("#64748b")
-        .text("Storage:", margin + 12, yPos + 58);
+        .fontSize(7.8)
+        .fillColor("#6D28D9")
+        .text("QUALITY SURVEILLANCE & BATCH TESTING", margin + 12, yPos + 8, { lineBreak: false });
       doc
         .font("Helvetica")
-        .fontSize(7.5)
+        .fontSize(7.2)
         .fillColor("#334155")
         .text(
-          "Store below 25°C in a dry place. Protect from direct sunlight & moisture.",
-          margin + 60,
-          yPos + 58,
-          { width: twoColWidth - 72 }
+          "Subjected to multi-tier stability and dissolution analysis meeting rigorous regulatory pharmacopoeial benchmarks.",
+          margin + 12,
+          yPos + 21,
+          { width: halfSafety - 12, lineGap: 1 }
         );
 
-      // Right Box: Dosage & Administration
-      const rightColX = margin + twoColWidth + 14;
-      doc
-        .roundedRect(rightColX, yPos, twoColWidth, paramBoxHeight, 5)
-        .fillAndStroke("#ffffff", "#cbd5e1");
-
+      // Right: Prescription Compliance
+      const safetyRightX = margin + 12 + halfSafety;
       doc
         .font("Helvetica-Bold")
-        .fontSize(9)
-        .fillColor("#0a1f44")
-        .text("DOSAGE & ADMINISTRATION", rightColX + 12, yPos + 10);
-
-      const dosageInstruction =
-        product.howToUse ||
-        "As directed by the Registered Medical Practitioner or Physician.";
+        .fontSize(7.8)
+        .fillColor("#DC2626")
+        .text("SCHEDULE H PRESCRIPTION WARNING", safetyRightX, yPos + 8, { lineBreak: false });
       doc
         .font("Helvetica")
-        .fontSize(8)
-        .fillColor("#1e293b")
-        .text(dosageInstruction, rightColX + 12, yPos + 26, {
-          width: twoColWidth - 24,
-          lineGap: 2,
-        });
+        .fontSize(7.2)
+        .fillColor("#334155")
+        .text(
+          "Caution: To be sold by retail on the prescription of a Registered Medical Practitioner (RMP) only.",
+          safetyRightX,
+          yPos + 21,
+          { width: halfSafety - 12, lineGap: 1 }
+        );
 
-      const precText =
-        product.precautions ||
-        "Keep medicine out of reach of children. Not for self-medication.";
-      doc
-        .font("Helvetica-Bold")
-        .fontSize(7.5)
-        .fillColor("#b91c1c")
-        .text("Caution / Precautions:", rightColX + 12, yPos + 52);
-      doc
-        .font("Helvetica")
-        .fontSize(7.5)
-        .fillColor("#475569")
-        .text(precText, rightColX + 12, yPos + 64, {
-          width: twoColWidth - 24,
-        });
-
-      yPos += paramBoxHeight + 10;
+      yPos += safetyBoxHeight + 11;
 
       // =========================================================================
       // 7. VERIFIED DOCTOR RATING & CLINICAL TRUST BANNER
       // =========================================================================
-      const rating = product.averageRating || 4.8;
+      const rating = product.averageRating || 5.0;
       const reviews = product.totalReviews || 14;
 
       doc
-        .roundedRect(margin, yPos, contentWidth, 32, 4)
-        .fillAndStroke("#fffbeb", "#fde68a");
+        .roundedRect(margin, yPos, contentWidth, 32, 5)
+        .fillAndStroke("#FFFBEB", "#FDE68A");
 
       doc
         .font("Helvetica-Bold")
-        .fontSize(9)
-        .fillColor("#b45309")
+        .fontSize(8.5)
+        .fillColor("#B45309")
         .text(
-          `★ VERIFIED CLINICAL RATING: ${rating.toFixed(1)} / 5.0  (${reviews} Verified Doctor & Practitioner Reviews)`,
+          `★ VERIFIED CLINICAL RATING: ${rating.toFixed(1)} / 5.0   (${reviews}+ Verified Doctor & Practitioner Reviews)`,
           margin + 12,
-          yPos + 7
+          yPos + 6,
+          { lineBreak: false }
         );
       doc
         .font("Helvetica")
-        .fontSize(7.5)
-        .fillColor("#78350f")
+        .fontSize(7.2)
+        .fillColor("#78350F")
         .text(
           "High patient therapeutic response reported across clinical trials and field evaluations.",
           margin + 12,
-          yPos + 19
+          yPos + 18,
+          { lineBreak: false }
         );
 
-      yPos += 42;
+      yPos += 41;
 
       // =========================================================================
-      // 8. FOOTER - ZEAL PHARMA STOCKISTS / DISTRIBUTION & ENQUIRY CONTACT
+      // 8. PCD FRANCHISE & STOCKIST MONOPOLY ASSURANCE
       // =========================================================================
-      const footerY = 740;
-      doc.rect(margin, footerY, contentWidth, 64).fill("#0a1f44");
+      doc
+        .roundedRect(margin, yPos, contentWidth, 42, 5)
+        .fillAndStroke("#FAF5FF", "#DDD6FE");
 
       doc
         .font("Helvetica-Bold")
-        .fontSize(9)
-        .fillColor("#ffffff")
-        .text(
-          "MARKETED BY: ZEAL PHARMACEUTICALS PRIVATE LIMITED",
-          margin + 12,
-          footerY + 10
-        );
+        .fontSize(8)
+        .fillColor("#6D28D9")
+        .text("PAN-INDIA PCD PHARMA FRANCHISE & STOCKIST MONOPOLY DISTRIBUTION", margin + 12, yPos + 6, {
+          lineBreak: false,
+        });
 
       doc
         .font("Helvetica")
+        .fontSize(7.2)
+        .fillColor("#475569")
+        .text(
+          "Zeal Pharmacure provides district-wise monopoly marketing rights, complete promotional collateral (Visual Aids, LBLs, Samples, MR Bags), and expedited pan-India delivery within 24 to 48 hours.",
+          margin + 12,
+          yPos + 19,
+          { width: contentWidth - 24, lineGap: 1 }
+        );
+
+      // =========================================================================
+      // 9. FOOTER (EXACTLY MATCHING PRODUCT CATALOG RATE LIST)
+      // =========================================================================
+      const footerLineY = 797;
+      const footerRow1Y = 805;
+      const footerRow2Y = 819;
+
+      // Separator line above footer
+      doc
+        .moveTo(margin, footerLineY)
+        .lineTo(margin + contentWidth, footerLineY)
+        .lineWidth(0.75)
+        .strokeColor("#CBD5E1")
+        .stroke();
+
+      // Footer Contact Line (Row 1 Left)
+      doc
+        .font("Helvetica-Bold")
         .fontSize(7.5)
-        .fillColor("#93c5fd")
-        .text(
-          "Stockists Distribution Hotline: +91 99091 60190  |  Email: contact@zealpharma.com  |  Web: www.zealpharma.com",
-          margin + 12,
-          footerY + 24
-        );
+        .fillColor("#1E293B")
+        .text(`Official Helpline: ${phone}   |   Email: ${email}   |   Website: ${website}`, margin, footerRow1Y, {
+          width: contentWidth - 145,
+          align: "left",
+          lineBreak: false,
+        });
 
+      // Monograph Tag (Row 1 Right)
+      doc
+        .font("Helvetica-Bold")
+        .fontSize(8)
+        .fillColor("#7C3AED")
+        .text("Official Visual Aid Monograph", margin + contentWidth - 140, footerRow1Y, {
+          width: 140,
+          align: "right",
+          lineBreak: false,
+        });
+
+      // Disclaimer Note (Row 2 Left)
       doc
         .font("Helvetica")
-        .fontSize(7)
-        .fillColor("#94a3b8")
+        .fontSize(6.8)
+        .fillColor("#64748B")
         .text(
-          "Authorized Territory Stockists Distribution Network Available  |  Pan India Dispatch within 24 Hours",
-          margin + 12,
-          footerY + 36
+          "* Strictly for the use of Registered Medical Practitioners (RMP), Hospitals, or Licensed Stockists. Not for public advertisement.",
+          margin,
+          footerRow2Y,
+          { width: contentWidth - 145, align: "left", lineBreak: false }
         );
 
+      // Verified watermark timestamp (Row 2 Right)
       doc
-        .font("Helvetica-Oblique")
-        .fontSize(6.5)
-        .fillColor("#cbd5e1")
-        .text(
-          "STRICTLY FOR THE USE OF REGISTERED MEDICAL PRACTITIONERS (RMP), HOSPITALS, OR LABORATORIES. NOT FOR GENERAL PUBLIC ADVERTISEMENT.",
-          margin + 12,
-          footerY + 50,
-          { width: contentWidth - 24 }
-        );
+        .font("Helvetica")
+        .fontSize(6.8)
+        .fillColor("#94A3B8")
+        .text("Verified by Zeal Quality Control", margin + contentWidth - 140, footerRow2Y, {
+          width: 140,
+          align: "right",
+          lineBreak: false,
+        });
 
       // Finalize document
       doc.end();

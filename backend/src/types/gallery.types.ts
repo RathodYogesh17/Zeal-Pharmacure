@@ -52,6 +52,14 @@ interface IGalleryPagination {
   totalPages: number;
 }
 
+interface IGalleryCategoryCounts {
+  total: number;
+  product: number;
+  profile: number;
+  logo: number;
+  banner: number;
+}
+
 interface IGalleryUploadResponse {
   created: IMedia[];
   existing: IMedia[];
@@ -61,6 +69,7 @@ interface IGalleryUploadResponse {
 interface IGalleryListResponse {
   items: IMedia[];
   pagination: IGalleryPagination;
+  categoryCounts?: IGalleryCategoryCounts;
 }
 
 export type {
@@ -68,6 +77,7 @@ export type {
   IGalleryRequest,
   IMedia,
   IGalleryPagination,
+  IGalleryCategoryCounts,
   IGalleryUploadResponse,
   IGalleryListResponse,
 };

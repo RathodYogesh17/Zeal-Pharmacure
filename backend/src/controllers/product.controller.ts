@@ -118,7 +118,13 @@ const downloadVisualAidPdf = async (req: Request, res: Response): Promise<void> 
   }
 
   try {
-    const pdfBuffer = await generateVisualAidPdf(product as any);
+    const pdfBuffer = await generateVisualAidPdf(product as any, {
+      companyName: "ZEAL PHARMACURE PVT. LTD.",
+      phone: "+91 9909160190",
+      email: "info@zealpharma.com",
+      website: "www.zealpharmacure.com",
+      headOfficeAddress: "7015, BTM Market, Sita Nagar, Parvat Patiya, Surat, Gujarat – 395010",
+    });
     const sanitizedFilename = `${product.slug || "product"}-visual-aid.pdf`;
 
     res.setHeader("Content-Type", "application/pdf");

@@ -27,11 +27,13 @@ import {
   useBatchDeleteGalleryImagesMutation,
 } from '../hooks/queries/useGalleryQuery';
 import { galleryService, type IMediaItem } from '../api/galleryService';
-import { Button, Modal, Badge, ThemeSelect, ZealLoader } from '../components/common';
+import { Button, Modal, Badge, ThemeSelect, ZealLoader, TablePagination } from '../components/common';
 
 export const AdminGalleryPage: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(50);
   const [selectedTagForUpload, setSelectedTagForUpload] = useState<string>('PRODUCT');
   const [filesToUpload, setFilesToUpload] = useState<File[]>([]);
   const [uploadSuccess, setUploadSuccess] = useState('');
@@ -62,7 +64,8 @@ export const AdminGalleryPage: React.FC = () => {
   const { data: galleryData, isLoading, refetch } = useGalleryImagesQuery({
     tag: activeFilter,
     search: searchQuery,
-    limit: 100,
+    page: currentPage,
+    limit: pageSize,
   });
 
   const uploadMutation = useUploadGalleryImagesMutation();
@@ -237,12 +240,13 @@ export const AdminGalleryPage: React.FC = () => {
     { id: 'OTHER', label: 'Other Visual Aids' },
   ];
 
-  // Quick stats
+  // Quick stats from backend category breakdown
   const allItems = galleryData?.items || [];
-  const productCount = allItems.filter(i => (i.tag || i.folder) === 'PRODUCT').length;
-  const profileCount = allItems.filter(i => (i.tag || i.folder) === 'PROFILE' || (i.tag || i.folder) === 'STAFF').length;
-  const logoCount = allItems.filter(i => (i.tag || i.folder) === 'LOGO' || (i.tag || i.folder) === 'BRANDING').length;
-  const bannerCount = allItems.filter(i => (i.tag || i.folder) === 'BANNER' || (i.tag || i.folder) === 'CMS' || (i.tag || i.folder) === 'HERO').length;
+  const totalAssetsCount = galleryData?.categoryCounts?.total ?? (galleryData?.pagination?.total || allItems.length);
+  const productCount = galleryData?.categoryCounts?.product ?? allItems.filter(i => (i.tag || i.folder) === 'PRODUCT').length;
+  const profileCount = galleryData?.categoryCounts?.profile ?? allItems.filter(i => (i.tag || i.folder) === 'PROFILE' || (i.tag || i.folder) === 'STAFF').length;
+  const logoCount = galleryData?.categoryCounts?.logo ?? allItems.filter(i => (i.tag || i.folder) === 'LOGO' || (i.tag || i.folder) === 'BRANDING').length;
+  const bannerCount = galleryData?.categoryCounts?.banner ?? allItems.filter(i => (i.tag || i.folder) === 'BANNER' || (i.tag || i.folder) === 'CMS' || (i.tag || i.folder) === 'HERO').length;
 
   return (
     <div>
@@ -351,7 +355,7 @@ export const AdminGalleryPage: React.FC = () => {
           </div>
           <div>
             <div style={{ fontSize: '20px', fontWeight: 800, color: '#0F172A' }}>
-              {galleryData?.pagination?.total || allItems.length}
+              {totalAssetsCount}
             </div>
             <div style={{ fontSize: '12px', color: '#64748B' }}>Total Assets</div>
           </div>
@@ -694,7 +698,11 @@ export const AdminGalleryPage: React.FC = () => {
                 <button
                   key={tab.id}
                   type="button"
-                  onClick={() => setActiveFilter(tab.id)}
+                  onClick={() => {
+                    setActiveFilter(tab.id);
+                    setCurrentPage(1);
+                    setSelectedIds([]);
+                  }}
                   style={{
                     padding: '8px 16px',
                     borderRadius: '999px',
@@ -788,7 +796,11 @@ export const AdminGalleryPage: React.FC = () => {
                 type="text"
                 placeholder="Search assets by name..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setCurrentPage(1);
+                  setSelectedIds([]);
+                }}
                 className="admin-search-input"
               />
             </div>
@@ -1029,6 +1041,27 @@ export const AdminGalleryPage: React.FC = () => {
                 </div>
               );
             })}
+          </div>
+        )}
+
+        {/* Gallery Grid Pagination Controls */}
+        {!isLoading && allItems.length > 0 && (
+          <div style={{ marginTop: '24px', borderTop: '1px solid #E2E8F0', paddingTop: '8px' }}>
+            <TablePagination
+              currentPage={currentPage}
+              totalPages={galleryData?.pagination?.totalPages || 1}
+              totalItems={galleryData?.pagination?.total || 0}
+              pageSize={pageSize}
+              onPageChange={(page) => {
+                setCurrentPage(page);
+                window.scrollTo({ top: 350, behavior: 'smooth' });
+              }}
+              onPageSizeChange={(newSize) => {
+                setPageSize(newSize);
+                setCurrentPage(1);
+              }}
+              pageSizeOptions={[25, 50, 100, 200]}
+            />
           </div>
         )}
       </div>

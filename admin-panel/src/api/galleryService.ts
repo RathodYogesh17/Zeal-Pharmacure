@@ -22,6 +22,14 @@ export interface IMediaItem {
   createdAt?: string;
 }
 
+export interface IGalleryCategoryCounts {
+  total: number;
+  product: number;
+  profile: number;
+  logo: number;
+  banner: number;
+}
+
 export interface IGalleryResponse {
   items: IMediaItem[];
   pagination: {
@@ -30,6 +38,7 @@ export interface IGalleryResponse {
     total: number;
     totalPages: number;
   };
+  categoryCounts?: IGalleryCategoryCounts;
 }
 
 export const galleryService = {

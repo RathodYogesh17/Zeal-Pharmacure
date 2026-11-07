@@ -3,7 +3,7 @@ import { UploadCloud, Search, Check, Folder, Image as ImageIcon, CheckCircle2, A
 import { Modal } from './Modal';
 import { Button } from './Button';
 import { ZealLoader } from './ZealLoader';
-import { ThemeSelect } from '../tableTheme';
+import { ThemeSelect, TablePagination } from '../tableTheme';
 import { useGalleryImagesQuery, useUploadGalleryImagesMutation} from '../../../hooks/queries/useGalleryQuery';
 import { galleryService, type IMediaItem } from '../../../api/galleryService';
 
@@ -21,6 +21,8 @@ export const MediaGalleryModal: React.FC<MediaGalleryModalProps> = ({ isOpen, on
   const [activeTab, setActiveTab] = useState<'browse' | 'upload'>('browse');
   const [selectedTag, setSelectedTag] = useState<string>(defaultTag);
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(50);
   const [selectedImage, setSelectedImage] = useState<IMediaItem | null>(null);
   const [selectedImages, setSelectedImages] = useState<IMediaItem[]>([]);
 
@@ -33,7 +35,8 @@ export const MediaGalleryModal: React.FC<MediaGalleryModalProps> = ({ isOpen, on
   const { data: galleryData, isLoading } = useGalleryImagesQuery({
     tag: selectedTag,
     search: searchQuery,
-    limit: 60,
+    page: currentPage,
+    limit: pageSize,
   });
 
   const uploadMutation = useUploadGalleryImagesMutation();
@@ -167,7 +170,10 @@ export const MediaGalleryModal: React.FC<MediaGalleryModalProps> = ({ isOpen, on
                   <button
                     key={t.id}
                     type="button"
-                    onClick={() => setSelectedTag(t.id)}
+                    onClick={() => {
+                      setSelectedTag(t.id);
+                      setCurrentPage(1);
+                    }}
                     style={{ padding: '5px 12px', borderRadius: '999px', fontSize: '12px', fontWeight: 600, border: '1px solid',
                       borderColor: selectedTag === t.id ? '#6828DC' : '#E2E8F0',
                       background: selectedTag === t.id ? '#EDE9FE' : '#FFFFFF',
@@ -187,7 +193,10 @@ export const MediaGalleryModal: React.FC<MediaGalleryModalProps> = ({ isOpen, on
                   type="text"
                   placeholder="Search file name..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setCurrentPage(1);
+                  }}
                   style={{ padding: '6px 10px 6px 30px', fontSize: '12.5px', borderRadius: '8px', border: '1px solid #CBD5E1', width: '100%'}}/>
               </div>
             </div>
@@ -274,6 +283,24 @@ export const MediaGalleryModal: React.FC<MediaGalleryModalProps> = ({ isOpen, on
                     </div>
                   );
                 })}
+              </div>
+            )}
+
+            {/* Pagination Controls inside Modal */}
+            {!isLoading && (galleryData?.items?.length ?? 0) > 0 && (
+              <div style={{ marginTop: '12px', borderTop: '1px solid #E2E8F0', paddingTop: '4px' }}>
+                <TablePagination
+                  currentPage={currentPage}
+                  totalPages={galleryData?.pagination?.totalPages || 1}
+                  totalItems={galleryData?.pagination?.total || 0}
+                  pageSize={pageSize}
+                  onPageChange={(p) => setCurrentPage(p)}
+                  onPageSizeChange={(s) => {
+                    setPageSize(s);
+                    setCurrentPage(1);
+                  }}
+                  pageSizeOptions={[24, 50, 100]}
+                />
               </div>
             )}
           </div>
