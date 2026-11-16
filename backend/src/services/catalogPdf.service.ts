@@ -116,9 +116,6 @@ export const generateProductCatalogPdf = async (
 
       // Render Header for a single page with spacious layout
       const renderPageHeader = () => {
-        // Top purple decorative accent line
-        doc.rect(margin, 15, contentWidth, 3.5).fill("#7C3AED");
-
         // 1. Zeal Logo (Left side)
         const logoSize = 50;
         const logoY = 24;
