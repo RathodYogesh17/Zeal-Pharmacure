@@ -140,7 +140,7 @@ const createProductEnquiry = async (body: ICreateProductEnquiryRequest) => {
       : null;
 
   const enquiry = await ProductEnquiry.create({
-    enquiryType: detectedType as "SINGLE_PRODUCT" | "BULK_PRODUCT",
+    enquiryType: detectedType as any,
     product: resolvedProductId,
     products: bulkItems,
     name: (body.name || (body as any).fullName || "Valued Client").trim(),

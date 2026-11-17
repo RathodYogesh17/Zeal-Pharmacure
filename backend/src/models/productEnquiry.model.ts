@@ -27,7 +27,13 @@ const productEnquirySchema = new Schema(
     // ENQUIRY TYPE
     // ==========================================
 
-    enquiryType: {type: String, enum: ["SINGLE_PRODUCT", "BULK_PRODUCT"], required: true, index: true,},
+    enquiryType: {
+      type: String,
+      enum: ["SINGLE_PRODUCT", "BULK_PRODUCT", "GENERAL", "THIRD_PARTY", "PRODUCT"],
+      default: "SINGLE_PRODUCT",
+      required: true,
+      index: true,
+    },
 
     // ==========================================
     // SINGLE PRODUCT

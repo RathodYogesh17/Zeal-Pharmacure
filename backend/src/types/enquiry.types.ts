@@ -2,7 +2,7 @@ import type { Request } from "express";
 import type { Types } from "mongoose";
 import type { IAuthenticatedUser } from "./user.types";
 
-export type ProductEnquiryType = "SINGLE_PRODUCT" | "BULK_PRODUCT";
+export type ProductEnquiryType = "SINGLE_PRODUCT" | "BULK_PRODUCT" | "GENERAL" | "THIRD_PARTY" | "PRODUCT";
 export type ProductEnquiryStatus =
   | "NEW"
   | "IN_PROGRESS"
