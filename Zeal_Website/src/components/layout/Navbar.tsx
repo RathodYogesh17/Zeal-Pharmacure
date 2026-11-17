@@ -46,14 +46,20 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <header style={{
-      background: '#FFFFFF',
-      boxShadow: '0 2px 12px rgba(15, 23, 42, 0.05)',
-      position: 'sticky',
-      top: 0,
-      zIndex: 1000,
-      borderBottom: '1px solid #F1F5F9',
-    }}>
+    <header
+      className="zp-site-header"
+      style={{
+        background: 'rgba(255, 255, 255, 0.98)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
+        boxShadow: '0 2px 14px rgba(15, 23, 42, 0.06)',
+        position: 'sticky',
+        top: 0,
+        zIndex: 1000,
+        borderBottom: '1px solid #F1F5F9',
+        transition: 'box-shadow 0.25s ease, background-color 0.25s ease',
+      }}
+    >
       <div className="container" style={{
         display: 'flex',
         alignItems: 'center',

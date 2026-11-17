@@ -13,14 +13,19 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
-html, body, #root, .app-wrapper {
+html, body {
   font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif) !important;
   color: var(--slate-800);
   background-color: #FAFAFC;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+#root, .app-wrapper {
+  font-family: inherit;
+  overflow: visible;
 }
 
 /* Headings, Titles, Banner Titles & Badges: Always Outfit */

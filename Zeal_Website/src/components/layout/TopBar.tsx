@@ -6,13 +6,18 @@ export const TopBar: React.FC = () => {
   const { settings } = useSiteSettings();
 
   return (
-    <div style={{
-      background: '#4C1D95',
-      color: '#EDE9FE',
-      fontSize: '12.5px',
-      borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-      padding: '7px 0',
-    }}>
+    <div
+      className="zp-site-topbar"
+      style={{
+        background: '#4C1D95',
+        color: '#EDE9FE',
+        fontSize: '12.5px',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+        padding: '7px 0',
+        position: 'relative',
+        zIndex: 999,
+      }}
+    >
       <div className="container" style={{
         display: 'flex',
         alignItems: 'center',
