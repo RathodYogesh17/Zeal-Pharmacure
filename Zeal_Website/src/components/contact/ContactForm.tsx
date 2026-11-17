@@ -108,7 +108,7 @@ export const ContactForm: React.FC = () => {
         subject: formData.subject,
         message: formData.message.trim(),
         enquiryType: 'GENERAL',
-        source: 'CONTACT_PAGE',
+        source: 'WEBSITE',
       });
       setSuccessMsg('Thank you for reaching out to Zeal Pharmacure. Our regional business executive will contact you shortly.');
       setFormData({

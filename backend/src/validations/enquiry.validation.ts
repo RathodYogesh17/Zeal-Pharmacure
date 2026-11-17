@@ -52,7 +52,7 @@ const createProductEnquirySchema = Joi.object({
   quantityUnit: Joi.string().trim().max(50).allow(null, "").optional(),
   message: Joi.string().trim().max(2000).allow(null, "").optional(),
   source: Joi.string()
-    .valid("WEBSITE", "PRODUCT_PAGE", "BULK_ENQUIRY", "ADMIN", "OTHER")
+    .valid("WEBSITE", "PRODUCT_PAGE", "BULK_ENQUIRY", "CONTACT_PAGE", "FRANCHISE_PAGE", "ADMIN", "OTHER")
     .default("WEBSITE")
     .optional(),
   isConfirmed: Joi.boolean().default(true).optional(),

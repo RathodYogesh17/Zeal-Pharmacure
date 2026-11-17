@@ -127,8 +127,10 @@ const productEnquirySchema = new Schema(
 
     source: {
       type: String,
-      enum: ["WEBSITE","PRODUCT_PAGE", "BULK_ENQUIRY","ADMIN","OTHER",],
-      default: "WEBSITE", index: true,},
+      enum: ["WEBSITE", "PRODUCT_PAGE", "BULK_ENQUIRY", "CONTACT_PAGE", "FRANCHISE_PAGE", "ADMIN", "OTHER"],
+      default: "WEBSITE",
+      index: true,
+    },
 
     // ==========================================
     // CONFIRMATION

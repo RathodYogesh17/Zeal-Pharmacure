@@ -159,7 +159,7 @@ const createProductEnquiry = async (body: ICreateProductEnquiryRequest) => {
       ? `[Subject: ${(body as any).subject}] ${body.message || ""}`.trim()
       : body.message?.trim() || "",
     status: "NEW" as const,
-    source: (body.source as any) || "WEBSITE",
+    source: (["WEBSITE", "PRODUCT_PAGE", "BULK_ENQUIRY", "CONTACT_PAGE", "FRANCHISE_PAGE", "ADMIN", "OTHER"].includes(body.source as string) ? body.source : "WEBSITE") as any,
     isConfirmed: body.isConfirmed !== false,
     confirmedAt: body.isConfirmed !== false ? new Date() : null,
     assignedTo: null,
