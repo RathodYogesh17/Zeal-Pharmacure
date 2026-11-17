@@ -125,7 +125,7 @@ const getHomeHeroSlides = (productCount: number): HomeSlideConfig[] => [
     highlightWord: 'Pan-India Distribution',
     titlePrefix: 'Ready Bulk Stock with ',
     titleSuffix: ' Network',
-    subtitle: 'Equipped with modern temperature-controlled warehousing at Surat (7015 - A, 7TH FLOOR, BTM) ensuring computerized FEFO batch management, zero stockouts, and seamless transit across all states.',
+    subtitle: 'Equipped with modern temperature-controlled warehousing at Surat ensuring computerized FEFO batch management, zero stockouts, and seamless transit across all states.',
     ctaText: 'Explore Product Catalog',
     ctaLink: '/products',
     secondaryText: 'Enquire for Stockist',
@@ -140,10 +140,10 @@ const getHomeHeroSlides = (productCount: number): HomeSlideConfig[] => [
     statusDot: '#38BDF8',
     statusText: 'Surat Central Depot: Active Dispatch',
     bottomBarTitle: 'Surat Central Logistics Depot',
-    bottomBarSub: '7015 - A, 7TH FLOOR, BTM • Pan-India Delivery',
+    bottomBarSub: 'Surat Central Depot • Pan-India Delivery',
     floatTopIcon: <Building2 size={18} style={{ color: '#0284C7' }} />,
     floatTopTitle: 'Surat Central Depot',
-    floatTopSub: '7015 - A, 7TH FLOOR, BTM',
+    floatTopSub: 'Central Distribution Hub',
     floatTopBorder: '#BAE6FD',
     floatBottomIcon: <Truck size={18} style={{ color: '#0284C7' }} />,
     floatBottomTitle: 'Pan-India Logistics',
@@ -368,7 +368,7 @@ export const HomeHeroSlider: React.FC<HomeHeroSliderProps> = ({
             <div className="zp-home-chips-row">
               <div className="zp-home-chip">
                 <Building2 size={14} style={{ color: activeSlideData.dotColor }} />
-                <span>Surat Central Depot (7015 - A, 7TH FLOOR, BTM)</span>
+                <span>Surat Central Depot</span>
               </div>
               <div className="zp-home-chip">
                 <ShieldCheck size={14} style={{ color: '#34D399' }} />

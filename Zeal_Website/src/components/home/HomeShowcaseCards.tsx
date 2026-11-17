@@ -62,7 +62,7 @@ export const HomeShowcaseCards: React.FC<HomeShowcaseCardsProps> = ({ onOpenFran
                     Surat Central Depot
                   </div>
                   <div style={{ fontSize: '11px', color: '#0284C7', fontWeight: 700 }}>
-                    7015 - A, 7TH FLOOR, BTM
+                    Surat, Gujarat
                   </div>
                 </div>
               </div>
@@ -159,7 +159,7 @@ export const HomeShowcaseCards: React.FC<HomeShowcaseCardsProps> = ({ onOpenFran
                 className="zp-home-wide-desc"
                 style={{ color: '#4C1D95' }}
               >
-                Direct depot wholesale pricing on {productCount}+ DCGI-approved formulations in ready stock at our air-conditioned 7015 - A, 7TH FLOOR, BTM depot. Computerized batch tracking with zero supply delays.
+                Direct depot wholesale pricing on {productCount}+ DCGI-approved formulations in ready stock at our air-conditioned central depot. Computerized batch tracking with zero supply delays.
               </p>
 
               <Link
