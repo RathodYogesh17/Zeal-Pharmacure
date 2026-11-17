@@ -150,12 +150,14 @@ const createProductEnquiry = async (body: ICreateProductEnquiryRequest) => {
     companyName: body.companyName?.trim() || "",
     drugLicenseNumber: normalizedDl,
     gstNumber: body.gstNumber?.trim() || "",
-    city: body.city.trim(),
-    state: body.state.trim(),
+    city: (body.city || "General").trim(),
+    state: (body.state || "Gujarat").trim(),
     pincode: body.pincode?.trim() || "",
     quantity: parsedQty,
     quantityUnit: body.quantityUnit?.trim() || "",
-    message: body.message?.trim() || "",
+    message: (body as any).subject
+      ? `[Subject: ${(body as any).subject}] ${body.message || ""}`.trim()
+      : body.message?.trim() || "",
     status: "NEW" as const,
     source: (body.source as any) || "WEBSITE",
     isConfirmed: body.isConfirmed !== false,
@@ -251,7 +253,7 @@ const createFranchiseEnquiry = async (body: ICreateFranchiseEnquiryRequest) => {
     normalizedDl = dlResult.normalized;
   }
 
-  const district = body.district?.trim() || body.territoryDistrict?.trim() || body.city.trim();
+  const district = body.district?.trim() || body.territoryDistrict?.trim() || (body.city || "General").trim();
 
   // Resolve interested products if provided
   const interestedProductIds: mongoose.Types.ObjectId[] = [];
@@ -273,8 +275,8 @@ const createFranchiseEnquiry = async (body: ICreateFranchiseEnquiryRequest) => {
     drugLicenseNumber: normalizedDl,
     gstNumber: body.gstNumber?.trim() || "",
     address: body.address?.trim() || "",
-    city: body.city.trim(),
-    state: body.state.trim(),
+    city: (body.city || "General").trim(),
+    state: (body.state || "Gujarat").trim(),
     district,
     pincode: body.pincode?.trim() || "",
     pharmaExperience: body.pharmaExperience?.trim() || "",

@@ -57,12 +57,12 @@ const productEnquirySchema = new Schema(
 
     city: {
       type: String,
-      required: true,
+      default: "General",
       trim: true,
       index: true,
     },
 
-    state: { type: String, required: true, trim: true, index: true,},
+    state: { type: String, default: "Gujarat", trim: true, index: true, },
     pincode: { type: String, default: "", trim: true,},
 
     // ==========================================

@@ -19,6 +19,8 @@ export const ContactForm: React.FC = () => {
     fullName: user?.name || '',
     email: user?.email || '',
     phone: user?.phone || '',
+    city: '',
+    state: '',
     subject: 'Stockist Distribution Network Monopoly',
     message: '',
   });
@@ -97,16 +99,24 @@ export const ContactForm: React.FC = () => {
 
     try {
       await enquiryService.submitContactEnquiry({
-        ...formData,
+        name: effectiveName,
         fullName: effectiveName,
         email: effectiveEmail,
         phone: cleanPhone,
+        city: formData.city.trim() || 'General',
+        state: formData.state.trim() || 'Gujarat',
+        subject: formData.subject,
+        message: formData.message.trim(),
+        enquiryType: 'GENERAL',
+        source: 'CONTACT_PAGE',
       });
       setSuccessMsg('Thank you for reaching out to Zeal Pharmacure. Our regional business executive will contact you shortly.');
       setFormData({
         fullName: user?.name || '',
         email: user?.email || '',
         phone: user?.phone || '',
+        city: '',
+        state: '',
         subject: 'Stockist Distribution Network Monopoly',
         message: '',
       });
@@ -150,7 +160,7 @@ export const ContactForm: React.FC = () => {
 
       <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <FormInput
-          label="Full Name *"
+          label="Full Name"
           name="fullName"
           required
           placeholder="e.g. Dr. Amit Sharma / Sharma Medicals"
@@ -162,7 +172,7 @@ export const ContactForm: React.FC = () => {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '14px' }}>
           <FormInput
-            label="Email Address *"
+            label="Email Address"
             type="email"
             name="email"
             required
@@ -174,7 +184,7 @@ export const ContactForm: React.FC = () => {
           />
 
           <FormInput
-            label="Mobile Number *"
+            label="Mobile Number"
             type="tel"
             name="phone"
             required
@@ -183,6 +193,24 @@ export const ContactForm: React.FC = () => {
             onChange={handleChange}
             error={fieldErrors.phone}
             leftIcon={<Phone size={16} />}
+          />
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '14px' }}>
+          <FormInput
+            label="City / District"
+            name="city"
+            placeholder="e.g. Surat / Mumbai"
+            value={formData.city}
+            onChange={handleChange}
+          />
+
+          <FormInput
+            label="State"
+            name="state"
+            placeholder="e.g. Gujarat / Maharashtra"
+            value={formData.state}
+            onChange={handleChange}
           />
         </div>
 
@@ -199,7 +227,7 @@ export const ContactForm: React.FC = () => {
         </div>
 
         <FormTextarea
-          label="Your Message / Preferred District *"
+          label="Your Message / Preferred District"
           name="message"
           required
           rows={4}

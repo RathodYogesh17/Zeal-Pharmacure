@@ -45,8 +45,8 @@ const franchiseEnquirySchema = new Schema(
     // ==========================================
 
     address: { type: String, default: "", trim: true,},
-    city: { type: String, required: true, trim: true, index: true,},
-    state: {type: String, required: true, trim: true, index: true,},
+    city: { type: String, default: "General", trim: true, index: true, },
+    state: { type: String, default: "Gujarat", trim: true, index: true, },
     district: { type: String,  default: "", trim: true, index: true,},
     pincode: { type: String, default: "", trim: true,},
 

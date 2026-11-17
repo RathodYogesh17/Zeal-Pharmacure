@@ -19,12 +19,30 @@ import type { IAuthenticatedUser } from "../types/user.types";
 
 const createProductEnquiry = async (req: Request, res: Response): Promise<void> => {
   const body: ICreateProductEnquiryRequest = req.body;
+  if (!body.name && (body as any).fullName) {
+    body.name = (body as any).fullName;
+  }
+  if (!body.city || !body.city.trim()) {
+    body.city = "General";
+  }
+  if (!body.state || !body.state.trim()) {
+    body.state = "Gujarat";
+  }
   const result = await enquiryService.createProductEnquiry(body);
   sendSuccess(res, HTTP_STATUS.CREATED, "Product enquiry submitted successfully", result);
 };
 
 const createFranchiseEnquiry = async (req: Request, res: Response): Promise<void> => {
   const body: ICreateFranchiseEnquiryRequest = req.body;
+  if (!body.name && (body as any).fullName) {
+    body.name = (body as any).fullName;
+  }
+  if (!body.city || !body.city.trim()) {
+    body.city = "General";
+  }
+  if (!body.state || !body.state.trim()) {
+    body.state = "Gujarat";
+  }
   const result = await enquiryService.createFranchiseEnquiry(body);
   sendSuccess(
     res,
@@ -36,6 +54,15 @@ const createFranchiseEnquiry = async (req: Request, res: Response): Promise<void
 
 const createEnquiry = async (req: Request, res: Response): Promise<void> => {
   const body: ICreateEnquiryRequest = req.body;
+  if (!body.name && (body as any).fullName) {
+    body.name = (body as any).fullName;
+  }
+  if (!body.city || !body.city.trim()) {
+    body.city = "General";
+  }
+  if (!body.state || !body.state.trim()) {
+    body.state = "Gujarat";
+  }
   const result = await enquiryService.createEnquiry(body);
   sendSuccess(res, HTTP_STATUS.CREATED, MESSAGES.ENQUIRY_CREATED, result);
 };

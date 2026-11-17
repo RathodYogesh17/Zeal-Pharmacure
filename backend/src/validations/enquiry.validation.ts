@@ -31,12 +31,8 @@ const createProductEnquirySchema = Joi.object({
   }),
   whatsappNumber: Joi.string().trim().max(20).allow(null, "").optional(),
   companyName: Joi.string().trim().max(150).allow(null, "").optional(),
-  city: Joi.string().trim().min(2).max(100).required().messages({
-    "string.empty": "City is required",
-  }),
-  state: Joi.string().trim().min(2).max(100).required().messages({
-    "string.empty": "State is required",
-  }),
+  city: Joi.string().trim().max(100).allow(null, "").default("General").optional(),
+  state: Joi.string().trim().max(100).allow(null, "").default("Gujarat").optional(),
   pincode: Joi.string().trim().max(10).allow(null, "").optional(),
   drugLicenseNumber: Joi.string()
     .trim()
@@ -96,12 +92,8 @@ const createFranchiseEnquirySchema = Joi.object({
     .optional(),
   gstNumber: Joi.string().trim().max(20).allow(null, "").optional(),
   address: Joi.string().trim().max(300).allow(null, "").optional(),
-  city: Joi.string().trim().min(2).max(100).required().messages({
-    "string.empty": "City is required",
-  }),
-  state: Joi.string().trim().min(2).max(100).required().messages({
-    "string.empty": "State is required",
-  }),
+  city: Joi.string().trim().max(100).allow(null, "").default("General").optional(),
+  state: Joi.string().trim().max(100).allow(null, "").default("Gujarat").optional(),
   district: Joi.string().trim().max(100).allow(null, "").optional(),
   territoryDistrict: Joi.string().trim().max(100).allow(null, "").optional(),
   pincode: Joi.string().trim().max(10).allow(null, "").optional(),
@@ -136,10 +128,8 @@ const createEnquirySchema = Joi.object({
   product: Joi.string().hex().length(24).allow(null, "").optional(),
   productSlug: Joi.string().trim().allow(null, "").optional(),
   products: Joi.array().items(productItemValidationSchema).default([]).optional(),
-  name: Joi.string().trim().min(2).max(100).required().messages({
-    "string.empty": "Name is required",
-    "string.min": "Name must be at least 2 characters",
-  }),
+  name: Joi.string().trim().min(2).max(100).allow(null, "").optional(),
+  fullName: Joi.string().trim().min(2).max(100).allow(null, "").optional(),
   email: Joi.string().trim().email().required().messages({
     "string.empty": "Email is required",
     "string.email": "Please provide a valid email address",
@@ -150,12 +140,9 @@ const createEnquirySchema = Joi.object({
   whatsappNumber: Joi.string().trim().max(20).allow(null, "").optional(),
   companyName: Joi.string().trim().max(150).allow(null, "").optional(),
   businessType: Joi.string().allow(null, "").optional(),
-  city: Joi.string().trim().min(2).max(100).required().messages({
-    "string.empty": "City is required",
-  }),
-  state: Joi.string().trim().min(2).max(100).required().messages({
-    "string.empty": "State / Territory is required",
-  }),
+  city: Joi.string().trim().max(100).allow(null, "").default("General").optional(),
+  state: Joi.string().trim().max(100).allow(null, "").default("Gujarat").optional(),
+  subject: Joi.string().trim().max(200).allow(null, "").optional(),
   district: Joi.string().trim().max(100).allow(null, "").optional(),
   territoryDistrict: Joi.string().trim().max(100).allow(null, "").optional(),
   address: Joi.string().trim().max(300).allow(null, "").optional(),

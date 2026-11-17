@@ -194,11 +194,16 @@ export interface IFranchiseEnquiryPayload {
 }
 
 export interface IGeneralEnquiryPayload {
+  name?: string;
   fullName: string;
   email: string;
   phone: string;
+  city?: string;
+  state?: string;
   subject?: string;
   message: string;
+  enquiryType?: string;
+  source?: string;
 }
 
 export interface IEnquiry {
