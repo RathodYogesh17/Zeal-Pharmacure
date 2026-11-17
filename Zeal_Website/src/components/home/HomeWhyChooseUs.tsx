@@ -43,7 +43,7 @@ export const HomeWhyChooseUs: React.FC = () => {
     },
     {
       title: 'Pan-India Express Distribution Network',
-      desc: 'Air-conditioned Surat Central Depot ensures seamless stock availability with zero backorders.',
+      desc: 'Air-conditioned modern warehousing ensures seamless stock availability with zero backorders.',
       icon: <Network size={24} style={{ color: '#DB2777' }} />,
       bg: '#FDF2F8',
       border: '#FCE7F3',

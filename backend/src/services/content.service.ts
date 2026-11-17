@@ -213,7 +213,7 @@ const defaultCmsSeeds: Array<{
           title: "Ready Bulk Stock with Pan-India Distribution Network",
           subtitle:
             "Equipped with modern temperature-controlled warehousing at Surat ensuring computerized FEFO batch management, zero stockouts, and seamless transit across all states.",
-          badge: "CENTRAL LOGISTICS DEPOT • SURAT, GUJARAT",
+          badge: "PAN-INDIA DISTRIBUTION NETWORK",
           imageUrl: "/banners/home_animated_depot.jpg",
           ctaText: "Explore Product Catalog",
           ctaLink: "/products",

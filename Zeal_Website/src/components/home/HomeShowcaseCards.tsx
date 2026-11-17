@@ -29,7 +29,7 @@ export const HomeShowcaseCards: React.FC<HomeShowcaseCardsProps> = ({ onOpenFran
             </h2>
 
             <p className="zp-home-testimonials-sub">
-              Access computerized inventory management, authorized distribution rights, and express logistics from our Surat central warehouse.
+              Access computerized inventory management, authorized distribution rights, and express logistics from our central warehouse.
             </p>
           </div>
 
@@ -59,10 +59,10 @@ export const HomeShowcaseCards: React.FC<HomeShowcaseCardsProps> = ({ onOpenFran
                       color: '#0F172A',
                     }}
                   >
-                    Surat Central Depot
+                    Express Dispatch
                   </div>
                   <div style={{ fontSize: '11px', color: '#0284C7', fontWeight: 700 }}>
-                    Surat, Gujarat
+                    Pan-India Transit
                   </div>
                 </div>
               </div>
@@ -152,7 +152,7 @@ export const HomeShowcaseCards: React.FC<HomeShowcaseCardsProps> = ({ onOpenFran
                 className="zp-home-wide-title"
                 style={{ color: '#2E1065' }}
               >
-                Surat Central Logistics Hub &amp; Bulk Supply
+                Central Logistics Hub &amp; Bulk Supply
               </h3>
 
               <p
@@ -178,7 +178,7 @@ export const HomeShowcaseCards: React.FC<HomeShowcaseCardsProps> = ({ onOpenFran
             <div className="zp-home-wide-img-wrap">
               <img
                 src={depotImg}
-                alt="Zeal Pharmacure Surat Central Logistics Depot"
+                alt="Zeal Pharmacure Central Logistics Warehouse"
                 className="zp-home-wide-img"
               />
             </div>

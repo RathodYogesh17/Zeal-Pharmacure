@@ -4,7 +4,6 @@ import {
   ArrowRight,
   Sparkles,
   ShieldCheck,
-  Building2,
   Truck,
   Play,
   Layers,
@@ -99,9 +98,9 @@ const getHomeHeroSlides = (productCount: number): HomeSlideConfig[] => [
     cardBorder: 'rgba(139, 92, 246, 0.4)',
     cardGlow: 'rgba(124, 58, 237, 0.25)',
     statusDot: '#A78BFA',
-    statusText: 'Surat Central Depot: Active Dispatch',
+    statusText: 'Active Order Dispatch',
     bottomBarTitle: 'Zeal Pharmacure Healthcare Hub',
-    bottomBarSub: 'WHO-GMP & ISO 9001:2015 Certified Stockist Depot',
+    bottomBarSub: 'WHO-GMP & ISO 9001:2015 Certified Formulations',
     floatTopIcon: <Award size={18} style={{ color: '#8B5CF6' }} />,
     floatTopTitle: 'District Distribution Rights',
     floatTopSub: 'Protected Territorial Area',
@@ -114,7 +113,7 @@ const getHomeHeroSlides = (productCount: number): HomeSlideConfig[] => [
   {
     id: 1,
     theme: 'cyan',
-    badgeText: 'CENTRAL LOGISTICS DEPOT • SURAT, GUJARAT',
+    badgeText: 'PAN-INDIA DISTRIBUTION NETWORK',
     badgeColor: '#BAE6FD',
     badgeBg: 'rgba(12, 74, 110, 0.72)',
     badgeBorder: 'rgba(56, 189, 248, 0.45)',
@@ -125,7 +124,7 @@ const getHomeHeroSlides = (productCount: number): HomeSlideConfig[] => [
     highlightWord: 'Pan-India Distribution',
     titlePrefix: 'Ready Bulk Stock with ',
     titleSuffix: ' Network',
-    subtitle: 'Equipped with modern temperature-controlled warehousing at Surat ensuring computerized FEFO batch management, zero stockouts, and seamless transit across all states.',
+    subtitle: 'Equipped with modern temperature-controlled warehousing ensuring computerized FEFO batch management, zero stockouts, and seamless transit across all states.',
     ctaText: 'Explore Product Catalog',
     ctaLink: '/products',
     secondaryText: 'Enquire for Stockist',
@@ -138,12 +137,12 @@ const getHomeHeroSlides = (productCount: number): HomeSlideConfig[] => [
     cardBorder: 'rgba(56, 189, 248, 0.4)',
     cardGlow: 'rgba(2, 132, 199, 0.25)',
     statusDot: '#38BDF8',
-    statusText: 'Surat Central Depot: Active Dispatch',
-    bottomBarTitle: 'Surat Central Logistics Depot',
-    bottomBarSub: 'Surat Central Depot • Pan-India Delivery',
-    floatTopIcon: <Building2 size={18} style={{ color: '#0284C7' }} />,
-    floatTopTitle: 'Surat Central Depot',
-    floatTopSub: 'Central Distribution Hub',
+    statusText: 'Pan-India Active Dispatch',
+    bottomBarTitle: 'Ready Bulk Inventory',
+    bottomBarSub: 'Zero Stockout Guarantee • Express Delivery',
+    floatTopIcon: <ShieldCheck size={18} style={{ color: '#0284C7' }} />,
+    floatTopTitle: 'WHO-GMP Certified',
+    floatTopSub: 'Quality Assured Formulations',
     floatTopBorder: '#BAE6FD',
     floatBottomIcon: <Truck size={18} style={{ color: '#0284C7' }} />,
     floatBottomTitle: 'Pan-India Logistics',
@@ -366,10 +365,6 @@ export const HomeHeroSlider: React.FC<HomeHeroSliderProps> = ({
 
             {/* Quick Value Metric Chips */}
             <div className="zp-home-chips-row">
-              <div className="zp-home-chip">
-                <Building2 size={14} style={{ color: activeSlideData.dotColor }} />
-                <span>Surat Central Depot</span>
-              </div>
               <div className="zp-home-chip">
                 <ShieldCheck size={14} style={{ color: '#34D399' }} />
                 <span>{productCount}+ DCGI Formulations</span>

@@ -35,7 +35,7 @@ export const fallbackBanners: IBannerItem[] = [
     id: 'banner-2',
     title: 'Ready Bulk Stock with Pan-India Distribution Network',
     subtitle: 'Equipped with modern temperature-controlled warehousing at Surat ensuring computerized FEFO batch management, zero stockouts, and seamless transit across all states.',
-    badge: 'CENTRAL LOGISTICS DEPOT • SURAT, GUJARAT',
+    badge: 'PAN-INDIA DISTRIBUTION NETWORK',
     imageUrl: '',
     ctaText: 'Explore Product Catalog',
     ctaLink: '/products',
