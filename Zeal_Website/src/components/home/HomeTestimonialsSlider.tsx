@@ -120,7 +120,7 @@ export const HomeTestimonialsSlider: React.FC<HomeTestimonialsSliderProps> = ({ 
             </h2>
 
             <p className="zp-home-testimonials-sub">
-              Verified clinical experiences and commercial feedback from 1,000+ medical consultants, hospital practitioners, and stockists across India.
+              Verified clinical experiences and commercial feedback from 850+ medical consultants, hospital practitioners, and stockists across India.
             </p>
           </div>
 
@@ -144,7 +144,7 @@ export const HomeTestimonialsSlider: React.FC<HomeTestimonialsSliderProps> = ({ 
               </div>
               <div style={{ height: '24px', width: '1px', background: '#E2E8F0' }} />
               <div style={{ fontSize: '11.5px', color: '#475569', fontWeight: 700, lineHeight: 1.3 }}>
-                <div>1,000+ Verified</div>
+                <div>850+ Verified</div>
                 <div style={{ color: '#059669', fontSize: '10.5px' }}>Prescribers &amp; Stockists</div>
               </div>
             </div>

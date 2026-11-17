@@ -30,7 +30,7 @@ export const StatsBar: React.FC<StatsBarProps> = ({
 
   if (variant === 'inline') {
     const defaultAboutStats: IStatItem[] = [
-      { label: 'Distribution Legacy', value: '15+', sub: 'Established in 2010', icon: <Clock size={22} style={{ color: 'var(--zp-primary, #7C3AED)' }} /> },
+      { label: 'Distribution Legacy', value: '33+', sub: 'Dedicated Leadership', icon: <Clock size={22} style={{ color: 'var(--zp-primary, #7C3AED)' }} /> },
       { label: 'DCGI Formulations', value: `${productCount || 500}+`, sub: 'Marketed & Distributed', icon: <FlaskConical size={22} style={{ color: 'var(--zp-primary, #7C3AED)' }} /> },
       { label: 'Stockist Partners', value: '200+', sub: 'Across 12+ States', icon: <Users size={22} style={{ color: 'var(--zp-primary, #7C3AED)' }} /> },
       { label: 'Distribution Reach', value: 'Pan-India', sub: 'Central Warehouse Hub', icon: <Truck size={22} style={{ color: 'var(--zp-primary, #7C3AED)' }} /> },
@@ -83,7 +83,7 @@ export const StatsBar: React.FC<StatsBarProps> = ({
       icon: <Award size={24} style={{ color: '#059669' }} />,
       bg: '#ECFDF5',
       border: '#A7F3D0',
-      number: '15',
+      number: '33',
       plusColor: '#059669',
       label: 'Years of Experience',
       sub: 'Dedicated Pharma Leadership',
@@ -92,7 +92,7 @@ export const StatsBar: React.FC<StatsBarProps> = ({
       icon: <Users size={24} style={{ color: '#2563EB' }} />,
       bg: '#EFF6FF',
       border: '#BFDBFE',
-      number: '1000',
+      number: '850',
       plusColor: '#2563EB',
       label: 'Happy Clients & Partners',
       sub: 'Distributors & Stockists',
@@ -101,7 +101,7 @@ export const StatsBar: React.FC<StatsBarProps> = ({
       icon: <MapPin size={24} style={{ color: '#EA580C' }} />,
       bg: '#FFF7ED',
       border: '#FED7AA',
-      number: '100',
+      number: '60',
       plusColor: '#EA580C',
       label: 'Cities Served',
       sub: 'Pan-India Distribution Network',

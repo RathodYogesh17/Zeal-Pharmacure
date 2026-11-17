@@ -22,7 +22,7 @@ export const HomeWhyChooseUs: React.FC = () => {
     },
     {
       title: 'Experienced Leadership',
-      desc: '15+ years guided by seasoned pharmaceutical executives, formulation scientists, and supply-chain leaders.',
+      desc: '33+ years guided by seasoned pharmaceutical executives, formulation scientists, and supply-chain leaders.',
       icon: <Users size={24} style={{ color: '#0284C7' }} />,
       bg: '#F0F9FF',
       border: '#BAE6FD',
@@ -35,7 +35,7 @@ export const HomeWhyChooseUs: React.FC = () => {
       border: '#A7F3D0',
     },
     {
-      title: '1000+ Satisfied Partners',
+      title: '850+ Satisfied Partners',
       desc: 'Trusted nationwide by authorized medical practitioners, hospital procurement units, and authorized Stockists / Distribution partners.',
       icon: <Smile size={24} style={{ color: '#D97706' }} />,
       bg: '#FEF3C7',
@@ -96,7 +96,7 @@ export const HomeWhyChooseUs: React.FC = () => {
                       color: '#0F172A',
                     }}
                   >
-                    15+ Years
+                    33+ Years
                   </div>
                   <div style={{ fontSize: '11px', color: '#D97706', fontWeight: 700 }}>
                     Pharma Excellence
@@ -105,7 +105,7 @@ export const HomeWhyChooseUs: React.FC = () => {
               </div>
               <div style={{ height: '24px', width: '1px', background: '#E2E8F0' }} />
               <div style={{ fontSize: '11.5px', color: '#475569', fontWeight: 700, lineHeight: 1.3 }}>
-                <div>1000+ Partners</div>
+                <div>850+ Partners</div>
                 <div style={{ color: '#059669', fontSize: '10.5px' }}>Pan-India Network</div>
               </div>
             </div>
