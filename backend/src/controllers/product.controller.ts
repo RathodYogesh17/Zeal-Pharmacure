@@ -121,9 +121,9 @@ const downloadVisualAidPdf = async (req: Request, res: Response): Promise<void> 
     const pdfBuffer = await generateVisualAidPdf(product as any, {
       companyName: "ZEAL PHARMACURE PVT. LTD.",
       phone: "+91 9909160190",
-      email: "info@zealpharma.com",
+      email: "zealpharmacure@gmail.com",
       website: "www.zealpharmacure.com",
-      headOfficeAddress: "7015, BTM Market, Sita Nagar, Parvat Patiya, Surat, Gujarat – 395010",
+      headOfficeAddress: "7015 - A, 7TH FLOOR, BTM, NEAR SITANAGAR CHOWK, PUNAGAM, SURAT-395010 (Gujarat)",
     });
     const sanitizedFilename = `${product.slug || "product"}-visual-aid.pdf`;
 
@@ -154,9 +154,9 @@ const downloadCatalogPdf = async (req: IProductRequest, res: Response): Promise<
     const pdfBuffer = await generateProductCatalogPdf(products as any, {
       companyName: "ZEAL PHARMACURE PVT. LTD.",
       phone: "+91 9909160190",
-      email: "info@zealpharma.com",
+      email: "zealpharmacure@gmail.com",
       website: "www.zealpharmacure.com",
-      headOfficeAddress: "7015, BTM Market, Sita Nagar, Parvat Patiya, Surat, Gujarat – 395010",
+      headOfficeAddress: "7015 - A, 7TH FLOOR, BTM, NEAR SITANAGAR CHOWK, PUNAGAM, SURAT-395010 (Gujarat)",
       userEmail: req.user?.email,
       userName: req.user ? (req.user as any).name : undefined,
     });

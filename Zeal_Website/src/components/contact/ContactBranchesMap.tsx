@@ -59,7 +59,7 @@ export const ContactBranchesMap: React.FC<ContactBranchesMapProps> = ({ settings
                 Surat Central Depot (Puna Gam)
               </div>
               <div style={{ fontSize: '12px', color: '#64748B' }}>
-                7015, BTM (Bellagio Textile Market), Sita Nagar
+                7015 - A, 7TH FLOOR, BTM, Near Sitanagar Chowk
               </div>
             </div>
           </div>
@@ -180,7 +180,7 @@ export const ContactBranchesMap: React.FC<ContactBranchesMapProps> = ({ settings
                 Depot &amp; Registered Address
               </div>
               <div style={{ fontSize: '13.5px', color: '#1E293B', fontWeight: 600, lineHeight: 1.5, marginTop: '2px' }}>
-                7015, BTM (Bellagio Textile Market), Sita Nagar, Parvat Patiya, Puna Gam, Surat, Gujarat – 395010
+                7015 - A, 7TH FLOOR, BTM, NEAR SITANAGAR CHOWK, PUNAGAM, SURAT-395010 (Gujarat)
               </div>
               <div style={{ fontSize: '12px', color: '#059669', fontWeight: 600, marginTop: '3px' }}>
                 Landmark: Beside RajMahal Mall

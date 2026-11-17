@@ -160,7 +160,7 @@ const INITIAL_STAFF: IStaffUser[] = [
   {
     _id: 'u-3',
     name: 'Vikram Mehta',
-    email: 'sales@zealpharma.com',
+    email: 'sales@zealpharmacure.com',
     phone: '+91 99091 60190',
     role: 'SALES_MANAGER',
     isActive: true,

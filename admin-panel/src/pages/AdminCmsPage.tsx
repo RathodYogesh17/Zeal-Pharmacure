@@ -840,7 +840,7 @@ export const AdminCmsPage: React.FC = () => {
                   <input
                     type="email"
                     name="email"
-                    placeholder="e.g. info@zealpharma.com"
+                    placeholder="e.g. zealpharmacure@gmail.com"
                     value={formSettings.email || ''}
                     onChange={handleSettingsChange}
                     className="cms-input"
@@ -855,7 +855,7 @@ export const AdminCmsPage: React.FC = () => {
                   <input
                     type="email"
                     name="salesEmail"
-                    placeholder="e.g. sales@zealpharma.com"
+                    placeholder="e.g. zealpharmacure@gmail.com"
                     value={formSettings.salesEmail || ''}
                     onChange={handleSettingsChange}
                     className="cms-input"
@@ -909,7 +909,7 @@ export const AdminCmsPage: React.FC = () => {
                   <input
                     type="text"
                     name="plantAddress"
-                    placeholder="e.g. 7015, BTM (Bellagio Textile Market), Central Logistics Depot, Surat, Gujarat – 395010, India"
+                    placeholder="e.g. 7015 - A, 7TH FLOOR, BTM, NEAR SITANAGAR CHOWK, PUNAGAM, SURAT-395010 (Gujarat)"
                     value={formSettings.plantAddress || ''}
                     onChange={handleSettingsChange}
                     className="cms-input"
@@ -1007,7 +1007,7 @@ export const AdminCmsPage: React.FC = () => {
                 </span>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                   <Mail size={13} style={{ color: '#A78BFA' }} />
-                  {formSettings.email || 'info@zealpharma.com'}
+                  {formSettings.email || 'zealpharmacure@gmail.com'}
                 </span>
               </div>
 

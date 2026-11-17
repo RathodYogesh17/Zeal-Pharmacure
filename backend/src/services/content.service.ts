@@ -212,7 +212,7 @@ const defaultCmsSeeds: Array<{
           id: "banner-2",
           title: "Ready Bulk Stock with Pan-India Distribution Network",
           subtitle:
-            "Equipped with modern temperature-controlled warehousing at Surat (7015, BTM Market) ensuring computerized FEFO batch management, zero stockouts, and seamless transit across all states.",
+            "Equipped with modern temperature-controlled warehousing at Surat (7015 - A, 7TH FLOOR, BTM) ensuring computerized FEFO batch management, zero stockouts, and seamless transit across all states.",
           badge: "CENTRAL LOGISTICS DEPOT • SURAT, GUJARAT",
           imageUrl: "/banners/home_animated_depot.jpg",
           ctaText: "Explore Product Catalog",
@@ -250,13 +250,13 @@ const defaultCmsSeeds: Array<{
       section: "corporate",
       content: {
         companyName: "Zeal Pharmaceuticals",
-        headOfficeAddress: "7015, BTM (Bellagio Textile Market), Sita Nagar, Parvat Patiya, Puna Gam, Surat, Gujarat – 395010, India",
-        plantAddress: "Sanand GIDC Industrial Estate, Phase II, Ahmedabad, Gujarat 382110, India",
+        headOfficeAddress: "7015 - A, 7TH FLOOR, BTM, NEAR SITANAGAR CHOWK, PUNAGAM, SURAT-395010 (Gujarat)",
+        plantAddress: "7015 - A, 7TH FLOOR, BTM, NEAR SITANAGAR CHOWK, PUNAGAM, SURAT-395010 (Gujarat)",
         phone: "+91 9909160190",
         salesHelpline: "+91 9909160190",
         hrHelpline: "+91 9909160190",
-        email: "info@zealpharma.com",
-        salesEmail: "sales@zealpharma.com",
+        email: "zealpharmacure@gmail.com",
+        salesEmail: "zealpharmacure@gmail.com",
         whatsappNumber: "+91 9909160190",
         gstNumber: "24AAACZ1234F1Z5",
         drugLicenseNumber: "20B-123456 / 21B-123456",
@@ -301,6 +301,9 @@ const ensureCmsSeeded = async (): Promise<void> => {
       if (!existing.publishedAt) updateFields.publishedAt = seed.publishedAt || new Date();
       if (seed.key === "contact-info" && existing.content) {
         const c = existing.content as Record<string, unknown>;
+        const updatedContact: Record<string, unknown> = { ...c };
+        let hasChanges = false;
+
         if (
           String(c.phone || '').includes('74360') ||
           String(c.salesHelpline || '').includes('74360') ||
@@ -311,13 +314,35 @@ const ensureCmsSeeded = async (): Promise<void> => {
           String(c.hrHelpline || '').includes('93162') ||
           String(c.whatsappNumber || '').includes('93162')
         ) {
-          updateFields.content = {
-            ...c,
-            phone: "+91 9909160190",
-            salesHelpline: "+91 9909160190",
-            hrHelpline: "+91 9909160190",
-            whatsappNumber: "+91 9909160190",
-          };
+          updatedContact.phone = "+91 9909160190";
+          updatedContact.salesHelpline = "+91 9909160190";
+          updatedContact.hrHelpline = "+91 9909160190";
+          updatedContact.whatsappNumber = "+91 9909160190";
+          hasChanges = true;
+        }
+
+        if (
+          !c.headOfficeAddress ||
+          !String(c.headOfficeAddress).includes("7015 - A") ||
+          !String(c.headOfficeAddress).includes("SITANAGAR CHOWK")
+        ) {
+          updatedContact.headOfficeAddress = "7015 - A, 7TH FLOOR, BTM, NEAR SITANAGAR CHOWK, PUNAGAM, SURAT-395010 (Gujarat)";
+          updatedContact.plantAddress = "7015 - A, 7TH FLOOR, BTM, NEAR SITANAGAR CHOWK, PUNAGAM, SURAT-395010 (Gujarat)";
+          hasChanges = true;
+        }
+
+        if (
+          !c.email ||
+          String(c.email).includes("info@zealpharma.com") ||
+          !String(c.email).includes("zealpharmacure@gmail.com")
+        ) {
+          updatedContact.email = "zealpharmacure@gmail.com";
+          updatedContact.salesEmail = "zealpharmacure@gmail.com";
+          hasChanges = true;
+        }
+
+        if (hasChanges) {
+          updateFields.content = updatedContact;
         }
       }
       if (Object.keys(updateFields).length > 0) {

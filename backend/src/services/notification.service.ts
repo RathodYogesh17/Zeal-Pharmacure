@@ -861,7 +861,7 @@ export const formatStatusUpdateMessage = (payload: IStatusUpdateNotificationPayl
         `2. Valid GST Registration Certificate`,
         `3. Consignee Delivery Address & Transport Godown Details`,
         ``,
-        `👉 *How to Send:* Please reply directly to this WhatsApp message or email clear copies to *sales@zealpharma.com* so we can issue your tax invoice immediately.`,
+        `👉 *How to Send:* Please reply directly to this WhatsApp message or email clear copies to *zealpharmacure@gmail.com* so we can issue your tax invoice immediately.`,
       ].join("\n");
       break;
 
@@ -955,9 +955,9 @@ export const formatStatusUpdateMessage = (payload: IStatusUpdateNotificationPayl
     ``,
     `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
     `📞 *Institutional Sales Desk:* +91 9909160190`,
-    `✉️ *Sales Support Email:* sales@zealpharma.com`,
-    `🌐 *WHO-GMP Formulation Catalog:* www.zealpharma.com`,
-    `🏢 *Zeal Pharmaceuticals Pvt. Ltd.* (Surat, Gujarat)`,
+    `✉️ *Sales Support Email:* zealpharmacure@gmail.com`,
+    `🌐 *WHO-GMP Formulation Catalog:* www.zealpharmacure.com`,
+    `🏢 *Zeal Pharmacure Pvt. Ltd.* (7015 - A, 7TH FLOOR, BTM, NEAR SITANAGAR CHOWK, PUNAGAM, SURAT-395010 (Gujarat))`,
   ].filter(Boolean).join("\n");
 };
 

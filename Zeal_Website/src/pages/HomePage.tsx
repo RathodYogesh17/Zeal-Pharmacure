@@ -36,7 +36,7 @@ const getFallbackSlides = (productCount: number) => [
   },
   {
     title: 'Ready Bulk Stock with Pan-India Distribution Network',
-    subtitle: 'Equipped with modern temperature-controlled warehousing at Surat (7015, BTM Market) ensuring computerized FEFO batch management, zero stockouts, and seamless transit across all states.',
+    subtitle: 'Equipped with modern temperature-controlled warehousing at Surat (7015 - A, 7TH FLOOR, BTM) ensuring computerized FEFO batch management, zero stockouts, and seamless transit across all states.',
     badge: 'CENTRAL LOGISTICS DEPOT • SURAT, GUJARAT',
     ctaText: 'Explore Product Catalog',
     ctaLink: '/products',

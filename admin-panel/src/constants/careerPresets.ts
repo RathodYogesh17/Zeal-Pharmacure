@@ -12,7 +12,7 @@ export interface ICareerRolePreset {
   requirements: string[];
 }
 
-export const ZEAL_SINGLE_LOCATION = 'Zeal Pharma, 7015, Billingo, Parvat Patiya, Sita Nagar, Surat';
+export const ZEAL_SINGLE_LOCATION = '7015 - A, 7TH FLOOR, BTM, NEAR SITANAGAR CHOWK, PUNAGAM, SURAT-395010 (Gujarat)';
 
 export const CAREER_ROLE_PRESETS: ICareerRolePreset[] = [
   {

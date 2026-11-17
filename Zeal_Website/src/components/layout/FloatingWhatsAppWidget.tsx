@@ -421,7 +421,7 @@ export const FloatingWhatsAppWidget: React.FC = () => {
                 </div>
                 <div style={{ marginTop: '5px', fontSize: '11px', color: '#64748B', display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <MapPin size={11} color="#7C3AED" />
-                  <span>7015, Billiogo Textile Market, Parvat Patiya, Surat</span>
+                  <span>7015 - A, 7TH FLOOR, BTM, Near Sitanagar Chowk, Punagam, Surat</span>
                 </div>
               </div>
 

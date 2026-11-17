@@ -472,7 +472,7 @@ export const ProductDetailTabs: React.FC<ProductDetailTabsProps> = ({
                     Surat Central Logistics Depot
                   </div>
                   <div style={{ fontSize: '12px', color: '#64748B', marginTop: '2px' }}>
-                    7015 BTM, Parvat Patiya, Surat, GJ
+                    7015 - A, 7TH FLOOR, BTM, Punagam, Surat-395010 (Gujarat)
                   </div>
                 </div>
               </div>

@@ -243,7 +243,7 @@ export const CareerPage: React.FC = () => {
                   color: '#334155',
                   whiteSpace: 'nowrap',
                 }}
-                title="Central Distribution Hub: Zeal Pharma, 7015, Billingo, Parvat Patiya, Sita Nagar, Surat"
+                title="Central Distribution Hub: 7015 - A, 7TH FLOOR, BTM, NEAR SITANAGAR CHOWK, PUNAGAM, SURAT-395010 (Gujarat)"
               >
                 <MapPin size={15} style={{ color: '#7C3AED', flexShrink: 0 }} />
                 <span>Surat Central Godown</span>

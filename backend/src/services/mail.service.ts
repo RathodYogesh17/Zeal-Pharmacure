@@ -73,10 +73,10 @@ const sendLeadAlertEmail = async (lead: IEnquiryEmailAlertProps): Promise<boolea
   const adminRecipients = [
     process.env.ADMIN_EMAIL,
     process.env.MAIL_USER,
-    "info@zealpharma.com",
+    "zealpharmacure@gmail.com",
   ].filter(Boolean) as string[];
 
-  const primaryRecipient = adminRecipients[0] || "Yogeshrd1708@gmail.com";
+  const primaryRecipient = adminRecipients[0] || "zealpharmacure@gmail.com";
   const topic = lead.productName || (lead.enquiryType === "FRANCHISE" ? "Stockists Distribution" : "B2B Lead");
   const subject = `[New B2B Lead Alert] ${topic} - ${lead.name} (${lead.city}, ${lead.state})`;
 

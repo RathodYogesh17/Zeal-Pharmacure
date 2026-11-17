@@ -412,7 +412,7 @@ export const Footer: React.FC = () => {
                   <MapPin size={15} />
                 </div>
                 <span style={{ color: '#94A3B8', lineHeight: 1.5, fontSize: '13px' }}>
-                  {settings.headOfficeAddress || '7015, BTM (Bellagio Textile Market), Sita Nagar, Parvat Patiya, Puna Gam, Surat, Gujarat – 395010, India'}
+                  {settings.headOfficeAddress || '7015 - A, 7TH FLOOR, BTM, NEAR SITANAGAR CHOWK, PUNAGAM, SURAT-395010 (Gujarat)'}
                 </span>
               </div>
 

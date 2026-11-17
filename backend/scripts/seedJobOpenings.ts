@@ -6,7 +6,7 @@ import type { JobType } from "../src/types/career.types";
 
 dotenv.config();
 
-const SINGLE_LOCATION = "Zeal Pharma, 7015, Billingo, Parvat Patiya, Sita Nagar, Surat";
+const SINGLE_LOCATION = "7015 - A, 7TH FLOOR, BTM, NEAR SITANAGAR CHOWK, PUNAGAM, SURAT-395010 (Gujarat)";
 
 interface ISampleJob {
   title: string;

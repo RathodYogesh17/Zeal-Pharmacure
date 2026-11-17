@@ -166,7 +166,7 @@ export const AboutHero: React.FC<AboutHeroProps> = ({ onOpenFranchiseModal }) =>
                       Surat Central Logistics Depot
                     </div>
                     <div style={{ fontSize: '11px', color: '#CBD5E1', fontWeight: 600 }}>
-                      7015, BTM Market • Pan-India Delivery
+                      7015 - A, 7TH FLOOR, BTM • Pan-India Delivery
                     </div>
                   </div>
 

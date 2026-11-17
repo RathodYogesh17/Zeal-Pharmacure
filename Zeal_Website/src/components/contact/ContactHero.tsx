@@ -134,7 +134,7 @@ export const ContactHero: React.FC<ContactHeroProps> = ({ onOpenFranchise, onScr
                     Surat Central Logistics &amp; Distribution Depot
                   </div>
                   <div style={{ fontSize: '11.5px', color: '#94A3B8' }}>
-                    7015, BTM Market, Puna Gam, Surat
+                    7015 - A, 7TH FLOOR, BTM, Punagam, Surat
                   </div>
                 </div>
 

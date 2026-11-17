@@ -265,13 +265,16 @@ export const generateClientEnquiryConfirmationHtml = (props: {
                 Need urgent assistance? Reach our sales desk directly:
               </p>
               <p style="margin: 0; font-size: 13.5px; font-weight: 700; color: #0F172A;">
-                📞 +91 9909160190 &nbsp;|&nbsp; ✉️ info@zealpharma.com
+                📞 +91 9909160190 &nbsp;|&nbsp; ✉️ zealpharmacure@gmail.com
               </p>
+              <div style="color: #64748B; margin-top: 4px; font-size: 11.5px;">
+                7015 - A, 7TH FLOOR, BTM, NEAR SITANAGAR CHOWK, PUNAGAM, SURAT-395010 (Gujarat)
+              </div>
             </td>
           </tr>
           <tr>
             <td style="background-color: #F8FAFC; padding: 14px 24px; border-top: 1px solid #E2E8F0; font-size: 11px; color: #94A3B8; text-align: center;">
-              &copy; ${currentYear} Zeal Pharmacure Pvt. Ltd. | Surat, Gujarat – 395010
+              &copy; ${currentYear} Zeal Pharmacure Pvt. Ltd. | 7015 - A, 7TH FLOOR, BTM, NEAR SITANAGAR CHOWK, PUNAGAM, SURAT-395010 (Gujarat)
             </td>
           </tr>
         </table>
@@ -328,13 +331,16 @@ ${props.replyMessage}
                 ${designation}
               </p>
               <p style="margin: 4px 0 0 0; font-size: 12.5px; color: #6828DC; font-weight: 600;">
-                Helpline: +91 9909160190 | www.zealpharma.com
+                Helpline: +91 9909160190 | zealpharmacure@gmail.com | www.zealpharmacure.com
               </p>
+              <div style="font-size: 11px; color: #64748B; margin-top: 4px;">
+                7015 - A, 7TH FLOOR, BTM, NEAR SITANAGAR CHOWK, PUNAGAM, SURAT-395010 (Gujarat)
+              </div>
             </td>
           </tr>
           <tr>
             <td style="background-color: #F8FAFC; padding: 14px 24px; border-top: 1px solid #E2E8F0; font-size: 11px; color: #94A3B8; text-align: center;">
-              &copy; ${currentYear} Zeal Pharmacure Pvt. Ltd. | Surat, Gujarat – 395010
+              &copy; ${currentYear} Zeal Pharmacure Pvt. Ltd. | 7015 - A, 7TH FLOOR, BTM, NEAR SITANAGAR CHOWK, PUNAGAM, SURAT-395010 (Gujarat)
             </td>
           </tr>
         </table>

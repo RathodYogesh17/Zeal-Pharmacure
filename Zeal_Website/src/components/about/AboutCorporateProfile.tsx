@@ -34,7 +34,7 @@ export const AboutCorporateProfile: React.FC = () => {
             </h2>
 
             <p style={{ fontSize: '15.5px', color: '#475569', lineHeight: 1.75, marginBottom: '14px' }}>
-              Operated from our centralized hub in <strong>Surat, Gujarat (7015, BTM, Sita Nagar, Parvat Patiya, Puna Gam, Surat – 395010)</strong>, <strong>Zeal Pharmacure</strong> operates as an ethical pharmaceutical marketing, authorized stockist network, and bulk distribution enterprise. We bridge the gap between world-class formulation science and healthcare delivery across India.
+              Operated from our centralized hub in <strong>Surat, Gujarat (7015 - A, 7TH FLOOR, BTM, NEAR SITANAGAR CHOWK, PUNAGAM, SURAT-395010 (Gujarat))</strong>, <strong>Zeal Pharmacure</strong> operates as an ethical pharmaceutical marketing, authorized stockist network, and bulk distribution enterprise. We bridge the gap between world-class formulation science and healthcare delivery across India.
             </p>
 
             <p style={{ fontSize: '14.5px', color: '#64748B', lineHeight: 1.75, marginBottom: '24px' }}>
@@ -80,7 +80,7 @@ export const AboutCorporateProfile: React.FC = () => {
               <div style={{ padding: '14px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
                   <div style={{ fontFamily: 'var(--font-heading, "Outfit", sans-serif)', fontSize: '14px', fontWeight: 800, color: '#0F172A' }}>
-                    Surat Central Logistics Depot (7015, BTM)
+                    Surat Central Logistics Depot (7015 - A, 7TH FLOOR, BTM)
                   </div>
                   <div style={{ fontSize: '12px', color: '#64748B' }}>Barcoded inventory ready for same-day dispatch</div>
                 </div>

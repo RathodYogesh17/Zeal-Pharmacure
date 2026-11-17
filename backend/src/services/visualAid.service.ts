@@ -150,10 +150,10 @@ export const generateVisualAidPdf = async (
       // Company Settings matching Catalog PDF
       const companyName = options.companyName || "ZEAL PHARMACURE PVT. LTD.";
       const phone = options.phone || "+91 9909160190";
-      const email = options.email || "info@zealpharma.com";
+      const email = options.email || "zealpharmacure@gmail.com";
       const website = options.website || "www.zealpharmacure.com";
       const address =
-        options.headOfficeAddress || "7015, BTM Market, Sita Nagar, Parvat Patiya, Surat, Gujarat – 395010";
+        options.headOfficeAddress || "7015 - A, 7TH FLOOR, BTM, NEAR SITANAGAR CHOWK, PUNAGAM, SURAT-395010 (Gujarat)";
 
       // =========================================================================
       // 1. PAGE HEADER (EXACTLY MATCHING PRODUCT CATALOG RATE LIST)
