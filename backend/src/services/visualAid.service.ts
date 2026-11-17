@@ -40,18 +40,19 @@ export interface IVisualAidOptions {
 }
 
 // =========================================================================
-// COLOR PALETTE: PURE ROYAL PURPLE & READABLE SLATE GRAY THEME
+// COLOR PALETTE: PURE ROYAL PURPLE & EDITORIAL SLATE GRAY THEME
 // =========================================================================
 const PURPLE = {
   DARKEST: "#3B0764",   // Deepest purple for strong titles
-  DEEP: "#4C1D95",      // Dark violet for primary headers
+  DEEP: "#4C1D95",      // Dark violet for primary section headers
   PRIMARY: "#6D28D9",   // Brand royal purple
-  VIBRANT: "#7C3AED",   // Vibrant accent purple for badges
+  VIBRANT: "#7C3AED",   // Vibrant accent purple for badges & bullets
   ACCENT: "#8B5CF6",    // Medium purple for bullets & borders
   LIGHT_BG: "#FAF5FF",  // Crisp 50-shade card background
-  MUTED_BG: "#F5F3FF",  // 100-shade section header background
+  MUTED_BG: "#F5F3FF",  // 100-shade accent background
   BORDER: "#DDD6FE",    // Light purple border
-  BORDER_LIGHT: "#EDE9FE",
+  BORDER_LIGHT: "#EDE9FE", // Hairline dividers
+  LINE_SUBTLE: "#F3E8FF",  // Row separators
 };
 
 const TEXT = {
@@ -279,9 +280,9 @@ const getClinicalMedicalData = (product: IVisualAidProduct) => {
 
 /**
  * Generate a high-resolution, print-ready A4 Visual Aid PDF
- * with spacious layout, readable typography (8pt-10pt), pure purple theme,
- * angle-wise photos, top header (logo, name, phone, email, website only),
- * bottom footer (company name + page number only), and primary focus on side effects.
+ * with editorial line-by-line sections, zero text overlap,
+ * perfect logo & company alignment, pure purple theme,
+ * angle-wise photos, clean header and minimalist footer.
  */
 export const generateVisualAidPdf = async (
   product: IVisualAidProduct,
@@ -297,7 +298,7 @@ export const generateVisualAidPdf = async (
     try {
       const doc = new PDFDocument({
         size: "A4",
-        margins: { top: 0, bottom: 0, left: 26, right: 26 },
+        margins: { top: 0, bottom: 0, left: 28, right: 28 },
         info: {
           Title: `${product.name} - Scientific Visual Aid & Product Monograph`,
           Author: "ZEAL PHARMACURE PRIVATE LIMITED",
@@ -315,8 +316,8 @@ export const generateVisualAidPdf = async (
       doc.on("end", () => resolve(Buffer.concat(buffers)));
       doc.on("error", (err: Error) => reject(err));
 
-      const margin = 26;
-      const contentWidth = 543.28; // 595.28 - 26 * 2
+      const margin = 28;
+      const contentWidth = 539.28; // 595.28 - 28 * 2
 
       // Company info
       const companyName = options.companyName || "ZEAL PHARMACURE PVT. LTD.";
@@ -325,15 +326,15 @@ export const generateVisualAidPdf = async (
       const website = options.website || "www.zealpharmacure.com";
 
       // =========================================================================
-      // 1. TOP HEADER (CLEAN: ONLY LOGO, NAME, CONTACT, EMAIL & WEBSITE)
+      // 1. TOP HEADER: LOGO, COMPANY NAME & CONTACT IN PERFECT SAME-LINE ALIGNMENT
       // =========================================================================
-      const headerY = 16;
+      const headerY = 18;
       const logoSize = 42;
       let textStartX = margin;
 
       if (logoBuffer) {
         try {
-          doc.image(logoBuffer, margin, headerY + 1, {
+          doc.image(logoBuffer, margin, headerY, {
             width: logoSize,
             height: logoSize,
           });
@@ -343,10 +344,10 @@ export const generateVisualAidPdf = async (
         }
       }
 
-      // Company Brand Lockup (Left)
+      // Company Name and Subtitle vertically centered with logo
       doc
         .font("Helvetica-Bold")
-        .fontSize(15)
+        .fontSize(15.5)
         .fillColor(PURPLE.DARKEST)
         .text(companyName, textStartX, headerY + 4, { lineBreak: false });
 
@@ -354,18 +355,17 @@ export const generateVisualAidPdf = async (
         .font("Helvetica-Bold")
         .fontSize(8)
         .fillColor(PURPLE.PRIMARY)
-        .text("SCIENTIFIC PRODUCT VISUAL AID & DRUG MONOGRAPH", textStartX, headerY + 23, { lineBreak: false });
+        .text("SCIENTIFIC PRODUCT VISUAL AID & CLINICAL MONOGRAPH", textStartX, headerY + 24, { lineBreak: false });
 
-      // Clean Contact Details (Right side)
+      // Clean Contact Details on Far Right, perfectly aligned with header lines
       const contactBoxWidth = 200;
       const contactBoxX = margin + contentWidth - contactBoxWidth;
-      const contactTextY = headerY + 4;
 
       doc
         .font("Helvetica")
         .fontSize(8)
-        .fillColor(TEXT.DARK_GRAY)
-        .text(`Helpline: ${phone}`, contactBoxX, contactTextY, {
+        .fillColor(TEXT.MID_GRAY)
+        .text(`Helpline: ${phone}`, contactBoxX, headerY + 4, {
           width: contactBoxWidth,
           align: "right",
           lineBreak: false,
@@ -374,8 +374,8 @@ export const generateVisualAidPdf = async (
       doc
         .font("Helvetica")
         .fontSize(8)
-        .fillColor(TEXT.DARK_GRAY)
-        .text(`Email: ${email}`, contactBoxX, contactTextY + 13, {
+        .fillColor(TEXT.MID_GRAY)
+        .text(`Email: ${email}`, contactBoxX, headerY + 15, {
           width: contactBoxWidth,
           align: "right",
           lineBreak: false,
@@ -385,30 +385,25 @@ export const generateVisualAidPdf = async (
         .font("Helvetica-Bold")
         .fontSize(8)
         .fillColor(PURPLE.PRIMARY)
-        .text(website, contactBoxX, contactTextY + 26, {
+        .text(website, contactBoxX, headerY + 26, {
           width: contactBoxWidth,
           align: "right",
           lineBreak: false,
         });
 
       // Header Separator Line in Brand Purple
-      const headerDividerY = 64;
+      const headerDividerY = headerY + logoSize + 6; // 66 pt
       doc
         .moveTo(margin, headerDividerY)
         .lineTo(margin + contentWidth, headerDividerY)
-        .lineWidth(1)
+        .lineWidth(1.25)
         .strokeColor(PURPLE.PRIMARY)
         .stroke();
 
       // =========================================================================
-      // 2. PRODUCT TITLE & IDENTITY BAR
+      // 2. PRODUCT IDENTITY: EDITORIAL LINE-BY-LINE (ZERO OVERLAP GUARANTEE)
       // =========================================================================
-      let curY = 72;
-      const titleBoxHeight = 44;
-
-      doc
-        .roundedRect(margin, curY, contentWidth, titleBoxHeight, 4)
-        .fillAndStroke(PURPLE.LIGHT_BG, PURPLE.BORDER);
+      let curY = headerDividerY + 8; // 74 pt
 
       const productName = product.name.toUpperCase();
       const dosageText = (
@@ -427,13 +422,13 @@ export const generateVisualAidPdf = async (
       const mrpText =
         product.mrp && Number(product.mrp) > 0 ? `MRP Rs. ${Number(product.mrp).toFixed(2)}` : null;
 
-      // Badges from right to left
-      let badgeRightX = margin + contentWidth - 10;
-      const badgeY = curY + (titleBoxHeight - 20) / 2;
+      // Badges rendered on top right of product bar
+      let badgeRightX = margin + contentWidth;
+      const badgeY = curY + 2;
 
-      // 1. MRP Badge (if available)
+      // 1. MRP Badge
       if (mrpText) {
-        const mrpW = Math.max(62, mrpText.length * 6 + 14);
+        const mrpW = Math.max(64, mrpText.length * 6 + 14);
         badgeRightX -= mrpW;
         doc
           .roundedRect(badgeRightX, badgeY, mrpW, 20, 3)
@@ -443,7 +438,7 @@ export const generateVisualAidPdf = async (
           .fontSize(8)
           .fillColor(PURPLE.PRIMARY)
           .text(mrpText, badgeRightX, badgeY + 5.5, { width: mrpW, align: "center", lineBreak: false });
-        badgeRightX -= 8;
+        badgeRightX -= 6;
       }
 
       // 2. Packaging Badge
@@ -457,7 +452,7 @@ export const generateVisualAidPdf = async (
         .fontSize(8)
         .fillColor(TEXT.DARK_GRAY)
         .text(packagingText, badgeRightX, badgeY + 5.5, { width: packW, align: "center", lineBreak: false });
-      badgeRightX -= 8;
+      badgeRightX -= 6;
 
       // 3. Dosage Form Badge
       const dosageW = Math.max(56, dosageText.length * 5.8 + 14);
@@ -470,7 +465,7 @@ export const generateVisualAidPdf = async (
         .fontSize(8)
         .fillColor(PURPLE.PRIMARY)
         .text(dosageText, badgeRightX, badgeY + 5.5, { width: dosageW, align: "center", lineBreak: false });
-      badgeRightX -= 8;
+      badgeRightX -= 6;
 
       // 4. Rx Badge
       const rxW = 34;
@@ -484,68 +479,84 @@ export const generateVisualAidPdf = async (
         .fillColor(PURPLE.DARKEST)
         .text(rxText, badgeRightX, badgeY + 5.5, { width: rxW, align: "center", lineBreak: false });
 
-      // Title & Generic Text on Left
-      const titleAvailableWidth = badgeRightX - margin - 16;
+      // Title & Generic Dynamic Measurement: NEVER OVERLAP!
+      const titleAvailableWidth = badgeRightX - margin - 12;
+      doc.font("Helvetica-Bold").fontSize(15);
+      const measuredTitleHeight = doc.heightOfString(productName, {
+        width: titleAvailableWidth,
+      });
+
+      // Render Product Name
       doc
         .font("Helvetica-Bold")
         .fontSize(15)
         .fillColor(TEXT.BLACK)
-        .text(productName, margin + 12, curY + 7, {
+        .text(productName, margin, curY, {
           width: titleAvailableWidth,
-          lineBreak: false,
-          ellipsis: true,
+          lineBreak: true,
         });
+
+      // Generic Composition is placed DYNAMICALLY below the title's actual height!
+      const genericY = curY + measuredTitleHeight + 3;
 
       doc
         .font("Helvetica-Oblique")
         .fontSize(8.5)
         .fillColor(PURPLE.PRIMARY)
-        .text(genericText, margin + 12, curY + 26, {
-          width: titleAvailableWidth,
+        .text(`Composition: ${genericText}`, margin, genericY, {
+          width: contentWidth,
           height: 14,
           ellipsis: true,
           lineBreak: false,
         });
 
-      curY += titleBoxHeight + 8;
+      // Divider below Product Identity
+      const identityBottomY = Math.max(badgeY + 24, genericY + 14);
+      doc
+        .moveTo(margin, identityBottomY)
+        .lineTo(margin + contentWidth, identityBottomY)
+        .lineWidth(0.5)
+        .strokeColor(PURPLE.BORDER_LIGHT)
+        .stroke();
+
+      curY = identityBottomY + 8; // ~126 pt
 
       // =========================================================================
-      // 3. PRODUCT ANGLE-WISE PHOTOS & KEY FORMULATION SPECIFICATIONS
+      // 3. PRODUCT PRESENTATION (PHOTO PEDESTAL) & LINE-BY-LINE SPECIFICATIONS
       // =========================================================================
-      const photoSectionHeight = 166;
-      const photoCardWidth = 252;
-      const specsCardWidth = contentWidth - photoCardWidth - 10; // ~281 pt
-      const specsCardX = margin + photoCardWidth + 10;
+      const photoSectionHeight = 168;
+      const photoCardWidth = 246;
+      const specsAreaX = margin + photoCardWidth + 16;
+      const specsAreaWidth = contentWidth - photoCardWidth - 16; // ~277 pt
 
-      // --- Left: Angle-Wise Photo Showcase Box ---
+      // --- Left: Angle-Wise Photo Showcase (Clean Soft Pedestal) ---
       doc
         .roundedRect(margin, curY, photoCardWidth, photoSectionHeight, 4)
-        .fillAndStroke("#FFFFFF", PURPLE.BORDER);
+        .fillAndStroke("#FFFFFF", PURPLE.BORDER_LIGHT);
 
-      // Centered Header Bar
-      const photoHeaderHeight = 20;
+      // Clean Header Strip
       doc
-        .roundedRect(margin, curY, photoCardWidth, photoHeaderHeight, 4)
+        .roundedRect(margin, curY, photoCardWidth, 18, 4)
         .fill(PURPLE.MUTED_BG);
       doc
         .font("Helvetica-Bold")
-        .fontSize(8)
+        .fontSize(7.5)
         .fillColor(PURPLE.PRIMARY)
-        .text("PRODUCT PACKSHOT & ANGLE PRESENTATION", margin, curY + 6, {
+        .text("PRODUCT PACKSHOT & PRESENTATION", margin, curY + 5, {
           width: photoCardWidth,
           align: "center",
           lineBreak: false,
         });
 
       // Render Photo(s)
-      const photoAreaY = curY + photoHeaderHeight + 7;
-      const photoAreaHeight = photoSectionHeight - photoHeaderHeight - 14; // ~132 pt
+      const photoAreaY = curY + 24;
+      const photoAreaHeight = photoSectionHeight - 30; // ~138 pt
 
       if (productPhotos.length >= 2) {
         // Multi-angle: 2 photo frames side by side
-        const colW = (photoCardWidth - 20) / 2; // ~116 pt
-        const leftX = margin + 7;
-        const rightX = margin + 7 + colW + 6;
+        const colW = (photoCardWidth - 18) / 2; // ~114 pt
+        const leftX = margin + 6;
+        const rightX = margin + 6 + colW + 6;
 
         // Frame 1
         doc
@@ -592,8 +603,8 @@ export const generateVisualAidPdf = async (
           });
       } else if (productPhotos.length === 1) {
         // Single packshot angle - spacious centered display
-        const frameW = photoCardWidth - 14;
-        const frameX = margin + 7;
+        const frameW = photoCardWidth - 12;
+        const frameX = margin + 6;
 
         doc
           .roundedRect(frameX, photoAreaY, frameW, photoAreaHeight, 3)
@@ -616,8 +627,8 @@ export const generateVisualAidPdf = async (
           });
       } else {
         // High quality vector silhouette fallback
-        const frameW = photoCardWidth - 14;
-        const frameX = margin + 7;
+        const frameW = photoCardWidth - 12;
+        const frameX = margin + 6;
         doc
           .roundedRect(frameX, photoAreaY, frameW, photoAreaHeight, 3)
           .fillAndStroke(PURPLE.LIGHT_BG, PURPLE.BORDER_LIGHT);
@@ -626,36 +637,27 @@ export const generateVisualAidPdf = async (
           .font("Helvetica-Bold")
           .fontSize(11)
           .fillColor(PURPLE.VIBRANT)
-          .text(dosageText, frameX, photoAreaY + 44, { width: frameW, align: "center", lineBreak: false });
+          .text(dosageText, frameX, photoAreaY + 46, { width: frameW, align: "center", lineBreak: false });
 
         doc
           .font("Helvetica")
           .fontSize(8)
           .fillColor(TEXT.MUTED_GRAY)
-          .text("Standardized Pharmaceutical Packaging Specimen", frameX, photoAreaY + 62, {
+          .text("Standardized Pharmaceutical Packaging Specimen", frameX, photoAreaY + 64, {
             width: frameW,
             align: "center",
             lineBreak: false,
           });
       }
 
-      // --- Right: Key Formulation Specifications (Single Airy, Unified Card) ---
-      doc
-        .roundedRect(specsCardX, curY, specsCardWidth, photoSectionHeight, 4)
-        .fillAndStroke("#FFFFFF", PURPLE.BORDER);
-
-      doc
-        .roundedRect(specsCardX, curY, specsCardWidth, photoHeaderHeight, 4)
-        .fill(PURPLE.MUTED_BG);
+      // --- Right: Key Specifications (EDITORIAL LINE-BY-LINE - NO BOX!) ---
+      // Accent bar header
+      doc.rect(specsAreaX, curY + 2, 3, 13).fill(PURPLE.PRIMARY);
       doc
         .font("Helvetica-Bold")
-        .fontSize(8)
-        .fillColor(PURPLE.PRIMARY)
-        .text("KEY FORMULATION SPECIFICATIONS", specsCardX, curY + 6, {
-          width: specsCardWidth,
-          align: "center",
-          lineBreak: false,
-        });
+        .fontSize(9)
+        .fillColor(PURPLE.DEEP)
+        .text("FORMULATION SPECIFICATIONS", specsAreaX + 8, curY + 3, { lineBreak: false });
 
       const divisionName =
         product.subCategoryName ||
@@ -664,139 +666,73 @@ export const generateVisualAidPdf = async (
         "Speciality Formulation";
 
       const medical = getClinicalMedicalData(product);
-      let specRowY = curY + 28;
-      const specRowGap = 22;
 
-      // 1. Therapeutic Class
-      doc
-        .font("Helvetica-Bold")
-        .fontSize(8)
-        .fillColor(TEXT.MID_GRAY)
-        .text("Therapeutic Class:", specsCardX + 12, specRowY, { lineBreak: false });
-      doc
-        .font("Helvetica-Bold")
-        .fontSize(8.5)
-        .fillColor(TEXT.BLACK)
-        .text(String(divisionName), specsCardX + 98, specRowY, {
-          width: specsCardWidth - 108,
-          height: 16,
-          ellipsis: true,
-          lineBreak: false,
-        });
-      specRowY += specRowGap;
+      // Line-by-line specs table
+      const specRows = [
+        { label: "Therapeutic Class:", val: String(divisionName), bold: true },
+        { label: "Active Composition:", val: genericText, bold: false },
+        { label: "Dosage & Pack:", val: `${dosageText}  |  ${packagingText}`, bold: true },
+        { label: "Administration:", val: medical.howToUse, bold: false },
+        { label: "Storage Condition:", val: medical.storage, bold: false },
+        { label: "Classification:", val: `${rxText} — Prescription Medicine Only`, bold: true, color: PURPLE.VIBRANT },
+      ];
 
-      // 2. Active Composition
-      doc
-        .font("Helvetica-Bold")
-        .fontSize(8)
-        .fillColor(TEXT.MID_GRAY)
-        .text("Composition:", specsCardX + 12, specRowY, { lineBreak: false });
-      doc
-        .font("Helvetica")
-        .fontSize(8)
-        .fillColor(TEXT.DARK_GRAY)
-        .text(genericText, specsCardX + 98, specRowY, {
-          width: specsCardWidth - 108,
-          height: 16,
-          ellipsis: true,
-          lineBreak: false,
-        });
-      specRowY += specRowGap;
+      let rowY = curY + 24;
+      const rowHeight = 23;
 
-      // 3. Dosage & Pack
-      doc
-        .font("Helvetica-Bold")
-        .fontSize(8)
-        .fillColor(TEXT.MID_GRAY)
-        .text("Dosage & Pack:", specsCardX + 12, specRowY, { lineBreak: false });
-      doc
-        .font("Helvetica")
-        .fontSize(8.5)
-        .fillColor(TEXT.BLACK)
-        .text(`${dosageText}  |  ${packagingText}`, specsCardX + 98, specRowY, {
-          width: specsCardWidth - 108,
-          height: 16,
-          ellipsis: true,
-          lineBreak: false,
-        });
-      specRowY += specRowGap;
+      for (let i = 0; i < specRows.length; i++) {
+        const r = specRows[i]!;
 
-      // 4. Administration
-      doc
-        .font("Helvetica-Bold")
-        .fontSize(8)
-        .fillColor(TEXT.MID_GRAY)
-        .text("Administration:", specsCardX + 12, specRowY, { lineBreak: false });
-      doc
-        .font("Helvetica")
-        .fontSize(8)
-        .fillColor(TEXT.DARK_GRAY)
-        .text(medical.howToUse, specsCardX + 98, specRowY, {
-          width: specsCardWidth - 108,
-          height: 16,
-          ellipsis: true,
-          lineBreak: false,
-        });
-      specRowY += specRowGap;
+        // Label
+        doc
+          .font("Helvetica-Bold")
+          .fontSize(8)
+          .fillColor(TEXT.MID_GRAY)
+          .text(r.label, specsAreaX + 8, rowY + 3, { width: 92, lineBreak: false });
 
-      // 5. Storage Condition
-      doc
-        .font("Helvetica-Bold")
-        .fontSize(8)
-        .fillColor(TEXT.MID_GRAY)
-        .text("Storage:", specsCardX + 12, specRowY, { lineBreak: false });
-      doc
-        .font("Helvetica")
-        .fontSize(8)
-        .fillColor(TEXT.DARK_GRAY)
-        .text(medical.storage, specsCardX + 98, specRowY, {
-          width: specsCardWidth - 108,
-          height: 16,
-          ellipsis: true,
-          lineBreak: false,
-        });
-      specRowY += specRowGap;
+        // Value
+        doc
+          .font(r.bold ? "Helvetica-Bold" : "Helvetica")
+          .fontSize(8)
+          .fillColor(r.color || TEXT.BLACK)
+          .text(r.val, specsAreaX + 104, rowY + 3, {
+            width: specsAreaWidth - 110,
+            height: 14,
+            ellipsis: true,
+            lineBreak: false,
+          });
 
-      // 6. Classification
-      doc
-        .font("Helvetica-Bold")
-        .fontSize(8)
-        .fillColor(TEXT.MID_GRAY)
-        .text("Classification:", specsCardX + 12, specRowY, { lineBreak: false });
-      doc
-        .font("Helvetica-Bold")
-        .fontSize(8)
-        .fillColor(PURPLE.VIBRANT)
-        .text(`${rxText} — Prescription Medicine Only`, specsCardX + 98, specRowY, {
-          width: specsCardWidth - 108,
-          height: 16,
-          ellipsis: true,
-          lineBreak: false,
-        });
+        // Subtle row separator line
+        doc
+          .moveTo(specsAreaX + 8, rowY + rowHeight - 2)
+          .lineTo(specsAreaX + specsAreaWidth, rowY + rowHeight - 2)
+          .lineWidth(0.5)
+          .strokeColor(PURPLE.LINE_SUBTLE)
+          .stroke();
 
-      curY += photoSectionHeight + 8;
+        rowY += rowHeight;
+      }
+
+      curY += photoSectionHeight + 10; // ~304 pt
 
       // =========================================================================
-      // 4. APPROVED CLINICAL INDICATIONS (CLEAN, AIRY & READABLE)
+      // 4. APPROVED CLINICAL INDICATIONS: EDITORIAL LINE-BY-LINE (NO HEAVY BOX!)
       // =========================================================================
-      const indSectionHeight = 88;
-      doc
-        .roundedRect(margin, curY, contentWidth, indSectionHeight, 4)
-        .fillAndStroke("#FFFFFF", PURPLE.BORDER);
-
-      // Centered Header
-      doc
-        .roundedRect(margin, curY, contentWidth, 20, 4)
-        .fill(PURPLE.MUTED_BG);
+      // Accent bar header
+      doc.rect(margin, curY + 2, 3, 13).fill(PURPLE.PRIMARY);
       doc
         .font("Helvetica-Bold")
-        .fontSize(8)
-        .fillColor(PURPLE.PRIMARY)
-        .text("APPROVED CLINICAL INDICATIONS & THERAPEUTIC USES", margin, curY + 6, {
-          width: contentWidth,
-          align: "center",
-          lineBreak: false,
-        });
+        .fontSize(9)
+        .fillColor(PURPLE.DEEP)
+        .text("APPROVED CLINICAL INDICATIONS & THERAPEUTIC USES", margin + 8, curY + 3, { lineBreak: false });
+
+      // Subtle header underline
+      doc
+        .moveTo(margin + 260, curY + 8)
+        .lineTo(margin + contentWidth, curY + 8)
+        .lineWidth(0.5)
+        .strokeColor(PURPLE.BORDER_LIGHT)
+        .stroke();
 
       // Indications list (Focused on top 4)
       let indicationList: string[] = [];
@@ -817,37 +753,46 @@ export const generateVisualAidPdf = async (
         ];
       }
 
-      const halfIndCol = (contentWidth - 28) / 2; // ~257 pt
-      let indRowY = curY + 28;
+      const halfIndCol = (contentWidth - 20) / 2; // ~259 pt
+      let indRowY = curY + 24;
 
       for (let i = 0; i < Math.min(4, indicationList.length); i++) {
         const item = indicationList[i]!;
         const isLeft = i % 2 === 0;
-        const colX = isLeft ? margin + 14 : margin + 14 + halfIndCol + 8;
+        const colX = isLeft ? margin + 6 : margin + 6 + halfIndCol + 8;
         if (isLeft && i > 0) {
-          indRowY += 24;
+          indRowY += 22;
         }
 
         // Purple Bullet Point
-        doc.circle(colX + 3, indRowY + 5, 3).fill(PURPLE.VIBRANT);
+        doc.circle(colX + 3, indRowY + 5, 2.5).fill(PURPLE.PRIMARY);
         doc
           .font("Helvetica")
           .fontSize(8.5)
           .fillColor(TEXT.DARK_GRAY)
-          .text(item, colX + 12, indRowY, {
+          .text(item, colX + 11, indRowY, {
             width: halfIndCol - 16,
-            height: 20,
+            height: 18,
             ellipsis: true,
             lineBreak: false,
           });
       }
 
-      curY += indSectionHeight + 8;
+      // Divider below Indications
+      const indSectionBottomY = indRowY + 24;
+      doc
+        .moveTo(margin, indSectionBottomY)
+        .lineTo(margin + contentWidth, indSectionBottomY)
+        .lineWidth(0.5)
+        .strokeColor(PURPLE.BORDER_LIGHT)
+        .stroke();
+
+      curY = indSectionBottomY + 8; // ~396 pt
 
       // =========================================================================
       // 5. MAIN FOCUS: CLINICAL SIDE EFFECTS & ADVERSE REACTIONS PROFILE
       // =========================================================================
-      const adrSectionHeight = 162;
+      const adrSectionHeight = 158;
       doc
         .roundedRect(margin, curY, contentWidth, adrSectionHeight, 4)
         .fillAndStroke("#FFFFFF", PURPLE.PRIMARY);
@@ -868,67 +813,68 @@ export const generateVisualAidPdf = async (
         });
 
       const adrContentY = curY + adrHeaderHeight + 8;
-      const subAdrBoxHeight = 100;
-      const subAdrColW = (contentWidth - 18) / 2; // ~262 pt
+      const subAdrBoxHeight = 96;
+      const subAdrColW = (contentWidth - 24) / 2; // ~257 pt
 
-      // Box 1: Common / Mild Effects
-      doc
-        .roundedRect(margin + 6, adrContentY, subAdrColW, subAdrBoxHeight, 3)
-        .fillAndStroke(PURPLE.LIGHT_BG, PURPLE.BORDER);
-
+      // Left Column: Common / Mild Effects (Clean Line-by-Line)
       doc
         .font("Helvetica-Bold")
-        .fontSize(8)
+        .fontSize(8.5)
         .fillColor(PURPLE.DEEP)
-        .text("COMMON & MILD ADVERSE EFFECTS", margin + 14, adrContentY + 8, { lineBreak: false });
+        .text("COMMON & MILD ADVERSE EFFECTS", margin + 12, adrContentY + 4, { lineBreak: false });
 
-      let effCurY = adrContentY + 24;
+      let effCurY = adrContentY + 20;
       for (let i = 0; i < Math.min(3, medical.commonSideEffects.length); i++) {
         const eff = medical.commonSideEffects[i]!;
-        doc.circle(margin + 17, effCurY + 4, 2.5).fill(PURPLE.ACCENT);
+        doc.circle(margin + 16, effCurY + 4, 2.5).fill(PURPLE.ACCENT);
         doc
           .font("Helvetica")
           .fontSize(8)
           .fillColor(TEXT.DARK_GRAY)
-          .text(eff, margin + 25, effCurY, {
-            width: subAdrColW - 32,
-            height: 20,
+          .text(eff, margin + 24, effCurY, {
+            width: subAdrColW - 28,
+            height: 18,
             ellipsis: true,
             lineGap: 1.5,
           });
-        effCurY += 24;
+        effCurY += 22;
       }
 
-      // Box 2: Rare & Precautionary Effects
-      const box2X = margin + 6 + subAdrColW + 6;
+      // Vertical Divider Line between Common and Rare
+      const vDividerX = margin + subAdrColW + 12;
       doc
-        .roundedRect(box2X, adrContentY, subAdrColW, subAdrBoxHeight, 3)
-        .fillAndStroke(PURPLE.LIGHT_BG, PURPLE.BORDER);
+        .moveTo(vDividerX, adrContentY + 4)
+        .lineTo(vDividerX, adrContentY + subAdrBoxHeight)
+        .lineWidth(0.5)
+        .strokeColor(PURPLE.BORDER_LIGHT)
+        .stroke();
 
+      // Right Column: Rare & Precautionary Effects (Clean Line-by-Line)
+      const rightAdrX = vDividerX + 12;
       doc
         .font("Helvetica-Bold")
-        .fontSize(8)
+        .fontSize(8.5)
         .fillColor(PURPLE.DEEP)
-        .text("RARE & PRECAUTIONARY EFFECTS", box2X + 10, adrContentY + 8, { lineBreak: false });
+        .text("RARE & PRECAUTIONARY EFFECTS", rightAdrX, adrContentY + 4, { lineBreak: false });
 
-      let rareCurY = adrContentY + 24;
+      let rareCurY = adrContentY + 20;
       for (let i = 0; i < Math.min(3, medical.rareSideEffects.length); i++) {
         const eff = medical.rareSideEffects[i]!;
-        doc.circle(box2X + 13, rareCurY + 4, 2.5).fill(PURPLE.ACCENT);
+        doc.circle(rightAdrX + 4, rareCurY + 4, 2.5).fill(PURPLE.ACCENT);
         doc
           .font("Helvetica")
           .fontSize(8)
           .fillColor(TEXT.DARK_GRAY)
-          .text(eff, box2X + 21, rareCurY, {
+          .text(eff, rightAdrX + 12, rareCurY, {
             width: subAdrColW - 28,
-            height: 20,
+            height: 18,
             ellipsis: true,
             lineGap: 1.5,
           });
-        rareCurY += 24;
+        rareCurY += 22;
       }
 
-      // Pharmacovigilance Directive Strip (Centered below side effects boxes)
+      // Pharmacovigilance Directive Strip (Centered below side effects)
       const pvBoxY = adrContentY + subAdrBoxHeight + 6;
       const pvBoxHeight = 20;
       doc
@@ -949,57 +895,54 @@ export const generateVisualAidPdf = async (
           }
         );
 
-      curY += adrSectionHeight + 8;
+      curY += adrSectionHeight + 10; // ~572 pt
 
       // =========================================================================
-      // 6. CONTRAINDICATIONS, PRECAUTIONS & SCHEDULE WARNING
+      // 6. CONTRAINDICATIONS & WARNINGS: EDITORIAL LINE-BY-LINE (NO OUTER BOX!)
       // =========================================================================
-      const safetySectionHeight = 164;
-      doc
-        .roundedRect(margin, curY, contentWidth, safetySectionHeight, 4)
-        .fillAndStroke("#FFFFFF", PURPLE.BORDER);
-
-      // Centered Header
-      doc
-        .roundedRect(margin, curY, contentWidth, 20, 4)
-        .fill(PURPLE.MUTED_BG);
+      // Accent bar header
+      doc.rect(margin, curY + 2, 3, 13).fill(PURPLE.PRIMARY);
       doc
         .font("Helvetica-Bold")
-        .fontSize(8)
-        .fillColor(PURPLE.PRIMARY)
-        .text("CONTRAINDICATIONS, CLINICAL PRECAUTIONS & REGULATORY WARNING", margin, curY + 6, {
-          width: contentWidth,
-          align: "center",
-          lineBreak: false,
-        });
+        .fontSize(9)
+        .fillColor(PURPLE.DEEP)
+        .text("CONTRAINDICATIONS, CLINICAL PRECAUTIONS & REGULATORY WARNING", margin + 8, curY + 3, { lineBreak: false });
 
-      const safetyBodyY = curY + 28;
-      const halfSafetyColW = (contentWidth - 28) / 2; // ~257 pt
+      // Subtle header underline
+      doc
+        .moveTo(margin + 340, curY + 8)
+        .lineTo(margin + contentWidth, curY + 8)
+        .lineWidth(0.5)
+        .strokeColor(PURPLE.BORDER_LIGHT)
+        .stroke();
+
+      const safetyBodyY = curY + 22;
+      const halfSafetyColW = (contentWidth - 24) / 2; // ~257 pt
 
       // Left Column: Contraindications & Pregnancy
       doc
         .font("Helvetica-Bold")
         .fontSize(8)
         .fillColor(PURPLE.DEEP)
-        .text("CONTRAINDICATIONS (DO NOT PRESCRIBE)", margin + 12, safetyBodyY, { lineBreak: false });
+        .text("CONTRAINDICATIONS (DO NOT PRESCRIBE)", margin + 6, safetyBodyY, { lineBreak: false });
 
       doc
         .font("Helvetica")
         .fontSize(8)
         .fillColor(TEXT.DARK_GRAY)
-        .text(medical.contraindications, margin + 12, safetyBodyY + 12, {
-          width: halfSafetyColW - 6,
-          height: 48,
+        .text(medical.contraindications, margin + 6, safetyBodyY + 11, {
+          width: halfSafetyColW - 8,
+          height: 46,
           ellipsis: true,
-          lineGap: 2.5,
+          lineGap: 2,
         });
 
-      const popY = safetyBodyY + 68;
+      const popY = safetyBodyY + 62;
       doc
         .font("Helvetica-Bold")
         .fontSize(8)
         .fillColor(PURPLE.DEEP)
-        .text("PREGNANCY & LACTATION ADVISORY", margin + 12, popY, { lineBreak: false });
+        .text("PREGNANCY & LACTATION ADVISORY", margin + 6, popY, { lineBreak: false });
 
       doc
         .font("Helvetica")
@@ -1008,18 +951,18 @@ export const generateVisualAidPdf = async (
         .text(
           product.pregnancyInfo ||
             "Use during pregnancy and lactation only if potential clinical benefit clearly outweighs fetal risk, strictly under obstetrician supervision.",
-          margin + 12,
-          popY + 12,
+          margin + 6,
+          popY + 11,
           {
-            width: halfSafetyColW - 6,
-            height: 38,
+            width: halfSafetyColW - 8,
+            height: 36,
             ellipsis: true,
-            lineGap: 2.5,
+            lineGap: 2,
           }
         );
 
       // Right Column: Special Precautions & Schedule H Warning Box
-      const rightSafetyX = margin + 14 + halfSafetyColW + 6;
+      const rightSafetyX = margin + halfSafetyColW + 16;
 
       doc
         .font("Helvetica-Bold")
@@ -1031,16 +974,16 @@ export const generateVisualAidPdf = async (
         .font("Helvetica")
         .fontSize(8)
         .fillColor(TEXT.DARK_GRAY)
-        .text(medical.precautions, rightSafetyX, safetyBodyY + 12, {
-          width: halfSafetyColW - 6,
-          height: 48,
+        .text(medical.precautions, rightSafetyX, safetyBodyY + 11, {
+          width: halfSafetyColW - 8,
+          height: 46,
           ellipsis: true,
-          lineGap: 2.5,
+          lineGap: 2,
         });
 
       // Schedule H Prescription Warning Box (Clean, Centered, High Contrast)
       const rxBoxY = popY - 2;
-      const rxBoxHeight = 58;
+      const rxBoxHeight = 54;
       doc
         .roundedRect(rightSafetyX, rxBoxY, halfSafetyColW - 4, rxBoxHeight, 3)
         .fillAndStroke(PURPLE.LIGHT_BG, PURPLE.VIBRANT);
@@ -1049,7 +992,7 @@ export const generateVisualAidPdf = async (
         .font("Helvetica-Bold")
         .fontSize(8)
         .fillColor(PURPLE.DARKEST)
-        .text("SCHEDULE H PRESCRIPTION DRUG — WARNING", rightSafetyX, rxBoxY + 8, {
+        .text("SCHEDULE H PRESCRIPTION DRUG — WARNING", rightSafetyX, rxBoxY + 7, {
           width: halfSafetyColW - 4,
           align: "center",
           lineBreak: false,
@@ -1062,10 +1005,10 @@ export const generateVisualAidPdf = async (
         .text(
           "To be sold by retail on the prescription of a Registered Medical Practitioner (RMP) only. Not for public consumer circulation. Keep strictly out of reach of children.",
           rightSafetyX + 8,
-          rxBoxY + 22,
+          rxBoxY + 20,
           {
             width: halfSafetyColW - 20,
-            height: 30,
+            height: 28,
             align: "center",
             ellipsis: true,
             lineGap: 1.5,
