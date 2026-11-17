@@ -119,7 +119,7 @@ const createProductEnquiry = async (body: ICreateProductEnquiryRequest) => {
   }
 
   const detectedType =
-    body.enquiryType || (bulkItems.length > 0 ? "BULK_PRODUCT" : "SINGLE_PRODUCT");
+    body.enquiryType === "BULK_PRODUCT" || bulkItems.length > 0 ? "BULK_PRODUCT" : "SINGLE_PRODUCT";
 
   // Validate & normalize Drug License number if provided
   let normalizedDl = body.drugLicenseNumber?.trim() || "";
