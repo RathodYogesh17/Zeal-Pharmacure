@@ -3,6 +3,7 @@ import { getMediaUrl } from './mediaUtils';
 
 export interface ProductThemePalette {
   bg: string;
+  bgFade?: string;
   border: string;
   shadow: string;
   tagStyle: {
@@ -20,6 +21,7 @@ export const THEME_PALETTES: Record<string, ProductThemePalette> = {
   // Orange / Sunset Amber (e.g. Acloz-SP, pain relief, orange/amber packs)
   orange: {
     bg: 'linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%)',
+    bgFade: '#FFF7ED',
     border: '#FED7AA',
     shadow: '0 4px 16px rgba(234, 88, 12, 0.08)',
     tagStyle: { color: '#C2410C', background: '#FFFFFF', border: '1px solid #FED7AA' },
@@ -30,7 +32,8 @@ export const THEME_PALETTES: Record<string, ProductThemePalette> = {
   },
   // Emerald / Mint Green (e.g. Lulizeal, herbal, green antifungal/creams)
   emerald: {
-    bg: 'linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)',
+    bg: 'linear-gradient(135deg, #F0FDF4 0%, #E6F7ED 40%, #D4EADB 100%)',
+    bgFade: '#F0FDF4',
     border: '#A7F3D0',
     shadow: '0 4px 16px rgba(5, 150, 105, 0.08)',
     tagStyle: { color: '#047857', background: '#FFFFFF', border: '1px solid #A7F3D0' },
@@ -42,6 +45,7 @@ export const THEME_PALETTES: Record<string, ProductThemePalette> = {
   // Royal Purple / Violet (e.g. Amloal-AT, Acloz-MR, Telmizeal, purple packs)
   purple: {
     bg: 'linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%)',
+    bgFade: '#F5F3FF',
     border: '#DDD6FE',
     shadow: '0 4px 16px rgba(124, 58, 237, 0.08)',
     tagStyle: { color: '#6D28D9', background: '#FFFFFF', border: '1px solid #DDD6FE' },
@@ -327,11 +331,9 @@ export const resolveProductBanners = (
     'vitamins, minerals & supplements',
   ]);
   const isZealcovit = Boolean(slot1Result.product?.name?.toUpperCase().includes('ZEALCOVIT'));
-  const slot1Img = isZealcovit
-    ? '/promos/promo_zealcovit.jpg'
-    : (slot1Result.product && getProductImage(slot1Result.product)
-        ? getMediaUrl(getProductImage(slot1Result.product)!)
-        : '/promos/promo_zealcovit.jpg');
+  const slot1Img = (isZealcovit || !slot1Result.product)
+    ? '/promos/promo_zealcovit.webp'
+    : '/promos/promo_zealcovit.webp';
   const slot1Theme = resolveProductTheme(slot1Result.product, 'emerald');
 
   // 2. Slot 2 (Hero Promo 1): CALCIZEAL-D3 60K SACHET (Replaces FERZEAL-XT TAB)
@@ -346,9 +348,12 @@ export const resolveProductBanners = (
     'vitamins',
     'gynecology',
   ]);
-  const slot2Img = slot2Result.product && getProductImage(slot2Result.product)
-    ? getMediaUrl(getProductImage(slot2Result.product)!)
-    : 'https://res.cloudinary.com/dll2ppcmu/image/upload/v1792402840/zeal-pharma/products/phetx7yqmptd4v6ivhjg.png';
+  const isCalcizealD3 = Boolean(slot2Result.product?.name?.toUpperCase().includes('CALCIZEAL-D3'));
+  const slot2Img = isCalcizealD3
+    ? '/promos/promo_calcizeal_d3.webp'
+    : (slot2Result.product && getProductImage(slot2Result.product)
+        ? getMediaUrl(getProductImage(slot2Result.product)!)
+        : '/promos/promo_calcizeal_d3.webp');
   const slot2Theme = resolveProductTheme(slot2Result.product, 'amber');
 
   // 3. Slot 3 (Hero Promo 2): ZEAL\'S FOOT CURE 75 GM CREAM (Replaces CALCIZEAL-ROSE TAB)
@@ -361,9 +366,12 @@ export const resolveProductBanners = (
     'derma',
     'nutraceutical',
   ]);
-  const slot3Img = slot3Result.product && getProductImage(slot3Result.product)
-    ? getMediaUrl(getProductImage(slot3Result.product)!)
-    : 'https://res.cloudinary.com/dll2ppcmu/image/upload/v1793946518/zeal-pharma/products/yfnk69mxxhzuxr8hi75v.png';
+  const isFootCure = Boolean(slot3Result.product?.name?.toUpperCase().includes('FOOT CURE'));
+  const slot3Img = isFootCure
+    ? '/promos/promo_foot_cure.webp'
+    : (slot3Result.product && getProductImage(slot3Result.product)
+        ? getMediaUrl(getProductImage(slot3Result.product)!)
+        : '/promos/promo_foot_cure.webp');
   const slot3Theme = resolveProductTheme(slot3Result.product, 'mauve');
 
   // 4. CHRONIC CARE (Middle Promo 1)
@@ -381,9 +389,12 @@ export const resolveProductBanners = (
     'cholesterol',
     'chronic',
   ]);
-  const chronicImg = chronicResult.product && getProductImage(chronicResult.product)
-    ? getMediaUrl(getProductImage(chronicResult.product)!)
-    : getMediaUrl((settings as any)?.promoBanners?.productDiabetic, '/promos/promo_diabetic.jpg');
+  const isAmloal = Boolean(chronicResult.product?.name?.toUpperCase().includes('AMLOAL'));
+  const chronicImg = isAmloal
+    ? '/promos/promo_amloal_at.webp'
+    : (chronicResult.product && getProductImage(chronicResult.product)
+        ? getMediaUrl(getProductImage(chronicResult.product)!)
+        : getMediaUrl((settings as any)?.promoBanners?.productDiabetic, '/promos/promo_diabetic.jpg'));
   const chronicTheme = resolveProductTheme(chronicResult.product, 'purple');
 
   // 5. DERMA TRICHOLOGY (Middle Promo 2)
@@ -397,9 +408,12 @@ export const resolveProductBanners = (
     'scalp',
     'hair health',
   ]);
-  const trichoImg = trichoResult.product && getProductImage(trichoResult.product)
-    ? getMediaUrl(getProductImage(trichoResult.product)!)
-    : getMediaUrl((settings as any)?.promoBanners?.productBiotin, '/promos/promo_hair_biotin.jpg');
+  const isMultivtaz = Boolean(trichoResult.product?.name?.toUpperCase().includes('MULTIVTAZ'));
+  const trichoImg = isMultivtaz
+    ? '/promos/promo_multivtaz.webp'
+    : (trichoResult.product && getProductImage(trichoResult.product)
+        ? getMediaUrl(getProductImage(trichoResult.product)!)
+        : getMediaUrl((settings as any)?.promoBanners?.productBiotin, '/promos/promo_hair_biotin.jpg'));
   const trichoTheme = resolveProductTheme(trichoResult.product, 'cyan');
 
   // 6. RESPIRATORY LINE (Middle Promo 3)
@@ -415,13 +429,18 @@ export const resolveProductBanners = (
     'sinus',
     'allergy',
   ]);
-  const respImg = respResult.product && getProductImage(respResult.product)
-    ? getMediaUrl(getProductImage(respResult.product)!)
-    : getMediaUrl((settings as any)?.promoBanners?.productRespiratory, '/promos/promo_respiratory.jpg');
+  const isAclozMr = Boolean(respResult.product?.name?.toUpperCase().includes('ACLOZ-MR'));
+  const respImg = isAclozMr
+    ? '/promos/promo_acloz_mr.webp'
+    : (respResult.product && getProductImage(respResult.product)
+        ? getMediaUrl(getProductImage(respResult.product)!)
+        : getMediaUrl((settings as any)?.promoBanners?.productRespiratory, '/promos/promo_respiratory.jpg'));
   const respTheme = resolveProductTheme(respResult.product, 'purple');
 
-  // 7. PEDIATRIC DIVISION / FALLBACK (Bottom Promo 1)
+  // 7. PEDIATRIC DIVISION / ACLOZ-SP (Bottom Promo 1)
   const pedResult = findBestProduct([
+    'acloz-sp tab',
+    'acloz-sp',
     'pediatric',
     'child',
     'infant',
@@ -429,11 +448,13 @@ export const resolveProductBanners = (
     'syrup',
     'suspension',
     'dry syrup',
-    'acloz-sp tab',
   ]);
-  const pedImg = pedResult.product && getProductImage(pedResult.product)
-    ? getMediaUrl(getProductImage(pedResult.product)!)
-    : getMediaUrl((settings as any)?.promoBanners?.productPediatric, '/promos/promo_pediatric.jpg');
+  const isAclozSp = Boolean(pedResult.product?.name?.toUpperCase().includes('ACLOZ-SP'));
+  const pedImg = isAclozSp
+    ? '/promos/promo_acloz_sp.webp'
+    : (pedResult.product && getProductImage(pedResult.product)
+        ? getMediaUrl(getProductImage(pedResult.product)!)
+        : getMediaUrl((settings as any)?.promoBanners?.productPediatric, '/promos/promo_pediatric.jpg'));
   const pedTheme = resolveProductTheme(pedResult.product, 'orange');
 
   // 8. DERMA CARE (Bottom Promo 2)
@@ -448,9 +469,12 @@ export const resolveProductBanners = (
     'ointment',
     'antifungal',
   ]);
-  const dermaImg = dermaResult.product && getProductImage(dermaResult.product)
-    ? getMediaUrl(getProductImage(dermaResult.product)!)
-    : getMediaUrl((settings as any)?.promoBanners?.productDerma, '/promos/promo_derma_barrier.jpg');
+  const isLulizeal = Boolean(dermaResult.product?.name?.toUpperCase().includes('LULIZEAL'));
+  const dermaImg = isLulizeal
+    ? '/promos/promo_lulizeal.webp'
+    : (dermaResult.product && getProductImage(dermaResult.product)
+        ? getMediaUrl(getProductImage(dermaResult.product)!)
+        : getMediaUrl((settings as any)?.promoBanners?.productDerma, '/promos/promo_derma_barrier.jpg'));
   const dermaTheme = resolveProductTheme(dermaResult.product, 'emerald');
 
   return {
@@ -545,14 +569,14 @@ export const resolveProductBanners = (
       product: pedResult.product,
       image: pedImg,
       badge: pedResult.product && !pedResult.isCategoryMatch
-        ? getCategoryName(pedResult.product).toUpperCase() || 'PEDIATRIC HEALTH'
-        : 'PEDIATRIC DIVISION',
+        ? getCategoryName(pedResult.product).toUpperCase() || (isAclozSp ? 'ORTHOPEDICS & PAIN MANAGEMENT' : 'PEDIATRIC HEALTH')
+        : (isAclozSp ? 'ORTHOPEDICS & PAIN MANAGEMENT' : 'PEDIATRIC DIVISION'),
       title: pedResult.product
         ? pedResult.product.name
-        : 'Pediatric Healthcare & Infant Therapeutics',
+        : 'ACLOZ-SP TAB',
       desc: pedResult.product
-        ? (pedResult.product.composition || 'Tested palatable dry syrups, oral drops, and child clinical healthcare range.')
-        : 'Tested palatable dry syrups, oral drops, and child clinical healthcare range.',
+        ? (pedResult.product.composition || 'Aceclofenac 100 mg + Paracetamol 325 Mg + Serratiopeptidase 15 Mg Tablet')
+        : 'Aceclofenac 100 mg + Paracetamol 325 Mg + Serratiopeptidase 15 Mg Tablet',
       theme: pedTheme,
       isMatchedFromCategory: pedResult.isCategoryMatch,
       isFallback: !pedResult.isCategoryMatch && pedResult.product !== null,

@@ -4,6 +4,7 @@ import { useSiteSettings } from '../../../context/SiteSettingsContext';
 import { getMediaUrl } from '../../../utils/mediaUtils';
 import { resolveProductBanners, THEME_PALETTES } from '../../../utils/productBannerMatcher';
 import type { IProduct } from '../../../types';
+import './ProductBanners.css';
 
 export interface ProductHeroBannersProps {
   products: IProduct[];
@@ -188,10 +189,14 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
                 onClick={onScrollToCatalog}
                 className="zp-btn-pill-outline"
                 style={{
-                  padding: '12px 22px',
+                  padding: '12px 24px',
                   fontSize: '13.5px',
-                  borderColor: currentSlide.theme?.border || undefined,
-                  color: currentSlide.theme?.accentColor || undefined,
+                  borderRadius: '999px',
+                  borderColor: currentSlide.theme?.border || '#E2E8F0',
+                  color: '#0F172A',
+                  background: '#FFFFFF',
+                  fontWeight: 700,
+                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.04)',
                 }}
               >
                 View Formulations
@@ -199,31 +204,18 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
             </div>
           </div>
 
-          {/* Large Image on Right - Seamless Full-Height Display */}
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            bottom: 0,
-            width: 'clamp(260px, 48%, 420px)',
-            zIndex: 1,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '16px 20px',
-            pointerEvents: 'none',
-          }}>
+          {/* Large Image on Right - Seamless Full-Height Studio Showcase */}
+          <div className="zp-hero-image-stage">
+            <div
+              className="zp-hero-image-fade-overlay"
+              style={{
+                background: `linear-gradient(to right, ${currentSlide.theme?.bgFade || '#F0FDF4'} 0%, rgba(240, 253, 244, 0.45) 45%, transparent 100%)`,
+              }}
+            />
             <img
               src={currentSlide.image}
               alt={currentSlide.title}
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'contain',
-                borderRadius: '16px',
-                imageRendering: '-webkit-optimize-contrast',
-                filter: 'drop-shadow(0 12px 28px rgba(0, 0, 0, 0.08))',
-              }}
+              className="zp-hero-image"
             />
           </div>
 
@@ -378,11 +370,22 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
                     <ArrowRight size={12} />
                   </button>
                 </div>
-                <div style={{ width: '92px', height: '92px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{
+                  width: '94px',
+                  height: '94px',
+                  flexShrink: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '14px',
+                  overflow: 'hidden',
+                  background: '#FFFFFF',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+                }}>
                   <img
                     src={card.image}
                     alt={card.alt}
-                    style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '12px' }}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '14px' }}
                   />
                 </div>
               </div>

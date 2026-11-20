@@ -1,6 +1,60 @@
 /* Product Middle & Bottom Promo Banners Styling & Responsive Design */
 
 /* ========================================================
+   Hero Banner Image Stage (Seamless Full-Height Blend)
+   Matches sample design: full bleed top/bottom/right,
+   smooth gradient fade where image meets content.
+   ======================================================== */
+.zp-hero-image-stage {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: clamp(340px, 58%, 560px);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  overflow: hidden;
+  pointer-events: none;
+  border-top-right-radius: 24px;
+  border-bottom-right-radius: 24px;
+}
+
+.zp-hero-image-stage img,
+.zp-hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right center;
+  border-top-right-radius: 24px;
+  border-bottom-right-radius: 24px;
+  image-rendering: -webkit-optimize-contrast;
+  display: block;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.2) 14%, rgba(0, 0, 0, 0.8) 32%, black 50%);
+  mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.2) 14%, rgba(0, 0, 0, 0.8) 32%, black 50%);
+}
+
+.zp-hero-image-fade-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 180px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+@media (max-width: 640px) {
+  .zp-hero-image-stage {
+    width: 260px;
+    opacity: 0.35;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 100%);
+  }
+}
+
+/* ========================================================
    Middle Banners (3 Cards)
    ======================================================== */
 .zp-middle-banners-grid {
@@ -104,6 +158,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
 }
 
 .zp-middle-promo-glow {
@@ -113,8 +171,8 @@
 .zp-middle-promo-img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  border-radius: 14px;
+  object-fit: cover;
+  border-radius: 18px;
   image-rendering: -webkit-optimize-contrast;
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   display: block;
@@ -233,13 +291,17 @@
 
 /* Bottom Promo Image Stage */
 .zp-bottom-promo-img-wrap {
-  width: clamp(140px, 34%, 210px);
+  width: clamp(140px, 34%, 200px);
   aspect-ratio: 1 / 1;
   flex-shrink: 0;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #FFFFFF;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
 }
 
 .zp-bottom-promo-glow {
@@ -249,8 +311,8 @@
 .zp-bottom-promo-img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  border-radius: 16px;
+  object-fit: cover;
+  border-radius: 20px;
   image-rendering: -webkit-optimize-contrast;
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   display: block;

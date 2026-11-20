@@ -26,7 +26,9 @@ export const ProductBottomBanners: React.FC<ProductBottomBannersProps> = ({
       tagStyle: banners.pediatricDivision.theme.tagStyle,
       title: banners.pediatricDivision.title,
       desc: banners.pediatricDivision.desc || 'Tested palatable dry syrups, oral drops, and child clinical healthcare range.',
-      btnText: 'Enquire Pediatric Range',
+      btnText: banners.pediatricDivision.product?.name?.toUpperCase().includes('ACLOZ')
+        ? 'Enquire Formulation'
+        : 'Enquire Pediatric Range',
       btnBg: banners.pediatricDivision.theme.btnBg,
       btnShadow: banners.pediatricDivision.theme.btnShadow,
       bg: banners.pediatricDivision.theme.bg,
