@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Sparkles, Send, ArrowRight } from 'lucide-react';
 import { useSiteSettings } from '../../../context/SiteSettingsContext';
 import { getMediaUrl } from '../../../utils/mediaUtils';
-import { resolveProductBanners } from '../../../utils/productBannerMatcher';
+import { resolveProductBanners, THEME_PALETTES } from '../../../utils/productBannerMatcher';
 import type { IProduct } from '../../../types';
 
 export interface ProductHeroBannersProps {
@@ -21,7 +21,7 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
   const { settings } = useSiteSettings();
   const [activeBannerDot, setActiveBannerDot] = useState(0);
 
-  // Dynamic banner resolution from live database products
+  // Dynamic banner resolution with product-matched color themes
   const banners = useMemo(() => resolveProductBanners(products, settings), [products, settings]);
 
   const dynamicHeroSlides = useMemo(() => [
@@ -31,6 +31,7 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
       subtitle: banners.multivitamin.subtitle || 'High-Bioavailability Formulations Ready for Authorized Stockists Distribution.',
       image: banners.multivitamin.image,
       product: banners.multivitamin.product,
+      theme: banners.multivitamin.theme,
     },
     {
       badge: 'PREMIUM EXTRACTION THERAPEUTICS',
@@ -38,29 +39,44 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
       subtitle: 'Certified Active Formulations with Exclusive Territorial Distribution Protection.',
       image: getMediaUrl((settings as any)?.promoBanners?.productHeroSlide2 || (settings as any)?.promoBanners?.productWellness, '/promos/promo_wellness.jpg'),
       product: banners.nutraceuticals.product,
+      theme: banners.nutraceuticals.theme || THEME_PALETTES.pink,
     },
   ], [banners, settings]);
 
   const dynamicPromoCards = useMemo(() => [
     {
       tag: banners.gynecology.badge,
-      tagStyle: { background: '#854D0E', color: '#FFFFFF', padding: '2px 6px', borderRadius: '4px', fontSize: '9.5px' },
-      bg: '#FEF9C3',
-      border: '#FEF08A',
+      tagStyle: {
+        ...banners.gynecology.theme.tagStyle,
+        padding: '3px 8px',
+        borderRadius: '6px',
+        fontSize: '9.5px',
+        fontWeight: 900,
+      },
+      bg: banners.gynecology.theme.bg,
+      border: banners.gynecology.theme.border,
       title: banners.gynecology.title,
       image: banners.gynecology.image,
       alt: banners.gynecology.title,
       product: banners.gynecology.product,
+      btnColor: banners.gynecology.theme.accentColor,
     },
     {
       tag: banners.nutraceuticals.badge,
-      tagStyle: { color: 'var(--zp-primary)', fontSize: '10px' },
-      bg: '#F5F3FF',
-      border: 'var(--zp-primary-border)',
+      tagStyle: {
+        ...banners.nutraceuticals.theme.tagStyle,
+        padding: '3px 8px',
+        borderRadius: '6px',
+        fontSize: '10px',
+        fontWeight: 900,
+      },
+      bg: banners.nutraceuticals.theme.bg,
+      border: banners.nutraceuticals.theme.border,
       title: banners.nutraceuticals.title,
       image: banners.nutraceuticals.image,
       alt: banners.nutraceuticals.title,
       product: banners.nutraceuticals.product,
+      btnColor: banners.nutraceuticals.theme.accentColor,
     },
   ], [banners]);
 
@@ -92,11 +108,11 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
         alignItems: 'stretch',
       }}>
 
-        {/* LEFT LARGE HERO BANNER */}
+        {/* LEFT LARGE HERO BANNER (Matched to Product Palette) */}
         <div style={{
-          background: 'linear-gradient(135deg, #F8FAFC 0%, #EDE9FE 100%)',
+          background: currentSlide.theme?.bg || 'linear-gradient(135deg, #F8FAFC 0%, #EDE9FE 100%)',
           borderRadius: '24px',
-          border: '1.5px solid var(--zp-primary-border)',
+          border: `1.5px solid ${currentSlide.theme?.border || 'var(--zp-primary-border)'}`,
           padding: '40px 36px 32px',
           display: 'flex',
           flexDirection: 'column',
@@ -104,13 +120,14 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
           position: 'relative',
           overflow: 'hidden',
           minHeight: '380px',
-          boxShadow: '0 8px 30px rgba(124, 58, 237, 0.06)',
+          boxShadow: currentSlide.theme?.shadow || '0 8px 30px rgba(124, 58, 237, 0.06)',
+          transition: 'background 0.4s ease, border-color 0.4s ease',
         }}>
           <div style={{ zIndex: 2, maxWidth: '380px', position: 'relative' }}>
             <span style={{
               fontSize: '11px',
               fontWeight: 900,
-              color: 'var(--zp-primary)',
+              color: currentSlide.theme?.accentColor || 'var(--zp-primary)',
               letterSpacing: '1.2px',
               display: 'inline-flex',
               alignItems: 'center',
@@ -119,10 +136,10 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
               padding: '4px 10px',
               borderRadius: '999px',
               marginBottom: '12px',
-              border: '1px solid var(--zp-primary-border)',
+              border: `1px solid ${currentSlide.theme?.border || 'var(--zp-primary-border)'}`,
               fontFamily: 'var(--font-heading, "Outfit", sans-serif)',
             }}>
-              <Sparkles size={12} color="var(--zp-primary)" />
+              <Sparkles size={12} color={currentSlide.theme?.accentColor || 'var(--zp-primary)'} />
               {currentSlide.badge}
             </span>
 
@@ -154,7 +171,13 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
                 type="button"
                 onClick={handleEnquireSlide}
                 className="zp-btn-primary"
-                style={{ padding: '12px 26px', borderRadius: '999px', fontSize: '13.5px' }}
+                style={{
+                  padding: '12px 26px',
+                  borderRadius: '999px',
+                  fontSize: '13.5px',
+                  background: currentSlide.theme?.btnBg || undefined,
+                  boxShadow: currentSlide.theme?.btnShadow || undefined,
+                }}
               >
                 <Send size={14} />
                 <span>Enquire For Stockists</span>
@@ -164,32 +187,32 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
                 type="button"
                 onClick={onScrollToCatalog}
                 className="zp-btn-pill-outline"
-                style={{ padding: '12px 22px', fontSize: '13.5px' }}
+                style={{
+                  padding: '12px 22px',
+                  fontSize: '13.5px',
+                  borderColor: currentSlide.theme?.border || undefined,
+                  color: currentSlide.theme?.accentColor || undefined,
+                }}
               >
                 View Formulations
               </button>
             </div>
           </div>
 
-          {/* Large Image on Right - Seamless Full-Height with Soft Gradient Mask */}
+          {/* Large Image on Right - Seamless Full-Height Display */}
           <div style={{
             position: 'absolute',
             top: 0,
             right: 0,
             bottom: 0,
-            width: 'clamp(240px, 48%, 380px)',
+            width: 'clamp(260px, 48%, 420px)',
             zIndex: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '16px 20px',
             pointerEvents: 'none',
           }}>
-            <div style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              bottom: 0,
-              width: '120px',
-              background: 'linear-gradient(90deg, #F8FAFC 0%, rgba(248, 250, 252, 0.8) 40%, transparent 100%)',
-              zIndex: 2,
-            }} />
             <img
               src={currentSlide.image}
               alt={currentSlide.title}
@@ -197,8 +220,9 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
                 width: '100%',
                 height: '100%',
                 objectFit: 'contain',
-                padding: '24px',
+                borderRadius: '16px',
                 imageRendering: '-webkit-optimize-contrast',
+                filter: 'drop-shadow(0 12px 28px rgba(0, 0, 0, 0.08))',
               }}
             />
           </div>
@@ -214,7 +238,9 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
                   width: activeBannerDot === idx ? '24px' : '8px',
                   height: '8px',
                   borderRadius: '999px',
-                  background: activeBannerDot === idx ? 'var(--zp-primary)' : '#CBD5E1',
+                  background: activeBannerDot === idx
+                    ? (currentSlide.theme?.accentColor || 'var(--zp-primary)')
+                    : '#CBD5E1',
                   border: 'none',
                   cursor: 'pointer',
                   transition: 'all 0.3s ease',
@@ -290,7 +316,7 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
             </div>
           </div>
 
-          {/* Bottom Split 2 Cards (Gynecology & Nutraceuticals) */}
+          {/* Bottom Split 2 Cards (Calcizeal-D3 Sachet & Foot Cure Cream with Product-Matched Themes) */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
             {dynamicPromoCards.map((card, idx) => (
               <div
@@ -298,20 +324,21 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
                 style={{
                   background: card.bg,
                   borderRadius: '18px',
-                  border: `1.2px solid ${card.border}`,
-                  padding: '20px 16px',
+                  border: `1.5px solid ${card.border}`,
+                  padding: '18px 16px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
+                  gap: '8px',
                   position: 'relative',
                   overflow: 'hidden',
                   minHeight: '140px',
+                  transition: 'background 0.3s ease, border-color 0.3s ease',
                 }}
               >
-                <div style={{ zIndex: 2, maxWidth: '140px' }}>
+                <div style={{ zIndex: 2, flex: 1, minWidth: 0, paddingRight: '4px' }}>
                   <span
                     style={{
-                      fontWeight: 900,
                       display: 'inline-block',
                       marginBottom: '6px',
                       ...card.tagStyle,
@@ -320,11 +347,13 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
                     {card.tag}
                   </span>
                   <h4 style={{
-                    fontSize: '14.5px',
+                    fontSize: '13.5px',
                     fontWeight: 900,
                     color: 'var(--zp-text-dark)',
                     lineHeight: 1.25,
                     marginBottom: '8px',
+                    letterSpacing: '-0.2px',
+                    wordBreak: 'break-word',
                   }}>
                     {card.title}
                   </h4>
@@ -334,7 +363,7 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
                     style={{
                       background: 'none',
                       border: 'none',
-                      color: 'var(--zp-primary)',
+                      color: card.btnColor || 'var(--zp-primary)',
                       fontSize: '12px',
                       fontWeight: 800,
                       cursor: 'pointer',
@@ -342,13 +371,14 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
                       display: 'flex',
                       alignItems: 'center',
                       gap: '3px',
+                      transition: 'color 0.2s ease',
                     }}
                   >
                     <span>Enquire Now</span>
                     <ArrowRight size={12} />
                   </button>
                 </div>
-                <div style={{ width: '95px', height: '95px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: '92px', height: '92px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <img
                     src={card.image}
                     alt={card.alt}
