@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Sparkles, Send, ArrowRight } from 'lucide-react';
 import { useSiteSettings } from '../../../context/SiteSettingsContext';
 import { getMediaUrl } from '../../../utils/mediaUtils';
+import { resolveProductBanners } from '../../../utils/productBannerMatcher';
 import type { IProduct } from '../../../types';
 
 export interface ProductHeroBannersProps {
@@ -10,46 +11,6 @@ export interface ProductHeroBannersProps {
   onOpenFranchise: () => void;
   onScrollToCatalog: () => void;
 }
-
-const PROMO_CARDS = [
-  {
-    tag: 'GYNECOLOGY',
-    tagStyle: { background: '#854D0E', color: '#FFFFFF', padding: '2px 6px', borderRadius: '4px', fontSize: '9.5px' },
-    bg: '#FEF9C3',
-    border: '#FEF08A',
-    title: "Women's Health Formulations",
-    image: '/promos/promo_gummies.jpg',
-    alt: 'Women Health',
-    productIndex: 2,
-  },
-  {
-    tag: 'NUTRACEUTICALS',
-    tagStyle: { color: 'var(--zp-primary)', fontSize: '10px' },
-    bg: '#F5F3FF',
-    border: 'var(--zp-primary-border)',
-    title: 'Premium Wellness Extracts',
-    image: '/promos/promo_wellness.jpg',
-    alt: 'Premium Wellness',
-    productIndex: 3,
-  },
-];
-
-const HERO_SLIDES = [
-  {
-    badge: 'DCGI & WHO-GMP APPROVED',
-    title: 'Multivitamin &\nWellness Range',
-    subtitle: 'High-Bioavailability Formulations Ready for Authorized Stockists Distribution.',
-    image: '/promos/promo_multivitamin.jpg',
-    productIndex: 0,
-  },
-  {
-    badge: 'PREMIUM EXTRACTION THERAPEUTICS',
-    title: 'Herbal Wellness &\nImmunity Boosters',
-    subtitle: 'Certified Active Formulations with Exclusive Territorial Distribution Protection.',
-    image: '/promos/promo_wellness.jpg',
-    productIndex: 1,
-  },
-];
 
 export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
   products,
@@ -60,26 +21,63 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
   const { settings } = useSiteSettings();
   const [activeBannerDot, setActiveBannerDot] = useState(0);
 
-  const dynamicPromoCards = PROMO_CARDS.map((card, idx) => ({
-    ...card,
-    image: idx === 0
-      ? getMediaUrl((settings as any)?.promoBanners?.productGummies, card.image)
-      : getMediaUrl((settings as any)?.promoBanners?.productWellness, card.image),
-  }));
+  // Dynamic banner resolution from live database products
+  const banners = useMemo(() => resolveProductBanners(products, settings), [products, settings]);
 
-  const dynamicHeroSlides = HERO_SLIDES.map((slide, idx) => ({
-    ...slide,
-    image: idx === 0
-      ? getMediaUrl((settings as any)?.promoBanners?.productHeroSlide1 || (settings as any)?.promoBanners?.productMultivitamin, slide.image)
-      : getMediaUrl((settings as any)?.promoBanners?.productHeroSlide2 || (settings as any)?.promoBanners?.productWellness, slide.image),
-  }));
+  const dynamicHeroSlides = useMemo(() => [
+    {
+      badge: banners.multivitamin.badge,
+      title: banners.multivitamin.title,
+      subtitle: banners.multivitamin.subtitle || 'High-Bioavailability Formulations Ready for Authorized Stockists Distribution.',
+      image: banners.multivitamin.image,
+      product: banners.multivitamin.product,
+    },
+    {
+      badge: 'PREMIUM EXTRACTION THERAPEUTICS',
+      title: 'Herbal Wellness &\nImmunity Boosters',
+      subtitle: 'Certified Active Formulations with Exclusive Territorial Distribution Protection.',
+      image: getMediaUrl((settings as any)?.promoBanners?.productHeroSlide2 || (settings as any)?.promoBanners?.productWellness, '/promos/promo_wellness.jpg'),
+      product: banners.nutraceuticals.product,
+    },
+  ], [banners, settings]);
+
+  const dynamicPromoCards = useMemo(() => [
+    {
+      tag: banners.gynecology.badge,
+      tagStyle: { background: '#854D0E', color: '#FFFFFF', padding: '2px 6px', borderRadius: '4px', fontSize: '9.5px' },
+      bg: '#FEF9C3',
+      border: '#FEF08A',
+      title: banners.gynecology.title,
+      image: banners.gynecology.image,
+      alt: banners.gynecology.title,
+      product: banners.gynecology.product,
+    },
+    {
+      tag: banners.nutraceuticals.badge,
+      tagStyle: { color: 'var(--zp-primary)', fontSize: '10px' },
+      bg: '#F5F3FF',
+      border: 'var(--zp-primary-border)',
+      title: banners.nutraceuticals.title,
+      image: banners.nutraceuticals.image,
+      alt: banners.nutraceuticals.title,
+      product: banners.nutraceuticals.product,
+    },
+  ], [banners]);
 
   const rackBgImg = getMediaUrl((settings as any)?.promoBanners?.warehouseRack, '/banners/stockist_warehouse_rack.jpg');
   const currentSlide = dynamicHeroSlides[activeBannerDot] || dynamicHeroSlides[0];
 
-  const handleEnquire = (idx: number) => {
-    if (products.length > idx) {
-      onEnquireProduct(products[idx]);
+  const handleEnquireSlide = () => {
+    if (currentSlide.product) {
+      onEnquireProduct(currentSlide.product);
+    } else {
+      onOpenFranchise();
+    }
+  };
+
+  const handleEnquireCard = (p: IProduct | null) => {
+    if (p) {
+      onEnquireProduct(p);
     } else {
       onOpenFranchise();
     }
@@ -154,7 +152,7 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
               <button
                 type="button"
-                onClick={() => handleEnquire(currentSlide.productIndex)}
+                onClick={handleEnquireSlide}
                 className="zp-btn-primary"
                 style={{ padding: '12px 26px', borderRadius: '999px', fontSize: '13.5px' }}
               >
@@ -179,51 +177,50 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
             top: 0,
             right: 0,
             bottom: 0,
-            width: '56%',
+            width: 'clamp(240px, 48%, 380px)',
             zIndex: 1,
             pointerEvents: 'none',
-            overflow: 'hidden',
           }}>
-            <img
-              src={currentSlide.image}
-              alt={currentSlide.title}
-              key={currentSlide.image}
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center 35%',
-                imageRendering: '-webkit-optimize-contrast',
-                WebkitMaskImage: 'linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.4) 12%, #000000 28%)',
-                maskImage: 'linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.4) 12%, #000000 28%)',
-              }}
-            />
-            {/* Ambient tone gradient overlay to blend gently with card */}
             <div style={{
               position: 'absolute',
               top: 0,
               left: 0,
-              right: 0,
               bottom: 0,
-              background: 'linear-gradient(90deg, rgba(248, 250, 252, 0.85) 0%, rgba(237, 233, 254, 0.15) 15%, transparent 28%)',
-              pointerEvents: 'none',
+              width: '120px',
+              background: 'linear-gradient(90deg, #F8FAFC 0%, rgba(248, 250, 252, 0.8) 40%, transparent 100%)',
+              zIndex: 2,
             }} />
+            <img
+              src={currentSlide.image}
+              alt={currentSlide.title}
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
+                padding: '24px',
+                imageRendering: '-webkit-optimize-contrast',
+              }}
+            />
           </div>
 
-          {/* Carousel Dots */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '30px', zIndex: 2, position: 'relative' }}>
-            {HERO_SLIDES.map((_, dot) => (
-              <span
-                key={dot}
-                onClick={() => setActiveBannerDot(dot)}
+          {/* Slider Dots */}
+          <div style={{ display: 'flex', gap: '6px', marginTop: '20px', zIndex: 2 }}>
+            {dynamicHeroSlides.map((_, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => setActiveBannerDot(idx)}
                 style={{
-                  width: activeBannerDot === dot ? '22px' : '8px',
+                  width: activeBannerDot === idx ? '24px' : '8px',
                   height: '8px',
-                  borderRadius: '4px',
-                  background: activeBannerDot === dot ? 'var(--zp-primary)' : '#CBD5E1',
+                  borderRadius: '999px',
+                  background: activeBannerDot === idx ? 'var(--zp-primary)' : '#CBD5E1',
+                  border: 'none',
                   cursor: 'pointer',
-                  transition: 'all 0.2s',
+                  transition: 'all 0.3s ease',
+                  padding: 0,
                 }}
+                aria-label={`Slide ${idx + 1}`}
               />
             ))}
           </div>
@@ -293,7 +290,7 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
             </div>
           </div>
 
-          {/* Bottom Split 2 Cards */}
+          {/* Bottom Split 2 Cards (Gynecology & Nutraceuticals) */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
             {dynamicPromoCards.map((card, idx) => (
               <div
@@ -333,7 +330,7 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
                   </h4>
                   <button
                     type="button"
-                    onClick={() => handleEnquire(card.productIndex)}
+                    onClick={() => handleEnquireCard(card.product)}
                     style={{
                       background: 'none',
                       border: 'none',
@@ -351,7 +348,7 @@ export const ProductHeroBanners: React.FC<ProductHeroBannersProps> = ({
                     <ArrowRight size={12} />
                   </button>
                 </div>
-                <div style={{ width: '95px', height: '95px', flexShrink: 0 }}>
+                <div style={{ width: '95px', height: '95px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <img
                     src={card.image}
                     alt={card.alt}

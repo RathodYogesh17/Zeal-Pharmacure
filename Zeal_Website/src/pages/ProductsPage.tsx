@@ -749,10 +749,18 @@ export const ProductsPage: React.FC = () => {
       </section>
 
       {/* 3. MIDDLE 3 PROMO BANNERS */}
-      <ProductMiddleBanners onOpenFranchise={openFranchiseModal} />
+      <ProductMiddleBanners
+        products={products}
+        onEnquireProduct={handleOpenSingleEnquiry}
+        onOpenFranchise={openFranchiseModal}
+      />
 
       {/* 4. BOTTOM 2 PROMO BANNERS */}
-      <ProductBottomBanners onOpenFranchise={openFranchiseModal} />
+      <ProductBottomBanners
+        products={products}
+        onEnquireProduct={handleOpenSingleEnquiry}
+        onOpenFranchise={openFranchiseModal}
+      />
 
       {/* 5. BEST SELLING FORMULATIONS */}
       <section className="zp-container" style={{ marginTop: '56px', marginBottom: '72px' }}>
