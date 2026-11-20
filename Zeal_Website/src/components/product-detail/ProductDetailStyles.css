@@ -53,7 +53,7 @@
   }
 }
 
-/* 3. Product Gallery Responsiveness */
+/* 3. Product Gallery Responsiveness & Slider Controls */
 .zp-gallery-stage-box {
   height: clamp(250px, 75vw, 380px) !important;
   padding: clamp(12px, 3vw, 24px) !important;
@@ -61,6 +61,148 @@
   position: relative;
   width: 100%;
   box-sizing: border-box;
+}
+
+/* Gallery Slider Navigation Buttons */
+.zp-gallery-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1.5px solid #E2E8F0;
+  color: #1E293B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.12);
+  z-index: 6;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
+  outline: none;
+}
+
+.zp-gallery-nav-btn:hover {
+  background: #7C3AED;
+  color: #FFFFFF;
+  border-color: #7C3AED;
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.32);
+}
+
+.zp-gallery-nav-btn:active {
+  transform: translateY(-50%) scale(0.96);
+}
+
+.zp-gallery-nav-btn.prev {
+  left: 12px;
+}
+
+.zp-gallery-nav-btn.next {
+  right: 12px;
+}
+
+/* Zoom Modal Navigation Buttons */
+.zp-zoom-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1.5px solid #E2E8F0;
+  color: #1E293B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  z-index: 20;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
+  outline: none;
+}
+
+.zp-zoom-nav-btn:hover {
+  background: #7C3AED;
+  color: #FFFFFF;
+  border-color: #7C3AED;
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 10px 28px rgba(124, 58, 237, 0.4);
+}
+
+.zp-zoom-nav-btn:active {
+  transform: translateY(-50%) scale(0.96);
+}
+
+.zp-zoom-nav-btn.prev {
+  left: clamp(10px, 2.5vw, 24px);
+}
+
+.zp-zoom-nav-btn.next {
+  right: clamp(10px, 2.5vw, 24px);
+}
+
+/* Slide Transition Animations */
+.zp-gallery-slide-right {
+  animation: zpSlideFromRight 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.zp-gallery-slide-left {
+  animation: zpSlideFromLeft 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes zpSlideFromRight {
+  from {
+    opacity: 0.35;
+    transform: translateX(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes zpSlideFromLeft {
+  from {
+    opacity: 0.35;
+    transform: translateX(-20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@media (max-width: 640px) {
+  .zp-gallery-nav-btn {
+    width: 34px;
+    height: 34px;
+  }
+  .zp-gallery-nav-btn.prev {
+    left: 8px;
+  }
+  .zp-gallery-nav-btn.next {
+    right: 8px;
+  }
+  .zp-zoom-nav-btn {
+    width: 40px;
+    height: 40px;
+  }
+  .zp-zoom-nav-btn.prev {
+    left: 8px;
+  }
+  .zp-zoom-nav-btn.next {
+    right: 8px;
+  }
 }
 
 .zp-gallery-thumbs-row {
